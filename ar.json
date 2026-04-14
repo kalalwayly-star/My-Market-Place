@@ -1,20 +1,14 @@
 {
-    "greeting": "مرحباً، أهلاً بك في My Marketplace!",
-    "home": "الرئيسية",
-    "postAd": "نشر إعلان",
-    "myAds": "إعلاناتي",
-    "deleteConfirmation": "هل أنت متأكد أنك تريد حذف هذا الإعلان؟",
-    "noAds": "ليس لديك أي إعلانات نشطة.",
-
-  "footer_terms": "Terms of Service",
-  "footer_safety": "Safety Tips",
-
-
-  
-  "footer_privacy_header": "Privacy Policy",
-  "footer_privacy": "Privacy Policy"
-
-
+  "greeting": "مرحباً، أهلاً بك في My Marketplace!",
+  "home": "الرئيسية",
+  "postAd": "نشر إعلان",
+  "myAds": "إعلاناتي",
+  "deleteConfirmation": "هل أنت متأكد أنك تريد حذف هذا الإعلان؟",
+  "noAds": "ليس لديك أي إعلانات نشطة.",
+  "footer_terms": "شروط الخدمة",
+  "footer_safety": "نصائح السلامة",
+  "footer_privacy_header": "سياسة الخصوصية",
+  "footer_privacy": "سياسة الخصوصية"
 }
 
 
