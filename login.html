@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Marketplace</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="auth-body">
+
+<header class="header">
+  <div class="container">
+    <h1>My Marketplace</h1>
+    <a href="index.html" class="btn-link">← Back to Home</a>
+  </div>
+</header>
+
+<div class="auth-container">
+  <div class="auth-card">
+    <h2>Welcome Back</h2>
+    <p class="subtitle">Please enter your details to sign in.</p>
+
+    <!-- Email Input -->
+    <div class="input-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="you@example.com" required>
+    </div>
+
+    <!-- Password Input with 7-char requirement -->
+    <div class="input-group">
+        <label for="loginPassword">Password (Min. 7 characters)</label>
+        <input type="password" id="loginPassword" placeholder="Enter your password" required>
+    </div>
+
+    <div class="auth-buttons">
+      <button class="btn-primary" onclick="login()">Login</button>
+      <div class="divider"><span>OR</span></div>
+      <button class="btn-outline" onclick="register()">Create Account</button>
+    </div>
+
+    <!-- This will show the "7 characters" error in red -->
+    <p id="error-message" class="error-text" style="color: red; margin-top: 10px;"></p>
+  </div>
+</div>
+
+<script src="auth.js"></script>
+</body>
+</html>

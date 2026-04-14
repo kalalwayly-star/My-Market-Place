@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Ads | Marketplace</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header">
+    <div class="container">
+        <h1>My Marketplace</h1>
+        <div class="nav" id="userAuth">
+            <!-- This gets filled by updateHeader() in main.js -->
+            <a href="index.html" class="btn text">Home</a>
+            <a href="post.html" class="btn primary">Post Ad</a>
+        </div>
+    </div>
+</header>
+
+<section class="container main-content">
+    <div class="section-header">
+        <h2>Your Active Listings</h2>
+        <p id="userGreeting"></p>
+    </div>
+
+    <!-- main.js will inject ads into this div -->
+    <div id="myAds" class="ads-grid">
+        <p class="loading">Loading your ads...</p>
+    </div> 
+    
+    <div class="footer-actions">
+        <br>
+        <a href="index.html" class="btn text">← Back to Home</a>
+    </div>
+</section>
+
+<!-- LOAD SCRIPTS IN THIS ORDER -->
+<script src="storage.js"></script>
+<script src="main.js"></script>
+<script src="myads.js"></script> <!-- Added myads.js for handling ads -->
+
+<script>
+    // Personalize the greeting if logged in
+    const user = JSON.parse(localStorage.getItem("currentUser"));
+    if (user) {
+        document.getElementById('userGreeting').innerText = `Managing ads for: ${user.email}`;
+    }
+</script>
+
+</body>
+</html>

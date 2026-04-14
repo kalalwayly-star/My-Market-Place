@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <title>Ad Details | My Marketplace</title>
+   <link rel="stylesheet" href="style.css">
+</head>
+<body class="details-page">
+
+
+<header class="header">
+   <div class="container" style="display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 1200px; margin: 0 auto;">
+       <h1>My Marketplace</h1>
+       <div class="nav">
+           <a href="index.html" class="btn text">Back to Browse</a>
+       </div>
+   </div>
+</header>
+
+
+<main class="container detail-wrapper" style="max-width: 1200px; margin: 20px auto; padding: 0 20px;">
+   <div class="detail-grid">
+       <!-- Left Side: Image and Description -->
+       <div class="content-main">
+           <div id="adImageContainer" class="main-image">
+               <!-- Image injected by details.js -->
+           </div>
+           <div class="description-section">
+               <h2>Description</h2>
+               <p id="adDesc">Loading description...</p>
+           </div>
+       </div>
+
+
+
+       <!-- Right Side: Price and Contact -->
+       <div class="content-sidebar">
+           <div class="price-card">
+               <h1 id="adTitle">Loading Title...</h1>
+               <p class="ad-category" id="adCategory"></p>
+               <div class="price-tag"><span id="adPrice">0</span></div>
+               <p class="location-tag">📍 <span id="adLocation">Unknown</span></p>
+              
+               <hr>
+              
+               <h3>Contact Seller</h3>
+               <div class="contact-info">
+               </div>
+
+
+               <!-- Messaging Section -->
+               <div id="contactSection" class="contact-card" style="margin-top: 20px;">
+                   <textarea id="messageText" placeholder="Hi, is this still available?" rows="4" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;"></textarea>
+                   <button onclick="sendMessage()" class="btn-primary-large" style="margin-top: 10px; width: 100%;">Send Message</button>
+               </div>
+<!-- Update your button like this -->
+<button id="reportBtn" onclick="showReportModal()">Report this Ad</button>
+
+<!-- Ensure your modal has this ID -->
+<div id="reportModal" style="display:none; position: fixed; background: white; border: 1px solid #ccc; padding: 20px; z-index: 1000;">
+    <h3>Report Ad</h3>
+    <select id="reportReason">
+        <option value="scam">Scam</option>
+        <option value="illegal">Illegal Item</option>
+    </select>
+    <button onclick="submitReport()">Submit Report</button>
+    <button onclick="closeModal()">Cancel</button>
+</div>
+
+           </div>
+       </div>
+   </div>
+</main>
+
+<!-- Add this to the bottom of your body tag in all main HTML files -->
+<footer>
+    <p>© 2024 Classified-Site</p>
+    <ul>
+        <li><a href="legal/terms.html">Terms of Service</a></li>
+        <li><a href="legal/privacy.html">Privacy Policy</a></li>
+        <li><a href="legal/safety.html">Safety Tips</a></li>
+    </ul>
+</footer>
+
+
+<!-- Scripts -->
+<script src="storage.js"></script>
+<script src="details.js"></script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Language Switcher | My Marketplace</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header">
+    <div class="container">
+        <h1 id="greeting">Loading greeting...</h1> <!-- Dynamic text -->
+        <div class="nav" id="userAuth">
+            <a href="index.html" class="btn text" id="home">Loading...</a> <!-- Dynamic text -->
+            <a href="post.html" class="btn primary" id="postAd">Loading...</a> <!-- Dynamic text -->
+        </div>
+    </div>
+</header>
+
+<section class="container main-content">
+    <div class="section-header">
+        <h2 id="myAds">Loading...</h2> <!-- Dynamic text -->
+        <p id="userGreeting"></p>
+    </div>
+
+    <div id="adsGrid" class="ads-grid"> <!-- Fixed ID conflict by renaming -->
+        <p class="loading" id="noAds">Loading your ads...</p> <!-- Dynamic text -->
+    </div>
+</section>
+
+<!-- Language Selector -->
+<div style="margin: 20px;">
+    <label for="languageSwitcher">Choose Language:</label>
+    <select id="languageSwitcher">
+        <option value="en">English</option>
+        <option value="es">Español</option>
+        <option value="fr">Français</option> <!-- French option -->
+        <option value="ar">العربية</option> <!-- Arabic option -->
+    </select>
+</div>
+
+<!-- LOAD SCRIPTS IN THIS ORDER -->
+<script src="languages.js"></script>  <!-- The JavaScript that manages language switching -->
+</body>
+</html>

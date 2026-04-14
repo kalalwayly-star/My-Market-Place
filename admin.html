@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard | Classified Site</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<button onclick="adminLogin()">Admin Login</button>
+
+<div class="admin-container">
+    <h1>🛠️ Administrative Dashboard</h1>
+
+    <!-- =============================== -->
+    <!-- 🚨 AI MODERATION QUEUE -->
+    <!-- =============================== -->
+    <section>
+        <h2>🚨 Moderation Queue (AI Fraud Detection)</h2>
+        <div id="moderationList">
+            <!-- Injected by admin.js -->
+        </div>
+    </section>
+<!-- Button to trigger the admin login -->
+    <hr>
+
+    <!-- =============================== -->
+    <!-- 📋 USER REPORTS -->
+    <!-- =============================== -->
+    <section>
+        <h2>📋 User Reported Ads</h2>
+        <div id="reportList">
+            <!-- Injected by admin.js -->
+        </div>
+    </section>
+
+</div>
+
+
+<!-- Optional (only if used elsewhere) -->
+<script src="auth.js"></script>
+
+<!-- Main Admin Logic -->
+<script src="admin.js"></script>
+
+<script>
+    // Ensure that the admin is logged in before accessing this page
+    if (!localStorage.getItem("isAdmin") || localStorage.getItem("isAdmin") !== "true") {
+        alert("Access Denied. You must be an admin to access this page.");
+        window.location.href = "index.html";  // Redirect to home page
+    }
+</script>
+
+</body>
+</html>

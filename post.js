@@ -1,0 +1,191 @@
+// 1. GLOBAL VARIABLES
+const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+let uploadedImages = [];
+
+// 2. HANDLE CATEGORY CHANGES
+function handleCategoryChange() {
+    const mainCategorySelect = document.getElementById('mainCategory');
+    if (!mainCategorySelect) return;
+
+    const categoryValue = mainCategorySelect.value;
+    const commonFields = document.getElementById('commonFields');
+    const sections = document.querySelectorAll('.category-details');
+
+    sections.forEach(sec => sec.style.display = 'none');
+
+    if (categoryValue === "") {
+        if (commonFields) commonFields.style.display = 'none';
+        return;
+    }
+
+    if (commonFields) commonFields.style.display = 'block';
+
+    let sectionId = "";
+    if (categoryValue === "Cars & Trucks") sectionId = "section-Cars";
+    if (categoryValue === "Real Estate") sectionId = "section-RealEstate";
+    if (categoryValue === "Jewellery") sectionId = "section-Jewellery";
+    if (categoryValue === "Electronics") sectionId = "section-Electronics";
+
+    const targetSection = document.getElementById(sectionId);
+    if (targetSection) targetSection.style.display = 'block';
+}
+
+// 3. PHOTO UPLOAD LOGIC
+// Handle file input
+async function handlePhotoUpload(event) {
+    const gallery = document.getElementById('galleryPreview');
+    const files = Array.from(event.target.files);  // Get all files selected
+
+    if (uploadedImages.length + files.length > 10) {
+        alert("Maximum 10 photos allowed.");
+        return;
+    }
+
+    for (const file of files) {
+        const base64 = await compressImage(file);  // Compress the image and convert to base64
+        uploadedImages.push(base64);  // Save base64 image in the uploadedImages array
+
+        const div = document.createElement('div');
+        div.style.cssText = "position:relative; display:inline-block; margin:5px;";
+        div.innerHTML = `
+            <img src="${base64}" style="width:80px; height:80px; object-fit:cover; border-radius:5px;">
+            <button onclick="removeImg(event, '${base64}', this)" style="position:absolute; top:-5px; right:-5px; background:red; color:white; border:none; border-radius:50%; width:18px; height:18px; cursor:pointer;">×</button>
+        `;
+        gallery.appendChild(div);  // Append to gallery
+    }
+}
+
+function compressImage(file) {
+    return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (e) => {
+            const img = new Image();
+            img.src = e.target.result;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+                const MAX = 800;
+                if (width > height && width > MAX) { height *= MAX / width; width = MAX; }
+                else if (height > MAX) { width *= MAX / height; height = MAX; }
+                canvas.width = width; canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                resolve(canvas.toDataURL('image/jpeg', 0.7));
+            };
+        };
+    });
+}
+
+function removeImg(e, data, btn) {
+    e.preventDefault();
+    uploadedImages = uploadedImages.filter(img => img !== data);
+    btn.parentElement.remove();
+}
+
+// 4. PAYPAL RENDER FUNCTION
+function renderPayPalButtons() {
+    const payContainer = document.getElementById('paypal-button-container');
+    payContainer.innerHTML = ''; // Clean start
+
+    if (typeof paypal === 'undefined') {
+        payContainer.innerHTML = '<p style="color:red;">PayPal failed to load. Check your internet or ad-blocker.</p>';
+        return;
+    }
+
+    paypal.Buttons({
+        style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'paypal' },
+        createOrder: (data, actions) => {
+            return actions.order.create({
+                purchase_units: [{ amount: { value: '4.99' } }]
+            });
+        },
+        onApprove: (data, actions) => {
+            return actions.order.capture().then(details => {
+                alert('Payment Successful!');
+                finalizeAd(true);
+            });
+        },
+        onCancel: () => {
+            alert("Payment cancelled.");
+        }
+    }).render('#paypal-button-container');
+}
+
+// 5. CHECKBOX LISTENER
+document.addEventListener('DOMContentLoaded', () => {
+    const isFeaturedCheckbox = document.getElementById('isFeatured');
+    const payContainer = document.getElementById('paypal-button-container');
+    const postBtn = document.getElementById('postBtn');
+
+    document.addEventListener("DOMContentLoaded", () => {
+    const input = document.getElementById("photoInput");
+    if (input) input.addEventListener("change", handlePhotoUpload);
+});
+
+    if (isFeaturedCheckbox) {
+        isFeaturedCheckbox.addEventListener('change', function() {
+            if (!payContainer || !postBtn) return;
+
+            if (this.checked) {
+                postBtn.style.display = 'none';
+                payContainer.style.display = 'block';
+                renderPayPalButtons();
+            } else {
+                postBtn.style.display = 'block';
+                payContainer.style.display = 'none';
+                payContainer.innerHTML = '';
+            }
+        });
+    }
+});
+
+// 6. MAIN SAVE LOGIC
+function saveNewAd(event) {
+    if (event) event.preventDefault();
+
+    if (!currentUser) {
+        alert("Please login first.");
+        window.location.href = "login.html";
+        return;
+    }
+
+    const isFeaturedCheckbox = document.getElementById('isFeatured');
+    const isFeatured = isFeaturedCheckbox ? isFeaturedCheckbox.checked : false;
+
+    if (!isFeatured) {
+        finalizeAd(false);
+    }
+}
+
+// 7. FINALIZING DATA
+function finalizeAd(featuredStatus) {
+    const newAd = {
+        id: Date.now(),
+        userEmail: currentUser.email,
+        category: document.getElementById('mainCategory').value,
+        title: document.getElementById('adTitle').value,
+        price: document.getElementById('adPrice').value,
+        location: document.getElementById('adLocation').value,
+        description: document.getElementById('adDesc').value,
+        // Save images as base64 or the default image
+        image: uploadedImages.length > 0 ? uploadedImages : [document.getElementById('adImage').value || 'https://placeholder.com'],
+        status: "Active",
+        isFeatured: featuredStatus,
+        date: new Date().toLocaleDateString()
+    };
+
+    // Save new ad to localStorage
+    const ads = JSON.parse(localStorage.getItem("ads") || "[]");
+    ads.push(newAd);
+    localStorage.setItem("ads", JSON.stringify(ads));
+
+    alert(featuredStatus ? "Featured Ad Posted!" : "Ad Posted Successfully!");
+    window.location.href = "index.html";  // Redirect after posting
+}
+// 8. ADD EVENT LISTENER FOR IMAGE UPLOAD
+document.addEventListener("DOMContentLoaded", () => {
+    const input = document.getElementById("imageInput");
+    if (input) input.addEventListener("change", handlePhotoUpload);
+});

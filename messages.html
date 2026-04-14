@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>My Messages | Marketplace</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="header">
+      <h1>My Messages</h1>
+      <div class="nav"><a href="index.html" class="btn text">Home</a></div>
+  </header>
+
+<br><br>
+<div class="container">
+    <div class="search-messages-container" style="margin-bottom: 20px;">
+        <input type="text" id="msgSearch" placeholder="Search by sender or subject..." 
+               style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;">
+    </div>
+    
+    <div class="message-tabs" style="margin-bottom: 20px;">
+        <button onclick="changeTab('received')" id="btnReceived" class="btn text active">Received</button>
+        <button onclick="changeTab('sent')" id="btnSent" class="btn text">Sent</button>
+    </div>
+
+    <div id="messageList" class="message-grid"></div>
+</div>
+
+<script src="main.js"></script>
+
+<script>
+let currentTab = 'received';
+// Load messages from localStorage
+let allMessages = JSON.parse(localStorage.getItem("messages") || "[]");
+
+function renderMessages(filterText = "") {
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    const container = document.getElementById("messageList");
+    if (!currentUser || !container) return;
+
+    // 1. Filter by current tab (Received vs Sent)
+    let filtered = allMessages.filter(m => 
+        currentTab === 'received' ? m.receiverEmail === currentUser.email : m.senderEmail === currentUser.email
+    );
+
+    // 2. Filter by search text
+    if (filterText) {
+        const query = filterText.toLowerCase();
+        filtered = filtered.filter(m => 
+            (m.senderEmail && m.senderEmail.toLowerCase().includes(query)) || 
+            (m.adTitle && m.adTitle.toLowerCase().includes(query)) ||
+            (m.text && m.text.toLowerCase().includes(query))
+        );
+    }
+
+    // 3. Display the results
+    if (filtered.length === 0) {
+        container.innerHTML = `<p>No messages found in ${currentTab}.</p>`;
+    } else {
+        container.innerHTML = filtered.map(m => `
+            <div class="message-card" style="border: 1px solid #eee; padding: 15px; margin-bottom: 10px; border-radius: 8px;">
+                <h4>Re: ${m.adTitle}</h4>
+                <p><strong>${currentTab === 'received' ? 'From' : 'To'}:</strong> ${currentTab === 'received' ? m.senderEmail : m.receiverEmail}</p>
+                <p class="msg-text">"${m.text}"</p>
+                <span class="msg-date" style="font-size: 0.8em; color: #888;">${m.date}</span>
+                
+                ${currentTab === 'received' ? `
+                    <div style="margin-top: 10px;">
+                        <button onclick="toggleReply(${m.id})" class="btn-link" style="color: blue; cursor: pointer; background: none; border: none; padding: 0; text-decoration: underline;">Reply</button>
+                        
+                        <!-- Hidden Reply Box -->
+                        <div id="reply-box-${m.id}" style="display: none; margin-top: 10px; background: #f9f9f9; padding: 10px; border-radius: 5px;">
+                            <textarea id="reply-text-${m.id}" placeholder="Type your reply..." style="width: 100%; height: 60px; margin-bottom: 5px;"></textarea>
+                            <button onclick="sendReply(${m.id})" class="btn" style="background: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Send Reply</button>
+                        </div>
+                    </div>
+                ` : ''}
+            </div>
+        `).join('');
+    }
+}
+
+// TOGGLE FUNCTION: Shows/Hides the reply area
+function toggleReply(id) {
+    const box = document.getElementById(`reply-box-${id}`);
+    if (box) {
+        box.style.display = (box.style.display === 'none' || box.style.display === '') ? 'block' : 'none';
+    }
+}
+
+// SEND FUNCTION: Saves the new message to localStorage
+function sendReply(originalMsgId) {
+    const textInput = document.getElementById(`reply-text-${originalMsgId}`);
+    const originalMsg = allMessages.find(m => m.id === originalMsgId);
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+    if (!textInput.value.trim()) return alert("Please enter a message.");
+
+    const newReply = {
+        id: Date.now(),
+        adTitle: originalMsg.adTitle,
+        senderEmail: currentUser.email,
+        receiverEmail: originalMsg.senderEmail,
+        text: textInput.value,
+        date: new Date().toLocaleString()
+    };
+
+    allMessages.push(newReply);
+    localStorage.setItem("messages", JSON.stringify(allMessages));
+    
+    alert("Reply sent!");
+    textInput.value = "";
+    toggleReply(originalMsgId);
+    renderMessages(); // Refresh the list
+}
+
+// Search listener
+document.getElementById("msgSearch").addEventListener("input", (e) => {
+    renderMessages(e.target.value);
+});
+
+function changeTab(tab) {
+    currentTab = tab;
+    document.getElementById("btnReceived").classList.toggle("active", tab === 'received');
+    document.getElementById("btnSent").classList.toggle("active", tab === 'sent');
+    renderMessages(document.getElementById("msgSearch").value);
+}
+
+window.onload = () => renderMessages();
+</script>
+</body>
+</html>
