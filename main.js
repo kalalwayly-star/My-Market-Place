@@ -129,7 +129,6 @@ function applyFilters() {
   
    if (!searchInput || !locationInput) return; // Stop if the boxes aren't found
 
-console.log("Searching with: ", searchQuery, locationQuery); // Debugging log
 
    const searchQuery = searchInput.value.toLowerCase().trim();
    const locationQuery = locationInput.value.toLowerCase().trim();
