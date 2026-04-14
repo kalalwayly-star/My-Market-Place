@@ -1,0 +1,18 @@
+{
+    "greeting": "¡Hola, bienvenido a My Marketplace!",
+    "home": "Inicio",
+    "postAd": "Publicar Anuncio",
+    "myAds": "Mis Anuncios",
+    "deleteConfirmation": "¿Estás seguro de que deseas eliminar este anuncio?",
+    "noAds": "No tienes anuncios activos.",
+
+  "footer_terms": "Terms of Service",
+  "footer_safety": "Safety Tips",
+
+  
+  "footer_privacy_header": "Privacy Policy",
+  "footer_privacy": "Privacy Policy"
+
+
+
+}
