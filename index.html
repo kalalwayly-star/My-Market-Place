@@ -30,6 +30,35 @@
                 </span>
                 <button onclick="logout()" class="btn logout-btn" id="nav_logout">Logout</button>
             </div>
+
+
+        </div>
+    </header>
+
+    <section class="hero">
+       <div class="hero-content">
+           <h2 id="hero_title">Find anything in your city</h2>
+           <div class="search-container">
+               <!-- placeholder translation requires extra JS logic, but we'll stick to text for now -->
+               <input type="text" id="search" placeholder="What are you looking for?">
+               <input type="text" id="filterLocation" placeholder="City or Neighborhood">
+               <button onclick="applyFilters()" class="btn-search" id="btn_search">Search</button>
+           </div>
+       </div>
+    </section>
+
+    <section class="categories-section">
+       <h3 id="cat_header">Browse by Category</h3>
+       <div class="category-grid">
+           <!-- Added data-i18n to category text -->
+           <div class="cat-card" onclick="filterByCategory('Cars & Trucks')">
+               <span class="icon">🚗</span>
+               <p data-i18n="cat_vehicles">Vehicles</p>
+           </div>
+           <div class="cat-card" onclick="filterByCategory('Real Estate')">
+               <span class="icon">🏠</span>
+               <p data-i18n="cat_realestate">Real Estate</p>
+           </div>
            <!-- Furniture -->
 <div class="cat-card" onclick="filterByCategory('Furniture')">
     <span class="icon">🛋️</span>
@@ -76,37 +105,7 @@
 <div class="cat-card" onclick="filterByCategory('Toys')">
     <span class="icon">🧸</span>
     <p id="cat_toys" data-i18n="cat_toys">Toys</p>
-</div>
-
-        </div>
-    </header>
-
-    <section class="hero">
-       <div class="hero-content">
-           <h2 id="hero_title">Find anything in your city</h2>
-           <div class="search-container">
-               <!-- placeholder translation requires extra JS logic, but we'll stick to text for now -->
-               <input type="text" id="search" placeholder="What are you looking for?">
-               <input type="text" id="filterLocation" placeholder="City or Neighborhood">
-               <button onclick="applyFilters()" class="btn-search" id="btn_search">Search</button>
-           </div>
-       </div>
-    </section>
-
-    <section class="categories-section">
-       <h3 id="cat_header">Browse by Category</h3>
-       <div class="category-grid">
-           <!-- Added data-i18n to category text -->
-           <div class="cat-card" onclick="filterByCategory('Cars & Trucks')">
-               <span class="icon">🚗</span>
-               <p data-i18n="cat_vehicles">Vehicles</p>
-           </div>
-           <div class="cat-card" onclick="filterByCategory('Real Estate')">
-               <span class="icon">🏠</span>
-               <p data-i18n="cat_realestate">Real Estate</p>
-           </div>
-           <!-- ... repeat for other categories ... -->
-       </div>
+</div>       </div>
     </section>
 
     <section class="main-content container">
