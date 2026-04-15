@@ -1,67 +1,77 @@
+// 1. Get saved language or default to English
+let currentLanguage = localStorage.getItem("language") || "en";
 
-
-function getMessages() {
-  return JSON.parse(localStorage.getItem("messages")) || [];
-}
-
-function saveMessages(messages) {
-  localStorage.setItem("messages", JSON.stringify(messages));
-}
-
-function sendMessage(adId, text) {
-  const user = JSON.parse(localStorage.getItem("currentUser"));
-
-  if (!user) {
-    alert("Please login first");
-    window.location.href = "login.html";
-    return;
-  }
-
-
-
-  const messages = getMessages();
-
-  messages.push({
-    adId,
-    text,
-    from: user.email,
-    time: new Date().toLocaleString()
-  });
-
-  saveMessages(messages);
-
-  alert("Message sent!");
-}
-// 1. Define your function as usual
-function toggleReply(messageId) {
-    console.log("Replying to message:", messageId);
-    
-    // Find the reply form by ID (make sure your HTML has an ID like `reply-form-123`)
-    const replyForm = document.getElementById(`reply-form-${messageId}`);
-    
-    if (replyForm) {
-        // Toggle visibility
-        replyForm.classList.toggle('hidden'); 
+// 2. Main function to load and apply translations
+async function loadLanguage(lang) {
+    try {
+        const response = await fetch(`languages/${lang}.json`);
+        if (!response.ok) throw new Error("Could not load language file");
+        
+        const translations = await response.json();
+        
+        // Save choice
+        localStorage.setItem("language", lang);
+        
+        // Update the HTML content
+        updatePageContent(translations, lang);
+        
+    } catch (error) {
+        console.error('Error loading language:', error);
     }
 }
 
-// 2. CRITICAL STEP: Make it global so the HTML 'onclick' can find it
-window.toggleReply = toggleReply;
-
-// This makes the function available to the 'onclick' in your HTML
-window.toggleReply = function(id) {
-    console.log("Toggle reply for ID:", id);
-    
-    // Replace 'reply-box-' with whatever ID prefix you use for your reply form
-    const replyBox = document.getElementById(`reply-box-${id}`); 
-    
-    if (replyBox) {
-        if (replyBox.style.display === "none" || replyBox.style.display === "") {
-            replyBox.style.display = "block";
-        } else {
-            replyBox.style.display = "none";
+// 3. Helper function to swap text and change direction
+function updatePageContent(translations, lang) {
+    // Update elements using data-i18n attribute
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[key]) {
+            el.innerText = translations[key];
         }
-    } else {
-        console.error("Could not find reply box for ID:", id);
+    });
+
+    // Update elements using ID
+    for (const [key, value] of Object.entries(translations)) {
+        const element = document.getElementById(key);
+        if (element) {
+            element.innerText = value;
+        }
     }
-};
+
+    // Apply RTL for Arabic, LTR for others
+    document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+    document.documentElement.lang = lang;
+}
+
+// 4. Setup Listeners for Dropdown and Buttons
+document.addEventListener('DOMContentLoaded', () => {
+    // A. Handle the Dropdown Switcher (from your languages.html)
+    const switcher = document.getElementById('languageSwitcher');
+    if (switcher) {
+        switcher.value = currentLanguage; // Sync dropdown with saved language
+        switcher.addEventListener('change', (e) => {
+            loadLanguage(e.target.value);
+        });
+    }
+
+    // B. Handle Buttons (if you have them on other pages)
+    const buttonMap = {
+        'lang-en': 'en',
+        'lang-es': 'es',
+        'lang-fr': 'fr',
+        'lang-ar': 'ar'
+    };
+
+    for (const [id, lang] of Object.entries(buttonMap)) {
+        const btn = document.getElementById(id);
+        if (btn) {
+            btn.addEventListener('click', () => loadLanguage(lang));
+        }
+    }
+
+    // 5. Run initial translation on page load
+    loadLanguage(currentLanguage);
+});
+
+
+
