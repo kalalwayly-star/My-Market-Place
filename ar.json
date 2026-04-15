@@ -24,6 +24,11 @@
   "footer_privacy_header": "سياسة الخصوصية",
   "footer_privacy": "سياسة الخصوصية"
 }
+{
+  "search_placeholder": "عن ماذا تبحث؟",
+  "location_placeholder": "المدينة أو الحي",
+  "cat_header": "تصفح حسب الفئة"
+}
 
 
  
