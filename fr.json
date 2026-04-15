@@ -1,18 +1,26 @@
 {
-    "greeting": "Bonjour, bienvenue sur My Marketplace!",
-    "home": "Accueil",
-    "postAd": "Publier une annonce",
-    "myAds": "Mes annonces",
-    "deleteConfirmation": "Êtes-vous sûr de vouloir supprimer cette annonce?",
-    "noAds": "Vous n'avez pas d'annonces actives.",
-
-  "footer_terms": "Terms of Service",
-  "footer_safety": "Safety Tips",
-
-  
-  "footer_privacy_header": "Privacy Policy",
-
-  "footer_privacy": "Privacy Policy"
-
-
+  "greeting": "Bienvenue sur My Marketplace !",
+  "home": "Accueil",
+  "postAd": "Publier une annonce",
+  "myAds": "Mes annonces",
+  "nav_messages": "Messages",
+  "nav_login": "Connexion",
+  "nav_logout": "Déconnexion",
+  "deleteConfirmation": "Êtes-vous sûr de vouloir supprimer cette annonce ?",
+  "noAds": "Vous n'avez aucune annonce active.",
+  "btn_search": "Rechercher",
+  "cat_realestate": "Immobilier",
+  "cat_cars_trucks": "Voitures et camions",
+  "cat_furniture": "Meubles",
+  "cat_jobs": "Emplois",
+  "cat_fashion": "Mode",
+  "cat_pets": "Animaux",
+  "cat_sports": "Sports",
+  "cat_books": "Livres",
+  "cat_appliances": "Électroménager",
+  "cat_toys": "Jouets",
+  "footer_terms": "Conditions d'utilisation",
+  "footer_safety": "Conseils de sécurité",
+  "footer_privacy_header": "Politique de confidentialité",
+  "footer_privacy": "Confidentialité"
 }
