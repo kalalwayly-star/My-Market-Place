@@ -1,17 +1,28 @@
 {
-    "greeting": "Hello, welcome to My Marketplace!",
-    "home": "Home",
-    "postAd": "Post Ad",
-    "myAds": "My Ads",
-    "deleteConfirmation": "Are you sure you want to delete this ad?",
-    "noAds": "You have no active listings.",
-
+  "greeting": "Welcome to My Marketplace!",
+  "home": "Home",
+  "postAd": "Post Ad",
+  "myAds": "My Ads",
+  "nav_messages": "Messages",
+  "nav_login": "Login",
+  "nav_logout": "Logout",
+  "deleteConfirmation": "Are you sure you want to delete this ad?",
+  "noAds": "You have no active ads.",
+  "btn_search": "Search",
+  "cat_realestate": "Real Estate",
+  "cat_cars_trucks": "Cars and Trucks",
+  "cat_furniture": "Furniture",
+  "cat_jobs": "Jobs",
+  "cat_fashion": "Fashion",
+  "cat_pets": "Pets",
+  "cat_sports": "Sports",
+  "cat_books": "Books",
+  "cat_appliances": "Appliances",
+  "cat_toys": "Toys",
   "footer_terms": "Terms of Service",
   "footer_safety": "Safety Tips",
-
   "footer_privacy_header": "Privacy Policy",
   "footer_privacy": "Privacy Policy"
-
-
 }
+
 
