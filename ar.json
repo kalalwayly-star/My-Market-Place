@@ -3,15 +3,15 @@
   "home": "الرئيسية",
   "postAd": "نشر إعلان",
   "myAds": "إعلاناتي",
-  "nav_messages":"رسائل",
-  "nav_login":"تسجيل دخول",
-  "nav_logout":"خروج",
+  "nav_messages": "رسائل",
+  "nav_login": "تسجيل دخول",
+  "nav_logout": "خروج",
   "deleteConfirmation": "هل أنت متأكد أنك تريد حذف هذا الإعلان؟",
   "noAds": "ليس لديك أي إعلانات نشطة.",
-  "btn_search":"ابحث",
-   "cat_realestate": "عقارات",
-  "cat_cars_trucks": "سيارات وشاحنات"
-    "cat_furniture": "أثاث",
+  "btn_search": "ابحث",
+  "cat_realestate": "عقارات",
+  "cat_cars_trucks": "سيارات وشاحنات",
+  "cat_furniture": "أثاث",
   "cat_jobs": "وظائف",
   "cat_fashion": "موضة وأزياء",
   "cat_pets": "حيوانات أليفة",
@@ -22,7 +22,8 @@
   "footer_terms": "شروط الخدمة",
   "footer_safety": "نصائح السلامة",
   "footer_privacy_header": "سياسة الخصوصية",
-  "footer_privacy": "سياسة الخصوصية",
+  "footer_privacy": "سياسة الخصوصية"
+}
 
  
 }
