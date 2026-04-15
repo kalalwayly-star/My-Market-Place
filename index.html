@@ -49,14 +49,18 @@
        <h3 id="cat_header">Browse by Category</h3>
        <div class="category-grid">
            <!-- Added data-i18n to category text -->
-           <div class="cat-card" onclick="filterByCategory('Cars & Trucks')">
-               <span class="icon">🚗</span>
-               <p data-i18n="cat_vehicles">Vehicles</p>
-           </div>
-           <div class="cat-card" onclick="filterByCategory('Real Estate')">
-               <span class="icon">🏠</span>
-               <p data-i18n="cat_realestate">Real Estate</p>
-           </div>
+          <!-- Real Estate -->
+<div class="cat-card" onclick="filterByCategory('Real Estate')">
+    <span class="icon">🏠</span>
+    <p id="cat_realestate" data-i18n="cat_realestate">Real Estate</p>
+</div>
+
+<!-- Cars & Trucks -->
+<div class="cat-card" onclick="filterByCategory('Cars & Trucks')">
+    <span class="icon">🚗</span>
+    <p id="cat_cars_trucks" data-i18n="cat_cars_trucks">Cars and Trucks</p>
+</div>
+
            <!-- Furniture -->
 <div class="cat-card" onclick="filterByCategory('Furniture')">
     <span class="icon">🛋️</span>
