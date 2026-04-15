@@ -19,15 +19,14 @@
   "cat_books": "كتب وهوايات",
   "cat_appliances": "أجهزة منزلية",
   "cat_toys": "ألعاب",
+   "search_placeholder": "عن ماذا تبحث؟",
+  "location_placeholder": "المدينة أو الحي",
+  "cat_header": "تصفح حسب الفئة",
   "footer_terms": "شروط الخدمة",
   "footer_safety": "نصائح السلامة",
   "footer_privacy_header": "سياسة الخصوصية",
   "footer_privacy": "سياسة الخصوصية"
-}
-{
-  "search_placeholder": "عن ماذا تبحث؟",
-  "location_placeholder": "المدينة أو الحي",
-  "cat_header": "تصفح حسب الفئة"
+ 
 }
 
 
