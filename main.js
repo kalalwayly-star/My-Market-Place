@@ -1,4 +1,3 @@
-
 /* --- 1. CONFIGURATION & HELPERS --- */
 const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
@@ -274,6 +273,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const savedLanguage = localStorage.getItem("language") || "en";  // Default to 'en' if no language is set
 
 });
+
 
 
     
