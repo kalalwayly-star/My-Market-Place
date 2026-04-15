@@ -1,52 +1,59 @@
-let currentLanguage = localStorage.getItem("language") || "en";  // Default to 'en' if no language is set
+let currentLanguage = localStorage.getItem("language") || "en";
 
-// Function to load the language file (e.g., en.json)
 function loadLanguage(language) {
-    fetch(`${language}.json`)  // Ensure the path is correct
+    fetch(`${language}.json`)
         .then(response => response.json())
         .then(translations => {
-            localStorage.setItem("language", language);  // Save the selected language in localStorage
-            updateText(translations);  // Update the page with translated text
+            localStorage.setItem("language", language);
+            updateText(translations, language); // Pass 'language' to help with RTL
         })
         .catch(error => console.error('Error loading language file:', error));
 }
 
-// Function to update text content on the page based on the selected language
-function updateText(translations) {
-    // Loop through all the keys in the translations object and update the corresponding elements
+function updateText(translations, language) {
     for (const [key, value] of Object.entries(translations)) {
         const element = document.getElementById(key);
         if (element) {
-            element.innerText = value;  // Update the element with translated text
+            // FIX: Check if it's an input field to update the placeholder
+            if (element.tagName === 'INPUT') {
+                element.placeholder = value;
+            } else {
+                element.innerText = value;
+            }
         }
     }
 
-    // Handle RTL (Right-To-Left) direction for languages like Arabic
-    if (translations.greeting === "مرحباً، أهلاً بك في My Marketplace!") {
-        document.documentElement.setAttribute('dir', 'rtl');  // Apply RTL for Arabic
+    // FIX: Use the language code (ar) for RTL instead of checking specific text
+    if (language === 'ar') {
+        document.documentElement.setAttribute('dir', 'rtl');
+        document.documentElement.lang = 'ar';
     } else {
-        document.documentElement.setAttribute('dir', 'ltr');  // Apply LTR for other languages
+        document.documentElement.setAttribute('dir', 'ltr');
+        document.documentElement.lang = language;
     }
 }
 
-// Set up event listeners for language buttons
-document.getElementById('lang-en').addEventListener('click', () => {
-    loadLanguage("en");  // Load English language
+// Setup listeners (added checks so it doesn't error if a button is missing)
+document.addEventListener('DOMContentLoaded', () => {
+    const buttons = {
+        'lang-en': 'en',
+        'lang-es': 'es',
+        'lang-fr': 'fr',
+        'lang-ar': 'ar'
+    };
+
+    for (const [id, lang] of Object.entries(buttons)) {
+        const btn = document.getElementById(id);
+        if (btn) btn.onclick = () => loadLanguage(lang);
+    }
+
+    // Handle dropdown if it exists on the page
+    const switcher = document.getElementById('languageSwitcher');
+    if (switcher) {
+        switcher.value = currentLanguage;
+        switcher.onchange = (e) => loadLanguage(e.target.value);
+    }
+
+    loadLanguage(currentLanguage);
 });
 
-document.getElementById('lang-es').addEventListener('click', () => {
-    loadLanguage("es");  // Load Spanish language
-});
-
-document.getElementById('lang-fr').addEventListener('click', () => {
-    loadLanguage("fr");  // Load French language
-});
-
-document.getElementById('lang-ar').addEventListener('click', () => {
-    loadLanguage("ar");  // Load Arabic language
-});
-
-// Load the default language or previously selected language on page load
-window.onload = () => {
-    loadLanguage(currentLanguage);  // Load the language stored in localStorage or default to English
-};
