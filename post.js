@@ -22,8 +22,6 @@ const mainCategorySelect = document.getElementById('postCategory');    if (!main
     let sectionId = "";
     if (categoryValue === "Cars & Trucks") sectionId = "section-Cars";
     if (categoryValue === "Real Estate") sectionId = "section-RealEstate";
-    if (categoryValue === "Jewellery") sectionId = "section-Jewellery";
-    if (categoryValue === "Electronics") sectionId = "section-Electronics";
 
     const targetSection = document.getElementById(sectionId);
     if (targetSection) targetSection.style.display = 'block';
@@ -163,7 +161,7 @@ function finalizeAd(featuredStatus) {
     const newAd = {
         id: Date.now(),
         userEmail: currentUser.email,
-        category: document.getElementById('mainCategory').value,
+        category: document.getElementById('postCategory').value,
         title: document.getElementById('adTitle').value,
         price: document.getElementById('adPrice').value,
         location: document.getElementById('adLocation').value,
@@ -174,7 +172,7 @@ function finalizeAd(featuredStatus) {
         isFeatured: featuredStatus,
         date: new Date().toLocaleDateString()
     };
-
+ 
     // Save new ad to localStorage
     const ads = JSON.parse(localStorage.getItem("ads") || "[]");
     ads.push(newAd);
