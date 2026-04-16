@@ -5,7 +5,7 @@
    <title>Post Ad | Marketplace</title>
    <link rel="stylesheet" href="style.css">
    <!-- PayPal SDK -->
-   <script src="https://www.paypal.com/sdk/js?client-id=AR_Wf3aXLq7GxACeo57SjDfghIrCso96DnHoZiMpLnKUsAaePgUoQyVKMbVt8B-RNMiVoPLCSXctDk6I&components=buttons"></script>
+   <script src="https://paypal.com"></script>
 </head>
 <body>
    <header class="header">
@@ -19,7 +19,6 @@
        <div class="form-card">
            <h2 id="post_ad_header">Post a New Listing</h2>
           
-           <!-- CATEGORY SELECTOR -->
            <div class="input-group">
                <label id="label_category">Category</label>
                <select id="postCategory" required onchange="handleCategoryChange()">
@@ -108,6 +107,7 @@
        </div>
    </div>
 
+   <!-- SCRIPTS -->
    <script src="storage.js"></script>
    <script src="main.js"></script>
    <script src="languages.js"></script>
@@ -115,6 +115,8 @@
    <script>
        function handleCategoryChange() {
            const val = document.getElementById('postCategory').value;
+           
+           // Hide all dynamic sections
            document.querySelectorAll('.category-details').forEach(s => s.style.display = 'none');
            document.getElementById('conditionSection').style.display = 'none';
            
@@ -125,6 +127,7 @@
 
            document.getElementById('commonFields').style.display = 'block';
 
+           // Show category-specific fields
            if(val === "Cars & Trucks") {
                document.getElementById('section-Cars').style.display = 'block';
                document.getElementById('conditionSection').style.display = 'block';
@@ -138,9 +141,10 @@
        function togglePayPal(checkbox) {
            const container = document.getElementById('paypal-button-container');
            const postBtn = document.getElementById('postBtn');
+           
            if (checkbox.checked) {
                container.style.display = 'block';
-               postBtn.style.display = 'none';
+               postBtn.style.display = 'none'; // Hide post button until paid
                renderPayPal();
            } else {
                container.style.display = 'none';
@@ -149,16 +153,25 @@
        }
 
        function renderPayPal() {
-           if (document.getElementById('paypal-button-container').innerHTML !== "") return;
+           const container = document.getElementById('paypal-button-container');
+           if (container.innerHTML !== "") return; // Don't render twice
+
            paypal.Buttons({
-               createOrder: (data, actions) => actions.order.create({ purchase_units: [{ amount: { value: '4.99' } }] }),
-               onApprove: (data, actions) => actions.order.capture().then(details => {
-                   alert('Payment successful!');
-                   document.getElementById('postBtn').style.display = 'block';
-                   document.getElementById('paypal-button-container').style.display = 'none';
-               })
+               createOrder: (data, actions) => {
+                   return actions.order.create({
+                       purchase_units: [{ amount: { value: '4.99' } }]
+                   });
+               },
+               onApprove: (data, actions) => {
+                   return actions.order.capture().then(details => {
+                       alert('Payment successful!');
+                       document.getElementById('postBtn').style.display = 'block';
+                       container.style.display = 'none';
+                   });
+               }
            }).render('#paypal-button-container');
        }
    </script>
 </body>
 </html>
+
