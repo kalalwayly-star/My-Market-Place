@@ -28,8 +28,21 @@
   "footer_terms": "شروط الخدمة",
   "footer_safety": "نصائح السلامة",
   "footer_privacy_header": "سياسة الخصوصية",
-  "footer_privacy": "سياسة الخصوصية"
- 
+  "footer_privacy": "سياسة الخصوصية" 
+}
+{
+  "label_condition": "الحالة",
+  "opt_new": "جديد",
+  "opt_used": "مستعمل",
+  "select_category": "اختر الفئة",
+  "cat_furniture": "أثاث",
+  "cat_jobs": "وظائف",
+  "cat_fashion": "موضة وأزياء",
+  "cat_pets": "حيوانات أليفة",
+  "cat_sports": "رياضة",
+  "cat_books": "كتب",
+  "cat_appliances": "أجهزة منزلية",
+  "cat_toys": "ألعاب"
 }
 
 
