@@ -32,7 +32,19 @@
   "label_condition": "الحالة",
   "opt_new": "جديد",
   "opt_used": "مستعمل",
-  "select_category": "اختر الفئة"
+  "select_category": "اختر الفئة",
+  "post_ad_header": "نشر إعلان جديد",
+  "label_make": "الماركة / الموديل",
+  "label_year": "سنة الصنع",
+  "label_km": "المسافة المقطوعة (كم)",
+  "label_bedrooms": "عدد غرف النوم",
+  "label_bathrooms": "عدد دورات المياه",
+  "label_location": "المدينة / الموقع",
+  "label_price": "السعر ($)",
+  "label_description": "الوصف",
+  "label_title": "عنوان الإعلان",
+  "btn_submit_ad": "انشر الإعلان الآن",
+  "feature_text": "✨ تمييز هذا الإعلان مقابل 4.99 دولار فقط!"
 }
 
 
