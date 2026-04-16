@@ -21,15 +21,32 @@
           
            <!-- CATEGORY SELECTOR -->
            <div class="input-group">
-               <label>What are you listing today?</label>
-               <select id="mainCategory" onchange="handleCategoryChange()" class="main-select">
-                   <option value="">-- Choose Category --</option>
-                   <option value="Cars & Trucks">🚗 Cars & Trucks</option>
-                   <option value="Real Estate">🏠 Real Estate</option>
-                   <option value="Jewellery">💎 Jewellery</option>
-                   <option value="Electronics">💻 Electronics</option>
-                   <option value="Services"> 🧰 Services</option>
-               </select>
+               <!-- Category Dropdown -->
+<label id="label_category">Category</label>
+<select id="postCategory" required>
+    <option value="" id="select_category">Choose Category</option>
+    <option value="Real Estate" id="cat_realestate">Real Estate</option>
+    <option value="Cars & Trucks" id="cat_cars_trucks">Cars and Trucks</option>
+    <option value="Furniture" id="cat_furniture">Furniture</option>
+    <option value="Jobs" id="cat_jobs">Jobs</option>
+    <option value="Fashion" id="cat_fashion">Fashion</option>
+    <option value="Pets" id="cat_pets">Pets</option>
+    <option value="Sports" id="cat_sports">Sports</option>
+    <option value="Books" id="cat_books">Books</option>
+    <option value="Appliances" id="cat_appliances">Appliances</option>
+    <option value="Toys" id="cat_toys">Toys</option>
+</select>
+
+<!-- Condition (New/Used) -->
+<label id="label_condition">Condition</label>
+<div class="condition-options">
+    <input type="radio" name="condition" value="New" id="cond_new">
+    <label for="cond_new" id="opt_new">New</label>
+    
+    <input type="radio" name="condition" value="Used" id="cond_used">
+    <label for="cond_used" id="opt_used">Used</label>
+</div>
+
            </div>
 
            <!-- Section: Photos -->
