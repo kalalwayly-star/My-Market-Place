@@ -31,7 +31,7 @@ const mainCategorySelect = document.getElementById('postCategory');    if (!main
 // Handle file input
 async function handlePhotoUpload(event) {
     const gallery = document.getElementById('galleryPreview');
-    const files = Array.from(event.target.files);  // Get all files selected
+    const files = Array.from(event.target.files);
 
     if (uploadedImages.length + files.length > 10) {
         alert("Maximum 10 photos allowed.");
@@ -39,18 +39,20 @@ async function handlePhotoUpload(event) {
     }
 
     for (const file of files) {
-        const base64 = await compressImage(file);  // Compress the image and convert to base64
-        uploadedImages.push(base64);  // Save base64 image in the uploadedImages array
+        const base64 = await compressImage(file);
+        uploadedImages.push(base64);
 
         const div = document.createElement('div');
-        div.style.cssText = "position:relative; display:inline-block; margin:5px;";
+        div.className = "preview-container"; // Matches our CSS
         div.innerHTML = `
-            <img src="${base64}" style="width:80px; height:80px; object-fit:cover; border-radius:5px;">
-            <button onclick="removeImg(event, '${base64}', this)" style="position:absolute; top:-5px; right:-5px; background:red; color:white; border:none; border-radius:50%; width:18px; height:18px; cursor:pointer;">×</button>
+            <img src="${base64}" class="preview-image">
+            <button type="button" class="remove-btn" onclick="removeImg(event, '${base64}', this)">×</button>
         `;
-        gallery.appendChild(div);  // Append to gallery
+        gallery.appendChild(div);
     }
+    event.target.value = ""; // Clear input to allow re-uploading same file if deleted
 }
+
 
 function compressImage(file) {
     return new Promise((resolve) => {
