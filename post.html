@@ -5,9 +5,7 @@
    <title>Post Ad | Marketplace</title>
    <link rel="stylesheet" href="style.css">
    <!-- PayPal SDK -->
-   <script src="https://paypal.com"></script>
-    <script  src="https://www.paypal.com/sdk/js?client-id=AR_Wf3aXLq7GxACeo57SjDfghIrCso96DnHoZiMpLnKUsAaePgUoQyVKMbVt8B-RNMiVoPLCSXctDk6I&components=buttons"></script>
-
+   <script src="https://www.paypal.com/sdk/js?client-id=AR_Wf3aXLq7GxACeo57SjDfghIrCso96DnHoZiMpLnKUsAaePgUoQyVKMbVt8B-RNMiVoPLCSXctDk6I&components=buttons"></script>
 </head>
 <body>
    <header class="header">
@@ -37,14 +35,21 @@
                    <option value="Toys" id="cat_toys">Toys</option>
                </select>
            </div>
-<div class="input-group">
-    <label>Upload Photos (Max 10)</label>
-    <!-- Use id="photoInput" to match your JavaScript -->
-    <input type="file" id="photoInput" accept="image/*" multiple>
-    
-    <!-- This is where the small preview images will appear -->
-    <div id="galleryPreview" style="margin-top: 10px; display: flex; flex-wrap: wrap;"></div>
-</div>
+
+           <!-- UPDATED PHOTO SECTION -->
+           <div class="form-section">
+               <h3>Photos (At least 1 required, max 10)</h3>
+               <div class="upload-container">
+                   <label for="photoInput" class="upload-box" style="border: 2px dashed #ccc; padding: 20px; display: block; text-align: center; cursor: pointer;">
+                       <div class="icon">📸</div>
+                       <span>Click to add photos</span>
+                       <!-- ADDED onchange="handlePhotoUpload(event)" -->
+                       <input type="file" id="photoInput" accept="image/*" multiple onchange="handlePhotoUpload(event)" hidden>
+                   </label>
+                   <!-- Gallery Grid for previews -->
+                   <div id="galleryPreview" class="gallery-grid" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px;"></div>
+               </div>
+           </div>
 
            <!-- DYNAMIC SECTIONS -->
            <div id="section-Cars" class="category-details" style="display:none;">
@@ -77,9 +82,9 @@
                <label id="label_condition">Condition</label>
                <div class="condition-options">
                    <input type="radio" name="condition" value="New" id="cond_new">
-                   <label for="cond_new" id="opt_new">New</label>
+                   <label for="cond_new">New</label>
                    <input type="radio" name="condition" value="Used" id="cond_used">
-                   <label for="cond_used" id="opt_used">Used</label>
+                   <label for="cond_used">Used</label>
                </div>
            </div>
 
@@ -112,78 +117,19 @@
                </div>
 
                <div id="paypal-button-container" style="display:none;"></div>
-               <button id="postBtn" onclick="saveNewAd(event)" class="btn-primary-large">Post Ad Now</button>
+               <!-- Ensure ID matches postBtn and type is button -->
+               <button type="button" id="postBtn" onclick="saveNewAd(event)" class="btn-primary-large">Post Ad Now</button>
            </div>
        </div>
    </div>
 
    <!-- SCRIPTS -->
    <script src="storage.js"></script>
+   <script src="post.js"></script> <!-- Ensure your logic is in post.js -->
+   <script src="languages.js"></script> 
    <script src="main.js"></script>
-   <script src="languages.js"></script>
 
-   <script>
-       function handleCategoryChange() {
-           const val = document.getElementById('postCategory').value;
-           
-           // Hide all dynamic sections
-           document.querySelectorAll('.category-details').forEach(s => s.style.display = 'none');
-           document.getElementById('conditionSection').style.display = 'none';
-           
-           if(val === "") {
-               document.getElementById('commonFields').style.display = 'none';
-               return;
-           }
-
-           document.getElementById('commonFields').style.display = 'block';
-
-           // Show category-specific fields
-           if(val === "Cars & Trucks") {
-               document.getElementById('section-Cars').style.display = 'block';
-               document.getElementById('conditionSection').style.display = 'block';
-           } else if(val === "Real Estate") {
-               document.getElementById('section-RealEstate').style.display = 'block';
-           } else if(val !== "Jobs") {
-               document.getElementById('conditionSection').style.display = 'block';
-           }
-       }
-
-       function togglePayPal(checkbox) {
-           const container = document.getElementById('paypal-button-container');
-           const postBtn = document.getElementById('postBtn');
-           
-           if (checkbox.checked) {
-               container.style.display = 'block';
-               postBtn.style.display = 'none'; // Hide post button until paid
-               renderPayPal();
-           } else {
-               container.style.display = 'none';
-               postBtn.style.display = 'block';
-           }
-       }
-
-       function renderPayPal() {
-           const container = document.getElementById('paypal-button-container');
-           if (container.innerHTML !== "") return; // Don't render twice
-
-           paypal.Buttons({
-               createOrder: (data, actions) => {
-                   return actions.order.create({
-                       purchase_units: [{ amount: { value: '4.99' } }]
-                   });
-               },
-               onApprove: (data, actions) => {
-                   return actions.order.capture().then(details => {
-                       alert('Payment successful!');
-                       document.getElementById('postBtn').style.display = 'block';
-                       container.style.display = 'none';
-                   });
-               }
-           }).render('#paypal-button-container');
-       }
-   </script>
-
-   
 </body>
 </html>
+
 
