@@ -29,15 +29,10 @@ const mainCategorySelect = document.getElementById('postCategory');    if (!main
 }
 
 // 3. PHOTO UPLOAD LOGIC
+// Handle file input
 async function handlePhotoUpload(event) {
     const gallery = document.getElementById('galleryPreview');
-    if (!gallery) {
-        console.error("Could not find galleryPreview div!");
-        return;
-    }
-
-    const files = Array.from(event.target.files);
-    console.log("Files selected:", files.length);
+    const files = Array.from(event.target.files);  // Get all files selected
 
     if (uploadedImages.length + files.length > 10) {
         alert("Maximum 10 photos allowed.");
@@ -45,29 +40,21 @@ async function handlePhotoUpload(event) {
     }
 
     for (const file of files) {
-        try {
-            console.log("Processing file:", file.name);
-            const base64 = await compressImage(file);
-            uploadedImages.push(base64);
+        const base64 = await compressImage(file);  // Compress the image and convert to base64
+        uploadedImages.push(base64);  // Save base64 image in the uploadedImages array
 
-            const div = document.createElement('div');
-            div.className = "preview-container";
-            div.innerHTML = `
-                <img src="${base64}" class="preview-image">
-                <button type="button" class="remove-btn" onclick="removeImg(event, '${base64}', this)">×</button>
-            `;
-            gallery.appendChild(div);
-            console.log("Image added to gallery");
-        } catch (error) {
-            console.error("Error processing image:", error);
-        }
+        const div = document.createElement('div');
+        div.style.cssText = "position:relative; display:inline-block; margin:5px;";
+        div.innerHTML = `
+            <img src="${base64}" style="width:80px; height:80px; object-fit:cover; border-radius:5px;">
+            <button onclick="removeImg(event, '${base64}', this)" style="position:absolute; top:-5px; right:-5px; background:red; color:white; border:none; border-radius:50%; width:18px; height:18px; cursor:pointer;">×</button>
+        `;
+        gallery.appendChild(div);  // Append to gallery
     }
-    event.target.value = ""; 
 }
 
-// 3b. COMPRESS IMAGE (CRITICAL FIX)
 function compressImage(file) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = (e) => {
@@ -78,21 +65,23 @@ function compressImage(file) {
                 let width = img.width;
                 let height = img.height;
                 const MAX = 800;
-
                 if (width > height && width > MAX) { height *= MAX / width; width = MAX; }
                 else if (height > MAX) { width *= MAX / height; height = MAX; }
-
-                canvas.width = width;
-                canvas.height = height;
+                canvas.width = width; canvas.height = height;
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, width, height);
                 resolve(canvas.toDataURL('image/jpeg', 0.7));
             };
-            img.onerror = (err) => reject(err);
         };
-        reader.onerror = (err) => reject(err);
     });
 }
+
+function removeImg(e, data, btn) {
+    e.preventDefault();
+    uploadedImages = uploadedImages.filter(img => img !== data);
+    btn.parentElement.remove();
+}
+
 
 // 3c. REMOVE IMAGE
 function removeImg(e, data, btn) {
