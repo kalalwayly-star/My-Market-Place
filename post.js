@@ -37,9 +37,18 @@ function handleCategoryChange() {
 }
 
 // 3. PHOTO UPLOAD LOGIC
+// 3. PHOTO UPLOAD LOGIC (Stabilized)
 async function handlePhotoUpload(event) {
     const gallery = document.getElementById('galleryPreview');
+    const commonFields = document.getElementById('commonFields');
     const files = Array.from(event.target.files);
+
+    if (!gallery) return;
+
+    // FIX: Force the form to stay visible
+    if (commonFields) {
+        commonFields.style.display = 'block';
+    }
 
     if (uploadedImages.length + files.length > 10) {
         alert("Maximum 10 photos allowed.");
@@ -48,27 +57,32 @@ async function handlePhotoUpload(event) {
 
     for (const file of files) {
         try {
+            // Use a standard reader for better reliability
             const base64 = await compressImage(file);
             uploadedImages.push(base64);
 
             const div = document.createElement('div');
+            // Class name for your CSS + Inline styles for safety
+            div.className = "preview-container";
             div.style.cssText = "position:relative; width:100px; height:100px; display:inline-block; margin:5px;";
+            
             div.innerHTML = `
                 <img src="${base64}" style="width:100%; height:100%; object-fit:cover; border-radius:8px; border:1px solid #ddd;">
                 <button type="button" onclick="removeImg(event, '${base64}', this)" 
-                    style="position:absolute; top:-5px; right:-5px; background:red; color:white; border:none; border-radius:50%; width:22px; height:22px; cursor:pointer; font-weight:bold; display:flex; align-items:center; justify-content:center;">×</button>
+                    style="position:absolute; top:-5px; right:-5px; background:red; color:white; border:none; border-radius:50%; width:22px; height:22px; cursor:pointer; font-weight:bold; display:flex; align-items:center; justify-content:center; line-height:1;">×</button>
             `;
             gallery.appendChild(div);
         } catch (error) {
             console.error("Error processing image:", error);
         }
     }
+    // Clear the input so you can select the same file again if deleted
     event.target.value = ""; 
 }
 
-// 3b. COMPRESS IMAGE (CRITICAL - WAS MISSING)
+// 3b. COMPRESS IMAGE (With error handling)
 function compressImage(file) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = (e) => {
@@ -81,17 +95,24 @@ function compressImage(file) {
                 const MAX = 800;
                 if (width > height && width > MAX) { height *= MAX / width; width = MAX; }
                 else if (height > MAX) { width *= MAX / height; height = MAX; }
-                canvas.width = width; canvas.height = height;
+                canvas.width = width; 
+                canvas.height = height;
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, width, height);
                 resolve(canvas.toDataURL('image/jpeg', 0.7));
             };
+            img.onerror = reject;
         };
+        reader.onerror = reject;
     });
 }
 
+// 3c. REMOVE IMAGE (With propagation fix)
 function removeImg(e, data, btn) {
-    if (e) { e.preventDefault(); e.stopPropagation(); }
+    if (e) {
+        e.preventDefault();
+        e.stopPropagation(); // Prevents the upload window from popping up again
+    }
     uploadedImages = uploadedImages.filter(img => img !== data);
     btn.parentElement.remove();
 }
