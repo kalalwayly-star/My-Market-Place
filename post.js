@@ -1,6 +1,7 @@
 // 1. GLOBAL VARIABLES
 const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-let uploadedImages = [];
+let uploadedImages = []; // <--- THIS MUST BE HERE
+
 
 // 2. HANDLE CATEGORY CHANGES
 function handleCategoryChange() {
@@ -28,10 +29,15 @@ const mainCategorySelect = document.getElementById('postCategory');    if (!main
 }
 
 // 3. PHOTO UPLOAD LOGIC
-// Handle file input
 async function handlePhotoUpload(event) {
     const gallery = document.getElementById('galleryPreview');
+    if (!gallery) {
+        console.error("Could not find galleryPreview div!");
+        return;
+    }
+
     const files = Array.from(event.target.files);
+    console.log("Files selected:", files.length);
 
     if (uploadedImages.length + files.length > 10) {
         alert("Maximum 10 photos allowed.");
@@ -39,23 +45,29 @@ async function handlePhotoUpload(event) {
     }
 
     for (const file of files) {
-        const base64 = await compressImage(file);
-        uploadedImages.push(base64);
+        try {
+            console.log("Processing file:", file.name);
+            const base64 = await compressImage(file);
+            uploadedImages.push(base64);
 
-        const div = document.createElement('div');
-        div.className = "preview-container"; // Matches our CSS
-        div.innerHTML = `
-            <img src="${base64}" class="preview-image">
-            <button type="button" class="remove-btn" onclick="removeImg(event, '${base64}', this)">×</button>
-        `;
-        gallery.appendChild(div);
+            const div = document.createElement('div');
+            div.className = "preview-container";
+            div.innerHTML = `
+                <img src="${base64}" class="preview-image">
+                <button type="button" class="remove-btn" onclick="removeImg(event, '${base64}', this)">×</button>
+            `;
+            gallery.appendChild(div);
+            console.log("Image added to gallery");
+        } catch (error) {
+            console.error("Error processing image:", error);
+        }
     }
-    event.target.value = ""; // Clear input to allow re-uploading same file if deleted
+    event.target.value = ""; 
 }
 
-
+// 3b. COMPRESS IMAGE (CRITICAL FIX)
 function compressImage(file) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = (e) => {
@@ -66,22 +78,29 @@ function compressImage(file) {
                 let width = img.width;
                 let height = img.height;
                 const MAX = 800;
+
                 if (width > height && width > MAX) { height *= MAX / width; width = MAX; }
                 else if (height > MAX) { width *= MAX / height; height = MAX; }
-                canvas.width = width; canvas.height = height;
+
+                canvas.width = width;
+                canvas.height = height;
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, width, height);
                 resolve(canvas.toDataURL('image/jpeg', 0.7));
             };
+            img.onerror = (err) => reject(err);
         };
+        reader.onerror = (err) => reject(err);
     });
 }
 
+// 3c. REMOVE IMAGE
 function removeImg(e, data, btn) {
     e.preventDefault();
     uploadedImages = uploadedImages.filter(img => img !== data);
     btn.parentElement.remove();
 }
+
 
 // 4. PAYPAL RENDER FUNCTION
 function renderPayPalButtons() {
