@@ -186,3 +186,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const input = document.getElementById("imageInput");
     if (input) input.addEventListener("change", handlePhotoUpload);
 });
+
+
+
+
+
+
