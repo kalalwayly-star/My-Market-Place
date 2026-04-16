@@ -1,13 +1,13 @@
 // 1. GLOBAL VARIABLES
 const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-let uploadedImages = []; // <--- THIS MUST BE HERE
-
+let uploadedImages = []; 
 
 // 2. HANDLE CATEGORY CHANGES
 function handleCategoryChange() {
-const mainCategorySelect = document.getElementById('postCategory');    if (!mainCategorySelect) return;
+    const mainCategorySelect = document.getElementById('postCategory');
+    if (!mainCategorySelect) return;
 
-    const categoryValue = postCategorySelect.value;
+    const categoryValue = mainCategorySelect.value; // Fixed: was using 'postCategorySelect'
     const commonFields = document.getElementById('commonFields');
     const sections = document.querySelectorAll('.category-details');
 
@@ -29,16 +29,11 @@ const mainCategorySelect = document.getElementById('postCategory');    if (!main
 }
 
 // 3. PHOTO UPLOAD LOGIC
-// 3. PHOTO UPLOAD LOGIC
 async function handlePhotoUpload(event) {
     const gallery = document.getElementById('galleryPreview');
-    if (!gallery) {
-        console.error("Could not find galleryPreview div!");
-        return;
-    }
+    if (!gallery) return;
 
     const files = Array.from(event.target.files);
-    console.log("Files selected:", files.length);
 
     if (uploadedImages.length + files.length > 10) {
         alert("Maximum 10 photos allowed.");
@@ -47,7 +42,6 @@ async function handlePhotoUpload(event) {
 
     for (const file of files) {
         try {
-            console.log("Processing file:", file.name);
             const base64 = await compressImage(file);
             uploadedImages.push(base64);
 
@@ -58,7 +52,6 @@ async function handlePhotoUpload(event) {
                 <button type="button" class="remove-btn" onclick="removeImg(event, '${base64}', this)">×</button>
             `;
             gallery.appendChild(div);
-            console.log("Image added to gallery");
         } catch (error) {
             console.error("Error processing image:", error);
         }
@@ -66,7 +59,6 @@ async function handlePhotoUpload(event) {
     event.target.value = ""; 
 }
 
-// 3b. COMPRESS IMAGE (CRITICAL FIX)
 function compressImage(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -79,39 +71,32 @@ function compressImage(file) {
                 let width = img.width;
                 let height = img.height;
                 const MAX = 800;
-
                 if (width > height && width > MAX) { height *= MAX / width; width = MAX; }
                 else if (height > MAX) { width *= MAX / height; height = MAX; }
-
                 canvas.width = width;
                 canvas.height = height;
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, width, height);
                 resolve(canvas.toDataURL('image/jpeg', 0.7));
             };
-            img.onerror = (err) => reject(err);
         };
-        reader.onerror = (err) => reject(err);
     });
 }
 
-// 3c. REMOVE IMAGE
 function removeImg(e, data, btn) {
     e.preventDefault();
     uploadedImages = uploadedImages.filter(img => img !== data);
     btn.parentElement.remove();
 }
 
-
-
-
 // 4. PAYPAL RENDER FUNCTION
 function renderPayPalButtons() {
     const payContainer = document.getElementById('paypal-button-container');
-    payContainer.innerHTML = ''; // Clean start
+    if (!payContainer) return;
+    payContainer.innerHTML = ''; 
 
     if (typeof paypal === 'undefined') {
-        payContainer.innerHTML = '<p style="color:red;">PayPal failed to load. Check your internet or ad-blocker.</p>';
+        payContainer.innerHTML = '<p style="color:red;">PayPal failed to load.</p>';
         return;
     }
 
@@ -124,54 +109,24 @@ function renderPayPalButtons() {
         },
         onApprove: (data, actions) => {
             return actions.order.capture().then(details => {
-                alert('Payment Successful!');
                 finalizeAd(true);
             });
-        },
-        onCancel: () => {
-            alert("Payment cancelled.");
         }
     }).render('#paypal-button-container');
 }
 
-// 5. CHECKBOX LISTENER
-document.addEventListener('DOMContentLoaded', () => {
-    const isFeaturedCheckbox = document.getElementById('isFeatured');
-    const payContainer = document.getElementById('paypal-button-container');
-    const postBtn = document.getElementById('postBtn');
-
-    document.addEventListener("DOMContentLoaded", () => {
-    const input = document.getElementById("photoInput");
-    if (input) input.addEventListener("change", handlePhotoUpload);
-});
-
-    if (isFeaturedCheckbox) {
-        isFeaturedCheckbox.addEventListener('change', function() {
-            if (!payContainer || !postBtn) return;
-
-            if (this.checked) {
-                postBtn.style.display = 'none';
-                payContainer.style.display = 'block';
-                renderPayPalButtons();
-            } else {
-                postBtn.style.display = 'block';
-                payContainer.style.display = 'none';
-                payContainer.innerHTML = '';
-            }
-        });
-    }
-});
-
-
-
-
-// 6. MAIN SAVE LOGIC
+// 5. MAIN SAVE LOGIC (Post Button calls this)
 function saveNewAd(event) {
     if (event) event.preventDefault();
 
     if (!currentUser) {
         alert("Please login first.");
-        window.location.href = "login.html";
+        return;
+    }
+
+    const title = document.getElementById('adTitle').value;
+    if (!title) {
+        alert("Please enter a title.");
         return;
     }
 
@@ -183,7 +138,7 @@ function saveNewAd(event) {
     }
 }
 
-// 7. FINALIZING DATA
+// 6. FINALIZING DATA
 function finalizeAd(featuredStatus) {
     const newAd = {
         id: Date.now(),
@@ -193,30 +148,22 @@ function finalizeAd(featuredStatus) {
         price: document.getElementById('adPrice').value,
         location: document.getElementById('adLocation').value,
         description: document.getElementById('adDesc').value,
-        // Save images as base64 or the default image
-        image: uploadedImages.length > 0 ? uploadedImages : [document.getElementById('adImage').value || 'https://placeholder.com'],
+        image: uploadedImages.length > 0 ? uploadedImages : ['https://placeholder.com'],
         status: "Active",
         isFeatured: featuredStatus,
         date: new Date().toLocaleDateString()
     };
  
-    // Save new ad to localStorage
     const ads = JSON.parse(localStorage.getItem("ads") || "[]");
     ads.push(newAd);
     localStorage.setItem("ads", JSON.stringify(ads));
 
     alert(featuredStatus ? "Featured Ad Posted!" : "Ad Posted Successfully!");
-    window.location.href = "index.html";  // Redirect after posting
+    window.location.href = "index.html";
 }
-// 8. FINAL INITIALIZATION
-document.addEventListener("DOMContentLoaded", () => {
-    // 1. Fix the Image Upload Listener
-    const photoInput = document.getElementById("photoInput");
-    if (photoInput) {
-        photoInput.addEventListener("change", handlePhotoUpload);
-    }
 
-    // 2. Fix the Featured Checkbox Listener
+// 7. INITIALIZATION (Run once when page loads)
+document.addEventListener("DOMContentLoaded", () => {
     const isFeaturedCheckbox = document.getElementById('isFeatured');
     const payContainer = document.getElementById('paypal-button-container');
     const postBtn = document.getElementById('postBtn');
@@ -239,13 +186,5 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
-document.addEventListener("DOMContentLoaded", () => {
-    const input = document.getElementById("photoInput");
-    if (input) input.addEventListener("change", handlePhotoUpload);
-});
-
-
-
-
 
 
