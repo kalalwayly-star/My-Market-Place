@@ -23,9 +23,7 @@ function updateText(translations, language) {
             }
         }
     }
- document.documentElement.dir = (language === 'ar') ? 'rtl' : 'ltr';
-}
-
+ 
 
     // FIX: Use the language code (ar) for RTL instead of checking specific text
     if (language === 'ar') {
