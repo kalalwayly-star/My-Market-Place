@@ -83,13 +83,6 @@ function removeImg(e, data, btn) {
 }
 
 
-// 3c. REMOVE IMAGE
-function removeImg(e, data, btn) {
-    e.preventDefault();
-    uploadedImages = uploadedImages.filter(img => img !== data);
-    btn.parentElement.remove();
-}
-
 
 // 4. PAYPAL RENDER FUNCTION
 function renderPayPalButtons() {
