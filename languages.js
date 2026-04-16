@@ -14,14 +14,17 @@ function updateText(translations, language) {
     for (const [key, value] of Object.entries(translations)) {
         const element = document.getElementById(key);
         if (element) {
-            // FIX: Check if it's an input field to update the placeholder
             if (element.tagName === 'INPUT') {
                 element.placeholder = value;
             } else {
-                element.innerText = value;
+                element.textContent = value; // Use textContent
             }
         }
     }
+    document.documentElement.dir = (language === 'ar') ? 'rtl' : 'ltr';
+    document.documentElement.lang = language;
+}
+
 
     // FIX: Use the language code (ar) for RTL instead of checking specific text
     if (language === 'ar') {
