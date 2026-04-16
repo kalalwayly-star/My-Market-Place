@@ -116,22 +116,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const payContainer = document.getElementById('paypal-button-container');
     const postBtn = document.getElementById('postBtn');
 
+    document.addEventListener("DOMContentLoaded", () => {
+    const input = document.getElementById("photoInput");
+    if (input) input.addEventListener("change", handlePhotoUpload);
+});
+
     if (isFeaturedCheckbox) {
         isFeaturedCheckbox.addEventListener('change', function() {
+            if (!payContainer || !postBtn) return;
+
             if (this.checked) {
-                // Show PayPal, Hide Post Button
                 postBtn.style.display = 'none';
                 payContainer.style.display = 'block';
-                renderPayPalButtons(); // This triggers the PayPal logic
+                renderPayPalButtons();
             } else {
-                // Show Post Button, Hide PayPal
                 postBtn.style.display = 'block';
                 payContainer.style.display = 'none';
-                payContainer.innerHTML = ''; // Clear it so it doesn't duplicate later
+                payContainer.innerHTML = '';
             }
         });
     }
 });
+
+
 
 
 // 6. MAIN SAVE LOGIC
@@ -209,7 +216,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 document.addEventListener("DOMContentLoaded", () => {
-    const input = document.getElementById("imageInput");
+    const input = document.getElementById("photoInput");
     if (input) input.addEventListener("change", handlePhotoUpload);
 });
 
