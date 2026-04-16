@@ -181,7 +181,37 @@ function finalizeAd(featuredStatus) {
     alert(featuredStatus ? "Featured Ad Posted!" : "Ad Posted Successfully!");
     window.location.href = "index.html";  // Redirect after posting
 }
-// 8. ADD EVENT LISTENER FOR IMAGE UPLOAD
+// 8. FINAL INITIALIZATION
+document.addEventListener("DOMContentLoaded", () => {
+    // 1. Fix the Image Upload Listener
+    const photoInput = document.getElementById("photoInput");
+    if (photoInput) {
+        photoInput.addEventListener("change", handlePhotoUpload);
+    }
+
+    // 2. Fix the Featured Checkbox Listener
+    const isFeaturedCheckbox = document.getElementById('isFeatured');
+    const payContainer = document.getElementById('paypal-button-container');
+    const postBtn = document.getElementById('postBtn');
+
+    if (isFeaturedCheckbox) {
+        isFeaturedCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                if (postBtn) postBtn.style.display = 'none';
+                if (payContainer) {
+                    payContainer.style.display = 'block';
+                    renderPayPalButtons();
+                }
+            } else {
+                if (postBtn) postBtn.style.display = 'block';
+                if (payContainer) {
+                    payContainer.style.display = 'none';
+                    payContainer.innerHTML = '';
+                }
+            }
+        });
+    }
+});
 document.addEventListener("DOMContentLoaded", () => {
     const input = document.getElementById("imageInput");
     if (input) input.addEventListener("change", handlePhotoUpload);
