@@ -37,9 +37,7 @@
                </select>
            </div>
 
-           <!-- DYNAMIC SECTIONS (Hidden by default) -->
-           
-           <!-- Cars & Trucks Details -->
+           <!-- DYNAMIC SECTIONS -->
            <div id="section-Cars" class="category-details" style="display:none;">
                <div class="input-group">
                    <label id="label_make">Make/Model</label>
@@ -55,7 +53,6 @@
                </div>
            </div>
 
-           <!-- Real Estate Details -->
            <div id="section-RealEstate" class="category-details" style="display:none;">
                <div class="input-group">
                    <label id="label_bedrooms">Bedrooms</label>
@@ -67,7 +64,6 @@
                </div>
            </div>
 
-           <!-- Condition (Show for all except Jobs/Real Estate) -->
            <div id="conditionSection" style="display:none; margin-top:10px;">
                <label id="label_condition">Condition</label>
                <div class="condition-options">
@@ -102,13 +98,11 @@
                <div class="form-group" style="background: #fff8e1; padding: 10px; border-radius: 5px; margin: 15px 0;">
                    <label for="isFeatured" style="cursor:pointer; font-weight: bold;">
                        <input type="checkbox" id="isFeatured" onchange="togglePayPal(this)">
-                       ✨ Feature this ad for only $4.99
+                       <span id="feature_text">✨ Feature this ad for only $4.99</span>
                    </label>
                </div>
 
-               <!-- PayPal Button (Hidden until checkbox clicked) -->
                <div id="paypal-button-container" style="display:none;"></div>
-               
                <button id="postBtn" onclick="saveNewAd(event)" class="btn-primary-large">Post Ad Now</button>
            </div>
        </div>
@@ -120,10 +114,7 @@
 
    <script>
        function handleCategoryChange() {
-           const maincategorySelect = document.getElementById('postCategory');
-           const val = categorySelect.value;
-           
-           // Hide all extra sections first
+           const val = document.getElementById('postCategory').value;
            document.querySelectorAll('.category-details').forEach(s => s.style.display = 'none');
            document.getElementById('conditionSection').style.display = 'none';
            
@@ -134,7 +125,6 @@
 
            document.getElementById('commonFields').style.display = 'block';
 
-           // Show specific fields
            if(val === "Cars & Trucks") {
                document.getElementById('section-Cars').style.display = 'block';
                document.getElementById('conditionSection').style.display = 'block';
@@ -148,40 +138,27 @@
        function togglePayPal(checkbox) {
            const container = document.getElementById('paypal-button-container');
            const postBtn = document.getElementById('postBtn');
-           
            if (checkbox.checked) {
                container.style.display = 'block';
-               postBtn.style.display = 'none'; // Hide post button until paid
+               postBtn.style.display = 'none';
                renderPayPal();
            } else {
                container.style.display = 'none';
                postBtn.style.display = 'block';
            }
-          <input type="checkbox" id="isFeatured" onchange="togglePayPal(this)">
-<span id="feature_text">✨ Feature this ad for only $4.99</span>
-
        }
 
        function renderPayPal() {
-           // Only render if container is empty to avoid double buttons
            if (document.getElementById('paypal-button-container').innerHTML !== "") return;
-
            paypal.Buttons({
-               createOrder: (data, actions) => {
-                   return actions.order.create({
-                       purchase_units: [{ amount: { value: '4.99' } }]
-                   });
-               },
-               onApprove: (data, actions) => {
-                   return actions.order.capture().then(details => {
-                       alert('Payment successful! You can now post your featured ad.');
-                       document.getElementById('postBtn').style.display = 'block';
-                       document.getElementById('paypal-button-container').style.display = 'none';
-                   });
-               }
+               createOrder: (data, actions) => actions.order.create({ purchase_units: [{ amount: { value: '4.99' } }] }),
+               onApprove: (data, actions) => actions.order.capture().then(details => {
+                   alert('Payment successful!');
+                   document.getElementById('postBtn').style.display = 'block';
+                   document.getElementById('paypal-button-container').style.display = 'none';
+               })
            }).render('#paypal-button-container');
        }
    </script>
 </body>
 </html>
-
