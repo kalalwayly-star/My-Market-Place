@@ -274,12 +274,3 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
-function resetFilters() {
-    document.getElementById('search_placeholder').value = '';
-    document.getElementById('location_placeholder').value = '';
-    // Call your function that loads all ads (usually loadAds() or displayListings())
-    displayListings(allAds); 
-}
-
-
-    
