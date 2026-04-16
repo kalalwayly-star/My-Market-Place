@@ -10,19 +10,22 @@ function loadLanguage(language) {
         .catch(error => console.error('Error loading language file:', error));
 }
 
+
+
 function updateText(translations, language) {
     for (const [key, value] of Object.entries(translations)) {
         const element = document.getElementById(key);
         if (element) {
-            // FIX: Check if it's an input field to update the placeholder
-            if (element.tagName === 'INPUT') {
+            if (element.tagName === 'INPUT' && element.type !== 'radio') {
                 element.placeholder = value;
             } else {
-                element.innerText = value;
+                // This works for Labels, Paragraphs, and Option tags
+                element.textContent = value; 
             }
         }
     }
-
+    document.documentElement.dir = (language === 'ar') ? 'rtl' : 'ltr';
+}
 
 
     // FIX: Use the language code (ar) for RTL instead of checking specific text
