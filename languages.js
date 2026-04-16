@@ -18,7 +18,6 @@ function updateText(translations, language) {
                 element.placeholder = value;
             } else {
                 element.innerText = value;
-                element.textContent = value; 
 
             }
         }
