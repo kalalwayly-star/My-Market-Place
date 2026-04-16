@@ -35,6 +35,14 @@
                    <option value="Toys" id="cat_toys">Toys</option>
                </select>
            </div>
+<div class="input-group">
+    <label>Upload Photos (Max 10)</label>
+    <!-- Use id="photoInput" to match your JavaScript -->
+    <input type="file" id="photoInput" accept="image/*" multiple>
+    
+    <!-- This is where the small preview images will appear -->
+    <div id="galleryPreview" style="margin-top: 10px; display: flex; flex-wrap: wrap;"></div>
+</div>
 
            <!-- DYNAMIC SECTIONS -->
            <div id="section-Cars" class="category-details" style="display:none;">
