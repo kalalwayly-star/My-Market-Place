@@ -31,60 +31,43 @@ function handleCategoryChange() {
 // 3. PHOTO UPLOAD LOGIC
 async function handlePhotoUpload(event) {
     const gallery = document.getElementById('galleryPreview');
-    if (!gallery) return;
-
     const files = Array.from(event.target.files);
 
-    if (uploadedImages.length + files.length > 10) {
-        alert("Maximum 10 photos allowed.");
-        return;
-    }
+    if (!gallery) return;
 
     for (const file of files) {
+        if (uploadedImages.length >= 10) {
+            alert("Maximum 10 photos allowed.");
+            break;
+        }
+
         try {
             const base64 = await compressImage(file);
             uploadedImages.push(base64);
 
+            // Create the preview element
             const div = document.createElement('div');
             div.className = "preview-container";
+            div.style.cssText = "position:relative; width:100px; height:100px;";
+            
             div.innerHTML = `
-                <img src="${base64}" class="preview-image">
-                <button type="button" class="remove-btn" onclick="removeImg(event, '${base64}', this)">×</button>
+                <img src="${base64}" style="width:100%; height:100%; object-fit:cover; border-radius:8px; border:1px solid #ddd;">
+                <button type="button" onclick="removeImg(event, '${base64}', this)" 
+                    style="position:absolute; top:-5px; right:-5px; background:red; color:white; border:none; border-radius:50%; width:22px; height:22px; cursor:pointer; font-weight:bold; display:flex; align-items:center; justify-content:center; line-height:1;">×</button>
             `;
+            
             gallery.appendChild(div);
         } catch (error) {
             console.error("Error processing image:", error);
         }
     }
+    // Clear input so same file can be picked again if deleted
     event.target.value = ""; 
-}
-
-function compressImage(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = (e) => {
-            const img = new Image();
-            img.src = e.target.result;
-            img.onload = () => {
-                const canvas = document.createElement('canvas');
-                let width = img.width;
-                let height = img.height;
-                const MAX = 800;
-                if (width > height && width > MAX) { height *= MAX / width; width = MAX; }
-                else if (height > MAX) { width *= MAX / height; height = MAX; }
-                canvas.width = width;
-                canvas.height = height;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0, width, height);
-                resolve(canvas.toDataURL('image/jpeg', 0.7));
-            };
-        };
-    });
 }
 
 function removeImg(e, data, btn) {
     e.preventDefault();
+    e.stopPropagation(); // Prevents clicking the label underneath
     uploadedImages = uploadedImages.filter(img => img !== data);
     btn.parentElement.remove();
 }
