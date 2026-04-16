@@ -6,7 +6,7 @@ let uploadedImages = [];
 function handleCategoryChange() {
 const mainCategorySelect = document.getElementById('postCategory');    if (!mainCategorySelect) return;
 
-    const categoryValue = mainCategorySelect.value;
+    const categoryValue = postCategorySelect.value;
     const commonFields = document.getElementById('commonFields');
     const sections = document.querySelectorAll('.category-details');
 
