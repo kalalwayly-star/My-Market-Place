@@ -1,58 +1,58 @@
-<!-- Add Font Awesome for the eye icon -->
-<link rel="stylesheet" href="https://cloudflare.com">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Classified Site</title>
+    <!-- Correct Font Awesome Link -->
+    <link rel="stylesheet" href="https://cloudflare.com">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-<div class="form-card">
-    <h2>Welcome Back</h2>
-    <p>Please enter your details to sign in.</p>
+<div class="auth-wrapper">
+    <div class="form-card">
+        <h2>Welcome Back</h2>
+        <p class="subtitle">Please enter your details to sign in.</p>
 
-    <!-- Email Field -->
-    <div class="input-group">
-        <label>Email</label>
-        <input type="email" id="loginEmail" placeholder="Enter your email" required>
-    </div>
+        <!-- Error Message Placeholder -->
+        <div id="error-message" class="error-text" style="text-align: center; margin-bottom: 15px;"></div>
 
-    <!-- Password Field with Eye Toggle -->
-   <div class="input-group">
-    <label>Password</label>
-    <input type="password" id="loginPassword" placeholder="Enter password">
-    <!-- Make sure Font Awesome is in your <head> for this icon -->
-    <i class="fas fa-eye" id="toggleLoginPassword" 
-       style="position: absolute; right: 10px; top: 38px; cursor: pointer; color: #777;"></i>
-</div>
+        <!-- Email Field -->
+        <div class="input-group">
+            <label>Email</label>
+            <input type="email" id="loginEmail" placeholder="Enter your email" required>
+        </div>
 
-    <input type="password" id="loginPassword" placeholder="Enter password">
-    <!-- Make sure Font Awesome is in your <head> for this icon -->
-    <i class="fas fa-eye" id="toggleLoginPassword" 
-       style="position: absolute; right: 10px; top: 38px; cursor: pointer; color: #777;"></i>
-</div>
+        <!-- Password Field with Eye Toggle -->
+        <div class="input-group">
+            <label>Password</label>
+            <input type="password" id="loginPassword" placeholder="Enter password" required>
+            <i class="fas fa-eye" id="toggleLoginPassword"></i>
+        </div>
 
+        <!-- Forgot Password Link -->
+        <div class="login-footer" style="text-align: right; margin-bottom: 20px;">
+            <a href="forgot.html" id="forgotPasswordLink" style="font-size: 13px; color: #007bff; text-decoration: none;">
+                Forgot Password?
+            </a>
+        </div>
+
+        <!-- Action Buttons -->
+        <button type="button" class="btn-primary" onclick="login()">Login</button>
         
-        <!-- Eye Icon -->
-        <i class="fas fa-eye" id="toggleLoginPassword" 
-           style="position: absolute; right: 12px; top: 38px; cursor: pointer; color: #777;"></i>
+        <div class="divider"><span>OR</span></div>
+
+        <button type="button" class="btn-secondary" onclick="window.location.href='register.html'">
+            Create Account
+        </button>
     </div>
-
-    <!-- Forgot Password Link -->
-    <div class="login-footer" style="text-align: right; margin-bottom: 20px;">
-        <a href="forgot.html" id="forgotPasswordLink" style="font-size: 13px; color: #007bff; text-decoration: none;">
-            Forgot Password?
-        </a>
-    </div>
-
-    <!-- Action Buttons -->
-    <button type="button" class="btn-primary" onclick="handleLogin()" style="width: 100%; margin-bottom: 10px;">
-        Login
-    </button>
-    
-    <div style="text-align: center; margin: 10px 0; color: #888;">OR</div>
-
-    <button type="button" class="btn-secondary" onclick="window.location.href='register.html'" style="width: 100%;">
-        Create Account
-    </button>
 </div>
 
+<!-- Scripts -->
+<script src="auth.js"></script>
 <script>
-    // Eye toggle logic for the login page
+    // Eye toggle logic
     const toggleBtn = document.querySelector('#toggleLoginPassword');
     const passwordField = document.querySelector('#loginPassword');
 
@@ -62,4 +62,8 @@
         this.classList.toggle('fa-eye-slash');
     });
 </script>
+
+</body>
+</html>
+
 
