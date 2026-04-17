@@ -14,10 +14,13 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.nav .btn {
-  margin-left: 10px;
+.nav {
+  display: flex;
+  gap: 10px;
 }
 
 /* --- BUTTONS --- */
@@ -64,13 +67,21 @@ body {
   background-color: #e2e6ea;
 }
 
-/* --- AUTH & FORMS (Login, Register, Forgot) --- */
+/* --- AUTH SPECIAL CENTERING --- */
+/* Add this class to <body> in login.html, register.html, forgot.html */
+.auth-page-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f4f7f6;
+    margin: 0;
+}
+
 .auth-wrapper {
+  width: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
-  min-height: 85vh;
-  padding: 20px;
 }
 
 .form-card {
@@ -79,12 +90,13 @@ body {
   box-shadow: 0 10px 30px rgba(0,0,0,0.08);
   padding: 35px;
   width: 100%;
-  max-width: 400px; /* Keeps the form from getting too wide */
+  max-width: 400px;
 }
 
+/* --- INPUT GROUPS & EYE ICON --- */
 .input-group {
   margin-bottom: 20px;
-  position: relative; /* REQUIRED for eye icon positioning */
+  position: relative;
   display: flex;
   flex-direction: column;
   text-align: left;
@@ -100,7 +112,7 @@ body {
 .input-group input, 
 .input-group select {
   padding: 12px;
-  padding-right: 40px; /* Space for the eye icon */
+  padding-right: 40px;
   border: 1px solid #ddd;
   border-radius: 6px;
   font-size: 1rem;
@@ -108,20 +120,15 @@ body {
   box-sizing: border-box;
 }
 
-/* The Eye Icon Positioning */
 .input-group i {
   position: absolute;
   right: 12px;
-  top: 38px; /* Perfectly centered in the input box */
+  top: 38px;
   cursor: pointer;
   color: #888;
 }
 
-.input-group i:hover {
-  color: #333;
-}
-
-/* Divider 'OR' line */
+/* --- DECORATION --- */
 .divider {
   text-align: center;
   margin: 20px 0;
@@ -147,7 +154,7 @@ body {
   font-size: 0.85rem;
 }
 
-/* --- GRID & ADS --- */
+/* --- ADS GRID --- */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -181,15 +188,7 @@ body {
   font-weight: bold;
 }
 
-/* Error Messages */
-.error-text {
-  color: #d9534f;
-  font-size: 0.85rem;
-  margin-top: 5px;
-  font-weight: bold;
-}
-
-/* Stage Transitions (for Forgot Password) */
+/* --- ANIMATIONS --- */
 .form-stage {
   animation: fadeIn 0.4s ease-in-out;
 }
@@ -199,29 +198,6 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-
-}
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%; /* Ensure it spans the full top */
-    padding: 15px 20px;
-}
-
-.nav {
-    display: flex;
-    gap: 10px; /* Gives space between buttons */
-}
-/* This centers the form but ONLY on pages where we add the class */
-.auth-page-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #f4f7f6;
-    margin: 0;
-}
 
 
 
