@@ -1,0 +1,52 @@
+<!-- register.html -->
+<link rel="stylesheet" href="https://cloudflare.com">
+<link rel="stylesheet" href="style.css">
+
+<div class="form-card">
+    <h2>Create Account</h2>
+    
+    <div id="error-message" style="color: red; margin-bottom: 10px;"></div>
+
+    <div class="input-group">
+        <label>Email</label>
+        <input type="email" id="email" placeholder="name@example.com" required>
+    </div>
+
+    <div class="input-group" style="position: relative;">
+        <label>Password</label>
+        <input type="password" id="loginPassword" placeholder="Min. 7 characters" required>
+        <i class="fas fa-eye" id="toggleRegPassword" style="position: absolute; right: 10px; top: 38px; cursor: pointer; color: #777;"></i>
+    </div>
+
+    <!-- Security Question (Required for Forgot Password) -->
+    <div class="input-group">
+        <label>Security Question</label>
+        <select id="securityQuestion" required>
+            <option value="pet">What was the name of your first pet?</option>
+            <option value="city">What city were you born in?</option>
+            <option value="school">What was the name of your first school?</option>
+        </select>
+    </div>
+
+    <div class="input-group">
+        <label>Security Answer</label>
+        <input type="text" id="securityAnswer" placeholder="Your answer" required>
+    </div>
+
+    <button type="button" class="btn-primary" onclick="register()">Create Account</button>
+    
+    <div style="text-align: center; margin-top: 15px;">
+        <p>Already have an account? <a href="login.html">Login here</a></p>
+    </div>
+</div>
+
+<script src="auth.js"></script>
+<script>
+    // Eye toggle for registration page
+    document.getElementById('toggleRegPassword').addEventListener('click', function() {
+        const passInput = document.getElementById('loginPassword');
+        const type = passInput.type === 'password' ? 'text' : 'password';
+        passInput.type = type;
+        this.classList.toggle('fa-eye-slash');
+    });
+</script>
