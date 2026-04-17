@@ -199,13 +199,7 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Only apply centering to pages with the auth-body class */
-.auth-page-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #f4f7f6;
+
 }
 .header {
     display: flex;
@@ -218,6 +212,15 @@ body {
 .nav {
     display: flex;
     gap: 10px; /* Gives space between buttons */
+}
+/* This centers the form but ONLY on pages where we add the class */
+.auth-page-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f4f7f6;
+    margin: 0;
 }
 
 
