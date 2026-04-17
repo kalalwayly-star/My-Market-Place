@@ -199,6 +199,26 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* Only apply centering to pages with the auth-body class */
+.auth-page-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f4f7f6;
+}
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%; /* Ensure it spans the full top */
+    padding: 15px 20px;
+}
+
+.nav {
+    display: flex;
+    gap: 10px; /* Gives space between buttons */
+}
 
 
 
