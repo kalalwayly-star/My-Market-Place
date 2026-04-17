@@ -1,56 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login | Marketplace</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body class="auth-body">
+<!-- Add Font Awesome for the eye icon -->
+<link rel="stylesheet" href="https://cloudflare.com">
 
-<header class="header">
-  <div class="container">
-    <h1>My Marketplace</h1>
-    <a href="index.html" class="btn-link">← Back to Home</a>
-  </div>
-</header>
-
-<div class="auth-container">
-  <div class="auth-card">
+<div class="form-card">
     <h2>Welcome Back</h2>
-    <p class="subtitle">Please enter your details to sign in.</p>
+    <p>Please enter your details to sign in.</p>
 
-    <!-- Email Input -->
+    <!-- Email Field -->
     <div class="input-group">
-      <label for="email">Email</label>
-      <input type="email" id="email" placeholder="you@example.com" required>
+        <label>Email</label>
+        <input type="email" id="loginEmail" placeholder="Enter your email" required>
     </div>
 
-    <!-- Password Input with 7-char requirement -->
-    <div class="input-group">
-        <label for="loginPassword">Password (Min. 7 characters)</label>
-        <input type="password" id="loginPassword" placeholder="Enter your password" required>
+    <!-- Password Field with Eye Toggle -->
+    <div class="input-group" style="position: relative; margin-bottom: 5px;">
+        <label>Password</label>
+        <input type="password" id="loginPassword" placeholder="Enter your password" required 
+               style="width: 100%; padding-right: 40px; box-sizing: border-box;">
+        
+        <!-- Eye Icon -->
+        <i class="fas fa-eye" id="toggleLoginPassword" 
+           style="position: absolute; right: 12px; top: 38px; cursor: pointer; color: #777;"></i>
     </div>
-<!-- Inside login.html -->
-<div class="input-group">
-    <label>Password</label>
-    <input type="password" id="loginPassword">
-    <div style="text-align: right;">
-        <a href="forgot.html" style="font-size: 0.8rem; color: #007bff; text-decoration: none;">Forgot Password?</a>
+
+    <!-- Forgot Password Link -->
+    <div class="login-footer" style="text-align: right; margin-bottom: 20px;">
+        <a href="forgot.html" id="forgotPasswordLink" style="font-size: 13px; color: #007bff; text-decoration: none;">
+            Forgot Password?
+        </a>
     </div>
+
+    <!-- Action Buttons -->
+    <button type="button" class="btn-primary" onclick="handleLogin()" style="width: 100%; margin-bottom: 10px;">
+        Login
+    </button>
+    
+    <div style="text-align: center; margin: 10px 0; color: #888;">OR</div>
+
+    <button type="button" class="btn-secondary" onclick="window.location.href='register.html'" style="width: 100%;">
+        Create Account
+    </button>
 </div>
 
-    <div class="auth-buttons">
-      <button class="btn-primary" onclick="login()">Login</button>
-      <div class="divider"><span>OR</span></div>
-      <button class="btn-outline" onclick="register()">Create Account</button>
-    </div>
+<script>
+    // Eye toggle logic for the login page
+    const toggleBtn = document.querySelector('#toggleLoginPassword');
+    const passwordField = document.querySelector('#loginPassword');
 
-    <!-- This will show the "7 characters" error in red -->
-    <p id="error-message" class="error-text" style="color: red; margin-top: 10px;"></p>
-  </div>
-</div>
+    toggleBtn.addEventListener('click', function () {
+        const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordField.setAttribute('type', type);
+        this.classList.toggle('fa-eye-slash');
+    });
+</script>
 
-<script src="auth.js"></script>
-</body>
-</html>
