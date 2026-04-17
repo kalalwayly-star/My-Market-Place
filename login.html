@@ -12,10 +12,20 @@
     </div>
 
     <!-- Password Field with Eye Toggle -->
-    <div class="input-group" style="position: relative; margin-bottom: 5px;">
-        <label>Password</label>
-        <input type="password" id="loginPassword" placeholder="Enter your password" required 
-               style="width: 100%; padding-right: 40px; box-sizing: border-box;">
+   <div class="input-group">
+    <label>Password</label>
+    <input type="password" id="loginPassword" placeholder="Enter password">
+    <!-- Make sure Font Awesome is in your <head> for this icon -->
+    <i class="fas fa-eye" id="toggleLoginPassword" 
+       style="position: absolute; right: 10px; top: 38px; cursor: pointer; color: #777;"></i>
+</div>
+
+    <input type="password" id="loginPassword" placeholder="Enter password">
+    <!-- Make sure Font Awesome is in your <head> for this icon -->
+    <i class="fas fa-eye" id="toggleLoginPassword" 
+       style="position: absolute; right: 10px; top: 38px; cursor: pointer; color: #777;"></i>
+</div>
+
         
         <!-- Eye Icon -->
         <i class="fas fa-eye" id="toggleLoginPassword" 
