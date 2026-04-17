@@ -16,47 +16,46 @@
 
     <main style="padding: 20px; max-width: 800px; margin: auto; line-height: 1.6;">
         <section>
-            <h2>🛡️ Buying Safely</h2>
+            <h2 id="safety_buy_title">🛡️ Buying Safely</h2>
             <ul>
-                <li><strong>Meet in Public:</strong> Always meet the seller in a well-lit, public place like a coffee shop or police station "safe zone."</li>
-                <li><strong>Inspect the Item:</strong> Check the item thoroughly before handing over any money.</li>
-                <li><strong>Avoid Wire Transfers:</strong> Never send money via Western Union, MoneyGram, or gift cards. These are almost always scams.</li>
+                <li><strong id="safety_meet_label">Meet in Public:</strong> <span id="safety_meet_text">Always meet the seller in a well-lit, public place like a coffee shop or police station "safe zone."</span></li>
+                <li><strong id="safety_inspect_label">Inspect the Item:</strong> <span id="safety_inspect_text">Check the item thoroughly before handing over any money.</span></li>
+                <li><strong id="safety_wire_label">Avoid Wire Transfers:</strong> <span id="safety_wire_text">Never send money via Western Union, MoneyGram, or gift cards. These are almost always scams.</span></li>
             </ul>
         </section>
 
         <section>
-            <h2>💰 Selling Safely</h2>
+            <h2 id="safety_sell_title">💰 Selling Safely</h2>
             <ul>
-                <li><strong>Cash is King:</strong> For local trades, cash is the safest method. Be wary of checks or complicated electronic transfers.</li>
-                <li><strong>Don't Share Personal Info:</strong> Avoid giving out your home address or private financial details in the ad description.</li>
-                <li><strong>Trust Your Instincts:</strong> If a buyer seems overly aggressive or "too good to be true," stop the communication.</li>
+                <li><strong id="safety_cash_label">Cash is King:</strong> <span id="safety_cash_text">For local trades, cash is the safest method. Be wary of checks or complicated electronic transfers.</span></li>
+                <li><strong id="safety_info_label">Don't Share Personal Info:</strong> <span id="safety_info_text">Avoid giving out your home address or private financial details in the ad description.</span></li>
+                <li><strong id="safety_instinct_label">Trust Your Instincts:</strong> <span id="safety_instinct_text">If a buyer seems overly aggressive or "too good to be true," stop the communication.</span></li>
             </ul>
         </section>
 
         <section>
-            <h2>🚩 Red Flags to Watch For</h2>
+            <h2 id="safety_redflags_title">🚩 Red Flags to Watch For</h2>
             <ul>
-                <li>Messages that are poorly written or use automated "bot-like" language.</li>
-                <li>Sellers who refuse to meet in person or insist on shipping items.</li>
-                <li>Items priced significantly lower than market value.</li>
+                <li id="safety_flag1">Messages that are poorly written or use automated "bot-like" language.</li>
+                <li id="safety_flag2">Sellers who refuse to meet in person or insist on shipping items.</li>
+                <li id="safety_flag3">Items priced significantly lower than market value.</li>
             </ul>
         </section>
     </main>
 
     <footer>
-        <p>© 2026 My Marketplace</p>
+        <p id="footer_copy">© 2026 My Marketplace</p>
     </footer>
-<!-- At the bottom of safety.html, terms.html, etc. -->
-<script src="storage.js"></script>
-<script src="languages.js"></script>
-<script>
-    // Force the language to update when the page loads
-    document.addEventListener('DOMContentLoaded', () => {
-        if (window.updateLanguage) {
-            updateLanguage(); 
-        }
-    });
-</script>
 
+    <script src="storage.js"></script>
+    <script src="languages.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.updateLanguage) {
+                updateLanguage(); 
+            }
+        });
+    </script>
 </body>
 </html>
+
