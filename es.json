@@ -42,6 +42,20 @@
         "safety_redflags_title": "🚩 Señales de alerta a tener en cuenta",
         "safety_flag1": "Mensajes mal escritos o que utilizan un lenguaje automatizado tipo 'bot'.",
         "safety_flag2": "Vendedores que se niegan a reunirse en persona o insisten en enviar artículos.",
-        "safety_flag3": "Artículos con precios significativamente inferiores al valor de mercado."
+        "safety_flag3": "Artículos con precios significativamente inferiores al valor de mercado.",
+  "privacy_title": "Política de Privacidad",
+    "footer_privacy_header": "Política de Privacidad",
+    "home_btn": "Inicio",
+    "privacy_sec1_title": "1. Información que recopilamos",
+    "privacy_sec1_text": "Cuando utiliza My Marketplace, recopilamos la información que proporciona directamente, como su dirección de correo electrónico, número de teléfono y ubicación al publicar un anuncio.",
+    "privacy_sec2_title": "2. Cómo utilizamos sus datos",
+    "privacy_sec2_text": "Su información se utiliza para conectar a compradores y vendedores. No vendemos sus datos personales a terceros con fines de marketing.",
+    "privacy_sec3_title": "3. Cookies y almacenamiento local",
+    "privacy_sec3_text": "Utilizamos el almacenamiento local (Local Storage) para recordar sus preferencias de idioma y su sesión de inicio de sesión. Esto garantiza una experiencia constante en nuestro sitio.",
+    "privacy_sec4_title": "4. Seguridad de los datos",
+    "privacy_sec4_text": "Si bien tomamos medidas razonables para proteger su información, ningún sistema es 100% seguro. Los usuarios deben ser cautelosos al compartir datos de contacto personales en las descripciones de los anuncios.",
+    "privacy_sec5_title": "5. Sus derechos",
+    "privacy_sec5_text": "Puede eliminar sus anuncios en cualquier momento. Si desea que la información de su cuenta se elimine de nuestra base de datos, póngase en contacto con el soporte técnico.",
+    "footer_copy": "© 2026 My Marketplace"
     
 }
