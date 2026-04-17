@@ -46,7 +46,17 @@
     <footer>
         <p>© 2026 My Marketplace</p>
     </footer>
+<!-- At the bottom of safety.html, terms.html, etc. -->
+<script src="storage.js"></script>
+<script src="languages.js"></script>
+<script>
+    // Force the language to update when the page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        if (window.updateLanguage) {
+            updateLanguage(); 
+        }
+    });
+</script>
 
-    <script src="languages.js"></script>
 </body>
 </html>
