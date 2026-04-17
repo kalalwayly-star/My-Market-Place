@@ -773,6 +773,53 @@ select {
 }
 .upload-box:hover { background: #f0f0f0; }
 
+/* --- Password Reset Styles --- */
+
+/* Wrapper to position the eye icon inside the input */
+.input-group {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    padding-right: 40px; /* Space so text doesn't go under the eye */
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* The Eye Icon */
+.input-group i {
+    position: absolute;
+    right: 12px;
+    top: 38px; /* Adjust this based on your label height */
+    cursor: pointer;
+    color: #777;
+    transition: color 0.2s;
+}
+
+.input-group i:hover {
+    color: #333;
+}
+
+/* Stage Transitions */
+.form-stage {
+    display: none; /* Hidden by default, shown via JS */
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Error State */
+.input-error {
+    border-color: #ff4d4d !important;
+    background-color: #fff2f2;
+}
 
 
 
