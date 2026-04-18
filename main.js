@@ -273,4 +273,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const savedLanguage = localStorage.getItem("language") || "en";  // Default to 'en' if no language is set
 
 });
+const adHTML = `
+<div class="ad-card">
+    <div class="ad-img-wrapper">
+        <img src="${ad.image}" alt="${ad.title}">
+    </div>
 
+    <div class="ad-content">
+        <h3>${ad.title}</h3>
+        <p>$${ad.price}</p>
+        <p>${ad.location}</p>
+    </div>
+</div>
+`;
