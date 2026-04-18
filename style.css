@@ -1,4 +1,4 @@
-/* --- 1. GLOBAL & HOMEPAGE STYLES --- */
+/* --- 1. GLOBAL & RESET --- */
 body {
   font-family: 'Segoe UI', Arial, sans-serif;
   margin: 0;
@@ -6,10 +6,10 @@ body {
   color: #333;
 }
 
-/* HEADER & NAVIGATION */
+/* --- 2. HEADER & LANGUAGES --- */
 .header {
   background: #4b2aad;
-  color: white;
+  color: white !important;
   padding: 15px 20px;
   display: flex;
   justify-content: space-between;
@@ -17,59 +17,42 @@ body {
   box-sizing: border-box;
 }
 
-/* Clean Language Nav: White words, no background */
-.language-nav, .nav {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-}
-
-.language-nav a, .nav a.text {
-    color: white;
+/* Force white text and remove any background/boxes */
+.language-nav a, .nav a.text, .nav a {
+    color: white !important;
+    background: transparent !important;
+    background-color: transparent !important;
     text-decoration: none;
-    font-size: 0.9rem;
-    background: none; /* Removes white background */
-    padding: 0;
+    padding: 5px 12px;
+    font-size: 14px;
+    border: none !important;
+    box-shadow: none !important;
 }
 
 .language-nav a:hover {
     text-decoration: underline;
 }
 
-/* BUTTONS: Unified Alignment */
-.btn {
-  background: #ff6a00;
-  color: white;
-  padding: 10px 16px; /* Balanced padding */
-  text-decoration: none;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-  display: inline-block;
-  line-height: 1.2;
-}
-
-.btn-primary {
-  width: 100%;
-  padding: 12px;
-  background-color: #007bff;
-  color: white;
-  border-radius: 6px;
-  font-weight: bold;
-}
-
-.btn-secondary {
-    background-color: #f8f9fa;
-    color: #333;
-    border: 1px solid #ddd;
-    padding: 12px;
+/* --- 3. UNIFIED BUTTONS (Login & Main) --- */
+.btn-primary, .btn-secondary, .btn {
+    display: inline-block;
+    height: 45px !important;
+    line-height: 25px !important; /* Centers text vertically */
+    padding: 10px 20px !important;
     border-radius: 6px;
-    width: 100%;
-    margin-top: 10px;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    box-sizing: border-box;
+    font-size: 16px;
+    border: none;
+    text-decoration: none;
 }
 
-/* --- 2. AUTH & LOGIN BOX --- */
+.btn-primary { background-color: #007bff !important; color: white !important; width: 100%; }
+.btn-secondary { background-color: #f8f9fa !important; color: #333 !important; border: 1px solid #ddd !important; width: 100%; margin-top: 12px; }
+
+/* --- 4. AUTH PAGES (Centering Login Box) --- */
 .auth-page-body {
     display: flex;
     justify-content: center;
@@ -85,40 +68,49 @@ body {
     padding: 35px; 
     width: 100%;
     max-width: 400px;
-    box-sizing: border-box;
 }
 
-/* --- 3. MY ADS PAGE (Fix large photos) --- */
-.myads-container {
-    max-width: 100px;
+/* --- 5. MY ADS PAGE (Fix huge photos & layout) --- */
+.ads-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 900px;
     margin: 20px auto;
     padding: 20px;
 }
 
 .myad-card {
-    display: flex;
+    display: flex !important; /* Forces side-by-side */
     background: white;
-    margin-bottom: 15px;
     border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    height: 160px; /* Fixed height for the row */
+    border: 1px solid #eee;
 }
 
 .myad-img-wrapper {
-    width: 180px; /* Controlled width */
-    height: 140px;
+    width: 220px !important; /* Fixed width for the photo */
+    height: 160px !important;
     flex-shrink: 0;
 }
 
 .myad-img-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Prevents stretching */
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important; /* Stops large photo problem */
 }
 
-/* --- 4. DETAIL PAGE (Fix large photos) --- */
-.details-page { background-color: #f8f9fa; }
+.myad-content {
+    padding: 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
 
+/* --- 6. DETAIL PAGE --- */
 .detail-grid {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -132,8 +124,7 @@ body {
     background: #fff;
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    max-height: 500px; /* Limits height strictly */
+    max-height: 500px;
     display: flex;
     justify-content: center;
 }
@@ -141,30 +132,10 @@ body {
 .main-image img {
     max-width: 100%;
     max-height: 500px;
-    object-fit: contain; /* Shows entire photo safely */
+    object-fit: contain;
 }
 
-.price-card {
-    background: white;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-}
-
-.price-tag {
-    font-size: 2.2rem;
-    font-weight: bold;
-    color: #28a745;
-}
-
-/* --- 5. CATEGORIES & GRID --- */
-.category-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 15px;
-    padding: 20px;
-}
-
+/* --- 7. GRID & CARDS --- */
 .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -178,7 +149,6 @@ body {
     object-fit: cover;
 }
 
-/* --- FOOTER --- */
 footer {
     text-align: center;
     padding: 40px;
@@ -187,171 +157,9 @@ footer {
     margin-top: 50px;
 }
 
-footer ul {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-}
-
-footer a { color: #ccc; text-decoration: none; }
-
-/* --- 1. HEADER & LANGUAGES --- */
-.header {
-  background: #4b2aad;
-  color: white;
-  padding: 15px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* No white background, just white text */
-.language-nav a, .nav a.text {
-    color: white !important;
-    text-decoration: none;
-    background: transparent !important;
-    padding: 5px 10px;
-    font-size: 14px;
-}
 
 
-/* --- 2. UNIFIED BUTTONS (Login Box) --- */
-.btn-primary, .btn-secondary {
-    display: block;
-    width: 100%;
-    height: 45px; /* Forced identical height */
-    line-height: 45px; /* Centers text vertically */
-    padding: 0; 
-    border-radius: 6px;
-    font-weight: bold;
-    text-align: center;
-    cursor: pointer;
-    box-sizing: border-box;
-    font-size: 16px;
-    border: none;
-}
-
-.btn-primary {
-    background-color: #007bff;
-    color: white;
-}
-
-.btn-secondary {
-    background-color: #f8f9fa;
-    color: #333;
-    border: 1px solid #ddd;
-    margin-top: 12px;
-    text-decoration: none; /* In case it's an <a> tag */
-}
-
-/* --- 3. MY ADS PAGE (The Row Fix) --- */
-/* Make sure your myads.html uses these exact classes */
-.myads-container {
-    max-width: 900px;
-    margin: 20px auto;
-}
-
-.myad-card {
-    display: flex; /* Forces photo and text to be side-by-side */
-    background: white;
-    margin-bottom: 20px;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    height: 150px; /* Fixed height for the row */
-}
-
-.myad-img-wrapper {
-    width: 200px; /* Limits photo width */
-    height: 150px;
-    flex-shrink: 0;
-}
-
-.myad-img-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Stops the "Large Photo" problem */
-}
-
-.myad-content {
-    padding: 15px;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-/* --- MY ADS PAGE FIX --- */
-.ads-grid {
-    display: flex;
-    flex-direction: column; /* Stack ads vertically */
-    gap: 20px;
-    padding: 20px 0;
-}
-
-/* Each Ad Row */
-.myad-card {
-    display: flex; /* Photo left, Text right */
-    background: white;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    height: 160px; /* Fixed height to control photo size */
-    border: 1px solid #eee;
-}
-
-/* Image Container */
-.myad-img-wrapper {
-    width: 220px; /* Limits width of the huge photo */
-    height: 100%;
-    flex-shrink: 0;
-}
-
-.myad-img-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Crops image perfectly to fit the box */
-}
-
-/* Content on the right */
-.myad-content {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    flex-grow: 1;
-}
-
-.myad-content h3 { margin: 0; font-size: 1.2rem; color: #333; }
-.myad-price { font-size: 1.3rem; color: #28a745; font-weight: bold; }
-
-/* Buttons in the row */
-.myad-actions {
-    display: flex;
-    gap: 10px;
-}
-/* Language Nav - White text, no background */
-.nav a.text, .language-nav a {
-    color: white !important;
-    background: transparent !important;
-    text-decoration: none;
-    padding: 5px 10px;
-}
-
-/* Login Box Button Alignment */
-.form-card .btn-primary, 
-.form-card .btn-secondary {
-    display: block;
-    box-sizing: border-box;
-    width: 100%;
-    height: 45px;
-    padding: 10px;
-    margin-top: 10px;
-    text-align: center;
-    font-size: 16px;
-    border-radius: 6px;
-}
+    
 
 
 
