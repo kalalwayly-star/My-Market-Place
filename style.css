@@ -221,6 +221,58 @@ footer a:hover {
     text-align: center;
     padding: 60px 20px;
 }
+/* Update your main container layout */
+.main-content-wrapper {
+    display: flex;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Category list stays on the left */
+.category-sidebar {
+    width: 250px;
+    flex-shrink: 0;
+}
+
+/* Ads show on the right */
+.ads-display-area {
+    flex-grow: 1;
+}
+.search-container input, 
+.search-container select {
+    padding: 15px 25px !important; /* Larger clickable area */
+    font-size: 1.1rem !important;
+    border-radius: 8px !important;
+    width: 100%;
+}
+
+.search-container button {
+    padding: 15px 30px !important;
+    font-size: 1.1rem;
+}
+/* Fix for the Detail Page layout from your screenshot */
+.detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 350px; /* Main content vs fixed sidebar */
+    gap: 40px;
+    align-items: start;
+}
+
+.description-section {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    margin-top: 20px;
+    text-align: left; /* Ensures text doesn't float weirdly */
+}
+
+/* Fix the sidebar positioning */
+.content-sidebar {
+    position: sticky;
+    top: 20px;
+}
 
 
 
