@@ -1,26 +1,34 @@
 let foundUser = null;
 
-// STEP 1: Verify the Email
+// ✅ REPLACE WITH THIS VERSION
 function checkUser() {
     const email = document.getElementById('resetEmail').value.trim();
     const users = JSON.parse(localStorage.getItem("users") || "[]");
     
     foundUser = users.find(u => u.email === email);
 
-    if (foundUser) {
-        document.getElementById('emailSection').style.display = 'none';
-        document.getElementById('securitySection').style.display = 'block';
-        document.getElementById('formSubtitle').innerText = "Answer your security question.";
-
-        const questions = {
-            pet: "What was the name of your first pet?",
-            city: "What city were you born in?",
-            school: "What was the name of your first school?"
-        };
-        document.getElementById('displayQuestion').innerText = questions[foundUser.securityQuestion];
-    } else {
+    if (!foundUser) {
         alert("No account found with that email.");
+        return;
     }
+
+    if (!foundUser.securityQuestion || !foundUser.securityAnswer) {
+        alert("This account has no recovery setup.");
+        return;
+    }
+
+    document.getElementById('emailSection').style.display = 'none';
+    document.getElementById('securitySection').style.display = 'block';
+    document.getElementById('formSubtitle').innerText = "Answer your security question.";
+
+    const questions = {
+        pet: "What was the name of your first pet?",
+        city: "What city were you born in?",
+        school: "What was the name of your first school?"
+    };
+
+    document.getElementById('displayQuestion').innerText =
+        questions[foundUser.securityQuestion] || "Security question not found";
 }
 
 // STEP 2: Verify the Answer
