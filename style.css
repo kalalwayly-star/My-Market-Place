@@ -90,7 +90,7 @@ body {
 
 /* --- 3. MY ADS PAGE (Fix large photos) --- */
 .myads-container {
-    max-width: 1000px;
+    max-width: 100px;
     margin: 20px auto;
     padding: 20px;
 }
@@ -216,9 +216,6 @@ footer a { color: #ccc; text-decoration: none; }
     font-size: 14px;
 }
 
-.language-nav a:hover {
-    text-decoration: underline;
-}
 
 /* --- 2. UNIFIED BUTTONS (Login Box) --- */
 .btn-primary, .btn-secondary {
