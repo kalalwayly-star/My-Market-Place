@@ -60,6 +60,11 @@ body {
     min-height: 100vh;
     background-color: #f4f7f6;
 }
+#hero_title {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 20px;
+}
 
 .form-card { 
     background: white; 
