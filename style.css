@@ -273,6 +273,25 @@ footer a:hover {
     position: sticky;
     top: 20px;
 }
+.feature-option {
+    display: flex;           /* Aligns children in a row */
+    align-items: center;     /* Centers them vertically */
+    gap: 10px;               /* Adds space between box and text */
+    margin: 15px 0;          /* Adds space above and below the row */
+    cursor: pointer;
+}
+
+#isFeatured {
+    width: 18px;             /* Makes the checkbox a professional size */
+    height: 18px;
+    cursor: pointer;
+}
+
+#feature_text {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+}
 
 
 
