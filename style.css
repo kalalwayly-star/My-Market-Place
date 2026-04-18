@@ -273,7 +273,11 @@ img {
     object-fit: cover;
     border-radius: 8px;
 }  
-
+.ads-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
 
 
 
