@@ -156,6 +156,58 @@ footer {
     color: white;
     margin-top: 50px;
 }
+/* Centers the search bar and sets a professional width */
+.search-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 40px auto; /* Centers it and adds space top/bottom */
+    max-width: 800px;
+    padding: 0 20px; /* Gives the 'indent' look on mobile */
+}
+
+/* Adds a nice 'indent' (margin) to your category list */
+.category-grid {
+    max-width: 1200px;
+    margin: 0 auto; /* Centers the whole grid */
+    padding: 20px 40px; /* This is your indent */
+}
+footer {
+    background: #4b2aad; /* Matches your header color */
+    color: white;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+/* Force links in the footer to be white and clean */
+footer a {
+    color: white !important;
+    text-decoration: none;
+    margin: 0 10px;
+    font-size: 0.9rem;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+.form-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    padding: 30px;
+    max-width: 600px; /* Stops it from stretching too wide */
+    margin: 40px auto;
+}
+
+/* Style for input fields to look uniform and modern */
+.form-card input, .form-card select, .form-card textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-sizing: border-box; /* Crucial for alignment */
+}
 
 
 
