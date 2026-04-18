@@ -47,6 +47,24 @@
         document.getElementById('userGreeting').innerText = `Managing ads for: ${user.email}`;
     }
 </script>
+// Inside your loop where you display ads:
+const adHTML = `
+    <div class="myad-card">
+        <div class="myad-img-wrapper">
+            <img src="${ad.image}" alt="${ad.title}">
+        </div>
+        <div class="myad-content">
+            <div>
+                <h3>${ad.title}</h3>
+                <p class="myad-price">$${ad.price}</p>
+            </div>
+            <div class="myad-actions">
+                <button class="btn" onclick="editAd(${ad.id})">Edit</button>
+                <button class="btn" style="background:#d9534f;" onclick="deleteAd(${ad.id})">Delete</button>
+            </div>
+        </div>
+    </div>
+`;
 
 </body>
 </html>
