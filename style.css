@@ -282,6 +282,55 @@ footer a { color: #ccc; text-decoration: none; }
     flex-direction: column;
     justify-content: center;
 }
+/* --- MY ADS PAGE FIX --- */
+.ads-grid {
+    display: flex;
+    flex-direction: column; /* Stack ads vertically */
+    gap: 20px;
+    padding: 20px 0;
+}
+
+/* Each Ad Row */
+.myad-card {
+    display: flex; /* Photo left, Text right */
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    height: 160px; /* Fixed height to control photo size */
+    border: 1px solid #eee;
+}
+
+/* Image Container */
+.myad-img-wrapper {
+    width: 220px; /* Limits width of the huge photo */
+    height: 100%;
+    flex-shrink: 0;
+}
+
+.myad-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Crops image perfectly to fit the box */
+}
+
+/* Content on the right */
+.myad-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
+}
+
+.myad-content h3 { margin: 0; font-size: 1.2rem; color: #333; }
+.myad-price { font-size: 1.3rem; color: #28a745; font-weight: bold; }
+
+/* Buttons in the row */
+.myad-actions {
+    display: flex;
+    gap: 10px;
+}
 
 
 
