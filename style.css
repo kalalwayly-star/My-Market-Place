@@ -1,10 +1,203 @@
+/* --- 1. GLOBAL & HOMEPAGE STYLES --- */
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', Arial, sans-serif;
   margin: 0;
   background: #f6f6f6;
+  color: #333;
 }
 
-/* HEADER */
+/* HEADER & NAVIGATION */
+.header {
+  background: #4b2aad;
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+/* Clean Language Nav: White words, no background */
+.language-nav, .nav {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.language-nav a, .nav a.text {
+    color: white;
+    text-decoration: none;
+    font-size: 0.9rem;
+    background: none; /* Removes white background */
+    padding: 0;
+}
+
+.language-nav a:hover {
+    text-decoration: underline;
+}
+
+/* BUTTONS: Unified Alignment */
+.btn {
+  background: #ff6a00;
+  color: white;
+  padding: 10px 16px; /* Balanced padding */
+  text-decoration: none;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  display: inline-block;
+  line-height: 1.2;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+.btn-secondary {
+    background-color: #f8f9fa;
+    color: #333;
+    border: 1px solid #ddd;
+    padding: 12px;
+    border-radius: 6px;
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* --- 2. AUTH & LOGIN BOX --- */
+.auth-page-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f4f7f6;
+}
+
+.form-card { 
+    background: white; 
+    border-radius: 12px; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
+    padding: 35px; 
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box;
+}
+
+/* --- 3. MY ADS PAGE (Fix large photos) --- */
+.myads-container {
+    max-width: 100px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.myad-card {
+    display: flex;
+    background: white;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.myad-img-wrapper {
+    width: 180px; /* Controlled width */
+    height: 140px;
+    flex-shrink: 0;
+}
+
+.myad-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Prevents stretching */
+}
+
+/* --- 4. DETAIL PAGE (Fix large photos) --- */
+.details-page { background-color: #f8f9fa; }
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+
+.main-image {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    max-height: 500px; /* Limits height strictly */
+    display: flex;
+    justify-content: center;
+}
+
+.main-image img {
+    max-width: 100%;
+    max-height: 500px;
+    object-fit: contain; /* Shows entire photo safely */
+}
+
+.price-card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.price-tag {
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: #28a745;
+}
+
+/* --- 5. CATEGORIES & GRID --- */
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    padding: 20px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.ad-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+/* --- FOOTER --- */
+footer {
+    text-align: center;
+    padding: 40px;
+    background: #333;
+    color: white;
+    margin-top: 50px;
+}
+
+footer ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+footer a { color: #ccc; text-decoration: none; }
+
+/* --- 1. HEADER & LANGUAGES --- */
 .header {
   background: #4b2aad;
   color: white;
@@ -14,881 +207,150 @@ body {
   align-items: center;
 }
 
-.nav .btn {
-  margin-left: 10px;
-}
-
-/* BUTTONS */
-.btn {
-  background: #ff6a00;
-  color: white;
-  padding: 8px 12px;
-  text-decoration: none;
-  border-radius: 5px;
-}
-.btn-secondary {
-    background-color: #f8f9fa; /* Light gray */
-    color: #333;
-    border: 1px solid #ddd;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background 0.3s;
-}
-
-.btn-secondary:hover {
-    background-color: #e2e6ea;
-}
-
-
-/* This controls the gallery on the details page */
-#galleryPreview img, .main-img, .details-container img {
-    max-width: 100%;
-    height: 400px; /* Limits the height */
-    object-fit: contain; /* Keeps the image from stretching */
-    border-radius: 8px;
-    display: block;
-    margin-bottom: 10px;
-    background: #eee;
-}
-/* Fix for large images on details page */
-.main-details-img {
-    width: 100%;
-    max-width: 600px; /* Limits width */
-    max-height: 450px; /* Limits height */
-    object-fit: contain; /* Prevents stretching */
-    border-radius: 12px;
-    display: block;
-    margin: 0 auto 20px auto;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-
-.btn.secondary {
-  background: #ddd;
-  color: black;
-}
-
-/* SEARCH */
-.search-bar {
-  padding: 15px;
-  text-align: center;
-}
-
-.search-bar input {
-  width: 60%;
-  padding: 10px;
-  border-radius: 20px;
-  border: 1px solid #ccc;
-}
-
-/* GRID */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 15px;
-  padding: 20px;
-}
-
-/* CARD */
-.card {
-  background: white;
-  border-radius: 10px;
-  padding: 10px;
-  transition: 0.2s;
-  cursor: pointer;
-}
-
-.card:hover {
-  transform: scale(1.03);
-}
-
-.card img {
-  width: 100%;
-  border-radius: 8px;
-}
-
-.card h3 {
-  margin: 5px 0;
-  font-size: 16px;
-}
-
-.card p {
-  margin: 3px 0;
-  color: #555;
-}
-#details .card {
-  max-width: 500px;
-  margin: auto;
-}
-button {
-  background: #4b2aad;
-  color: white;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-select {
-  padding: 8px;
-  margin: 10px;
-}
-
-.hero {
-    background-color: #204fbc; /* This gives it a nice solid purple/blue color */
-    color: white;
-    padding: 60px 20px;
-    text-align: center;
-}
-
-
-.search-container {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 20px;
-    max-width: 800px;
-    margin-inline: auto;
-}
-
-.search-container input, .search-container select {
-    padding: 12px;
-    border-radius: 5px;
-    border: none;
-}
-
-/* Category Grid */
-.category-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 15px;
-    padding: 20px;
-}
-
-.cat-card {
-    background: #f8f9fa;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 20px;
-    text-align: center;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.cat-card:hover {
-    background: #fff;
-    border-color: #007bff;
-    transform: translateY(-5px);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-.cat-card .icon { font-size: 30px; }
-
-/* Listings Grid */
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-    padding: 20px;
-}
-
-.ad-card {
-    border: 1px solid #eee;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-}
-
-.post-ad-page { background-color: #f4f7f9; font-family: 'Segoe UI', sans-serif; }
-
-.form-wrapper { padding: 40px 20px; max-width: 800px; margin: 0 auto; }
-
-.form-card { 
-    background: white; 
-    border-radius: 12px; 
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
-    padding: 30px; 
-}
-
-.form-section { margin-bottom: 35px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
-.form-section h3 { color: #333; margin-bottom: 20px; font-size: 1.2rem; }
-.step-num { 
-    background: #007bff; color: white; padding: 2px 10px; 
-    border-radius: 50%; margin-right: 10px; font-size: 0.9rem; 
-}
-
-.input-group { margin-bottom: 15px; display: flex; flex-direction: column; }
-.input-group label { font-weight: 600; margin-bottom: 5px; color: #555; font-size: 0.9rem; }
-.input-group input, .input-group select, .input-group textarea {
-    padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem;
-}
-
-.row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-
-/* Image Upload UI */
-.image-upload-container { display: flex; gap: 20px; align-items: center; }
-.upload-box {
-    border: 2px dashed #cbd5e0; border-radius: 10px; padding: 30px;
-    width: 200px; text-align: center; cursor: pointer; transition: 0.3s;
-}
-.upload-box:hover { border-color: #007bff; background: #f0f7ff; }
-.preview-slot { width: 120px; height: 120px; border-radius: 8px; background: #f8f9fa; border: 1px solid #eee; overflow: hidden; }
-
-.btn-primary-large {
-    background: #007bff; color: white; border: none; padding: 15px 40px;
-    border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 100%;
-}
-
-.detail-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 30px;
-    margin-top: 30px;
-}
-
-.main-image img {
-    width: 100%;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-
-.price-card {
-    background: white;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    position: sticky;
-    top: 20px;
-}
-
-.price-tag {
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: #28a745;
-    margin: 15px 0;
-}
-
-.ad-category {
-    background: #e9ecef;
-    display: inline-block;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    color: #495057;
-}
-
-
-.ad-card {
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    transition: transform 0.2s, box-shadow 0.2s;
-    overflow: hidden;
-}
-
-.ad-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-}
-
-.ad-image-wrapper img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-}
-
-.ad-content { padding: 15px; }
-
-.ad-category-tag {
-    font-size: 10px;
-    text-transform: uppercase;
-    color: #007bff;
-    font-weight: bold;
-}
-
-.ad-price {
-    font-size: 1.2rem;
-    color: #28a745;
-    font-weight: bold;
-    margin: 5px 0;
-}
-.details-container {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    background: white;
-    border-radius: 8px;
-}
-
-.main-img {
-    width: 100%;
-    max-height: 500px;
-    object-fit: cover;
-    border-radius: 8px;
-}
-
-.price {
-    font-size: 24px;
-    color: #28a745;
-    font-weight: bold;
-}
-.auth-body {
-  background-color: #f4f7f6;
-}
-
-.auth-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 80vh;
-}
-
-.auth-card {
-  background: white;
-  padding: 40px;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  width: 100%;
-  max-width: 400px;
-}
-
-.auth-card h2 { margin-bottom: 5px; }
-.subtitle { color: #666; margin-bottom: 25px; font-size: 14px; }
-
-.input-group {
-  margin-bottom: 15px;
-  text-align: left;
-}
-
-.input-group label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 5px;
-  font-size: 14px;
-}
-
-.input-group input {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-}
-
-.btn-primary {
-  width: 100%;
-  padding: 12px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.btn-outline {
-  width: 100%;
-  padding: 12px;
-  background: white;
-  border: 1px solid #007bff;
-  color: #007bff;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.divider {
-  margin: 15px 0;
-  text-align: center;
-  border-bottom: 1px solid #eee;
-  line-height: 0.1em;
-}
-
-.divider span { background:#fff; padding:0 10px; color: #999; font-size: 12px; }
-
-.error-text { color: #d9534f; font-size: 13px; margin-top: 10px; }
-.contact-card {
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: 8px;
-    margin-top: 20px;
-}
-#messageText {
-    width: 100%;
-    margin-bottom: 10px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-.message-card {
-    background: white;
-    border: 1px solid #eee;
-    padding: 15px;
-    margin-bottom: 10px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-.msg-date { font-size: 12px; color: #999; }
-.sold-card {
-    opacity: 0.7;
-    position: relative;
-}
-
-.sold-badge {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: #d9534f;
-    color: white;
+/* No white background, just white text */
+.language-nav a, .nav a.text {
+    color: white !important;
+    text-decoration: none;
+    background: transparent !important;
     padding: 5px 10px;
-    font-weight: bold;
-    border-radius: 4px;
-    z-index: 10;
-}
-
-.btn-secondary {
-    background-color: #6c757d;
-    color: white;
-}
-
-.message-tabs .btn.active {
-    border-bottom: 2px solid #007bff;
-    color: #007bff;
-    font-weight: bold;
-}
-.search-messages-container input:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0,123,255,0.2);
-}
-.badge {
-    background-color: #ff4d4d;
-    color: white;
-    font-size: 11px;
-    font-weight: bold;
-    padding: 2px 6px;
-    border-radius: 50%;
-    margin-left: 5px;
-    vertical-align: middle;
-    line-height: 1;
-}
-.form-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-    margin-top: 15px;
-}
-.category-details {
-    border: 1px solid #ddd;
-    padding: 15px;
-    border-radius: 8px;
-    background: #fdfdfd;
-}
-.gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    gap: 10px;
-    margin-top: 15px;
-}
-
-.preview-item {
-    position: relative;
-    width: 100px;
-    height: 100px;
-}
-
-.preview-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-}
-
-.remove-btn {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background: red;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.upload-box {
-    border: 2px dashed #007bff;
-    padding: 20px;
-    text-align: center;
-    display: block;
-    cursor: pointer;
-    background: #f0f7ff;
-    border-radius: 8px;
-}
-/* style.css */
-.ad-card.featured {
-    border: 2px solid #ffd700; /* Gold border */
-    background-color: #fffdf0; /* Subtle warm glow */
-    position: relative;
-}
-
-.ad-card.featured::after {
-    content: "FEATURED";
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: #ffd700;
-    font-size: 10px;
-    font-weight: bold;
-    padding: 2px 6px;
-    border-radius: 4px;
-}
-/* Fix for large images on My Ads page */
-#myAds .card-img-wrapper {
-    width: 100%;
-    height: 200px; /* Forces all images to the same height */
-    overflow: hidden;
-    border-radius: 8px 8px 0 0;
-    background-color: #eee;
-}
-
-.card-img-wrapper {
-    width: 200px;  /* Or whatever size you prefer */
-    height: 180px;
-    flex-shrink: 0; /* Prevents the image from getting squashed */
-    overflow: hidden;
-}
-
-/* This controls the overall grid */
-.ads-grid {
-    display: flex;
-    flex-direction: column; /* Stack multiple ads vertically */
-    gap: 20px;
-}
-
-/* This makes the individual ad look like a horizontal card */
-.ad-card {
-    display: flex !important; /* Forces side-by-side */
-    flex-direction: row;
-    align-items: flex-start;
-    gap: 15px;
-    border: 1px solid #ddd;
-    padding: 10px;
-    background: #fff;
-}
-
-/* This fixes the "stretched" image problem */
-.card-img-wrapper {
-    width: 150px !important; /* Set a specific width */
-    height: 150px !important; /* Set a specific height */
-    flex-shrink: 0; 
-    overflow: hidden;
-    background-color: #f0f0f0;
-}
-
-/* The special styling for featured ads */
-.featured-card {
-    border: 2px solid #ffd700 !important; /* Gold border */
-    background-color: #fffdf0 !important; /* Slight yellow tint */
-    position: relative;
-    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
-}
-
-/* A small badge that says "Featured" or "Premium" */
-.featured-badge {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: linear-gradient(45deg, #ffd700, #ffa500);
-    color: #000;
-    padding: 4px 10px;
-    font-size: 0.7rem;
-    font-weight: bold;
-    border-radius: 5px;
-    z-index: 5;
-    text-transform: uppercase;
-}
-
-
-.card-img-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-/* Restrict the size of the image on the details page */
-#adImageContainer {
-    width: 60%;
-    max-height: 440px; /* Adjust this number to make it shorter or taller */
-    overflow: hidden;
-    border-radius: 10px;
-    background-color: #f0f0f0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#adImageContainer img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain; /* 'contain' shows the whole photo, 'cover' fills the box */
-    display: block;
-}
-
-/* Report Button */
-#reportBtn {
-    background: transparent;
-    color: #d9534f; /* Soft Red */
-    border: 1px solid #d9534f;
-    padding: 8px 15px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: 0.3s;
-}
-
-#reportBtn:hover {
-    background: #d9534f;
-    color: white;
-}
-
-/* Modal Background */
-#reportModal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    padding: 25px;
-    border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    z-index: 1000;
-    width: 300px;
-    text-align: center;
-}
-
-/* Form Elements inside Modal */
-#reportModal select {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-}
-
-#reportModal button {
-    background: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-}
-/* Admin Container */
-.admin-container {
-    max-width: 900px;
-    margin: 40px auto;
-    font-family: sans-serif;
-}
-
-/* Flagged Ad Card */
-.report-card {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #f8f9fa;
-    border-left: 5px solid #d9534f;
-    margin-bottom: 10px;
-    padding: 15px;
-    border-radius: 4px;
-}
-
-.report-info {
-    flex-grow: 1;
-}
-
-.report-info strong {
-    color: #333;
-}
-
-/* Delete Button for Admin */
-.delete-btn {
-    background: #dc3545;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.delete-btn:hover {
-    background: #c82333;
-}
-
-/* Container for the whole photo section */
-.gallery-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 15px;
-}
-
-/* Individual preview wrapper */
-.preview-container {
-    position: relative;
-    width: 100px;
-    height: 100px;
-}
-
-/* The actual image */
-.preview-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 8px;
-    border: 2px solid #eee;
-}
-
-/* The Red X Button */
-.remove-btn {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background: #ff4d4d;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
     font-size: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
-.remove-btn:hover {
-    background: #d43f3f;
-}
 
-/* Style for your upload-box label */
-.upload-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 120px;
-    height: 100px;
-    border: 2px dashed #ccc;
-    border-radius: 8px;
+/* --- 2. UNIFIED BUTTONS (Login Box) --- */
+.btn-primary, .btn-secondary {
+    display: block;
+    width: 100%;
+    height: 45px; /* Forced identical height */
+    line-height: 45px; /* Centers text vertically */
+    padding: 0; 
+    border-radius: 6px;
+    font-weight: bold;
+    text-align: center;
     cursor: pointer;
-    background: #f9f9f9;
-}
-.upload-box:hover { background: #f0f0f0; }
-
-/* --- Password Reset Styles --- */
-
-/* Wrapper to position the eye icon inside the input */
-.input-group {
-    position: relative;
-    margin-bottom: 15px;
-}
-
-.input-group input {
-    width: 100%;
-    padding: 10px;
-    padding-right: 40px; /* Space so text doesn't go under the eye */
     box-sizing: border-box;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    font-size: 16px;
+    border: none;
 }
 
-/* The Eye Icon */
-.input-group i {
-    position: absolute;
-    right: 12px;
-    top: 38px; /* Adjust this based on your label height */
-    cursor: pointer;
-    color: #777;
-    transition: color 0.2s;
-}
-
-.input-group i:hover {
-    color: #333;
-}
-
-/* Stage Transitions */
-.form-stage {
-    display: none; /* Hidden by default, shown via JS */
-    animation: fadeIn 0.4s ease-in-out;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(5px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* Error State */
-.input-error {
-    border-color: #ff4d4d !important;
-    background-color: #fff2f2;
-}
-
-/* Center the form and give it a professional look */
-body {
-    background-color: #f4f7f6;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    font-family: Arial, sans-serif;
-}
-
-.form-card {
-    background: white;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    width: 100%;
-    max-width: 400px; /* This stops it from stretching too wide */
-}
-
-.input-group {
-    margin-bottom: 20px;
-    position: relative; /* Essential for the eye icon */
-}
-
-.input-group input {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    box-sizing: border-box;
-}
-
-/* Style the buttons to look premium */
 .btn-primary {
     background-color: #007bff;
     color: white;
-    border: none;
-    padding: 12px;
-    border-radius: 5px;
-    width: 100%;
-    cursor: pointer;
-    font-weight: bold;
 }
 
 .btn-secondary {
     background-color: #f8f9fa;
     color: #333;
     border: 1px solid #ddd;
-    padding: 12px;
-    border-radius: 5px;
+    margin-top: 12px;
+    text-decoration: none; /* In case it's an <a> tag */
+}
+
+/* --- 3. MY ADS PAGE (The Row Fix) --- */
+/* Make sure your myads.html uses these exact classes */
+.myads-container {
+    max-width: 900px;
+    margin: 20px auto;
+}
+
+.myad-card {
+    display: flex; /* Forces photo and text to be side-by-side */
+    background: white;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    height: 150px; /* Fixed height for the row */
+}
+
+.myad-img-wrapper {
+    width: 200px; /* Limits photo width */
+    height: 150px;
+    flex-shrink: 0;
+}
+
+.myad-img-wrapper img {
     width: 100%;
-    cursor: pointer;
+    height: 100%;
+    object-fit: cover; /* Stops the "Large Photo" problem */
+}
+
+.myad-content {
+    padding: 15px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+/* --- MY ADS PAGE FIX --- */
+.ads-grid {
+    display: flex;
+    flex-direction: column; /* Stack ads vertically */
+    gap: 20px;
+    padding: 20px 0;
+}
+
+/* Each Ad Row */
+.myad-card {
+    display: flex; /* Photo left, Text right */
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    height: 160px; /* Fixed height to control photo size */
+    border: 1px solid #eee;
+}
+
+/* Image Container */
+.myad-img-wrapper {
+    width: 220px; /* Limits width of the huge photo */
+    height: 100%;
+    flex-shrink: 0;
+}
+
+.myad-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Crops image perfectly to fit the box */
+}
+
+/* Content on the right */
+.myad-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
+}
+
+.myad-content h3 { margin: 0; font-size: 1.2rem; color: #333; }
+.myad-price { font-size: 1.3rem; color: #28a745; font-weight: bold; }
+
+/* Buttons in the row */
+.myad-actions {
+    display: flex;
+    gap: 10px;
+}
+/* Language Nav - White text, no background */
+.nav a.text, .language-nav a {
+    color: white !important;
+    background: transparent !important;
+    text-decoration: none;
+    padding: 5px 10px;
+}
+
+/* Login Box Button Alignment */
+.form-card .btn-primary, 
+.form-card .btn-secondary {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    height: 45px;
+    padding: 10px;
+    margin-top: 10px;
+    text-align: center;
+    font-size: 16px;
+    border-radius: 6px;
 }
 
 
