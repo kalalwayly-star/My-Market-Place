@@ -320,7 +320,24 @@ img {
 .grid {
     display: grid;
 }
+.ad-card {
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
 
+.ad-img-wrapper {
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+}
+
+.ad-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 
 
 
