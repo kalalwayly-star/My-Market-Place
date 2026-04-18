@@ -1,6 +1,5 @@
 let foundUser = null;
 
-// ✅ REPLACE WITH THIS VERSION
 function checkUser() {
     const email = document.getElementById('resetEmail').value.trim();
     const users = JSON.parse(localStorage.getItem("users") || "[]");
