@@ -2,68 +2,60 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Ads | Marketplace</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-
-    <header class="header">
-    <div class="container" style="display: flex; justify-content: space-between; width: 100%; max-width: 1200px; margin: 0 auto;">
+<!-- HEADER -->
+<header class="header">
+    <div class="container" style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto;">
         <h1>My Marketplace</h1>
-         </div>
+
         <div class="nav" id="userAuth">
             <a href="index.html" class="btn text">Home</a>
             <a href="post.html" class="btn">Post Ad</a>
         </div>
-  
+    </div>
 </header>
 
-<div class="myads-container">    <div class="section-header">
+<!-- MAIN CONTENT -->
+<main class="myads-container" style="max-width:1200px; margin: 20px auto; padding: 0 15px;">
+
+    <div class="section-header">
         <h2>Your Active Listings</h2>
+        <p id="userGreeting" style="color: gray; margin-top: 5px;"></p>
     </div>
 
+    <!-- ADS GRID -->
     <div id="myAds" class="ads-grid">
         <p class="loading">Loading your ads...</p>
     </div> 
     
-    <div class="footer-actions">
-        <br>
+    <!-- FOOTER ACTION -->
+    <div class="footer-actions" style="margin-top: 20px;">
         <a href="index.html" class="btn text">← Back to Home</a>
     </div>
-</section>
 
-<!-- LOAD SCRIPTS IN THIS ORDER -->
+</main>
+
+<!-- SCRIPTS -->
 <script src="storage.js"></script>
 <script src="main.js"></script>
-<script src="myads.js"></script> <!-- Added myads.js for handling ads -->
+<script src="myads.js"></script>
 
+<!-- INLINE SCRIPT -->
 <script>
-    // Personalize the greeting if logged in
     const user = JSON.parse(localStorage.getItem("currentUser"));
+
     if (user) {
-        document.getElementById('userGreeting').innerText = `Managing ads for: ${user.email}`;
+        const greetingEl = document.getElementById("userGreeting");
+        if (greetingEl) {
+            greetingEl.innerText = `Managing ads for: ${user.email}`;
+        }
     }
 </script>
-// This is the correct, full version of the code for your loop
-const adHTML = `
-    <div class="myad-card">
-        <div class="myad-img-wrapper">
-            <img src="${ad.image}" alt="${ad.title}">
-        </div>
-        <div class="myad-content">
-            <div>
-                <h3>${ad.title}</h3>
-                <p class="myad-price">$${ad.price}</p>
-            </div>
-            <div class="myad-actions">
-                <button class="btn-primary" style="width:auto; padding:5px 15px;" onclick="editAd(${ad.id})">Edit</button>
-                <button class="btn-secondary" style="width:auto; padding:5px 15px; background:#d9534f; color:white;" onclick="deleteAd(${ad.id})">Delete</button>
-            </div>
-        </div>
-    </div>
-`;
-
 
 </body>
 </html>
