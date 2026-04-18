@@ -190,6 +190,14 @@ body {
     max-width: 600px;
     margin: 40px auto;
 }
+.form-card {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    max-width: 500px;
+    margin: 40px auto; /* Centers the login box */
+}
 
 .form-card input, .form-card select, .form-card textarea {
     width: 100%;
