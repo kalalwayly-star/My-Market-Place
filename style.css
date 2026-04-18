@@ -287,6 +287,90 @@ body {
     color: #28a745;
     font-weight: bold;
 }
+/* --- DETAIL PAGE PROFESSIONAL LAYOUT --- */
+.details-page {
+    background-color: #f8f9fa;
+}
+
+/* Two-column grid layout */
+.detail-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* Image takes 2 parts, Sidebar takes 1 */
+    gap: 30px;
+    margin-top: 20px;
+}
+
+/* IMAGE FIX: This stops the photo from being huge */
+.main-image {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-height: 550px; /* Limits the height */
+}
+
+.main-image img {
+    width: 100%;
+    height: auto;
+    max-height: 550px;
+    object-fit: contain; /* Full image, no stretching */
+}
+
+/* SIDEBAR STYLES (Price & Contact) */
+.price-card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    position: sticky; /* Stays visible as you scroll */
+    top: 20px;
+}
+
+.price-tag {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #28a745; /* Professional Green */
+    margin: 15px 0;
+}
+
+.ad-category {
+    background: #e9ecef;
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    color: #495057;
+}
+
+/* MOBILE FIX: Stack columns on small screens */
+@media (max-width: 768px) {
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+}
+footer {
+    text-align: center;
+    padding: 40px 20px;
+    background: #333;
+    color: white;
+    margin-top: 50px;
+}
+
+footer ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+footer a {
+    color: #ccc;
+    text-decoration: none;
+}
 
 
 
