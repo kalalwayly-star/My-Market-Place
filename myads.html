@@ -48,7 +48,7 @@
         document.getElementById('userGreeting').innerText = `Managing ads for: ${user.email}`;
     }
 </script>
-// Inside your loop where you display ads:
+// This is the correct, full version of the code for your loop
 const adHTML = `
     <div class="myad-card">
         <div class="myad-img-wrapper">
@@ -60,12 +60,13 @@ const adHTML = `
                 <p class="myad-price">$${ad.price}</p>
             </div>
             <div class="myad-actions">
-                <button class="btn" onclick="editAd(${ad.id})">Edit</button>
-                <button class="btn" style="background:#d9534f;" onclick="deleteAd(${ad.id})">Delete</button>
+                <button class="btn-primary" style="width:auto; padding:5px 15px;" onclick="editAd(${ad.id})">Edit</button>
+                <button class="btn-secondary" style="width:auto; padding:5px 15px; background:#d9534f; color:white;" onclick="deleteAd(${ad.id})">Delete</button>
             </div>
         </div>
     </div>
 `;
+
 
 </body>
 </html>
