@@ -6,7 +6,7 @@ body {
   color: #333;
 }
 
-/* HEADER */
+/* HEADER & NAVIGATION */
 .header {
   background: #4b2aad;
   color: white;
@@ -17,104 +17,65 @@ body {
   box-sizing: border-box;
 }
 
-.nav {
+/* Clean Language Nav: White words, no background */
+.language-nav, .nav {
     display: flex;
-    gap: 10px;
-}
-
-/* SEARCH & HERO */
-.hero {
-    background-color: #204fbc;
-    color: white;
-    padding: 60px 20px;
-    text-align: center;
-}
-
-.search-container {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 20px;
-    max-width: 800px;
-    margin-inline: auto;
-}
-
-.search-container input, .search-container select {
-    padding: 12px;
-    border-radius: 5px;
-    border: none;
-}
-
-/* CATEGORIES */
-.category-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     gap: 15px;
-    padding: 20px;
+    align-items: center;
 }
 
-.cat-card {
-    background: #f8f9fa;
+.language-nav a, .nav a.text {
+    color: white;
+    text-decoration: none;
+    font-size: 0.9rem;
+    background: none; /* Removes white background */
+    padding: 0;
+}
+
+.language-nav a:hover {
+    text-decoration: underline;
+}
+
+/* BUTTONS: Unified Alignment */
+.btn {
+  background: #ff6a00;
+  color: white;
+  padding: 10px 16px; /* Balanced padding */
+  text-decoration: none;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  display: inline-block;
+  line-height: 1.2;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+.btn-secondary {
+    background-color: #f8f9fa;
+    color: #333;
     border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 20px;
-    text-align: center;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.cat-card:hover {
-    background: #fff;
-    border-color: #007bff;
-    transform: translateY(-5px);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-/* LISTINGS GRID */
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-    padding: 20px;
-}
-
-.ad-card {
-    background: #fff;
-    border: 1px solid #eee;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    transition: transform 0.2s;
-}
-
-.ad-card:hover {
-    transform: translateY(-5px);
-}
-
-.ad-image-wrapper img {
+    padding: 12px;
+    border-radius: 6px;
     width: 100%;
-    height: 180px;
-    object-fit: cover;
+    margin-top: 10px;
 }
 
-.ad-content { padding: 15px; }
-
-.ad-price {
-    font-size: 1.2rem;
-    color: #28a745;
-    font-weight: bold;
-}
-
-/* --- 2. AUTH PAGES (Login, Register, Forgot) --- */
-
-/* Add this class ONLY to <body> in login, register, and forgot html */
+/* --- 2. AUTH & LOGIN BOX --- */
 .auth-page-body {
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     background-color: #f4f7f6;
-    margin: 0;
 }
 
 .form-card { 
@@ -127,233 +88,100 @@ body {
     box-sizing: border-box;
 }
 
-.input-group { 
-    margin-bottom: 20px; 
-    display: flex; 
-    flex-direction: column; 
-    position: relative; /* Crucial for eye icon */
-}
-
-.input-group label { 
-    font-weight: 600; 
-    margin-bottom: 8px; 
-    color: #555; 
-    font-size: 0.9rem; 
-}
-
-.input-group input, .input-group select, .input-group textarea {
-    padding: 12px; 
-    border: 1px solid #ddd; 
-    border-radius: 6px; 
-    font-size: 1rem;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-/* Password Eye Icon */
-.input-group i {
-    position: absolute;
-    right: 12px;
-    top: 38px;
-    cursor: pointer;
-    color: #888;
-}
-
-/* --- 3. BUTTONS --- */
-.btn {
-  background: #ff6a00;
-  color: white;
-  padding: 8px 12px;
-  text-decoration: none;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-}
-
-.btn-primary {
-  width: 100%;
-  padding: 12px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.btn-secondary {
-    background-color: #f8f9fa;
-    color: #333;
-    border: 1px solid #ddd;
-    padding: 12px;
-    border-radius: 6px;
-    width: 100%;
-    cursor: pointer;
-    font-weight: bold;
-    margin-top: 10px;
-}
-
-.divider {
-  margin: 20px 0;
-  text-align: center;
-  position: relative;
-}
-
-.divider::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    border-top: 1px solid #eee;
-}
-
-.divider span { 
-    background:#fff; 
-    padding:0 10px; 
-    color: #999; 
-    font-size: 14px; 
-    position: relative;
-}
-
-/* --- 4. EXTRA FEATURES --- */
-.error-text { color: #d9534f; font-size: 13px; margin-top: 10px; font-weight: bold; }
-
-.form-stage {
-  animation: fadeIn 0.4s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-/* --- MY ADS PAGE FIX --- */
+/* --- 3. MY ADS PAGE (Fix large photos) --- */
 .myads-container {
     max-width: 1000px;
     margin: 20px auto;
     padding: 20px;
 }
 
-/* Fixes the "Very Large Photo" issue in lists */
 .myad-card {
-    display: flex; /* Horizontal layout for My Ads */
+    display: flex;
     background: white;
     margin-bottom: 15px;
-    border-radius: 8px;
+    border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 .myad-img-wrapper {
-    width: 200px; /* Fixed width for list thumbnails */
-    height: 150px;
+    width: 180px; /* Controlled width */
+    height: 140px;
     flex-shrink: 0;
 }
 
 .myad-img-wrapper img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Crops image to fit perfectly without stretching */
+    object-fit: cover; /* Prevents stretching */
 }
 
-/* --- DETAILS PAGE FIX --- */
-.details-wrapper {
-    max-width: 900px;
-    margin: 30px auto;
-    background: white;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-}
+/* --- 4. DETAIL PAGE (Fix large photos) --- */
+.details-page { background-color: #f8f9fa; }
 
-/* Professional Detail Image */
-.main-detail-img {
-    width: 100%;
-    max-height: 500px; /* Prevents image from taking over the whole screen */
-    object-fit: contain; /* Shows full image without cutting it off */
-    background: #f0f0f0;
-    border-radius: 8px;
-    margin-bottom: 20px;
-}
-
-.details-info {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.details-price {
-    font-size: 2rem;
-    color: #28a745;
-    font-weight: bold;
-}
-/* --- DETAIL PAGE PROFESSIONAL LAYOUT --- */
-.details-page {
-    background-color: #f8f9fa;
-}
-
-/* Two-column grid layout */
 .detail-grid {
     display: grid;
-    grid-template-columns: 2fr 1fr; /* Image takes 2 parts, Sidebar takes 1 */
+    grid-template-columns: 2fr 1fr;
     gap: 30px;
-    margin-top: 20px;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
 }
 
-/* IMAGE FIX: This stops the photo from being huge */
 .main-image {
     background: #fff;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    max-height: 500px; /* Limits height strictly */
     display: flex;
     justify-content: center;
-    align-items: center;
-    max-height: 550px; /* Limits the height */
 }
 
 .main-image img {
-    width: 100%;
-    height: auto;
-    max-height: 550px;
-    object-fit: contain; /* Full image, no stretching */
+    max-width: 100%;
+    max-height: 500px;
+    object-fit: contain; /* Shows entire photo safely */
 }
 
-/* SIDEBAR STYLES (Price & Contact) */
 .price-card {
     background: white;
     padding: 25px;
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    position: sticky; /* Stays visible as you scroll */
-    top: 20px;
 }
 
 .price-tag {
-    font-size: 2rem;
+    font-size: 2.2rem;
     font-weight: bold;
-    color: #28a745; /* Professional Green */
-    margin: 15px 0;
+    color: #28a745;
 }
 
-.ad-category {
-    background: #e9ecef;
-    display: inline-block;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    color: #495057;
+/* --- 5. CATEGORIES & GRID --- */
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    padding: 20px;
 }
 
-/* MOBILE FIX: Stack columns on small screens */
-@media (max-width: 768px) {
-    .detail-grid {
-        grid-template-columns: 1fr;
-    }
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+    padding: 20px;
 }
+
+.ad-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+/* --- FOOTER --- */
 footer {
     text-align: center;
-    padding: 40px 20px;
+    padding: 40px;
     background: #333;
     color: white;
     margin-top: 50px;
@@ -367,10 +195,7 @@ footer ul {
     gap: 20px;
 }
 
-footer a {
-    color: #ccc;
-    text-decoration: none;
-}
+footer a { color: #ccc; text-decoration: none; }
 
 
 
