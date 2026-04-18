@@ -3,15 +3,19 @@ const getErrorEl = () => document.getElementById('error-message');
 
 /* --- LOGIN FUNCTION --- */
 function login() {
-    // FIX: Look for 'loginEmail' (new) OR 'email' (old) to avoid breaking things
     const emailEl = document.getElementById('loginEmail') || document.getElementById('email');
     const email = emailEl ? emailEl.value.trim() : "";
     
     const password = document.getElementById('loginPassword').value;
     const errorMsg = getErrorEl();
 
+    if (!email || !password) {
+        errorMsg.innerText = "Please fill in all fields.";
+        return;
+    }
+
     if (password.length < 7) {
-        errorMsg.innerText = "Error: Password must be at least 7 characters.";
+        errorMsg.innerText = "Password must be at least 7 characters.";
         return;
     }
 
@@ -20,7 +24,7 @@ function login() {
 
     if (user) {
         localStorage.setItem("currentUser", JSON.stringify(user));
-        window.location.href = "myads.html"; 
+        window.location.href = "myads.html";
     } else {
         errorMsg.innerText = "Invalid email or password.";
     }
@@ -28,24 +32,17 @@ function login() {
 
 /* --- REGISTRATION FUNCTION --- */
 function register() {
-    const emailEl = document.getElementById('email');
-    const email = emailEl ? emailEl.value.trim() : "";
+    const email = document.getElementById('email').value.trim();
     const password = document.getElementById('loginPassword').value;
-    
-    // NEW: Capture Security Question & Answer for the Forgot Password flow
-    const sQuestion = document.getElementById('securityQuestion');
-    const sAnswer = document.getElementById('securityAnswer');
-    
     const errorMsg = getErrorEl();
 
-    // Check if these fields exist before trying to use them
-    if (!email || !password || (sAnswer && !sAnswer.value.trim())) {
+    if (!email || !password) {
         errorMsg.innerText = "Please fill in all fields.";
         return;
     }
 
     if (password.length < 7) {
-        errorMsg.innerText = "Account Failed: Password needs 7+ characters.";
+        errorMsg.innerText = "Password must be 7+ characters.";
         return;
     }
 
@@ -56,12 +53,9 @@ function register() {
         return;
     }
 
-    // UPDATED: Save security data + initial stats in one object
-    const newUser = { 
-        email, 
+    const newUser = {
+        email,
         password,
-        securityQuestion: sQuestion ? sQuestion.value : "pet", // Default to pet if missing
-        securityAnswer: sAnswer ? sAnswer.value.trim() : "",
         trustScore: 50,
         flaggedCount: 0,
         posts: 0,
@@ -73,30 +67,31 @@ function register() {
 
     sendWelcomeNotification(email);
     localStorage.setItem("currentUser", JSON.stringify(newUser));
-    
-    alert("Account created! Check your messages for a welcome note.");
+
+    alert("Account created successfully!");
     window.location.href = "myads.html";
 }
 
-/* --- HELPER FUNCTIONS --- */
-// (Keep sendWelcomeNotification and checkAdminAccess exactly as they were)
+/* --- WELCOME MESSAGE --- */
 function sendWelcomeNotification(userEmail) {
     const welcomeMsg = {
         id: Date.now(),
         sender: "Marketplace Team",
         receiverEmail: userEmail,
-        subject: "Welcome to the Marketplace!",
-        body: "Thanks for joining! You can now post ads and feature them to get more views. Enjoy your stay!",
+        subject: "Welcome!",
+        body: "Thanks for joining our marketplace!",
         date: new Date().toLocaleDateString()
     };
+
     const messages = JSON.parse(localStorage.getItem("messages") || "[]");
     messages.push(welcomeMsg);
     localStorage.setItem("messages", JSON.stringify(messages));
 }
 
+/* --- ADMIN CHECK --- */
 function checkAdminAccess() {
     const pass = prompt("Enter Admin Password:");
-    if (btoa(pass) === "S2FsZWQxOTcwIQ==") { 
+    if (btoa(pass) === "S2FsZWQxOTcwIQ==") {
         localStorage.setItem('isAdmin', 'true');
         window.location.href = "admin.html";
     } else {
