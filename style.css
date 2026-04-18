@@ -197,6 +197,94 @@ footer ul {
 
 footer a { color: #ccc; text-decoration: none; }
 
+/* --- 1. HEADER & LANGUAGES --- */
+.header {
+  background: #4b2aad;
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* No white background, just white text */
+.language-nav a, .nav a.text {
+    color: white !important;
+    text-decoration: none;
+    background: transparent !important;
+    padding: 5px 10px;
+    font-size: 14px;
+}
+
+.language-nav a:hover {
+    text-decoration: underline;
+}
+
+/* --- 2. UNIFIED BUTTONS (Login Box) --- */
+.btn-primary, .btn-secondary {
+    display: block;
+    width: 100%;
+    height: 45px; /* Forced identical height */
+    line-height: 45px; /* Centers text vertically */
+    padding: 0; 
+    border-radius: 6px;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    box-sizing: border-box;
+    font-size: 16px;
+    border: none;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #f8f9fa;
+    color: #333;
+    border: 1px solid #ddd;
+    margin-top: 12px;
+    text-decoration: none; /* In case it's an <a> tag */
+}
+
+/* --- 3. MY ADS PAGE (The Row Fix) --- */
+/* Make sure your myads.html uses these exact classes */
+.myads-container {
+    max-width: 900px;
+    margin: 20px auto;
+}
+
+.myad-card {
+    display: flex; /* Forces photo and text to be side-by-side */
+    background: white;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    height: 150px; /* Fixed height for the row */
+}
+
+.myad-img-wrapper {
+    width: 200px; /* Limits photo width */
+    height: 150px;
+    flex-shrink: 0;
+}
+
+.myad-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Stops the "Large Photo" problem */
+}
+
+.myad-content {
+    padding: 15px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 
 
 
