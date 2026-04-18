@@ -135,7 +135,7 @@ footer {
     overflow: hidden;
     max-height: 500px;
     display: flex;
-    justify-content: center;
+    justify-content: left;
 }
 
 .main-image img {
