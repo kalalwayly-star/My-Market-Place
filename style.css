@@ -273,7 +273,7 @@ img {
     object-fit: cover;
     border-radius: 8px;
 }  
-.ads-grid {
+.grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 20px;
@@ -317,7 +317,7 @@ img {
     max-height: 200px;
     object-fit: cover;
 }
-.ads-grid {
+.grid {
     display: grid;
 }
 
