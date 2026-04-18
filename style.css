@@ -6,6 +6,14 @@ body {
   color: #333;
 }
 
+/* Stacks Header, Content, and Footer vertically */
+.auth-page-body, .details-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
 /* --- 2. HEADER & LANGUAGES --- */
 .header {
   background: #4b2aad;
@@ -15,54 +23,33 @@ body {
   justify-content: space-between;
   align-items: center;
   box-sizing: border-box;
+  width: 100%;
 }
 
-/* Force white text and remove any background/boxes */
 .language-nav a, .nav a.text, .nav a {
     color: white !important;
     background: transparent !important;
-    background-color: transparent !important;
     text-decoration: none;
     padding: 5px 12px;
     font-size: 14px;
     border: none !important;
-    box-shadow: none !important;
 }
 
 .language-nav a:hover {
     text-decoration: underline;
 }
 
-/* --- 3. UNIFIED BUTTONS (Login & Main) --- */
-.btn-primary, .btn-secondary, .btn {
-    display: inline-block;
-    height: 45px !important;
-    line-height: 25px !important; /* Centers text vertically */
-    padding: 10px 20px !important;
-    border-radius: 6px;
-    font-weight: bold;
-    text-align: center;
-    cursor: pointer;
-    box-sizing: border-box;
-    font-size: 16px;
-    border: none;
-    text-decoration: none;
-}
-
-.btn-primary { background-color: #007bff !important; color: white !important; width: 100%; }
-.btn-secondary { background-color: #f8f9fa !important; color: #333 !important; border: 1px solid #ddd !important; width: 100%; margin-top: 12px; }
-
-/* Update this in your style.css */
-.auth-page-body {
+/* --- 3. HERO & SEARCH --- */
+.hero {
     display: flex;
-    flex-direction: column; /* This stacks header, content, and footer vertically */
-    min-height: 100vh;      /* Ensures the page takes up the full height */
-    margin: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 20px;
+    background-color: #204fbc;
+    color: white;
 }
-
-/* This pushes the footer to the very bottom of the screen */
-footer {
-    margin-top: auto; 
 
 #hero_title {
     text-align: center;
@@ -70,37 +57,73 @@ footer {
     margin-bottom: 20px;
 }
 
-.form-card { 
-    background: white; 
-    border-radius: 12px; 
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
-    padding: 35px; 
+.search-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 40px auto;
+    max-width: 800px;
     width: 100%;
-    max-width: 400px;
 }
 
-/* --- 5. MY ADS PAGE (Fix huge photos & layout) --- */
+.search-container input, .search-container select {
+    padding: 15px 25px !important;
+    font-size: 1.1rem !important;
+    border-radius: 8px !important;
+    border: none;
+}
+
+.search-container button {
+    padding: 15px 30px !important;
+    font-size: 1.1rem;
+    border-radius: 8px;
+}
+
+/* --- 4. LAYOUTS (Category Sidebar) --- */
+.main-content-wrapper {
+    display: flex;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.category-sidebar {
+    width: 250px;
+    flex-shrink: 0;
+}
+
+.ads-display-area {
+    flex-grow: 1;
+}
+
+.category-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 50px;
+}
+
+/* --- 5. MY ADS PAGE (Rows) --- */
 .ads-grid {
     display: flex;
     flex-direction: column;
     gap: 20px;
     max-width: 900px;
     margin: 20px auto;
-    padding: 20px;
 }
 
 .myad-card {
-    display: flex !important; /* Forces side-by-side */
+    display: flex !important;
     background: white;
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    height: 160px; /* Fixed height for the row */
+    height: 160px;
     border: 1px solid #eee;
 }
 
 .myad-img-wrapper {
-    width: 220px !important; /* Fixed width for the photo */
+    width: 220px !important;
     height: 160px !important;
     flex-shrink: 0;
 }
@@ -108,7 +131,7 @@ footer {
 .myad-img-wrapper img {
     width: 100% !important;
     height: 100% !important;
-    object-fit: cover !important; /* Stops large photo problem */
+    object-fit: cover !important;
 }
 
 .myad-content {
@@ -122,11 +145,12 @@ footer {
 /* --- 6. DETAIL PAGE --- */
 .detail-grid {
     display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 30px;
+    grid-template-columns: 1fr 350px;
+    gap: 40px;
     max-width: 1200px;
     margin: 20px auto;
     padding: 0 20px;
+    align-items: start;
 }
 
 .main-image {
@@ -144,158 +168,76 @@ footer {
     object-fit: contain;
 }
 
-/* --- 7. GRID & CARDS --- */
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 20px;
-    padding: 20px;
+.description-section {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    margin-top: 20px;
+    text-align: left;
 }
 
-.ad-card img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
+.content-sidebar {
+    position: sticky;
+    top: 20px;
 }
 
-footer {
-    text-align: center;
-    padding: 40px;
-    background: #332;
-    color: white;
-    margin-top: 50px;
-}
-/* Centers the search bar and sets a professional width */
-.search-container {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin: 40px auto; /* Centers it and adds space top/bottom */
-    max-width: 800px;
-    padding: 0 20px; /* Gives the 'indent' look on mobile */
-}
-
-/* Adds a nice 'indent' (margin) to your category list */
-.category-grid {
-    max-width: 1200px;
-    margin: 0 auto; /* Centers the whole grid */
-    padding: 20px 50px; /* This is your indent */
-}
-footer {
-    background: #4b2aad; /* Matches your header color */
-    color: white;
-    padding: 40px 20px;
-    text-align: center;
-}
-
-/* Force links in the footer to be white and clean */
-footer a {
-    color: white !important;
-    text-decoration: none;
-    margin: 0 10px;
-    font-size: 0.9rem;
-}
-
-footer a:hover {
-    text-decoration: underline;
-}
+/* --- 7. FORMS --- */
 .form-card {
     background: white;
     border-radius: 12px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    padding: 30px;
-    max-width: 600px; /* Stops it from stretching too wide */
+    padding: 35px;
+    max-width: 600px;
     margin: 40px auto;
 }
 
-/* Style for input fields to look uniform and modern */
 .form-card input, .form-card select, .form-card textarea {
     width: 100%;
     padding: 12px;
     margin-bottom: 20px;
     border: 1px solid #ddd;
     border-radius: 6px;
-    box-sizing: border-box; /* Crucial for alignment */
-}
-.hero {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Centers everything horizontally */
-    justify-content: center;
-    text-align: center;
-    padding: 60px 20px;
-}
-/* Update your main container layout */
-.main-content-wrapper {
-    display: flex;
-    gap: 30px;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
+    box-sizing: border-box;
 }
 
-/* Category list stays on the left */
-.category-sidebar {
-    width: 250px;
-    flex-shrink: 0;
-}
-
-/* Ads show on the right */
-.ads-display-area {
-    flex-grow: 1;
-}
-.search-container input, 
-.search-container select {
-    padding: 15px 25px !important; /* Larger clickable area */
-    font-size: 1.1rem !important;
-    border-radius: 8px !important;
-    width: 100%;
-}
-
-.search-container button {
-    padding: 15px 30px !important;
-    font-size: 1.1rem;
-}
-/* Fix for the Detail Page layout from your screenshot */
-.detail-grid {
-    display: grid;
-    grid-template-columns: 1fr 350px; /* Main content vs fixed sidebar */
-    gap: 40px;
-    align-items: start;
-}
-
-.description-section {
-    background: white;
-    padding: 25px;
-    border-radius: 8px;
-    margin-top: 20px;
-    text-align: left; /* Ensures text doesn't float weirdly */
-}
-
-/* Fix the sidebar positioning */
-.content-sidebar {
-    position: sticky;
-    top: 20px;
-}
 .feature-option {
-    display: flex;           /* Aligns children in a row */
-    align-items: center;     /* Centers them vertically */
-    gap: 10px;               /* Adds space between box and text */
-    margin: 15px 0;          /* Adds space above and below the row */
-    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 15px 0;
 }
 
-#isFeatured {
-    width: 18px;             /* Makes the checkbox a professional size */
-    height: 18px;
-    cursor: pointer;
+/* --- 8. FOOTER --- */
+footer {
+    background: #4b2aad;
+    color: white !important;
+    padding: 40px 20px;
+    text-align: center;
+    margin-top: auto; /* Pushes to bottom */
 }
 
-#feature_text {
-    font-size: 1rem;
-    font-weight: 500;
-    color: #333;
+footer a {
+    color: white !important;
+    text-decoration: none;
+    margin: 0 10px;
 }
+
+/* --- 9. BUTTONS --- */
+.btn-primary, .btn-secondary, .btn {
+    height: 45px;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-primary { background-color: #007bff; color: white; }
+.btn-secondary { background-color: #f8f9fa; color: #333; border: 1px solid #ddd; }
+
 
 
 
