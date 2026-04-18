@@ -52,14 +52,18 @@ body {
 .btn-primary { background-color: #007bff !important; color: white !important; width: 100%; }
 .btn-secondary { background-color: #f8f9fa !important; color: #333 !important; border: 1px solid #ddd !important; width: 100%; margin-top: 12px; }
 
-/* --- 4. AUTH PAGES (Centering Login Box) --- */
+/* Update this in your style.css */
 .auth-page-body {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #f4f7f6;
+    flex-direction: column; /* This stacks header, content, and footer vertically */
+    min-height: 100vh;      /* Ensures the page takes up the full height */
+    margin: 0;
 }
+
+/* This pushes the footer to the very bottom of the screen */
+footer {
+    margin-top: auto; 
+
 #hero_title {
     text-align: center;
     width: 100%;
