@@ -170,7 +170,7 @@ footer {
 .category-grid {
     max-width: 1200px;
     margin: 0 auto; /* Centers the whole grid */
-    padding: 20px 40px; /* This is your indent */
+    padding: 20px 60px; /* This is your indent */
 }
 footer {
     background: #4b2aad; /* Matches your header color */
