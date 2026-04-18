@@ -1,4 +1,4 @@
-/* --- GLOBAL STYLES --- */
+/* --- 1. GLOBAL & HOMEPAGE STYLES --- */
 body {
   font-family: 'Segoe UI', Arial, sans-serif;
   margin: 0;
@@ -6,7 +6,7 @@ body {
   color: #333;
 }
 
-/* --- HEADER & NAVIGATION --- */
+/* HEADER */
 .header {
   background: #4b2aad;
   color: white;
@@ -14,61 +14,100 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
   box-sizing: border-box;
 }
 
 .nav {
-  display: flex;
-  gap: 10px;
+    display: flex;
+    gap: 10px;
 }
 
-/* --- BUTTONS --- */
-.btn {
-  background: #ff6a00;
-  color: white;
-  padding: 8px 12px;
-  text-decoration: none;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
+/* SEARCH & HERO */
+.hero {
+    background-color: #204fbc;
+    color: white;
+    padding: 60px 20px;
+    text-align: center;
 }
 
-.btn-primary {
-  background-color: #007bff;
-  color: white;
-  width: 100%;
-  padding: 12px;
-  border-radius: 6px;
-  border: none;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.3s;
+.search-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+    max-width: 800px;
+    margin-inline: auto;
 }
 
-.btn-primary:hover {
-  background-color: #0056b3;
+.search-container input, .search-container select {
+    padding: 12px;
+    border-radius: 5px;
+    border: none;
 }
 
-.btn-secondary {
-  background-color: #f8f9fa;
-  color: #333;
-  border: 1px solid #ddd;
-  padding: 12px;
-  border-radius: 6px;
-  width: 100%;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background 0.3s;
+/* CATEGORIES */
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    padding: 20px;
 }
 
-.btn-secondary:hover {
-  background-color: #e2e6ea;
+.cat-card {
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s;
 }
 
-/* --- AUTH SPECIAL CENTERING --- */
-/* Add this class to <body> in login.html, register.html, forgot.html */
+.cat-card:hover {
+    background: #fff;
+    border-color: #007bff;
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* LISTINGS GRID */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.ad-card {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    transition: transform 0.2s;
+}
+
+.ad-card:hover {
+    transform: translateY(-5px);
+}
+
+.ad-image-wrapper img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.ad-content { padding: 15px; }
+
+.ad-price {
+    font-size: 1.2rem;
+    color: #28a745;
+    font-weight: bold;
+}
+
+/* --- 2. AUTH PAGES (Login, Register, Forgot) --- */
+
+/* Add this class ONLY to <body> in login, register, and forgot html */
 .auth-page-body {
     display: flex;
     justify-content: center;
@@ -78,117 +117,108 @@ body {
     margin: 0;
 }
 
-.auth-wrapper {
-  width: 100%;
-  display: flex;
-  justify-content: center;
+.form-card { 
+    background: white; 
+    border-radius: 12px; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
+    padding: 35px; 
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box;
 }
 
-.form-card {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-  padding: 35px;
-  width: 100%;
-  max-width: 400px;
+.input-group { 
+    margin-bottom: 20px; 
+    display: flex; 
+    flex-direction: column; 
+    position: relative; /* Crucial for eye icon */
 }
 
-/* --- INPUT GROUPS & EYE ICON --- */
-.input-group {
-  margin-bottom: 20px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  text-align: left;
+.input-group label { 
+    font-weight: 600; 
+    margin-bottom: 8px; 
+    color: #555; 
+    font-size: 0.9rem; 
 }
 
-.input-group label {
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: #555;
-  font-size: 0.9rem;
+.input-group input, .input-group select, .input-group textarea {
+    padding: 12px; 
+    border: 1px solid #ddd; 
+    border-radius: 6px; 
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-.input-group input, 
-.input-group select {
-  padding: 12px;
-  padding-right: 40px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 1rem;
-  width: 100%;
-  box-sizing: border-box;
-}
-
+/* Password Eye Icon */
 .input-group i {
-  position: absolute;
-  right: 12px;
-  top: 38px;
-  cursor: pointer;
-  color: #888;
+    position: absolute;
+    right: 12px;
+    top: 38px;
+    cursor: pointer;
+    color: #888;
 }
 
-/* --- DECORATION --- */
+/* --- 3. BUTTONS --- */
+.btn {
+  background: #ff6a00;
+  color: white;
+  padding: 8px 12px;
+  text-decoration: none;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-secondary {
+    background-color: #f8f9fa;
+    color: #333;
+    border: 1px solid #ddd;
+    padding: 12px;
+    border-radius: 6px;
+    width: 100%;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
 .divider {
-  text-align: center;
   margin: 20px 0;
+  text-align: center;
   position: relative;
 }
 
 .divider::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  border-top: 1px solid #eee;
-  z-index: 1;
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    border-top: 1px solid #eee;
 }
 
-.divider span {
-  background: white;
-  padding: 0 10px;
-  position: relative;
-  z-index: 2;
-  color: #999;
-  font-size: 0.85rem;
+.divider span { 
+    background:#fff; 
+    padding:0 10px; 
+    color: #999; 
+    font-size: 14px; 
+    position: relative;
 }
 
-/* --- ADS GRID --- */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
-  padding: 20px;
-}
+/* --- 4. EXTRA FEATURES --- */
+.error-text { color: #d9534f; font-size: 13px; margin-top: 10px; font-weight: bold; }
 
-.ad-card {
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  overflow: hidden;
-  transition: transform 0.2s;
-}
-
-.ad-card:hover {
-  transform: translateY(-5px);
-}
-
-.ad-image-wrapper img {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-}
-
-.ad-content { padding: 15px; }
-
-.ad-price {
-  font-size: 1.2rem;
-  color: #28a745;
-  font-weight: bold;
-}
-
-/* --- ANIMATIONS --- */
 .form-stage {
   animation: fadeIn 0.4s ease-in-out;
 }
@@ -197,6 +227,7 @@ body {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
 
 
 
