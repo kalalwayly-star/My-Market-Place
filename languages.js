@@ -24,8 +24,7 @@ function updateText(translations, language) {
         if (translations[key]) {
             el.innerText = translations[key];
         } else {
-            console.warn(`Missing translation key: ${key}`);
-        }
+console.warn(`Missing translation key: ${key} (add it to JSON files)`);        }
     });
 
     // 2. PLACEHOLDERS (using data-i18n-placeholder attributes)
