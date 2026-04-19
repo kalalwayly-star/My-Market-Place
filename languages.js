@@ -3,16 +3,22 @@ let currentLanguage = localStorage.getItem("language") || "en";
 
 // Load the selected language and update the page content
 function loadLanguage(language) {
-    fetch(${language}.json)
-        .then(response => response.json())
+    // FIXED: Added backticks for template literal
+    fetch(`${language}.json`)
+        .then(response => {
+            if (!response.ok) throw new Error("File not found");
+            return response.json();
+        })
         .then(translations => {
             localStorage.setItem("language", language);
             updateText(translations, language);
         })
         .catch(error => {
             console.error("Error loading language file:", error);
-            // Optionally, fall back to English if there's an error
-            loadLanguage("en");
+            // Fallback to English only if current attempt isn't already English
+            if (language !== "en") {
+                loadLanguage("en");
+            }
         });
 }
 
@@ -24,7 +30,9 @@ function updateText(translations, language) {
         if (translations[key]) {
             el.innerText = translations[key];
         } else {
-console.warn(Missing translation key: ${key} (add it to JSON files));        }
+            // FIXED: Added backticks and quotes
+            console.warn(`Missing translation key: ${key}`);
+        }
     });
 
     // 2. PLACEHOLDERS (using data-i18n-placeholder attributes)
@@ -35,51 +43,39 @@ console.warn(Missing translation key: ${key} (add it to JSON files));        }
         }
     });
 
-    // 3. Backward support for old IDs (should remove later if no longer needed)
-    document.querySelectorAll("[id]").forEach(el => {
-        const key = el.id;
-        if (translations[key] && !el.hasAttribute("data-i18n")) {
-            if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
-                el.placeholder = translations[key];
-            } else {
-                el.innerText = translations[key];
-            }
-        }
-    });
-
-    // 4. RTL support for Arabic language
-    if (language === "ar") {
-        document.documentElement.setAttribute("dir", "rtl");
-        document.documentElement.lang = "ar";
-    } else {
-        document.documentElement.setAttribute("dir", "ltr");
-        document.documentElement.lang = language;
-    }
+    // 3. Direction and Lang support
+    const isRTL = (language === "ar");
+    document.documentElement.setAttribute("dir", isRTL ? "rtl" : "ltr");
+    document.documentElement.lang = language;
 }
 
 // Set up language buttons and switcher
 document.addEventListener("DOMContentLoaded", () => {
-    // Language switcher buttons
-    const buttons = {
+    // 1. Handle Button Clicks
+    const langButtons = {
         "lang-en": "en",
         "lang-es": "es",
         "lang-fr": "fr",
         "lang-ar": "ar"
     };
 
-    // Add click event listeners to each button for language change
-    Object.entries(buttons).forEach(([id, lang]) => {
+    Object.entries(langButtons).forEach(([id, lang]) => {
         const btn = document.getElementById(id);
-        if (btn) btn.onclick = () => loadLanguage(lang);
+        if (btn) {
+            btn.addEventListener("click", (e) => {
+                e.preventDefault();
+                loadLanguage(lang);
+            });
+        }
     });
 
-    // Handle the dropdown switcher for language selection
+    // 2. Handle Dropdown Switcher
     const switcher = document.getElementById("languageSwitcher");
     if (switcher) {
         switcher.value = currentLanguage;
         switcher.onchange = (e) => loadLanguage(e.target.value);
     }
 
-    // Load the initial language based on the saved setting or default to 'en'
+    // 3. Initial Load
     loadLanguage(currentLanguage);
 });
