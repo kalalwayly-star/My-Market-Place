@@ -112,5 +112,9 @@
   "footer_safety": "Consejos de seguridad",
 "safety_buy_title": "🛡️ Comprar con seguridad",
 "safety_meet_label": "Reunirse en público:",
-"safety_flag1": "Mensajes mal escritos o que utilizan lenguaje automatizado."
+"safety_flag1": "Mensajes mal escritos o que utilizan lenguaje automatizado.",
+  "terms_title": "Términos de Servicio",
+"terms_header": "Términos de Servicio",
+"terms_acceptance_title": "1. Aceptación de los términos",
+"terms_listings_text": "Los usuarios son responsables del contenido que publican. No permitimos artículos ilegales."
 }
