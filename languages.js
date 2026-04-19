@@ -3,20 +3,16 @@ let currentLanguage = localStorage.getItem("language") || "en";
 
 // Load the selected language and update the page content
 function loadLanguage(language) {
-    fetch(`${language}.json`)
+    fetch(${language}.json)
         .then(response => response.json())
         .then(translations => {
             localStorage.setItem("language", language);
             updateText(translations, language);
-            // Store translations globally for faster access in other scripts
-            window.translations = translations;
         })
         .catch(error => {
             console.error("Error loading language file:", error);
-            // Fallback to English only once if there's an error
-            if (language !== "en") {
-                loadLanguage("en");
-            }
+            // Optionally, fall back to English if there's an error
+            loadLanguage("en");
         });
 }
 
@@ -28,9 +24,7 @@ function updateText(translations, language) {
         if (translations[key]) {
             el.innerText = translations[key];
         } else {
-            console.warn(`Missing translation key: ${key} (add it to JSON files)`);
-            el.innerText = el.innerText || `Missing translation: ${key}`; // Fallback
-        }
+console.warn(Missing translation key: ${key} (add it to JSON files));        }
     });
 
     // 2. PLACEHOLDERS (using data-i18n-placeholder attributes)
@@ -38,9 +32,6 @@ function updateText(translations, language) {
         const key = el.getAttribute("data-i18n-placeholder");
         if (translations[key]) {
             el.placeholder = translations[key];
-        } else {
-            console.warn(`Missing placeholder key: ${key} (add it to JSON files)`);
-            el.placeholder = el.placeholder || `Missing placeholder: ${key}`; // Fallback
         }
     });
 
