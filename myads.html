@@ -11,7 +11,8 @@
 <!-- HEADER -->
 <header class="header">
     <div class="container" style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto;">
-        <h1 data-i18n="myads_title">My Marketplace</h1>
+        
+        <h1>My Marketplace</h1>
 
         <div class="nav" id="userAuth">
             <a href="index.html" class="btn text" data-i18n="home">Home</a>
@@ -28,7 +29,7 @@
         <p id="userGreeting" style="color: gray; margin-top: 5px;"></p>
     </div>
 
-    <!-- ADS GRID -->
+    <!-- ADS GRID (IMPORTANT: keep this ID exactly) -->
     <div id="myAds" class="ads-grid">
         <p class="loading" data-i18n="loading_ads">Loading your ads...</p>
     </div> 
@@ -40,23 +41,22 @@
 
 </main>
 
-<!-- SCRIPTS -->
+<!-- SCRIPTS (ORDER MATTERS) -->
 <script src="storage.js"></script>
 <script src="main.js"></script>
-
-<!-- INLINE SCRIPT -->
-<script>
-    const user = JSON.parse(localStorage.getItem("currentUser"));
-
-    if (user) {
-        const greetingEl = document.getElementById("userGreeting");
-        if (greetingEl) {
-            greetingEl.innerText = `${user.email}`;  // Display user email, already handled by i18n
-        }
-    }
-</script>
-
 <script src="languages.js"></script>
+
+<!-- USER GREETING (SAFE + DOES NOT BREAK RENDER) -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const user = JSON.parse(localStorage.getItem("currentUser"));
+    const greetingEl = document.getElementById("userGreeting");
+
+    if (user && greetingEl) {
+        greetingEl.innerText = user.email;
+    }
+});
+</script>
 
 </body>
 </html>
