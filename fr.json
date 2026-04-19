@@ -100,6 +100,10 @@
     "post_btn": "Publier l'annonce",
     "delete": "Supprimer",
   "forgot_password": "Mot de passe oublié ?",
-    "home": "Accueil"
+    "home": "Accueil",
+  "footer_safety": "Conseils de sécurité",
+"safety_buy_title": "🛡️ Acheter en toute sécurité",
+"safety_meet_label": "Rencontrez-vous dans un lieu public :",
+"safety_flag1": "Messages mal écrits ou utilisant un langage automatisé."
   
 }
