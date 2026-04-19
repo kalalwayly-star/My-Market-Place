@@ -56,9 +56,18 @@
               (m.text && m.text.toLowerCase().includes(query))
           );
       }
+const lang = localStorage.getItem("language") || "en";
 
-      const lang = localStorage.getItem("language") || "en";
-      const t = translations[lang];
+const t = window.translations || {
+    received: "Received",
+    sent: "Sent",
+    no_messages: "No messages",
+    From: "From",
+    To: "To",
+    reply_placeholder: "Write a reply...",
+    send_reply: "Send"
+};
+      
 
       if (filtered.length === 0) {
           container.innerHTML = `<p>${t.no_messages}</p>`;    
