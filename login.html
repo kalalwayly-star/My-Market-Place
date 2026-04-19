@@ -3,78 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Classified Site</title>
-    <!-- FIX 1: Corrected Font Awesome Link (was cloudflare.com) -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">    <!-- FIX 2: Versioning should match your actual file save -->
-    <link rel="stylesheet" href="style.css?v=1.2">
+    <title data-i18n="login_title">Login | Marketplace</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-    
-<body class="auth-page-body">
+<body>
 
-<div class="auth-wrapper">
-    <div class="form-card">
-        <h2>Welcome Back</h2>
-        <p class="subtitle">Please enter your details to sign in.</p>
-
-        <!-- Error Message Placeholder -->
-        <div id="error-message" class="error-text" style="text-align: center; margin-bottom: 15px;"></div>
-
-        <!-- Email Field -->
-        <div class="input-group">
-            <label>Email</label>
-            <input type="email" id="loginEmail" placeholder="Enter your email" required>
+<header class="header">
+    <div class="container" style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 15px;">
+        <h1 data-i18n="myTitle">My Marketplace</h1>
+        <div class="nav">
+            <a href="index.html" class="btn text" data-i18n="home">Home</a>
         </div>
-
-        <!-- Password Field with Eye Toggle -->
-         <div class="input-group password-group">
-    <label>Password</label>
-    <input type="password" id="loginPassword" placeholder="Password" required>
-    <i class="fas fa-eye toggle-password" id="toggleLoginPassword"></i>
-</div>
-
-        <!-- Forgot Password Link -->
-        <div class="login-footer" style="text-align: right; margin-bottom: 20px;">
-            <a href="forgot.html" id="forgotPasswordLink" style="font-size: 13px; color: #007bff; text-decoration: none;">
-                Forgot Password?
-            </a>
-        </div>
-
-        <!-- Action Buttons: Both use matching CSS classes -->
-        <button type="button" class="btn-primary" onclick="login()">Login</button>
-        
-        <div class="divider"><span>OR</span></div>
-
-        <button type="button" class="btn-secondary" onclick="window.location.href='register.html'">
-            Create Account
-        </button>
     </div>
-</div>
+</header>
 
-<!-- Scripts -->
-<script src="auth.js"></script>
+<main class="login-container" style="max-width: 400px; margin: 50px auto; padding: 20px;">
+    <div class="form-card" style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+        <h2 data-i18n="login_header" style="text-align: center; margin-bottom: 20px;">Login to Your Account</h2>
+        
+        <form id="loginForm">
+            <div class="input-group" style="margin-bottom: 15px;">
+                <label data-i18n="label_email">Email Address</label>
+                <input type="email" id="loginEmail" data-i18n-placeholder="placeholder_email" placeholder="name@example.com" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+            </div>
+
+            <div class="input-group" style="margin-bottom: 20px;">
+                <label data-i18n="label_password">Password</label>
+                <input type="password" id="loginPassword" data-i18n-placeholder="placeholder_password" placeholder="••••••••" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+            </div>
+
+            <button type="submit" class="btn-primary-large" style="width: 100%; padding: 12px; cursor: pointer;" data-i18n="login_btn">Login</button>
+        </form>
+
+        <p style="text-align: center; margin-top: 20px; font-size: 0.9rem;">
+            <span data-i18n="no_account">Don't have an account?</span> 
+            <a href="register.html" data-i18n="register_link">Register here</a>
+        </p>
+    </div>
+</main>
+
+<!-- SCRIPTS -->
+<script src="storage.js"></script>
+<script src="main.js"></script>
 <script src="languages.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    const lang = localStorage.getItem("lang") || "en";
-    applyLanguage(lang);
-});
-</script>
-<script>
-    // Eye toggle logic
-    const toggleBtn = document.querySelector('#toggleLoginPassword');
-    const passwordField = document.querySelector('#loginPassword');
-
-    if(toggleBtn) {
-        toggleBtn.addEventListener('click', function () {
-            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordField.setAttribute('type', type);
-            this.classList.toggle('fa-eye-slash');
-        });
-    }
-</script>
 
 </body>
 </html>
+
 
 
 
