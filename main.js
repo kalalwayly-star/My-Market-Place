@@ -216,8 +216,9 @@ function updateHeader() {
 }
 
 
-window.onload = () => {
+document.addEventListener("DOMContentLoaded", () => {
    updateHeader();
+});
 
 
    // Home Page Logic
