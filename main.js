@@ -118,19 +118,31 @@ function renderAds(ads, containerId = "listings") {
 /* =========================
    5. HEADER
 ========================= */
-
 function updateHeader() {
-    const el = document.getElementById("userAuth");
-    if (!el) return;
+    const user = JSON.parse(localStorage.getItem("currentUser"));
+    const userAuth = document.getElementById("userAuth");
 
-    if (!currentUser) return;
+    if (!userAuth) return;
 
-    el.innerHTML = `
-        <span>Hi, ${currentUser.email.split("@")[0]}</span>
-        <a href="index.html">Home</a>
-        <a href="post.html">Post</a>
-        <button onclick="logout()">Logout</button>
+    // Keep static buttons ALWAYS visible
+    let html = `
+        <a href="index.html" class="btn text">Home</a>
+        <a href="post.html" class="btn">Post Ad</a>
     `;
+
+    // Add login/logout safely
+    if (user) {
+        html += `
+            <span class="user-email">Hi, ${user.email.split('@')[0]}</span>
+            <button onclick="logout()" class="btn text">Logout</button>
+        `;
+    } else {
+        html += `
+            <a href="login.html" class="btn">Login</a>
+        `;
+    }
+
+    userAuth.innerHTML = html;
 }
 
 /* =========================
@@ -140,31 +152,54 @@ function updateHeader() {
 function initMain() {
     updateHeader();
 
-    const listings = document.getElementById("listings");
-    if (listings) {
-        const ads = getAds().filter(a => a.status !== "Sold");
-        renderAds(ads, "listings");
-    }
+    // small delay prevents flashing (VERY IMPORTANT)
+    setTimeout(() => {
 
-    const myAds = document.getElementById("myAds");
-    if (myAds) {
-        if (!currentUser) {
-            myAds.innerHTML = `<p>Please login first.</p>`;
-            return;
+        const listings = document.getElementById("listings");
+        if (listings) {
+            const ads = getAds().filter(a => a.status !== "Sold");
+            renderAds(ads, "listings");
         }
 
-        const ads = getAds().filter(a => a.userEmail === currentUser.email);
-        renderAds(ads, "myAds");
-    }
-}
+        const myAds = document.getElementById("myAds");
+        if (myAds) {
+            const user = JSON.parse(localStorage.getItem("currentUser"));
 
+            if (!user) {
+                myAds.innerHTML = `<p>Please login first.</p>`;
+                return;
+            }
+
+            const ads = getAds().filter(a => a.userEmail === user.email);
+            renderAds(ads, "myAds");
+        }
+
+    }, 50);
+}
 /* =========================
    7. SAFE BOOT
 ========================= */
 
-if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initMain);
-} else {
-    initMain();
+function applyFilters() {
+    const search = document.getElementById("search")?.value.toLowerCase() || "";
+    const location = document.getElementById("filterLocation")?.value.toLowerCase() || "";
+
+    let ads = getAds().filter(a => a.status !== "Sold");
+
+    ads = ads.filter(ad =>
+        (ad.title || "").toLowerCase().includes(search) &&
+        (ad.location || "").toLowerCase().includes(location)
+    );
+
+    renderAds(ads, "listings");
 }
 
+function filterByCategory(cat) {
+    let ads = getAds().filter(a => a.status !== "Sold");
+
+    ads = ads.filter(ad =>
+        (ad.category || "").toLowerCase() === cat.toLowerCase()
+    );
+
+    renderAds(ads, "listings");
+}
