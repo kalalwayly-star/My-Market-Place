@@ -217,51 +217,36 @@ function updateHeader() {
 
 
 function initMain() {
-   updateHeader();
+    updateHeader();
+
+    // Home Page Logic
+    if (document.getElementById("listings")) {
+        const allAds = getAds();
+        const activeAds = allAds.filter(ad => ad.status !== "Sold");
+        activeAds.sort((a, b) => (b.isFeatured === a.isFeatured) ? 0 : b.isFeatured ? 1 : -1);
+        renderAds(activeAds, "listings");
+    }
+
+    // My Ads Page Logic
+    if (document.getElementById("myAds")) {
+        const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+        if (!currentUser) {
+            document.getElementById("myAds").innerHTML =
+                "<p>Please <a href='login.html'>Login</a> to see your ads.</p>";
+        } else {
+            const userAds = getAds().filter(ad => ad.userEmail === currentUser.email);
+            renderAds(userAds, "myAds");
+        }
+    }
 }
 
+// Run safely after DOM loads
 if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", initMain);
 } else {
     initMain();
 }
-
-
-   // Home Page Logic
-   if (document.getElementById("listings")) {
-       const allAds = getAds();
-       const activeAds = allAds.filter(ad => ad.status !== "Sold");
-       activeAds.sort((a, b) => (b.isFeatured === a.isFeatured) ? 0 : b.isFeatured ? 1 : -1);
-       renderAds(activeAds, "listings");
-   }
-
-
-   // My Ads Page Logic
-   if (document.getElementById("myAds")) {
-       if (!currentUser) {
-           document.getElementById("myAds").innerHTML = "<p>Please <a href='login.html'>Login</a> to see your ads.</p>";
-       } else {
-           const userAds = getAds().filter(ad => ad.userEmail === currentUser.email);
-           renderAds(userAds, "myAds");
-       }
-   
-};
-
-
-function adminLogin() {
-   const pass = prompt("Enter Admin Password:");
-
-
-   if (pass !== "your-password") {
-       alert("Access Denied");
-       return;
-   }
-
-
-   // Once password is correct, check if the user is an admin
-   checkAdminAccess();
-}
-
 
 // This function already exists in your admin.js
 function checkAdminAccess() {
