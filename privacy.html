@@ -3,58 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="privacy_title">Privacy Policy</title>
+    <title data-i18n="privacy_title">Privacy Policy | Marketplace</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1 id="footer_privacy_header">Privacy Policy</h1>
-        <nav>
-             <div class="nav"><a href="index.html" class="btn text" id="home_btn">Home</a></div>
-        </nav>
-       
-    </header>
 
-    <main style="padding: 20px; max-width: 800px; margin: auto; line-height: 1.6;">
-        <section>
-            <h2 id="privacy_sec1_title">1. Information We Collect</h2>
-            <p id="privacy_sec1_text">When you use My Marketplace, we collect information you provide directly, such as your email address, phone number, and location when you post an ad.</p>
-        </section>
+<header class="header">
+    <div class="container" style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 15px;">
+        <h1 data-i18n="myTitle">My Marketplace</h1>
+        <div class="nav">
+            <a href="index.html" class="btn text" data-i18n="home">Home</a>
+        </div>
+    </div>
+</header>
 
-        <section>
-            <h2 id="privacy_sec2_title">2. How We Use Your Data</h2>
-            <p id="privacy_sec2_text">Your information is used to connect buyers and sellers. We do not sell your personal data to third parties for marketing purposes.</p>
-        </section>
+<main class="content-container" style="max-width: 800px; margin: 40px auto; padding: 0 20px; line-height: 1.6;">
+    <h1 data-i18n="privacy_header" style="margin-bottom: 20px;">Privacy Policy</h1>
+    
+    <section style="margin-bottom: 30px;">
+        <h2 data-i18n="privacy_info_title">Information We Collect</h2>
+        <p data-i18n="privacy_info_text">We collect information you provide directly to us when you create an account, post an ad, or communicate with us.</p>
+    </section>
 
-        <section>
-            <h2 id="privacy_sec3_title">3. Cookies and Local Storage</h2>
-            <p id="privacy_sec3_text">We use Local Storage to remember your language preferences and login session. This ensures a consistent experience on our site.</p>
-        </section>
+    <section style="margin-bottom: 30px;">
+        <h2 data-i18n="privacy_usage_title">How We Use Information</h2>
+        <p data-i18n="privacy_usage_text">We use the information to maintain your account, display your listings, and improve our marketplace services.</p>
+    </section>
 
-        <section>
-            <h2 id="privacy_sec4_title">4. Data Security</h2>
-            <p id="privacy_sec4_text">While we take reasonable measures to protect your information, no system is 100% secure. Users should be cautious when sharing personal contact details in ad descriptions.</p>
-        </section>
+    <section style="margin-bottom: 30px;">
+        <h2 data-i18n="privacy_sharing_title">Information Sharing</h2>
+        <p data-i18n="privacy_sharing_text">Your contact information is only shared with other users when you choose to display it on your public listings.</p>
+    </section>
 
-        <section>
-            <h2 id="privacy_sec5_title">5. Your Rights</h2>
-            <p id="privacy_sec5_text">You can delete your ads at any time. If you wish to have your account information removed from our database, please contact support.</p>
-        </section>
-    </main>
+    <div class="footer-actions" style="border-top: 1px solid #eee; pt-20px; margin-top: 40px;">
+        <a href="index.html" class="btn text" data-i18n="back_home">← Back to Home</a>
+    </div>
+</main>
 
-    <footer>
-        <p id="footer_copy">© 2026 My Marketplace</p>
-    </footer>
+<script src="storage.js"></script>
+<script src="main.js"></script>
+<script src="languages.js"></script>
 
-    <script src="storage.js"></script>
-    <script src="languages.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            if (typeof updateLanguage === 'function') {
-                updateLanguage(); 
-            }
-        });
-    </script>
 </body>
 </html>
+
 
