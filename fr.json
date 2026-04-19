@@ -104,6 +104,11 @@
   "footer_safety": "Conseils de sécurité",
 "safety_buy_title": "🛡️ Acheter en toute sécurité",
 "safety_meet_label": "Rencontrez-vous dans un lieu public :",
-"safety_flag1": "Messages mal écrits ou utilisant un langage automatisé."
+"safety_flag1": "Messages mal écrits ou utilisant un langage automatisé.",
+  "terms_title": "Conditions d'utilisation",
+"terms_header": "Conditions d'utilisation",
+"terms_acceptance_title": "1. Acceptation des conditions",
+"terms_listings_text": "Les utilisateurs sont responsables du contenu qu'ils publient. Nous n'autorisons pas les articles illégaux."
+
   
 }
