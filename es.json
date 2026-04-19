@@ -108,5 +108,9 @@
     "post_btn": "Publicar ahora",
     "delete": "Eliminar",
 "forgot_password": "¿Olvidó su contraseña?",
-  "home": "Inicio"
+  "home": "Inicio",
+  "footer_safety": "Consejos de seguridad",
+"safety_buy_title": "🛡️ Comprar con seguridad",
+"safety_meet_label": "Reunirse en público:",
+"safety_flag1": "Mensajes mal escritos o que utilizan lenguaje automatizado."
 }
