@@ -6,48 +6,47 @@
     <title data-i18n="myads_title">My Ads | Marketplace</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
 <!-- HEADER -->
 <header class="header">
-    <div class="container" style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto;">
-        
-        <h1>My Marketplace</h1>
+    <div class="container" style="display:flex;justify-content:space-between;align-items:center;max-width:1200px;margin:0 auto;">
+
+        <h1 data-i18n="myads_title">My Marketplace</h1>
 
         <div class="nav" id="userAuth">
             <a href="index.html" class="btn text" data-i18n="home">Home</a>
             <a href="post.html" class="btn" data-i18n="postAd">Post Ad</a>
         </div>
+
     </div>
 </header>
 
-<!-- MAIN CONTENT -->
-<main class="myads-container" style="max-width:1200px; margin: 20px auto; padding: 0 15px;">
+<!-- MAIN -->
+<main class="myads-container" style="max-width:1200px;margin:20px auto;padding:0 15px;">
 
     <div class="section-header">
         <h2 data-i18n="your_active_listings">Your Active Listings</h2>
-        <p id="userGreeting" style="color: gray; margin-top: 5px;"></p>
+        <p id="userGreeting" style="color:gray;margin-top:5px;"></p>
     </div>
 
-    <!-- ADS GRID (IMPORTANT: keep this ID exactly) -->
-    <div id="myAds" class="ads-grid">
-        
-    </div> 
+    <!-- ADS GRID (IMPORTANT: MUST STAY EMPTY INITIALLY) -->
+    <div id="myAds" class="ads-grid"></div>
 
-    <!-- FOOTER ACTION -->
-    <div class="footer-actions" style="margin-top: 20px;">
+    <!-- BACK BUTTON -->
+    <div class="footer-actions" style="margin-top:20px;">
         <a href="index.html" class="btn text" data-i18n="back_home">← Back to Home</a>
     </div>
 
 </main>
 
-<!-- SCRIPTS (ORDER MATTERS) -->
+<!-- SCRIPTS (ORDER IS IMPORTANT) -->
 <script src="storage.js"></script>
 <script src="main.js"></script>
 <script src="languages.js"></script>
 
-
-<!-- USER GREETING (SAFE + DOES NOT BREAK RENDER) -->
+<!-- USER GREETING (SAFE) -->
 <script>
 document.addEventListener("DOMContentLoaded", () => {
     const user = JSON.parse(localStorage.getItem("currentUser"));
