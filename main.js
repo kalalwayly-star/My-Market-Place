@@ -244,7 +244,7 @@ if (document.readyState === "loading") {
            const userAds = getAds().filter(ad => ad.userEmail === currentUser.email);
            renderAds(userAds, "myAds");
        }
-   }
+   
 };
 
 
