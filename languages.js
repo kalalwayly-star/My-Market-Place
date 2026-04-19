@@ -1,14 +1,15 @@
-let currentLanguage = localStorage.getItem("language") || "en";
+let currentLanguage = localStorage.getItem("language") || "en"; // Default to 'en' if not set
 
 function loadLanguage(language) {
     fetch(`${language}.json`)
         .then(response => response.json())
         .then(translations => {
             localStorage.setItem("language", language);
-            updateText(translations, language); // Pass 'language' to help with RTL
+            updateText(translations, language); // Pass language for RTL
         })
         .catch(error => console.error('Error loading language file:', error));
 }
+
 function updateText(translations, language) {
     for (const [key, value] of Object.entries(translations)) {
         const element = document.getElementById(key);
@@ -18,11 +19,11 @@ function updateText(translations, language) {
                 element.placeholder = value;
             } else {
                 element.innerText = value;
-
             }
+        } else {
+            console.warn(`Missing translation for key: ${key}`); // Log missing keys
         }
     }
- 
 
     // FIX: Use the language code (ar) for RTL instead of checking specific text
     if (language === 'ar') {
@@ -55,6 +56,6 @@ document.addEventListener('DOMContentLoaded', () => {
         switcher.onchange = (e) => loadLanguage(e.target.value);
     }
 
-    loadLanguage(currentLanguage);
+    loadLanguage(currentLanguage); // Load current language on page load
 });
 
