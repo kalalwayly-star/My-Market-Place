@@ -83,6 +83,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // 5. Run initial translation on page load
     loadLanguage(currentLanguage);
 });
+.then(translations => {
+    localStorage.setItem("language", language);
+    updateText(translations, language);
 
-
+    // ✅ FIX: re-render dynamic content AFTER translation
+    if (typeof initMain === "function") {
+        initMain();
+    }
+})
+if (typeof initMain === "function") {
+    initMain();
+}
 
