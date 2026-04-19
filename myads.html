@@ -32,6 +32,7 @@
 </head>
 <body>
 
+<!-- HEADER -->
 <header class="header">
     <div class="container" style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto;">
         <h1>My Marketplace</h1>
@@ -42,6 +43,7 @@
     </div>
 </header>
 
+<!-- MAIN CONTENT -->
 <main class="myads-container" style="max-width:1200px; margin: 20px auto; padding: 0 15px;">
     <div class="section-header">
         <h2 data-i18n="your_active_listings">Your Active Listings</h2>
@@ -50,8 +52,7 @@
 
     <!-- The container where ads will be injected -->
     <div id="myAds" class="ads-grid">
-        <!-- Loading state -->
-        <p>Loading your ads...</p>
+        <p data-i18n="loading_ads">Loading your ads...</p>
     </div> 
 
     <div class="footer-actions" style="margin-top: 20px;">
@@ -63,6 +64,7 @@
 <script src="main.js"></script>
 <script src="languages.js"></script>
 
+<!-- USER GREETING (SAFE + DOES NOT BREAK RENDER) -->
 <script>
 document.addEventListener("DOMContentLoaded", () => {
     const user = JSON.parse(localStorage.getItem("currentUser"));
@@ -83,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const userAds = allAds.filter(ad => ad.userEmail === user?.email);
 
         if (userAds.length === 0) {
-            adsContainer.innerHTML = '<div class="no-ads">You haven\'t posted any ads yet.</div>';
+            adsContainer.innerHTML = '<div class="no-ads" data-i18n="no_ads">You haven\'t posted any ads yet.</div>';
             return;
         }
 
@@ -94,7 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
                      onerror="this.src='https://placeholder.com'">
                 <h3>${ad.title}</h3>
                 <p>$${ad.price}</p>
-                <button onclick="deleteAd('${ad.id}')" style="color: red; border: none; background: none; cursor: pointer;">Delete</button>
+                <button onclick="deleteAd('${ad.id}')" style="color: red; border: none; background: none; cursor: pointer;" data-i18n="delete">Delete</button>
             </div>
         `).join('');
     }
