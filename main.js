@@ -74,8 +74,7 @@ function renderAds(adsArray, containerId = "listings") {
         const isFeatured = ad.isFeatured === true;
 
         // Bulletproof Image Logic
-        let displayImage = 'https://placeholder.com';  // Default if no image found
-        if (ad && ad.image) {
+let displayImage = 'https://via.placeholder.com/300x200?text=No+Image';        if (ad && ad.image) {
             if (Array.isArray(ad.image) && ad.image.length > 0) {
                 displayImage = ad.image[0];  // Use the first image if it's an array
             } else if (typeof ad.image === 'string' && ad.image.length > 5) {
