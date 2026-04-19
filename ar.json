@@ -100,8 +100,20 @@
 "back_to_browse": "العودة للتصفح",
 
   "your_active_listings": "إعلاناتك النشطة",
-"search_messages": "البحث حسب المرسل أو الموضوع..."
-    
+"search_messages": "البحث حسب المرسل أو الموضوع...",
+"login_title": "تسجيل الدخول",
+    "login_header": "الدخول إلى حسابك",
+    "label_email": "البريد الإلكتروني",
+    "label_password": "كلمة المرور",
+    "placeholder_email": "الاسم@example.com",
+    "placeholder_password": "كلمة المرور",
+    "login_btn": "تسجيل الدخول",
+    "no_account": "ليس لديك حساب؟",
+    "register_link": "سجل هنا",
+    "post_ad_header": "نشر إعلان جديد",
+    "post_btn": "انشر الإعلان الآن",
+    "delete": "حذف",
+    "home": "الرئيسية"
     
 }
 
