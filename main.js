@@ -1,21 +1,22 @@
-/* =========================
-   1. CONFIG + SAFE HELPERS
-========================= */
-
+/* --- 1. CONFIGURATION & HELPERS --- */
 const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
+// Helper to get ads safely from storage
 function getAds() {
-    return JSON.parse(localStorage.getItem("ads") || "[]");
+    try {
+        return JSON.parse(localStorage.getItem("ads") || "[]");
+    } catch (e) {
+        console.error("Error parsing ads:", e);
+        return [];
+    }
 }
 
-function saveAds(ads) {
-    localStorage.setItem("ads", JSON.stringify(ads));
+// Helper to save ads
+function saveAds(adsArray) {
+    localStorage.setItem("ads", JSON.stringify(adsArray));
 }
 
-/* =========================
-   2. NAVIGATION ACTIONS
-========================= */
-
+/* --- 2. NAVIGATION & AUTH ACTIONS --- */
 function goToDetails(id) {
     window.location.href = `details.html?id=${id}`;
 }
@@ -25,24 +26,23 @@ function editAd(id) {
 }
 
 function deleteAd(id) {
-    if (!confirm("Delete this ad?")) return;
-
-    const ads = getAds().filter(ad => ad.id !== id);
-    saveAds(ads);
-
-    location.reload();
+    // Uses data-i18n compatible confirm or standard browser confirm
+    if (confirm("Are you sure you want to delete this ad?")) {
+        let ads = getAds();
+        ads = ads.filter(ad => String(ad.id) !== String(id));
+        saveAds(ads);
+        location.reload();
+    }
 }
 
 function toggleStatus(id) {
-    const ads = getAds();
-    const ad = ads.find(a => a.id === id);
-
-    if (!ad) return;
-
-    ad.status = ad.status === "Sold" ? "Active" : "Sold";
-    saveAds(ads);
-
-    location.reload();
+    let ads = getAds();
+    const index = ads.findIndex(ad => String(ad.id) === String(id));
+    if (index !== -1) {
+        ads[index].status = ads[index].status === "Sold" ? "Active" : "Sold";
+        saveAds(ads);
+        location.reload();
+    }
 }
 
 function logout() {
@@ -50,156 +50,98 @@ function logout() {
     window.location.href = "index.html";
 }
 
-/* =========================
-   3. IMAGE HANDLER (FIX FLASH)
-========================= */
-
-function getAdImage(ad) {
-    if (!ad || !ad.image) return "https://via.placeholder.com/300x200?text=No+Image";
-
-    if (Array.isArray(ad.image) && ad.image.length > 0) {
-        return ad.image[0];
-    }
-
-    if (typeof ad.image === "string") {
-        return ad.image;
-    }
-
-    return "https://via.placeholder.com/300x200?text=No+Image";
-}
-
-/* =========================
-   4. RENDER ADS (STABLE)
-========================= */
-
-function renderAds(ads, containerId = "listings") {
+/* --- 3. UI RENDERING (The Photo Fix) --- */
+function renderAds(adsArray, containerId = "listings") {
     const container = document.getElementById(containerId);
     if (!container) return;
 
-    if (!ads || ads.length === 0) {
-        container.innerHTML = `<p class="no-ads">No items found.</p>`;
+    container.innerHTML = "";
+    const isMyAdsPage = (containerId === "myAds");
+
+    if (!adsArray || adsArray.length === 0) {
+        container.innerHTML = `<p class='no-ads' data-i18n="no_items_found">No items found.</p>`;
         return;
     }
 
-    const isMyAds = containerId === "myAds";
+    container.innerHTML = adsArray.map(ad => {
+        const isSold = ad.status === 'Sold';
+        const isFeatured = ad.isFeatured === true;
 
-    container.innerHTML = ads.map(ad => {
-        const img = getAdImage(ad);
+        // --- FIXED IMAGE LOGIC ---
+        let displayImage = 'https://placeholder.com';
+        
+        if (ad.image) {
+            // If image is an array, take the first one; if string, use it directly
+            displayImage = Array.isArray(ad.image) ? ad.image[0] : ad.image;
+        }
 
         return `
-        <div class="card"
-             onclick="${isMyAds ? "" : `goToDetails(${ad.id})`}"
-             style="cursor:pointer; border:1px solid #ddd; border-radius:10px; overflow:hidden; background:#fff; margin-bottom:15px;">
+            <div class="card ${isFeatured ? 'featured-card' : ''} ${isSold ? 'sold-card' : ''}" 
+                 onclick="${isMyAdsPage ? '' : `goToDetails('${ad.id}')`}" 
+                 style="cursor:pointer; border: 1px solid #ddd; border-radius: 10px; overflow: hidden; background: white; margin-bottom: 15px; position: relative;">
+              
+                ${isFeatured ? '<div class="featured-badge" style="position: absolute; top: 10px; left: 10px; background: gold; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; z-index: 10;">✨</div>' : ''}
+                ${isSold ? '<div class="sold-badge" style="position: absolute; top: 10px; right: 10px; background: red; color: white; padding: 2px 8px; z-index: 10; font-weight: bold;">SOLD</div>' : ''}
 
-            <div style="height:180px; background:#f5f5f5;">
-                <img src="${img}"
-                     style="width:100%; height:100%; object-fit:cover;"
-                     loading="lazy">
+                <div class="card-img-wrapper" style="height:180px; width: 100%; overflow:hidden; background-color: #f0f0f0;">
+                    <img src="${displayImage}" alt="${ad.title}" 
+                         onerror="this.src='https://placeholder.com'" 
+                         style="width:100%; height:100%; object-fit: cover; display: block;">
+                </div>
+              
+                <div class="ad-content" style="padding: 15px;">
+                    <span class="category-tag" style="font-size: 0.8rem; color: #666; font-weight: bold; text-transform: uppercase;">${ad.category || "General"}</span>
+                    <h3 style="margin: 5px 0;">${ad.title || "Untitled"}</h3>
+                    <p style="margin: 5px 0; color: #007bff;"><strong>$${ad.price || "0"}</strong></p>
+                  
+                    ${isMyAdsPage ? `
+                        <div class="actions" style="margin-top:10px; display: flex; gap: 8px;">
+                            <button onclick="event.stopPropagation(); toggleStatus('${ad.id}')" class="btn-sm">Status</button>
+                            <button onclick="event.stopPropagation(); editAd('${ad.id}')" class="btn-sm">Edit</button>
+                            <button onclick="event.stopPropagation(); deleteAd('${ad.id}')" class="btn-sm btn-delete" style="color: red;" data-i18n="delete">Delete</button>
+                        </div>
+                    ` : ""}
+                </div>
             </div>
-
-            <div style="padding:15px;">
-                <h3>${ad.title || "Untitled"}</h3>
-                <p><strong>$${ad.price || 0}</strong></p>
-                <p>📍 ${ad.location || "Local"}</p>
-
-                ${isMyAds ? `
-                    <div style="margin-top:10px; display:flex; gap:8px;">
-                        <button onclick="event.stopPropagation(); toggleStatus(${ad.id})">Status</button>
-                        <button onclick="event.stopPropagation(); editAd(${ad.id})">Edit</button>
-                        <button onclick="event.stopPropagation(); deleteAd(${ad.id})" style="color:red;">Delete</button>
-                    </div>
-                ` : ""}
-            </div>
-        </div>
         `;
-    }).join("");
+    }).join('');
+
+    // Re-run language update to catch dynamic content (data-i18n)
+    if (typeof loadLanguage === "function") {
+        const lang = localStorage.getItem("language") || "en";
+        // Note: loadLanguage might re-fetch the JSON. Use updateText if available for performance.
+    }
 }
 
-/* =========================
-   5. HEADER
-========================= */
-function updateHeader() {
-    const user = JSON.parse(localStorage.getItem("currentUser"));
-    const userAuth = document.getElementById("userAuth");
-
-    if (!userAuth) return;
-
-    // Keep static buttons ALWAYS visible
-    let html = `
-        <a href="index.html" class="btn text">Home</a>
-        <a href="post.html" class="btn">Post Ad</a>
-    `;
-
-    // Add login/logout safely
-    if (user) {
-        html += `
-            <span class="user-email">Hi, ${user.email.split('@')[0]}</span>
-            <button onclick="logout()" class="btn text">Logout</button>
-        `;
-    } else {
-        html += `
-            <a href="login.html" class="btn">Login</a>
-        `;
+/* --- 4. INITIALIZATION --- */
+function initMain() {
+    // 1. Listings Page (index.html)
+    const listingsContainer = document.getElementById("listings");
+    if (listingsContainer) {
+        const allAds = getAds();
+        const activeAds = allAds.filter(ad => ad.status !== "Sold");
+        activeAds.sort((a, b) => (b.isFeatured === a.isFeatured) ? 0 : b.isFeatured ? 1 : -1);
+        renderAds(activeAds, "listings");
     }
 
-    userAuth.innerHTML = html;
-}
-
-/* =========================
-   6. INIT (IMPORTANT FIX)
-========================= */
-
-function initMain() {
-    updateHeader();
-
-    // small delay prevents flashing (VERY IMPORTANT)
-    setTimeout(() => {
-
-        const listings = document.getElementById("listings");
-        if (listings) {
-            const ads = getAds().filter(a => a.status !== "Sold");
-            renderAds(ads, "listings");
+    // 2. My Ads Page (myads.html)
+    const myAdsContainer = document.getElementById("myAds");
+    if (myAdsContainer) {
+        if (!currentUser) {
+            myAdsContainer.innerHTML = "<p data-i18n='please_login'>Please login to see your ads.</p>";
+        } else {
+            const allAds = getAds();
+            // Filter by userEmail to show only current user's items
+            const userAds = allAds.filter(ad => ad.userEmail === currentUser.email);
+            renderAds(userAds, "myAds");
         }
-
-        const myAds = document.getElementById("myAds");
-        if (myAds) {
-            const user = JSON.parse(localStorage.getItem("currentUser"));
-
-            if (!user) {
-                myAds.innerHTML = `<p>Please login first.</p>`;
-                return;
-            }
-
-            const ads = getAds().filter(a => a.userEmail === user.email);
-            renderAds(ads, "myAds");
-        }
-
-    }, 50);
-}
-/* =========================
-   7. SAFE BOOT
-========================= */
-
-function applyFilters() {
-    const search = document.getElementById("search")?.value.toLowerCase() || "";
-    const location = document.getElementById("filterLocation")?.value.toLowerCase() || "";
-
-    let ads = getAds().filter(a => a.status !== "Sold");
-
-    ads = ads.filter(ad =>
-        (ad.title || "").toLowerCase().includes(search) &&
-        (ad.location || "").toLowerCase().includes(location)
-    );
-
-    renderAds(ads, "listings");
+    }
 }
 
-function filterByCategory(cat) {
-    let ads = getAds().filter(a => a.status !== "Sold");
-
-    ads = ads.filter(ad =>
-        (ad.category || "").toLowerCase() === cat.toLowerCase()
-    );
-
-    renderAds(ads, "listings");
+// Safe execution
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initMain);
+} else {
+    initMain();
 }
+
