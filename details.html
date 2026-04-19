@@ -12,7 +12,7 @@
    <div class="container" style="display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 1200px; margin: 0 auto;">
        <h1>My Marketplace</h1>
        <div class="nav">
-           <a href="index.html" class="btn text">Back to Browse</a>
+           <a href="index.html" class="btn text" data-i18n="back_home">Back to Browse</a>
        </div>
    </div>
 </header>
@@ -26,9 +26,9 @@
                <!-- Image injected by details.js -->
            </div>
            <div class="description-section">
-               <h2>Description</h2>
-               <p id="adDesc">Loading description...</p>
-           </div>
+    <h2 data-i18n="label_description">Description</h2>
+    <p id="adDesc">Loading description...</p>
+</div>
        </div>
 
 
@@ -43,28 +43,41 @@
               
                <hr>
               
-               <h3>Contact Seller</h3>
-               <div class="contact-info">
+<h3 data-i18n="contact_seller">Contact Seller</h3>               <div class="contact-info">
                </div>
 
 
                <!-- Messaging Section -->
                <div id="contactSection" class="contact-card" style="margin-top: 20px;">
-                   <textarea id="messageText" placeholder="Hi, is this still available?" rows="4" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;"></textarea>
-                   <button onclick="sendMessage()" class="btn-primary-large" style="margin-top: 10px; width: 100%;">Send Message</button>
-               </div>
+                   <textarea 
+    id="messageText" 
+    placeholder="Hi, is this still available?" 
+    data-i18n-placeholder="message_placeholder"
+    rows="4"
+    style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+</textarea>
+<button 
+    onclick="sendMessage()" 
+    class="btn-primary-large" 
+    style="margin-top: 10px; width: 100%;"
+    data-i18n="send_message">
+    Send Message
+</button>               </div>
 <!-- Update your button like this -->
-<button id="reportBtn" onclick="showReportModal()">Report this Ad</button>
+<button id="reportBtn" onclick="showReportModal()" data-i18n="report_ad">
+    Report this Ad
+</button>
 
-<!-- Ensure your modal has this ID -->
 <div id="reportModal" style="display:none; position: fixed; background: white; border: 1px solid #ccc; padding: 20px; z-index: 1000;">
-    <h3>Report Ad</h3>
+    <h3 data-i18n="report_ad">Report Ad</h3>
+
     <select id="reportReason">
-        <option value="scam">Scam</option>
-        <option value="illegal">Illegal Item</option>
+        <option value="scam" data-i18n="report_scam">Scam</option>
+        <option value="illegal" data-i18n="report_illegal">Illegal Item</option>
     </select>
-    <button onclick="submitReport()">Submit Report</button>
-    <button onclick="closeModal()">Cancel</button>
+
+    <button onclick="submitReport()" data-i18n="submit_report">Submit Report</button>
+    <button onclick="closeModal()" data-i18n="cancel">Cancel</button>
 </div>
 
            </div>
@@ -74,11 +87,11 @@
 
 <!-- Add this to the bottom of your body tag in all main HTML files -->
 <footer>
-    <p>© 2024 Classified-Site</p>
+    <p data-i18n="footer_copy">© 2026 Classified-Site</p>
     <ul>
-        <li><a href="terms.html">Terms of Service</a></li>
-        <li><a href="privacy.html">Privacy Policy</a></li>
-        <li><a href="safety.html">Safety Tips</a></li>
+        <li><a href="terms.html" data-i18n="footer_terms">Terms of Service</a></li>
+        <li><a href="privacy.html" data-i18n="footer_privacy">Privacy Policy</a></li>
+        <li><a href="safety.html" data-i18n="footer_safety">Safety Tips</a></li>
     </ul>
 </footer>
 
