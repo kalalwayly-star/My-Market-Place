@@ -1,14 +1,18 @@
 {
   "greeting": "¡Bienvenido a My Marketplace!",
+
   "home": "Inicio",
   "postAd": "Publicar anuncio",
   "myAds": "Mis anuncios",
   "nav_messages": "Mensajes",
   "nav_login": "Iniciar sesión",
   "nav_logout": "Cerrar sesión",
-  "deleteConfirmation": "¿Estás seguro de que quieres eliminar este anuncio?",
-  "noAds": "No tienes anuncios activos.",
+
+  "hero_title": "Encuentra todo en tu ciudad",
+  "search_placeholder": "¿Qué estás buscando?",
+  "location_placeholder": "Ciudad o barrio",
   "btn_search": "Buscar",
+
   "cat_realestate": "Bienes raíces",
   "cat_cars_trucks": "Carros y camiones",
   "cat_furniture": "Muebles",
@@ -19,43 +23,68 @@
   "cat_books": "Libros",
   "cat_appliances": "Electrodomésticos",
   "cat_toys": "Juguetes",
+
+  "cat_header": "Explorar por categoría",
+  "viewTitle": "Anuncios recientes",
+  "btn_view_all": "Ver todo",
+
+  "noAds": "No tienes anuncios activos.",
+  "deleteConfirmation": "¿Estás seguro de que quieres eliminar este anuncio?",
+
+  "messages_title": "Mis mensajes",
+  "no_messages": "No hay mensajes",
+  "send_reply": "Enviar respuesta",
+  "reply_placeholder": "Escribe tu respuesta...",
+  "from": "De",
+  "to": "Para",
+  "reply": "Responder",
+
   "footer_terms": "Términos de servicio",
   "footer_safety": "Consejos de seguridad",
   "footer_privacy_header": "Política de privacidad",
   "footer_privacy": "Privacidad",
-  "footer_safety": "Consejos de seguridad",
-        "footer_safety_header": "Consejos de seguridad",
-        "safety_buy_title": "🛡️ Comprar con seguridad",
-        "safety_meet_label": "Reunirse en público:",
-        "safety_meet_text": "Reúnase siempre con el vendedor en un lugar público y bien iluminado, como una cafetería o una 'zona segura' de la policía.",
-        "safety_inspect_label": "Inspeccionar el artículo:",
-        "safety_inspect_text": "Revise el artículo a fondo antes de entregar dinero.",
-        "safety_wire_label": "Evitar transferencias bancarias:",
-        "safety_wire_text": "Nunca envíe dinero a través de Western Union, MoneyGram o tarjetas de regalo. Casi siempre son estafas.",
-        "safety_sell_title": "💰 Vender con seguridad",
-        "safety_cash_label": "El efectivo es el rey:",
-        "safety_cash_text": "Para intercambios locales, el efectivo es el método más seguro. Tenga cuidado con cheques o transferencias electrónicas complicadas.",
-        "safety_info_label": "No comparta información personal:",
-        "safety_info_text": "Evite dar su dirección particular o detalles financieros privados en la descripción del anuncio.",
-        "safety_instinct_label": "Confíe en su instinto:",
-        "safety_instinct_text": "Si un comprador parece demasiado agresivo o 'demasiado bueno para ser verdad', deje de comunicarse.",
-        "safety_redflags_title": "🚩 Señales de alerta a tener en cuenta",
-        "safety_flag1": "Mensajes mal escritos o que utilizan un lenguaje automatizado tipo 'bot'.",
-        "safety_flag2": "Vendedores que se niegan a reunirse en persona o insisten en enviar artículos.",
-        "safety_flag3": "Artículos con precios significativamente inferiores al valor de mercado.",
+  "footer_copy": "© 2026 My Marketplace",
+
   "privacy_title": "Política de Privacidad",
-    "footer_privacy_header": "Política de Privacidad",
-    "home_btn": "Inicio",
-    "privacy_sec1_title": "1. Información que recopilamos",
-    "privacy_sec1_text": "Cuando utiliza My Marketplace, recopilamos la información que proporciona directamente, como su dirección de correo electrónico, número de teléfono y ubicación al publicar un anuncio.",
-    "privacy_sec2_title": "2. Cómo utilizamos sus datos",
-    "privacy_sec2_text": "Su información se utiliza para conectar a compradores y vendedores. No vendemos sus datos personales a terceros con fines de marketing.",
-    "privacy_sec3_title": "3. Cookies y almacenamiento local",
-    "privacy_sec3_text": "Utilizamos el almacenamiento local (Local Storage) para recordar sus preferencias de idioma y su sesión de inicio de sesión. Esto garantiza una experiencia constante en nuestro sitio.",
-    "privacy_sec4_title": "4. Seguridad de los datos",
-    "privacy_sec4_text": "Si bien tomamos medidas razonables para proteger su información, ningún sistema es 100% seguro. Los usuarios deben ser cautelosos al compartir datos de contacto personales en las descripciones de los anuncios.",
-    "privacy_sec5_title": "5. Sus derechos",
-    "privacy_sec5_text": "Puede eliminar sus anuncios en cualquier momento. Si desea que la información de su cuenta se elimine de nuestra base de datos, póngase en contacto con el soporte técnico.",
-    "footer_copy": "© 2026 My Marketplace"
-    
+  "home_btn": "Inicio",
+
+  "privacy_sec1_title": "1. Información que recopilamos",
+  "privacy_sec1_text": "Cuando usa My Marketplace, recopilamos información como correo electrónico, teléfono y ubicación.",
+
+  "privacy_sec2_title": "2. Cómo usamos sus datos",
+  "privacy_sec2_text": "Usamos sus datos para conectar compradores y vendedores.",
+
+  "privacy_sec3_title": "3. Cookies y almacenamiento local",
+  "privacy_sec3_text": "Usamos almacenamiento local para recordar preferencias.",
+
+  "privacy_sec4_title": "4. Seguridad de los datos",
+  "privacy_sec4_text": "Ningún sistema es 100% seguro.",
+
+  "privacy_sec5_title": "5. Sus derechos",
+  "privacy_sec5_text": "Puede eliminar sus anuncios en cualquier momento.",
+
+  "safety_buy_title": "🛡️ Comprar con seguridad",
+  "safety_meet_label": "Reunirse en público:",
+  "safety_meet_text": "Siempre en lugares públicos seguros.",
+
+  "safety_inspect_label": "Inspeccionar el artículo:",
+  "safety_inspect_text": "Revise antes de pagar.",
+
+  "safety_wire_label": "Evitar transferencias bancarias:",
+  "safety_wire_text": "Evite transferencias no seguras.",
+
+  "safety_sell_title": "💰 Vender con seguridad",
+  "safety_cash_label": "Efectivo es mejor:",
+  "safety_cash_text": "Use efectivo cuando sea posible.",
+
+  "safety_info_label": "No comparta información personal:",
+  "safety_info_text": "Proteja sus datos personales.",
+
+  "safety_instinct_label": "Confíe en su instinto:",
+  "safety_instinct_text": "Evite situaciones sospechosas.",
+
+  "safety_redflags_title": "🚩 Señales de alerta",
+  "safety_flag1": "Mensajes sospechosos o automáticos.",
+  "safety_flag2": "Negarse a reunirse en persona.",
+  "safety_flag3": "Precios demasiado bajos"
 }
