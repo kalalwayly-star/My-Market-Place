@@ -90,7 +90,15 @@
 "from": "من",
 "to": "إلى",
 "no_messages": "لا توجد رسائل",
-"btn_view_all": "عرض الكل"
+"btn_view_all": "عرض الكل",
+    "received": "الوارد",
+"sent": "المرسل",
+"back_home": "العودة للرئيسية",
+"description": "الوصف",
+"send_message": "إرسال رسالة",
+"report_ad": "الإبلاغ عن الإعلان",
+"back_to_browse": "العودة للتصفح",
+"search_messages": "البحث حسب المرسل أو الموضوع..."
     
     
 }
