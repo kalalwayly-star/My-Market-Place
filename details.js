@@ -25,11 +25,7 @@ function initDetailsPage() {
 
     renderAdDetails();
 }
-if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initDetailsPage);
-} else {
-    initDetailsPage();
-}
+
 // =======================
 // RENDER AD
 // =======================
