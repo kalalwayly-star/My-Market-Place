@@ -127,6 +127,12 @@
    <script src="storage.js"></script>
    <script src="post.js"></script> <!-- Ensure your logic is in post.js -->
    <script src="languages.js"></script> 
+   <script>
+document.addEventListener("DOMContentLoaded", () => {
+    const lang = localStorage.getItem("lang") || "en";
+    applyLanguage(lang);
+});
+</script>
    <script src="main.js"></script>
 
 </body>
