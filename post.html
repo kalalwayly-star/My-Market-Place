@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
    <meta charset="UTF-8">
-   <title>Post Ad | Marketplace</title>
+   <title data-i18n="post_page_title">Post Ad | Marketplace</title>
    <link rel="stylesheet" href="style.css">
    <!-- PayPal SDK -->
    <script src="https://www.paypal.com/sdk/js?client-id=AR_Wf3aXLq7GxACeo57SjDfghIrCso96DnHoZiMpLnKUsAaePgUoQyVKMbVt8B-RNMiVoPLCSXctDk6I&components=buttons"></script>
@@ -10,43 +10,41 @@
 <body>
    <header class="header">
        <div class="container">
-           <h1 id="myTitle">My Marketplace</h1>
-           <div class="nav"><a href="index.html" class="btn text" id="home">Home</a></div>
+           <h1 data-i18n="myTitle">My Marketplace</h1>
+           <div class="nav"><a href="index.html" class="btn text" data-i18n="home">Home</a></div>
        </div>
    </header>
 
    <div class="form-wrapper">
        <div class="form-card">
-           <h2 id="post_ad_header">Post a New Listing</h2>
+           <h2 data-i18n="post_ad_header">Post a New Listing</h2>
           
            <div class="input-group">
-               <label id="label_category">Category</label>
+               <label data-i18n="label_category">Category</label>
                <select id="postCategory" required onchange="handleCategoryChange()">
-                   <option value="" id="select_category">Choose Category</option>
-                   <option value="Real Estate" id="cat_realestate">Real Estate</option>
-                   <option value="Cars & Trucks" id="cat_cars_trucks">Cars and Trucks</option>
-                   <option value="Furniture" id="cat_furniture">Furniture</option>
-                   <option value="Jobs" id="cat_jobs">Jobs</option>
-                   <option value="Fashion" id="cat_fashion">Fashion</option>
-                   <option value="Pets" id="cat_pets">Pets</option>
-                   <option value="Sports" id="cat_sports">Sports</option>
-                   <option value="Books" id="cat_books">Books</option>
-                   <option value="Appliances" id="cat_appliances">Appliances</option>
-                   <option value="Toys" id="cat_toys">Toys</option>
+                   <option value="" data-i18n="select_category">Choose Category</option>
+                   <option value="Real Estate" data-i18n="cat_realestate">Real Estate</option>
+                   <option value="Cars & Trucks" data-i18n="cat_cars_trucks">Cars and Trucks</option>
+                   <option value="Furniture" data-i18n="cat_furniture">Furniture</option>
+                   <option value="Jobs" data-i18n="cat_jobs">Jobs</option>
+                   <option value="Fashion" data-i18n="cat_fashion">Fashion</option>
+                   <option value="Pets" data-i18n="cat_pets">Pets</option>
+                   <option value="Sports" data-i18n="cat_sports">Sports</option>
+                   <option value="Books" data-i18n="cat_books">Books</option>
+                   <option value="Appliances" data-i18n="cat_appliances">Appliances</option>
+                   <option value="Toys" data-i18n="cat_toys">Toys</option>
                </select>
            </div>
 
-           <!-- UPDATED PHOTO SECTION -->
+           <!-- PHOTO SECTION -->
            <div class="form-section">
-               <h3>Photos (At least 1 required, max 10)</h3>
+               <h3 data-i18n="photo_header">Photos (At least 1 required, max 10)</h3>
                <div class="upload-container">
                    <label for="photoInput" class="upload-box" style="border: 2px dashed #ccc; padding: 20px; display: block; text-align: center; cursor: pointer;">
                        <div class="icon">📸</div>
-                       <span>Click to add photos</span>
-                       <!-- ADDED onchange="handlePhotoUpload(event)" -->
+                       <span data-i18n="click_to_add">Click to add photos</span>
                        <input type="file" id="photoInput" accept="image/*" multiple onchange="handlePhotoUpload(event)" hidden>
                    </label>
-                   <!-- Gallery Grid for previews -->
                    <div id="galleryPreview" class="gallery-grid" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px;"></div>
                </div>
            </div>
@@ -54,37 +52,37 @@
            <!-- DYNAMIC SECTIONS -->
            <div id="section-Cars" class="category-details" style="display:none;">
                <div class="input-group">
-                   <label id="label_make">Make/Model</label>
-                   <input type="text" id="carMake" placeholder="e.g. Toyota Camry">
+                   <label data-i18n="label_make">Make/Model</label>
+                   <input type="text" id="carMake" data-i18n-placeholder="placeholder_make" placeholder="e.g. Toyota Camry">
                </div>
                <div class="input-group">
-                   <label id="label_year">Year</label>
-                   <input type="number" id="carYear" placeholder="2024">
+                   <label data-i18n="label_year">Year</label>
+                   <input type="number" id="carYear" data-i18n-placeholder="placeholder_year" placeholder="2024">
                </div>
                <div class="input-group">
-                   <label id="label_km">Mileage (KM)</label>
-                   <input type="number" id="carKM" placeholder="0">
+                   <label data-i18n="label_km">Mileage (KM)</label>
+                   <input type="number" id="carKM" data-i18n-placeholder="placeholder_km" placeholder="0">
                </div>
            </div>
 
            <div id="section-RealEstate" class="category-details" style="display:none;">
                <div class="input-group">
-                   <label id="label_bedrooms">Bedrooms</label>
+                   <label data-i18n="label_bedrooms">Bedrooms</label>
                    <input type="number" id="reBeds" placeholder="2">
                </div>
                <div class="input-group">
-                   <label id="label_bathrooms">Bathrooms</label>
+                   <label data-i18n="label_bathrooms">Bathrooms</label>
                    <input type="number" id="reBaths" placeholder="1">
                </div>
            </div>
 
            <div id="conditionSection" style="display:none; margin-top:10px;">
-               <label id="label_condition">Condition</label>
+               <label data-i18n="label_condition">Condition</label>
                <div class="condition-options">
                    <input type="radio" name="condition" value="New" id="cond_new">
-                   <label for="cond_new">New</label>
+                   <label for="cond_new" data-i18n="cond_new">New</label>
                    <input type="radio" name="condition" value="Used" id="cond_used">
-                   <label for="cond_used">Used</label>
+                   <label for="cond_used" data-i18n="cond_used">Used</label>
                </div>
            </div>
 
@@ -92,50 +90,44 @@
            <div id="commonFields" style="display:none; margin-top:20px;">
                <hr>
                <div class="input-group">
-                   <label id="label_location">City/Location</label>
-                   <input type="text" id="adLocation" required>
+                   <label data-i18n="label_location">City/Location</label>
+                   <input type="text" id="adLocation" data-i18n-placeholder="placeholder_location" required>
                </div>
                <div class="input-group">
-                   <label id="label_title">Ad Title</label>
-                   <input type="text" id="adTitle" required>
+                   <label data-i18n="label_title">Ad Title</label>
+                   <input type="text" id="adTitle" data-i18n-placeholder="placeholder_title" required>
                </div>
                <div class="input-group">
-                   <label id="label_price">Price ($)</label>
-                   <input type="number" id="adPrice" required>
+                   <label data-i18n="label_price">Price ($)</label>
+                   <input type="number" id="adPrice" data-i18n-placeholder="placeholder_price" required>
                </div>
                <div class="input-group">
-                   <label id="label_description">Description</label>
-                   <textarea id="adDesc" rows="4"></textarea>
+                   <label data-i18n="label_description">Description</label>
+                   <textarea id="adDesc" data-i18n-placeholder="placeholder_desc" rows="4"></textarea>
                </div>
 
                <!-- FEATURE OPTION -->
                <div class="form-group" style="background: #fff8e1; padding: 10px; border-radius: 5px; margin: 15px 0;">
                    <label for="isFeatured" style="cursor:pointer; font-weight: bold;">
                        <input type="checkbox" id="isFeatured" onchange="togglePayPal(this)">
-    <span id="feature_text">✨ Feature this ad for only $4.99 (Stay at the top!)</span>
+                       <span data-i18n="feature_text">✨ Feature this ad for only $4.99 (Stay at the top!)</span>
                    </label>
                </div>
 
                <div id="paypal-button-container" style="display:none;"></div>
-               <!-- Ensure ID matches postBtn and type is button -->
-               <button type="button" id="postBtn" onclick="saveNewAd(event)" class="btn-primary-large">Post Ad Now</button>
+               <button type="button" id="postBtn" onclick="saveNewAd(event)" class="btn-primary-large" data-i18n="post_btn">Post Ad Now</button>
            </div>
        </div>
    </div>
 
    <!-- SCRIPTS -->
    <script src="storage.js"></script>
-   <script src="post.js"></script> <!-- Ensure your logic is in post.js -->
+   <script src="post.js"></script>
    <script src="languages.js"></script> 
-   <script>
-document.addEventListener("DOMContentLoaded", () => {
-    const lang = localStorage.getItem("lang") || "en";
-    applyLanguage(lang);
-});
-</script>
    <script src="main.js"></script>
 
 </body>
 </html>
+
 
 
