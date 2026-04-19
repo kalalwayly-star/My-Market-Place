@@ -86,5 +86,13 @@
   "safety_redflags_title": "🚩 Señales de alerta",
   "safety_flag1": "Mensajes sospechosos o automáticos.",
   "safety_flag2": "Negarse a reunirse en persona.",
-  "safety_flag3": "Precios demasiado bajos"
+  "safety_flag3": "Precios demasiado bajos",
+  "received": "Recibidos",
+"sent": "Enviados",
+"back_home": "Volver al inicio",
+"description": "Descripción",
+"send_message": "Enviar mensaje",
+"report_ad": "Reportar anuncio",
+"back_to_browse": "Volver a explorar",
+"search_messages": "Buscar por remitente o asunto..."
 }
