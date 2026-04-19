@@ -216,9 +216,15 @@ function updateHeader() {
 }
 
 
-document.addEventListener("DOMContentLoaded", () => {
+function initMain() {
    updateHeader();
-});
+}
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initMain);
+} else {
+    initMain();
+}
 
 
    // Home Page Logic
