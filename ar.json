@@ -85,7 +85,12 @@
         "contact_seller": "تواصل مع البائع",
     "messages_title": "الرسائل",
         "no_messages": "لا توجد رسائل",
-        "footer_copy": "© 2026 My Marketplace"
+        "footer_copy": "© 2026 My Marketplace",
+    "reply": "رد",
+"from": "من",
+"to": "إلى",
+"no_messages": "لا توجد رسائل",
+"btn_view_all": "عرض الكل"
     
     
 }
