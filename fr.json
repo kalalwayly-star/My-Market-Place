@@ -86,6 +86,19 @@
 "send_message": "Envoyer un message",
 "report_ad": "Signaler l'annonce",
 "back_to_browse": "Retour à la recherche",
-"search_messages": "Rechercher par expéditeur ou sujet..."
+"search_messages": "Rechercher par expéditeur ou sujet...",
+  "login_title": "Connexion",
+    "login_header": "Connectez-vous à votre compte",
+    "label_email": "Adresse e-mail",
+    "label_password": "Mot de passe",
+    "placeholder_email": "nom@exemple.com",
+    "placeholder_password": "Mot de passe",
+    "login_btn": "Se connecter",
+    "no_account": "Pas de compte ?",
+    "register_link": "Inscrivez-vous ici",
+    "post_ad_header": "Publier une annonce",
+    "post_btn": "Publier l'annonce",
+    "delete": "Supprimer",
+    "home": "Accueil"
   
 }
