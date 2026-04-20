@@ -1,8 +1,6 @@
+// 1. GLOBAL VARIABLES (Declared only once)
 const STORAGE_KEY = "marketplace_ads"; 
-
-// 1. GLOBAL VARIABLES & KEY SYNC
 const currentUser = JSON.parse(localStorage.getItem("currentUser")) || { email: "Guest" };
-const STORAGE_KEY = "marketplace_ads"; // Matches your main.js/storage.js
 let uploadedImages = []; 
 
 // 2. HANDLE CATEGORY CHANGES
@@ -15,24 +13,19 @@ function handleCategoryChange() {
     if (!mainCategorySelect) return;
     const categoryValue = mainCategorySelect.value;
 
-    // 1. Hide all specific extra sections first
+    // Hide everything first
     sections.forEach(sec => sec.style.display = 'none');
-    
-    // 2. Hide condition by default
     if (condSec) condSec.style.display = 'none';
 
-    // 3. If no category is selected, hide the whole form
     if (categoryValue === "") {
         if (commonFields) commonFields.style.display = 'none';
         return;
     }
 
-    // 4. SHOW THE FORM (Title, Price, etc.)
-    if (commonFields) {
-        commonFields.style.display = 'block';
-    }
+    // Show common fields (Title, Price, etc.)
+    if (commonFields) commonFields.style.display = 'block';
 
-    // 5. Show extra fields based on category
+    // Show specific sections
     if (categoryValue === "Cars & Trucks") {
         const carSec = document.getElementById('section-Cars');
         if (carSec) carSec.style.display = 'block';
@@ -40,16 +33,12 @@ function handleCategoryChange() {
     } else if (categoryValue === "Real Estate") {
         const reSec = document.getElementById('section-RealEstate');
         if (reSec) reSec.style.display = 'block';
-    } else if (categoryValue === "Jobs") {
-        // Jobs usually don't need "Condition" (New/Used)
-        if (condSec) condSec.style.display = 'none';
-    } else {
-        // All other categories (Furniture, Electronics, etc.) show Condition
+    } else if (categoryValue !== "Jobs") {
         if (condSec) condSec.style.display = 'block';
     }
 }
 
-// 3. PHOTO UPLOAD & COMPRESSION
+// 3. PHOTO UPLOAD
 async function handlePhotoUpload(event) {
     const gallery = document.getElementById('galleryPreview');
     const files = Array.from(event.target.files);
@@ -78,7 +67,7 @@ async function handlePhotoUpload(event) {
 }
 
 function compressImage(file) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = (e) => {
@@ -103,34 +92,22 @@ function removeImg(e, data, btn) {
     btn.parentElement.remove();
 }
 
-// 4. SAVE & GPS LOGIC
-// --- 5. SAVE LOGIC ---
+// 4. SAVE LOGIC
 function saveNewAd(event) {
     if (event) event.preventDefault();
-    
-    // 1. Basic Auth Check
-    if (!currentUser || currentUser.email === "Guest") { 
-        alert("Please login first."); 
-        return; 
-    }
+    if (!currentUser || currentUser.email === "Guest") { alert("Please login first."); return; }
 
-    // 2. Location Field Check
-    const locationInput = document.getElementById('adLocation');
-    if (!locationInput || !locationInput.value.trim()) {
-        alert("Location is mandatory.");
-        if(locationInput) locationInput.focus();
-        return;
-    }
+    const locVal = document.getElementById('adLocation').value.trim();
+    if (!locVal) { alert("Location is mandatory."); return; }
 
-    // 3. Get GPS coordinates BEFORE finalizing for the 75km filter
     navigator.geolocation.getCurrentPosition(
-        (position) => {
-            window.currentAdLat = position.coords.latitude;
-            window.currentAdLng = position.coords.longitude;
+        (pos) => {
+            window.currentAdLat = pos.coords.latitude;
+            window.currentAdLng = pos.coords.longitude;
             finalizeAd(false);
         },
-        (error) => {
-            alert("Warning: Location access denied. Your ad won't show in 'Nearby' searches.");
+        () => {
+            alert("Proceeding without GPS.");
             finalizeAd(false);
         },
         { timeout: 5000 }
@@ -138,7 +115,6 @@ function saveNewAd(event) {
 }
 
 function finalizeAd(featuredStatus) {
-    // Get Selected Condition (New or Used)
     const conditionEl = document.querySelector('input[name="condition"]:checked');
     
     const newAd = {
@@ -148,30 +124,25 @@ function finalizeAd(featuredStatus) {
         title: document.getElementById('adTitle').value,
         price: document.getElementById('adPrice').value,
         location: document.getElementById('adLocation').value,
-        // Captured GPS coordinates
         lat: window.currentAdLat || null,
         lng: window.currentAdLng || null,
         description: document.getElementById('adDesc').value,
         condition: conditionEl ? conditionEl.value : "N/A",
-        // Car specific data (grabs value only if the field exists)
         carYear: document.getElementById('carYear')?.value || "",
         carMileage: document.getElementById('carMileage')?.value || "",
         carFuel: document.getElementById('carFuel')?.value || "",
-        // Image logic
         image: uploadedImages.length > 0 ? uploadedImages : ['https://placeholder.com'],
         isFeatured: featuredStatus,
         status: "Active",
         date: new Date().toLocaleDateString()
     };
  
-    // Save to the correct key so index.html can see it
     const ads = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
     ads.push(newAd);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(ads));
 
     alert("Ad Posted Successfully!");
-    
-    // Redirect to Home Page
     window.location.href = "index.html";
 }
+
 
