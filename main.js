@@ -1,4 +1,3 @@
-
 const SEARCH_RELATIONS = {
     "pants": ["clothing", "fashion", "jeans", "trousers", "t-shirt", "shirt", "apparel"],
     "t-shirt": ["clothing", "fashion", "top", "shirt", "apparel"],
@@ -10,9 +9,8 @@ const SEARCH_RELATIONS = {
 /* --- 1. CONFIGURATION & HELPERS --- */
 const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
-// Distance Helper (Haversine Formula)
 function calculateDistance(lat1, lon1, lat2, lon2) {
-    const R = 6371; // km
+    const R = 6371; 
     const dLat = (lat2 - lat1) * Math.PI / 180;
     const dLon = (lon2 - lon1) * Math.PI / 180;
     const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
@@ -22,7 +20,6 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
     return R * c;
 }
 
-// Global Helper to get ads from the correct key
 function getAds() {
     try {
         return JSON.parse(localStorage.getItem("marketplace_ads") || "[]");
@@ -32,7 +29,6 @@ function getAds() {
     }
 }
 
-// Global Helper to save ads
 function saveAds(adsArray) {
     localStorage.setItem("marketplace_ads", JSON.stringify(adsArray));
 }
@@ -48,16 +44,15 @@ function goToDetails(id) {
 }
 
 /* --- 3. UI RENDERING --- */
-/* --- 3. UI RENDERING --- */
 function renderAds(adsArray, containerId = "listings", userCoords = null) {
     const container = document.getElementById(containerId);
     if (!container) return;
 
     container.innerHTML = "";
-    const isMyAdsPage = (containerId === "myAds"); // Check if we are on My Ads page
+    const isMyAdsPage = (containerId === "myAds");
 
     if (!adsArray || adsArray.length === 0) {
-        container.innerHTML = `<p class='no-ads' style="text-align:center; width:100%; padding: 20px;" data-i18n="no_items_found">No items found.</p>`;
+        container.innerHTML = `<p class='no-ads' style="text-align:center; width:100%; padding: 20px;">No items found in your area.</p>`;
         return;
     }
 
@@ -91,65 +86,29 @@ function renderAds(adsArray, containerId = "listings", userCoords = null) {
     }).join('');
 }
 
-
-
 /* --- 4. FILTERS --- */
-
-// 75km Category Filter
-function filterByCategory(category) {
-    navigator.geolocation.getCurrentPosition((pos) => {
-        const uCoords = { lat: pos.coords.latitude, lon: pos.coords.longitude };
-        const allAds = getAds();
-        
-        const filtered = allAds.filter(ad => {
-            const isMatch = ad.category === category;
-            if (ad.lat && ad.lng) {
-                const dist = calculateDistance(uCoords.lat, uCoords.lon, ad.lat, ad.lng);
-                return isMatch && dist <= 75;
-            }
-            return isMatch;
-        });
-        renderAds(filtered, "listings", uCoords);
-    }, () => {
-        // Fallback if GPS blocked
-        const filtered = getAds().filter(ad => ad.category === category);
-        renderAds(filtered, "listings");
-    });
-}
-
-// Search Button
-// Search Button (Smart Search + Distance Sort)
 function applyFilters() {
     const searchInput = document.querySelector('.search-container input');
     if (!searchInput) return;
     
     const query = searchInput.value.toLowerCase().trim();
-    if (!query) {
-        resetFilters();
-        return;
-    }
+    if (!query) { resetFilters(); return; }
 
     const relatedTerms = SEARCH_RELATIONS[query] || [];
     
     navigator.geolocation.getCurrentPosition((pos) => {
         const uCoords = { lat: pos.coords.latitude, lon: pos.coords.longitude };
-        
         const filtered = getAds().filter(ad => {
             const title = ad.title.toLowerCase();
             const cat = (ad.category || "").toLowerCase();
-            const matchQuery = title.includes(query) || cat.includes(query);
-            const matchRelated = relatedTerms.some(term => title.includes(term) || cat.includes(term));
-            return matchQuery || matchRelated;
+            return title.includes(query) || cat.includes(query) || relatedTerms.some(t => title.includes(t));
         });
 
-        // Sort: Closest items first
         filtered.sort((a, b) => {
             if (!a.lat || !a.lng) return 1;
             if (!b.lat || !b.lng) return -1;
-            return calculateDistance(uCoords.lat, uCoords.lon, a.lat, a.lng) - 
-                   calculateDistance(uCoords.lat, uCoords.lon, b.lat, b.lng);
+            return calculateDistance(uCoords.lat, uCoords.lon, a.lat, a.lng) - calculateDistance(uCoords.lat, uCoords.lon, b.lat, b.lng);
         });
-
         renderAds(filtered, "listings", uCoords);
     }, () => {
         const filtered = getAds().filter(ad => ad.title.toLowerCase().includes(query));
@@ -157,67 +116,55 @@ function applyFilters() {
     });
 }
 
-// View All Button (75km local filter)
 function resetFilters() {
+    const allActive = getAds().filter(ad => ad.status !== "Sold");
+    
     navigator.geolocation.getCurrentPosition((pos) => {
         const uCoords = { lat: pos.coords.latitude, lon: pos.coords.longitude };
-        
-        const localAds = getAds().filter(ad => {
-            if (ad.status === "Sold") return false;
+        const localAds = allActive.filter(ad => {
             if (ad.lat && ad.lng) {
                 return calculateDistance(uCoords.lat, uCoords.lon, ad.lat, ad.lng) <= 75;
             }
-            return false; 
+            return true; // Show ads without GPS coordinates so page isn't empty
         });
-
         renderAds(localAds, "listings", uCoords);
     }, () => {
-        renderAds(getAds().filter(ad => ad.status !== "Sold"), "listings");
-    });
+        renderAds(allActive, "listings");
+    }, { timeout: 3000 });
 
     const searchInput = document.querySelector('.search-container input');
     if (searchInput) searchInput.value = '';
 }
 
-
-/* --- 5. INITIALIZATION --- */
-function initMain() {
-    // Fill Homepage
-    if (document.getElementById("listings")) {
-        resetFilters();
-    }
-    
-    // Fill My Ads Page
-    const myAdsContainer = document.getElementById("myAds");
-    if (myAdsContainer) {
-        if (!currentUser) {
-            myAdsContainer.innerHTML = "<p style='text-align:center; padding: 20px;'>Please login to see your ads.</p>";
-        } else {
-            const userAds = getAds().filter(ad => ad.userEmail === currentUser.email);
+/* --- 5. INITIALIZATION & DELETE --- */
+function deleteAd(id) {
+    if (confirm("Are you sure you want to delete this ad?")) {
+        let allAds = getAds();
+        const updatedAds = allAds.filter(ad => String(ad.id) !== String(id));
+        saveAds(updatedAds);
+        
+        // Refresh the specific view
+        if (document.getElementById("myAds")) {
+            const userAds = updatedAds.filter(ad => ad.userEmail === currentUser.email);
             renderAds(userAds, "myAds");
+        } else {
+            resetFilters();
         }
     }
 }
 
-// Run logic when page loads
-document.addEventListener("DOMContentLoaded", initMain);
-
-function deleteAd(id) {
-    if (confirm("Are you sure you want to delete this ad?")) {
-        let allAds = getAds();
-        // Filter out the ad with the matching ID
-        const updatedAds = allAds.filter(ad => String(ad.id) !== String(id));
-        
-        // Save back to localStorage
-        saveAds(updatedAds);
-        
-        // Refresh the My Ads view
-        const userAds = updatedAds.filter(ad => ad.userEmail === currentUser.email);
+function initMain() {
+    if (document.getElementById("listings")) { resetFilters(); }
+    const myAdsContainer = document.getElementById("myAds");
+    if (myAdsContainer && currentUser) {
+        const userAds = getAds().filter(ad => ad.userEmail === currentUser.email);
         renderAds(userAds, "myAds");
-        
-        alert("Ad deleted successfully.");
     }
 }
+
+document.addEventListener("DOMContentLoaded", initMain);
+
+
 
 
 
