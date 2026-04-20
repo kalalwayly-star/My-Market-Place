@@ -65,6 +65,7 @@ function logout() {
     window.location.href = "index.html";
 }
 /* --- UPDATED UI RENDERING WITH DISTANCE --- */
+/* --- FIXED UI RENDERING --- */
 function renderAds(adsArray, containerId = "listings", userCoords = null) {
     const container = document.getElementById(containerId);
     if (!container) return;
@@ -80,18 +81,12 @@ function renderAds(adsArray, containerId = "listings", userCoords = null) {
     container.innerHTML = adsArray.map(ad => {
         const isSold = ad.status === 'Sold';
         const isFeatured = ad.isFeatured === true;
-        // This version uses your ar.json for "km"
-distanceHTML = `
-    <span class="distance-tag" style="font-size: 0.75rem; color: #28a745; margin-left: 10px;">
-        📍 ${dist.toFixed(1)} <span data-i18n="km">km</span>
-    </span>`;
 
-
-        // Distance Calculation for the UI
+        // --- FIX: Define 'dist' before using it ---
         let distanceHTML = "";
         if (userCoords && ad.lat && ad.lng) {
             const dist = calculateDistance(userCoords.lat, userCoords.lon, ad.lat, ad.lng);
-            distanceHTML = `<span class="distance-tag" style="font-size: 0.75rem; color: #28a745; margin-left: 10px;">📍 ${dist.toFixed(1)} km</span>`;
+            distanceHTML = `<span class="distance-tag" style="font-size: 0.75rem; color: #28a745; margin-left: 10px;">📍 ${dist.toFixed(1)} <span data-i18n="km">km</span></span>`;
         }
 
         let displayImage = 'https://placeholder.com';
@@ -103,36 +98,22 @@ distanceHTML = `
             <div class="card ${isFeatured ? 'featured-card' : ''} ${isSold ? 'sold-card' : ''}" 
                  onclick="${isMyAdsPage ? '' : `goToDetails('${ad.id}')`}" 
                  style="cursor:pointer; border: 1px solid #ddd; border-radius: 10px; overflow: hidden; background: white; margin-bottom: 15px; position: relative;">
-              
-                ${isFeatured ? '<div class="featured-badge" style="position: absolute; top: 10px; left: 10px; background: gold; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; z-index: 10;">✨</div>' : ''}
-                ${isSold ? '<div class="sold-badge" style="position: absolute; top: 10px; right: 10px; background: red; color: white; padding: 2px 8px; z-index: 10; font-weight: bold;">SOLD</div>' : ''}
-
                 <div class="card-img-wrapper" style="height:180px; width: 100%; overflow:hidden; background-color: #f0f0f0;">
-                    <img src="${displayImage}" alt="${ad.title}" 
-                         onerror="this.src='https://placeholder.com'" 
-                         style="width:100%; height:100%; object-fit: cover; display: block;">
+                    <img src="${displayImage}" alt="${ad.title}" onerror="this.src='https://placeholder.com'" style="width:100%; height:100%; object-fit: cover;">
                 </div>
-              
                 <div class="ad-content" style="padding: 15px;">
                     <div style="display:flex; justify-content: space-between; align-items: center;">
-                        <span class="category-tag" style="font-size: 0.8rem; color: #666; font-weight: bold; text-transform: uppercase;">${ad.category || "General"}</span>
+                        <span class="category-tag" style="font-size: 0.8rem; color: #666; font-weight: bold;">${ad.category || "General"}</span>
                         ${distanceHTML}
                     </div>
-                    <h3 style="margin: 5px 0;">${ad.title || "Untitled"}</h3>
-                    <p style="margin: 5px 0; color: #007bff;"><strong>$${ad.price || "0"}</strong></p>
-                  
-                    ${isMyAdsPage ? `
-                        <div class="actions" style="margin-top:10px; display: flex; gap: 8px;">
-                            <button onclick="event.stopPropagation(); toggleStatus('${ad.id}')" class="btn-sm">Status</button>
-                            <button onclick="event.stopPropagation(); editAd('${ad.id}')" class="btn-sm">Edit</button>
-                            <button onclick="event.stopPropagation(); deleteAd('${ad.id}')" class="btn-sm btn-delete" style="color: red;" data-i18n="delete">Delete</button>
-                        </div>
-                    ` : ""}
+                    <h3>${ad.title || "Untitled"}</h3>
+                    <p style="color: #007bff;"><strong>$${ad.price || "0"}</strong></p>
                 </div>
             </div>
         `;
     }).join('');
 }
+
 
 /* --- UPDATED CATEGORY FILTER --- */
 function filterByCategory(category) {
