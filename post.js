@@ -15,17 +15,24 @@ function handleCategoryChange() {
     if (!mainCategorySelect) return;
     const categoryValue = mainCategorySelect.value;
 
+    // 1. Hide all specific extra sections first
     sections.forEach(sec => sec.style.display = 'none');
+    
+    // 2. Hide condition by default
     if (condSec) condSec.style.display = 'none';
 
+    // 3. If no category is selected, hide the whole form
     if (categoryValue === "") {
         if (commonFields) commonFields.style.display = 'none';
         return;
     }
 
-    if (commonFields) commonFields.style.display = 'block';
+    // 4. SHOW THE FORM (Title, Price, etc.)
+    if (commonFields) {
+        commonFields.style.display = 'block';
+    }
 
-    // Show specific sections
+    // 5. Show extra fields based on category
     if (categoryValue === "Cars & Trucks") {
         const carSec = document.getElementById('section-Cars');
         if (carSec) carSec.style.display = 'block';
@@ -33,7 +40,11 @@ function handleCategoryChange() {
     } else if (categoryValue === "Real Estate") {
         const reSec = document.getElementById('section-RealEstate');
         if (reSec) reSec.style.display = 'block';
-    } else if (categoryValue !== "Jobs") {
+    } else if (categoryValue === "Jobs") {
+        // Jobs usually don't need "Condition" (New/Used)
+        if (condSec) condSec.style.display = 'none';
+    } else {
+        // All other categories (Furniture, Electronics, etc.) show Condition
         if (condSec) condSec.style.display = 'block';
     }
 }
