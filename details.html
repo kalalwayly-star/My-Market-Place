@@ -4,9 +4,25 @@
    <meta charset="UTF-8">
    <title>Ad Details | My Marketplace</title>
    <link rel="stylesheet" href="style.css">
+   <style>
+       /* Basic Fix for Grid Layout */
+       .detail-grid { display: flex; gap: 30px; margin-top: 20px; }
+       .content-main { flex: 2; }
+       .content-sidebar { flex: 1; min-width: 300px; }
+       .main-image { width: 100%; min-height: 300px; background: #f4f4f4; border-radius: 10px; margin-bottom: 20px; }
+       .price-card { background: #fff; padding: 20px; border-radius: 10px; border: 1px solid #ddd; }
+       .price-tag { font-size: 2rem; color: #007bff; font-weight: bold; margin: 10px 0; }
+       #adImageContainer img { max-width: 100%; border-radius: 10px; display: block; }
+       
+       /* Report Modal Styling */
+       #reportModal { 
+           display:none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+           background: white; border: 1px solid #ccc; padding: 30px; z-index: 1000;
+           box-shadow: 0 4px 15px rgba(0,0,0,0.2); border-radius: 8px;
+       }
+   </style>
 </head>
 <body class="auth-page-body">
-
 
 <header class="header">
    <div class="container" style="display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 1200px; margin: 0 auto;">
@@ -17,21 +33,21 @@
    </div>
 </header>
 
-
 <main class="container detail-wrapper" style="max-width: 1200px; margin: 20px auto; padding: 0 20px;">
    <div class="detail-grid">
+       
        <!-- Left Side: Image and Description -->
        <div class="content-main">
+           <!-- THE IMAGE BOX -->
            <div id="adImageContainer" class="main-image">
                <!-- Image injected by details.js -->
            </div>
+
            <div class="description-section">
-    <h2 data-i18n="label_description">Description</h2>
-    <p id="adDesc">Loading description...</p>
-</div>
+                <h2 data-i18n="label_description">Description</h2>
+                <p id="adDesc" style="white-space: pre-wrap;">Loading description...</p>
+           </div>
        </div>
-
-
 
        <!-- Right Side: Price and Contact -->
        <div class="content-sidebar">
@@ -43,69 +59,64 @@
               
                <hr>
               
-<h3 data-i18n="contact_seller">Contact Seller</h3>               <div class="contact-info">
-               </div>
-
-
+               <h3 data-i18n="contact_seller">Contact Seller</h3>
+               
                <!-- Messaging Section -->
-               <div id="contactSection" class="contact-card" style="margin-top: 20px;">
+               <div id="contactSection" style="margin-top: 20px;">
                    <textarea 
-    id="messageText" 
-    placeholder="Hi, is this still available?" 
-    data-i18n-placeholder="message_placeholder"
-    rows="4"
-    style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
-</textarea>
-<button 
-    onclick="sendMessage()" 
-    class="btn-primary-large" 
-    style="margin-top: 10px; width: 100%;"
-    data-i18n="send_message">
-    Send Message
-</button>              
-<!-- Update your button like this -->
-<button id="reportBtn" onclick="showReportModal()" data-i18n="report_ad">
-    Report this Ad
-</button>
+                        id="messageText" 
+                        placeholder="Hi, is this still available?" 
+                        data-i18n-placeholder="message_placeholder"
+                        rows="4"
+                        style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;"></textarea>
+                    
+                    <button 
+                        onclick="sendMessage()" 
+                        class="btn-primary-large" 
+                        style="margin-top: 10px; width: 100%; cursor: pointer;"
+                        data-i18n="send_message">
+                        Send Message
+                    </button>              
 
-<div id="reportModal" style="display:none; position: fixed; background: white; border: 1px solid #ccc; padding: 20px; z-index: 1000;">
-    <h3 data-i18n="report_ad">Report Ad</h3>
-
-    <select id="reportReason">
-        <option value="scam" data-i18n="report_scam">Scam</option>
-        <option value="illegal" data-i18n="report_illegal">Illegal Item</option>
-    </select>
-
-    <button onclick="submitReport()" data-i18n="submit_report">Submit Report</button>
-    <button onclick="closeModal()" data-i18n="cancel">Cancel</button>
-</div>
+                    <!-- Report System -->
+                    <button id="reportBtn" onclick="showReportModal()" style="margin-top: 15px; border: none; background: none; color: #ff4444; cursor: pointer; text-decoration: underline;" data-i18n="report_ad">
+                        Report this Ad
+                    </button>
+               </div>
 
            </div>
        </div>
    </div>
 </main>
 
-<!-- Add this to the bottom of your body tag in all main HTML files -->
-<footer>
-    <p data-i18n="footer_copy">© 2026 Classified-Site</p>
-    <ul>
-        <li><a href="terms.html" data-i18n="footer_terms">Terms of Service</a></li>
-        <li><a href="privacy.html" data-i18n="footer_privacy">Privacy Policy</a></li>
-        <li><a href="safety.html" data-i18n="footer_safety">Safety Tips</a></li>
-    </ul>
-</footer>
+<!-- Report Modal Popup -->
+<div id="reportModal">
+    <h3 data-i18n="report_ad">Report Ad</h3>
+    <select id="reportReason" style="width: 100%; padding: 10px; margin: 10px 0;">
+        <option value="scam" data-i18n="report_scam">Scam</option>
+        <option value="illegal" data-i18n="report_illegal">Illegal Item</option>
+    </select>
+    <div style="display: flex; gap: 10px;">
+        <button onclick="submitReport()" class="btn" data-i18n="submit_report" style="background: #28a745; color: white; border: none; padding: 10px;">Submit</button>
+        <button onclick="closeModal()" class="btn" data-i18n="cancel" style="background: #ccc; border: none; padding: 10px;">Cancel</button>
+    </div>
+</div>
 
+<footer>
+    <div class="container" style="text-align: center; padding: 20px 0; border-top: 1px solid #eee; margin-top: 40px;">
+        <p data-i18n="footer_copy">© 2026 Classified-Site</p>
+        <ul style="list-style: none; display: flex; justify-content: center; gap: 20px; padding: 0;">
+            <li><a href="terms.html" data-i18n="footer_terms">Terms of Service</a></li>
+            <li><a href="privacy.html" data-i18n="footer_privacy">Privacy Policy</a></li>
+            <li><a href="safety.html" data-i18n="footer_safety">Safety Tips</a></li>
+        </ul>
+    </div>
+</footer>
 
 <!-- Scripts -->
 <script src="storage.js"></script>
 <script src="details.js"></script>
-   <script src="languages.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    const lang = localStorage.getItem("lang") || "en";
-    applyLanguage(lang);
-});
-</script>
-
+<script src="languages.js"></script>
 </body>
 </html>
+
