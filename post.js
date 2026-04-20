@@ -8,19 +8,42 @@ function handleCategoryChange() {
     const mainCategorySelect = document.getElementById('postCategory');
     const commonFields = document.getElementById('commonFields');
     const sections = document.querySelectorAll('.category-details');
-    const condSec = document.getElementById('conditionSection');
+    // Use the ID from your HTML: globalCondition
+    const condSec = document.getElementById('globalCondition');
 
     if (!mainCategorySelect) return;
     const categoryValue = mainCategorySelect.value;
 
-    // Hide everything first
+    // Hide all dynamic sections (Cars, Real Estate, etc.)
     sections.forEach(sec => sec.style.display = 'none');
-    if (condSec) condSec.style.display = 'none';
 
     if (categoryValue === "") {
         if (commonFields) commonFields.style.display = 'none';
+        if (condSec) condSec.style.display = 'none';
         return;
     }
+
+    // Show common fields since a category is selected
+    if (commonFields) commonFields.style.display = 'block';
+
+    // 1. Show Specific Category Sections
+    if (categoryValue === 'Cars & Trucks') {
+        document.getElementById('section-Cars').style.display = 'block';
+    } else if (categoryValue === 'Real Estate') {
+        document.getElementById('section-RealEstate').style.display = 'block';
+    }
+
+    // 2. Logic for Condition Box (Hide for Pets, Jobs, Real Estate)
+    const noCondition = ['Pets', 'Jobs', 'Real Estate'];
+    
+    if (condSec) {
+        if (noCondition.includes(categoryValue)) {
+            condSec.style.display = 'none';
+        } else {
+            condSec.style.display = 'block';
+        }
+    }
+}
 
     // Show common fields (Title, Price, etc.)
     if (commonFields) commonFields.style.display = 'block';
