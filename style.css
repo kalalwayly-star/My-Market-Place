@@ -370,6 +370,9 @@ img {
     transform: translateY(-3px);
     opacity: 0.8;
 }
+.cat-card, .btn-search, .btn-link, .card {
+    cursor: pointer !important;
+}
 
 
 
