@@ -1,3 +1,5 @@
+const STORAGE_KEY = "marketplace_ads"; 
+
 // 1. GLOBAL VARIABLES & KEY SYNC
 const currentUser = JSON.parse(localStorage.getItem("currentUser")) || { email: "Guest" };
 const STORAGE_KEY = "marketplace_ads"; // Matches your main.js/storage.js
@@ -91,22 +93,33 @@ function removeImg(e, data, btn) {
 }
 
 // 4. SAVE & GPS LOGIC
+// --- 5. SAVE LOGIC ---
 function saveNewAd(event) {
     if (event) event.preventDefault();
-    if (!currentUser || currentUser.email === "Guest") { alert("Please login first."); return; }
+    
+    // 1. Basic Auth Check
+    if (!currentUser || currentUser.email === "Guest") { 
+        alert("Please login first."); 
+        return; 
+    }
 
-    const locVal = document.getElementById('adLocation').value.trim();
-    if (!locVal) { alert("Location is mandatory."); return; }
+    // 2. Location Field Check
+    const locationInput = document.getElementById('adLocation');
+    if (!locationInput || !locationInput.value.trim()) {
+        alert("Location is mandatory.");
+        if(locationInput) locationInput.focus();
+        return;
+    }
 
-    // Grab coordinates for 75km filter
+    // 3. Get GPS coordinates BEFORE finalizing for the 75km filter
     navigator.geolocation.getCurrentPosition(
-        (pos) => {
-            window.currentAdLat = pos.coords.latitude;
-            window.currentAdLng = pos.coords.longitude;
+        (position) => {
+            window.currentAdLat = position.coords.latitude;
+            window.currentAdLng = position.coords.longitude;
             finalizeAd(false);
         },
-        () => {
-            alert("Proceeding without GPS. Ad won't show in 'Nearby' filters.");
+        (error) => {
+            alert("Warning: Location access denied. Your ad won't show in 'Nearby' searches.");
             finalizeAd(false);
         },
         { timeout: 5000 }
@@ -114,7 +127,7 @@ function saveNewAd(event) {
 }
 
 function finalizeAd(featuredStatus) {
-    // Get Selected Condition (Radio buttons fix)
+    // Get Selected Condition (New or Used)
     const conditionEl = document.querySelector('input[name="condition"]:checked');
     
     const newAd = {
@@ -124,27 +137,30 @@ function finalizeAd(featuredStatus) {
         title: document.getElementById('adTitle').value,
         price: document.getElementById('adPrice').value,
         location: document.getElementById('adLocation').value,
+        // Captured GPS coordinates
         lat: window.currentAdLat || null,
         lng: window.currentAdLng || null,
         description: document.getElementById('adDesc').value,
-    
-
-
         condition: conditionEl ? conditionEl.value : "N/A",
-        // Car specific data
+        // Car specific data (grabs value only if the field exists)
         carYear: document.getElementById('carYear')?.value || "",
         carMileage: document.getElementById('carMileage')?.value || "",
         carFuel: document.getElementById('carFuel')?.value || "",
+        // Image logic
         image: uploadedImages.length > 0 ? uploadedImages : ['https://placeholder.com'],
         isFeatured: featuredStatus,
         status: "Active",
         date: new Date().toLocaleDateString()
     };
  
+    // Save to the correct key so index.html can see it
     const ads = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
     ads.push(newAd);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(ads));
 
     alert("Ad Posted Successfully!");
+    
+    // Redirect to Home Page
     window.location.href = "index.html";
 }
+
