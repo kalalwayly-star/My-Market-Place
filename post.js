@@ -157,13 +157,41 @@ function renderPayPalButtons() {
 // 5. SAVE LOGIC
 function saveNewAd(event) {
     if (event) event.preventDefault();
-    if (!currentUser) { alert("Please login first."); return; }
+    
+    // 1. Basic Auth Check
+    if (!currentUser) { 
+        alert("Please login first."); 
+        return; 
+    }
 
-    const title = document.getElementById('adTitle').value;
-    if (!title) { alert("Please enter a title."); return; }
+    // 2. Location Field Check (Manual check in case browser validation is skipped)
+    const locationInput = document.getElementById('adLocation');
+    if (!locationInput.value.trim()) {
+        alert("Location is mandatory.");
+        locationInput.focus();
+        return;
+    }
 
-    finalizeAd(false);
+    // 3. Get GPS coordinates BEFORE finalizing
+    // This ensures every ad can be filtered by the 75km radius
+    navigator.geolocation.getCurrentPosition(
+        (position) => {
+            // Store coordinates globally or pass them to finalizeAd
+            window.currentAdLat = position.coords.latitude;
+            window.currentAdLng = position.coords.longitude;
+            
+            // Now that we have the GPS, call your existing finalize function
+            finalizeAd(false);
+        },
+        (error) => {
+            // If GPS fails/blocked, warn user but still allow (or block if you prefer)
+            alert("Warning: Location access denied. Your ad won't show in 'Nearby' searches.");
+            finalizeAd(false);
+        },
+        { timeout: 5000 }
+    );
 }
+
 
 function finalizeAd(featuredStatus) {
     const newAd = {
@@ -173,6 +201,10 @@ function finalizeAd(featuredStatus) {
         title: document.getElementById('adTitle').value,
         price: document.getElementById('adPrice').value,
         location: document.getElementById('adLocation').value,
+        // --- ADD THESE TWO LINES ---
+        lat: window.currentAdLat || null,
+        lng: window.currentAdLng || null,
+        // ---------------------------
         description: document.getElementById('adDesc').value,
         image: uploadedImages.length > 0 ? uploadedImages : ['https://placeholder.com'],
         isFeatured: featuredStatus,
@@ -186,6 +218,7 @@ function finalizeAd(featuredStatus) {
     alert(featuredStatus ? "Featured Ad Posted!" : "Ad Posted Successfully!");
     window.location.href = "index.html";
 }
+
 
 
 
