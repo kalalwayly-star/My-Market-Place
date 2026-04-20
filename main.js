@@ -1,3 +1,6 @@
+/* --- 1. CONFIGURATION & HELPERS --- */
+const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
 // Distance Helper (Haversine Formula)
 function calculateDistance(lat1, lon1, lat2, lon2) {
     const R = 6371; // km
@@ -10,13 +13,10 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
     return R * c;
 }
 
-
-/* --- 1. CONFIGURATION & HELPERS --- */
-const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-
 // Helper to get ads safely from storage
 function getAds() {
     try {
+        // Updated to use the key from your storage.js
         return JSON.parse(localStorage.getItem("ads") || "[]");
     } catch (e) {
         console.error("Error parsing ads:", e);
@@ -39,7 +39,6 @@ function editAd(id) {
 }
 
 function deleteAd(id) {
-    // Uses data-i18n compatible confirm or standard browser confirm
     if (confirm("Are you sure you want to delete this ad?")) {
         let ads = getAds();
         ads = ads.filter(ad => String(ad.id) !== String(id));
@@ -63,7 +62,7 @@ function logout() {
     window.location.href = "index.html";
 }
 
-/* --- 3. UI RENDERING (The Photo Fix) --- */
+/* --- 3. UI RENDERING --- */
 function renderAds(adsArray, containerId = "listings") {
     const container = document.getElementById(containerId);
     if (!container) return;
@@ -72,7 +71,7 @@ function renderAds(adsArray, containerId = "listings") {
     const isMyAdsPage = (containerId === "myAds");
 
     if (!adsArray || adsArray.length === 0) {
-        container.innerHTML = `<p class='no-ads' data-i18n="no_items_found">No items found.</p>`;
+        container.innerHTML = `<p class='no-ads' data-i18n="no_items_found" style="text-align:center; width:100%;">No items found.</p>`;
         return;
     }
 
@@ -80,11 +79,8 @@ function renderAds(adsArray, containerId = "listings") {
         const isSold = ad.status === 'Sold';
         const isFeatured = ad.isFeatured === true;
 
-        // --- FIXED IMAGE LOGIC ---
         let displayImage = 'https://placeholder.com';
-        
         if (ad.image) {
-            // If image is an array, take the first one; if string, use it directly
             displayImage = Array.isArray(ad.image) ? ad.image[0] : ad.image;
         }
 
@@ -118,129 +114,75 @@ function renderAds(adsArray, containerId = "listings") {
             </div>
         `;
     }).join('');
-
-    // Re-run language update to catch dynamic content (data-i18n)
-    if (typeof loadLanguage === "function") {
-        const lang = localStorage.getItem("language") || "en";
-        // Note: loadLanguage might re-fetch the JSON. Use updateText if available for performance.
-    }
 }
 
-/* --- 4. INITIALIZATION --- */
+/* --- 4. FILTERING LOGIC --- */
+
+// FILTER BY CATEGORY (75km logic)
+function filterByCategory(category) {
+    navigator.geolocation.getCurrentPosition((position) => {
+        const uLat = position.coords.latitude;
+        const uLon = position.coords.longitude;
+
+        const allAds = getAds();
+        const filtered = allAds.filter(ad => {
+            const matchesCat = ad.category === category;
+            if (ad.lat && ad.lng) {
+                const dist = calculateDistance(uLat, uLon, ad.lat, ad.lng);
+                return matchesCat && dist <= 75;
+            }
+            return matchesCat;
+        });
+        renderAds(filtered, "listings");
+    }, () => {
+        // Fallback if GPS blocked
+        const allAds = getAds();
+        renderAds(allAds.filter(ad => ad.category === category), "listings");
+    });
+}
+
+// SEARCH BUTTON
+function applyFilters() {
+    const searchTerm = document.querySelector('[data-i18n-placeholder="search_placeholder"]').value.toLowerCase();
+    const locationTerm = document.querySelector('[data-i18n-placeholder="location_placeholder"]').value.toLowerCase();
+    
+    const allAds = getAds();
+    const filtered = allAds.filter(ad => {
+        const matchesSearch = ad.title.toLowerCase().includes(searchTerm) || (ad.description && ad.description.toLowerCase().includes(searchTerm));
+        const matchesLocation = ad.location && ad.location.toLowerCase().includes(locationTerm);
+        return matchesSearch && matchesLocation;
+    });
+    renderAds(filtered, "listings");
+}
+
+// VIEW ALL
+function resetFilters() {
+    const allAds = getAds();
+    const activeAds = allAds.filter(ad => ad.status !== "Sold");
+    renderAds(activeAds, "listings");
+    document.querySelectorAll('.search-container input').forEach(input => input.value = '');
+}
+
+/* --- 5. INITIALIZATION --- */
 function initMain() {
-    // 1. Listings Page (index.html)
     const listingsContainer = document.getElementById("listings");
     if (listingsContainer) {
-        const allAds = getAds();
-        const activeAds = allAds.filter(ad => ad.status !== "Sold");
-        activeAds.sort((a, b) => (b.isFeatured === a.isFeatured) ? 0 : b.isFeatured ? 1 : -1);
-        renderAds(activeAds, "listings");
+        resetFilters();
     }
 
-    // 2. My Ads Page (myads.html)
     const myAdsContainer = document.getElementById("myAds");
     if (myAdsContainer) {
         if (!currentUser) {
             myAdsContainer.innerHTML = "<p data-i18n='please_login'>Please login to see your ads.</p>";
         } else {
             const allAds = getAds();
-            // Filter by userEmail to show only current user's items
             const userAds = allAds.filter(ad => ad.userEmail === currentUser.email);
             renderAds(userAds, "myAds");
         }
     }
 }
 
-// Safe execution
-if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initMain);
-} else {
-    initMain();
-}
-// 1. FILTER BY CATEGORY
-function filterByCategory(category) {
-    const allAds = JSON.parse(localStorage.getItem('ads')) || []; // Assuming ads are in storage.js
-    const filtered = allAds.filter(ad => ad.category === category);
-    displayAds(filtered);
-}
+document.addEventListener("DOMContentLoaded", initMain);
 
-// 2. SEARCH BUTTON (applyFilters)
-function applyFilters() {
-    const searchTerm = document.querySelector('[data-i18n-placeholder="search_placeholder"]').value.toLowerCase();
-    const locationTerm = document.querySelector('[data-i18n-placeholder="location_placeholder"]').value.toLowerCase();
-    
-    const allAds = JSON.parse(localStorage.getItem('ads')) || [];
-    
-    const filtered = allAds.filter(ad => {
-        const matchesSearch = ad.title.toLowerCase().includes(searchTerm) || ad.description.toLowerCase().includes(searchTerm);
-        const matchesLocation = ad.location.toLowerCase().includes(locationTerm);
-        return matchesSearch && matchesLocation;
-    });
-    
-    displayAds(filtered);
-}
-
-// 3. VIEW ALL BUTTON (resetFilters)
-function resetFilters() {
-    const allAds = JSON.parse(localStorage.getItem('ads')) || [];
-    displayAds(allAds);
-    
-    // Clear the search inputs
-    document.querySelectorAll('.search-container input').forEach(input => input.value = '');
-}
-
-// 4. DISPLAY FUNCTION (The Bridge)
-function displayAds(adsArray) {
-    const container = document.getElementById('listings');
-    container.innerHTML = ''; // Clear current ads
-
-    if (adsArray.length === 0) {
-        container.innerHTML = '<p style="text-align:center; width:100%;" data-i18n="no_ads_found">No ads found</p>';
-        // Trigger translation refresh if your library supports it
-        if(window.updateContent) window.updateContent(); 
-        return;
-    }
-
-    adsArray.forEach(ad => {
-        const adCard = `
-            <div class="ad-card">
-                <img src="${ad.image || 'placeholder.jpg'}" alt="${ad.title}">
-                <h4>${ad.title}</h4>
-                <p>${ad.price} $</p>
-                <p class="category-label">${ad.category}</p>
-            </div>
-        `;
-        container.innerHTML += adCard;
-    });
-}
-
-
-// Updated Category Filter with 75km Radius
-function filterByCategory(categoryName) {
-    // 1. Get user's current position (using browser GPS)
-    navigator.geolocation.getCurrentPosition((position) => {
-        const userLat = position.coords.latitude;
-        const userLon = position.coords.longitude;
-
-        const allAds = getAllAds();
-        
-        const filtered = allAds.filter(ad => {
-            const isSameCategory = ad.category === categoryName;
-            
-            // 2. Check if ad is within 75km
-            // Note: Your ad objects must have ad.lat and ad.lng
-            const distance = getDistance(userLat, userLon, ad.lat, ad.lng);
-            
-            return isSameCategory && distance <= 75;
-        });
-
-        renderAds(filtered);
-    }, () => {
-        // Fallback if user blocks GPS: Just filter by category
-        alert("Please enable location for local results.");
-        const allAds = getAllAds();
-        renderAds(allAds.filter(ad => ad.category === categoryName));
-    });
-}
 
 
