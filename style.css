@@ -359,6 +359,17 @@ img {
     color: #333;
     font-size: 16px;
 }
+/* Makes categories look clickable */
+.cat-card, .btn-search, .btn-link {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+/* Optional: Slight lift effect on hover */
+.cat-card:hover {
+    transform: translateY(-3px);
+    opacity: 0.8;
+}
 
 
 
