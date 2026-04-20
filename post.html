@@ -52,30 +52,33 @@
                </div>
            </div>
 
-           <!-- DYNAMIC SECTIONS -->
+           
 <!-- UNIFIED CARS & TRUCKS SECTION -->
 <div id="section-Cars" class="category-details" style="display:none; border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin-bottom: 20px; background: #fafafa;">
     
-    <div class="input-group">
+    <!-- Make & Model -->
+    <div class="input-group" style="margin-bottom: 15px;">
         <label>Make/Model</label>
-        <input type="text" id="carMake" placeholder="e.g. Toyota Camry">
+        <input type="text" id="carMake" placeholder="e.g. Toyota Camry" style="width: 100%; padding: 8px; box-sizing: border-box;">
     </div>
 
+    <!-- Year & Mileage -->
     <div style="display: flex; gap: 15px; margin-bottom: 15px;">
         <div style="flex: 1;">
             <label>Year</label>
-            <input type="number" id="carYear" placeholder="2024" style="width: 100%;">
+            <input type="number" id="carYear" placeholder="2024" style="width: 100%; padding: 8px; box-sizing: border-box;">
         </div>
         <div style="flex: 1;">
             <label>Mileage (KM)</label>
-            <input type="number" id="carMileage" placeholder="0" style="width: 100%;">
+            <input type="number" id="carMileage" placeholder="0" style="width: 100%; padding: 8px; box-sizing: border-box;">
         </div>
     </div>
 
+    <!-- Fuel & Transmission -->
     <div style="display: flex; gap: 15px; margin-bottom: 15px;">
         <div style="flex: 1;">
             <label>Fuel Type</label>
-            <select id="carFuel" style="width: 100%;">
+            <select id="carFuel" style="width: 100%; padding: 8px;">
                 <option value="Petrol">Petrol</option>
                 <option value="Diesel">Diesel</option>
                 <option value="Electric">Electric</option>
@@ -84,27 +87,17 @@
         </div>
         <div style="flex: 1;">
             <label>Transmission</label>
-            <select id="carTrans" style="width: 100%;">
+            <select id="carTrans" style="width: 100%; padding: 8px;">
                 <option value="Automatic">Automatic</option>
                 <option value="Manual">Manual</option>
             </select>
         </div>
     </div>
 
-    <div class="input-group">
-        <label>Condition</label>
-        <div style="display: flex; gap: 20px; padding: 5px 0;">
-            <label style="font-weight: normal;"><input type="radio" name="condition" value="New" checked> New</label>
-            <label style="font-weight: normal;"><input type="radio" name="condition" value="Used"> Used</label>
-        </div>
-    </div>
-</div>
-
-
     <!-- Body Type -->
-    <div class="input-group">
+    <div class="input-group" style="margin-bottom: 15px;">
         <label data-i18n="label_body">Body Type</label>
-        <select id="carBody">
+        <select id="carBody" style="width: 100%; padding: 8px;">
             <option value="Sedan">Sedan</option>
             <option value="SUV">SUV</option>
             <option value="Truck/Pickup">Truck / Pickup</option>
@@ -113,8 +106,17 @@
         </select>
     </div>
 
- </div>
-</div>
+    <!-- Condition -->
+    <div class="input-group">
+        <label>Condition</label>
+        <div style="display: flex; gap: 20px; padding: 5px 0;">
+            <label style="font-weight: normal;"><input type="radio" name="condition" value="New" checked> New</label>
+            <label style="font-weight: normal;"><input type="radio" name="condition" value="Used"> Used</label>
+        </div>
+    </div>
+
+</div> <!-- ONLY ONE CLOSING TAG HERE -->
+
 
            <div id="section-RealEstate" class="category-details" style="display:none;">
                <div class="input-group">
