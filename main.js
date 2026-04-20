@@ -172,11 +172,6 @@ function resetFilters() {
 
 
 /* --- 5. INITIALIZATION --- */
-function initMain() {
-    const listingsContainer = document.getElementById("listings");
-    if (listingsContainer) {
-        resetFilters();
-    }
 
     const myAdsContainer = document.getElementById("myAds");
     if (myAdsContainer) {
