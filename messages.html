@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <title data-i18n="messages_title">My Messages | Marketplace</title>
+  <link rel="stylesheet" href="https://cloudflare.com">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -24,10 +25,15 @@
       </div>
       
       <!-- Tabs: Received/Sent -->
-      <div class="message-tabs" style="margin-bottom: 20px;">
-          <button onclick="changeTab('received')" id="btnReceived" class="btn text active" data-i18n="received"></button>
-          <button onclick="changeTab('sent')" id="btnSent" class="btn text" data-i18n="sent"></button>
-      </div>
+      <div class="message-tabs" style="margin-bottom: 20px; display: flex; gap: 10px;">
+    <button onclick="changeTab('received')" id="btnReceived" class="btn text active" data-i18n="received" style="min-width: 100px; padding: 10px;">
+        Received
+    </button>
+    <button onclick="changeTab('sent')" id="btnSent" class="btn text" data-i18n="sent" style="min-width: 100px; padding: 10px;">
+        Sent
+    </button>
+</div>
+
 
       <!-- Messages List -->
       <div id="messageList" class="message-grid"></div>
