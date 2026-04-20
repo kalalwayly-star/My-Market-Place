@@ -87,6 +87,23 @@ function renderAds(adsArray, containerId = "listings", userCoords = null) {
 }
 
 /* --- 4. FILTERS --- */
+function filterByCategory(category) {
+    navigator.geolocation.getCurrentPosition((pos) => {
+        const uCoords = { lat: pos.coords.latitude, lon: pos.coords.longitude };
+        const filtered = getAds().filter(ad => {
+            if (ad.category !== category) return false;
+            if (ad.lat && ad.lng) {
+                return calculateDistance(uCoords.lat, uCoords.lon, ad.lat, ad.lng) <= 75;
+            }
+            return true;
+        });
+        renderAds(filtered, "listings", uCoords);
+    }, () => {
+        const filtered = getAds().filter(ad => ad.category === category);
+        renderAds(filtered, "listings");
+    });
+}
+
 function applyFilters() {
     const searchInput = document.querySelector('.search-container input');
     if (!searchInput) return;
@@ -125,7 +142,7 @@ function resetFilters() {
             if (ad.lat && ad.lng) {
                 return calculateDistance(uCoords.lat, uCoords.lon, ad.lat, ad.lng) <= 75;
             }
-            return true; // Show ads without GPS so page isn't empty
+            return true;
         });
         renderAds(localAds, "listings", uCoords);
     }, () => {
@@ -140,7 +157,6 @@ function resetFilters() {
 function deleteAd(id) {
     if (confirm("Are you sure you want to delete this ad?")) {
         let allAds = getAds();
-        // Fixed: Added the missing filter logic here
         const updatedAds = allAds.filter(ad => String(ad.id) !== String(id));
         saveAds(updatedAds);
         
@@ -164,6 +180,7 @@ function initMain() {
 }
 
 document.addEventListener("DOMContentLoaded", initMain);
+
 
 
 
