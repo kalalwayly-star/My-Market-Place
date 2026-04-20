@@ -180,7 +180,7 @@ function resetFilters() {
         } else {
             const allAds = getAds();
             const userAds = allAds.filter(ad => ad.userEmail === currentUser.email);
-            renderAds(userAds, "myAds");
+            renderAds(userAds, "myAds", null);
         }
     }
 }
