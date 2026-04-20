@@ -56,45 +56,49 @@
 
 <!-- DYNAMIC SECTIONS (CARS & TRUCKS) -->
 <div id="section-Cars" class="category-details" style="display:none; border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin-bottom: 20px; background: #fafafa;">
+    
     <div class="input-group" style="margin-bottom: 15px;">
-        <label>Make/Model</label>
-        <input type="text" id="carMake" placeholder="e.g. Toyota Camry" style="width: 100%; padding: 8px; box-sizing: border-box;">
+        <label data-i18n="label_make">Make/Model</label>
+        <input type="text" id="carMake" data-i18n-placeholder="placeholder_make" placeholder="e.g. Toyota Camry" style="width: 100%; padding: 8px; box-sizing: border-box;">
     </div>
+
     <div style="display: flex; gap: 15px; margin-bottom: 15px;">
         <div style="flex: 1;">
-            <label>Year</label>
-            <input type="number" id="carYear" placeholder="2024" style="width: 100%; padding: 8px; box-sizing: border-box;">
+            <label data-i18n="label_year">Year</label>
+            <input type="number" id="carYear" data-i18n-placeholder="placeholder_year" placeholder="2024" style="width: 100%; padding: 8px; box-sizing: border-box;">
         </div>
         <div style="flex: 1;">
-            <label>Mileage (KM)</label>
-            <input type="number" id="carMileage" placeholder="0" style="width: 100%; padding: 8px; box-sizing: border-box;">
+            <label data-i18n="label_km">Mileage (KM)</label>
+            <input type="number" id="carMileage" data-i18n-placeholder="placeholder_km" placeholder="0" style="width: 100%; padding: 8px; box-sizing: border-box;">
         </div>
     </div>
+
     <div style="display: flex; gap: 15px; margin-bottom: 15px;">
         <div style="flex: 1;">
-            <label>Fuel Type</label>
+            <label data-i18n="label_fuel">Fuel Type</label>
             <select id="carFuel" style="width: 100%; padding: 8px;">
-                <option value="Petrol">Petrol</option>
-                <option value="Diesel">Diesel</option>
-                <option value="Electric">Electric</option>
-                <option value="Hybrid">Hybrid</option>
+                <option value="Petrol" data-i18n="fuel_petrol">Petrol</option>
+                <option value="Diesel" data-i18n="fuel_diesel">Diesel</option>
+                <option value="Electric" data-i18n="fuel_electric">Electric</option>
+                <option value="Hybrid" data-i18n="fuel_hybrid">Hybrid</option>
             </select>
         </div>
         <div style="flex: 1;">
-            <label>Transmission</label>
+            <label data-i18n="label_trans">Transmission</label>
             <select id="carTrans" style="width: 100%; padding: 8px;">
-                <option value="Automatic">Automatic</option>
-                <option value="Manual">Manual</option>
+                <option value="Automatic" data-i18n="trans_auto">Automatic</option>
+                <option value="Manual" data-i18n="trans_manual">Manual</option>
             </select>
         </div>
     </div>
-    <div class="input-group">
-        <label>Body Type</label>
+
+    <div class="input-group" style="margin-bottom: 15px;">
+        <label data-i18n="label_body">Body Type</label>
         <select id="carBody" style="width: 100%; padding: 8px;">
-            <option value="Sedan">Sedan</option>
-            <option value="SUV">SUV</option>
-            <option value="Truck/Pickup">Truck / Pickup</option>
-            <option value="Hatchback">Hatchback</option>
+            <option value="Sedan" data-i18n="body_sedan">Sedan</option>
+            <option value="SUV" data-i18n="body_suv">SUV</option>
+            <option value="Truck/Pickup" data-i18n="body_truck">Truck / Pickup</option>
+            <option value="Hatchback" data-i18n="body_hatch">Hatchback</option>
         </select>
     </div>
 </div>
@@ -105,12 +109,13 @@
     
     <!-- CONDITION MOVED HERE -->
     <div id="globalCondition" class="input-group" style="margin-bottom: 20px; background: #f0f7ff; padding: 10px; border-radius: 5px; display: none;">
-    <label style="font-weight: bold; display: block; margin-bottom: 8px;">Item Condition</label>
+    <label data-i18n="label_condition" style="font-weight: bold; display: block; margin-bottom: 8px;">Item Condition</label>
     <div style="display: flex; gap: 30px;">
-        <label style="cursor:pointer;"><input type="radio" name="condition" value="New" checked> New</label>
-        <label style="cursor:pointer;"><input type="radio" name="condition" value="Used"> Used</label>
+        <label style="cursor:pointer;"><input type="radio" name="condition" value="New" checked> <span data-i18n="opt_new">New</span></label>
+        <label style="cursor:pointer;"><input type="radio" name="condition" value="Used"> <span data-i18n="opt_used">Used</span></label>
     </div>
 </div>
+
 
 
     <div class="input-group">
