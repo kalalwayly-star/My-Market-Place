@@ -5,23 +5,54 @@ let uploadedImages = [];
 
 // 2. HANDLE CATEGORY CHANGES
 function handleCategoryChange() {
+    // 1. Get the elements
     const mainCategorySelect = document.getElementById('postCategory');
     const commonFields = document.getElementById('commonFields');
     const sections = document.querySelectorAll('.category-details');
-    // Use the ID from your HTML: globalCondition
     const condSec = document.getElementById('globalCondition');
 
+    // 2. Safety check - if the dropdown is missing, stop
     if (!mainCategorySelect) return;
     const categoryValue = mainCategorySelect.value;
 
-    // Hide all dynamic sections (Cars, Real Estate, etc.)
-    sections.forEach(sec => sec.style.display = 'none');
+    // 3. Hide all specific sections (Cars, Real Estate, etc.)
+    if (sections) {
+        sections.forEach(sec => sec.style.display = 'none');
+    }
 
+    // 4. If no category is picked, hide everything and stop
     if (categoryValue === "") {
         if (commonFields) commonFields.style.display = 'none';
         if (condSec) condSec.style.display = 'none';
         return;
     }
+
+    // 5. Show common fields (Title, Price, etc.)
+    if (commonFields) commonFields.style.display = 'block';
+
+    // 6. Show Car section specifically
+    const carSec = document.getElementById('section-Cars');
+    if (categoryValue === 'Cars & Trucks' && carSec) {
+        carSec.style.display = 'block';
+    }
+
+    // 7. Show Real Estate section specifically
+    const reSec = document.getElementById('section-RealEstate');
+    if (categoryValue === 'Real Estate' && reSec) {
+        reSec.style.display = 'block';
+    }
+
+    // 8. Condition Box logic (Hide for Pets, Jobs, Real Estate)
+    const noCondition = ['Pets', 'Jobs', 'Real Estate'];
+    if (condSec) {
+        if (noCondition.includes(categoryValue)) {
+            condSec.style.display = 'none';
+        } else {
+            condSec.style.display = 'block';
+        }
+    }
+} // <--- Make sure there is only ONE closing bracket here
+
 
     // Show common fields since a category is selected
     if (commonFields) commonFields.style.display = 'block';
@@ -42,22 +73,6 @@ function handleCategoryChange() {
         } else {
             condSec.style.display = 'block';
         }
-    }
-}
-
-    // Show common fields (Title, Price, etc.)
-    if (commonFields) commonFields.style.display = 'block';
-
-    // Show specific sections
-    if (categoryValue === "Cars & Trucks") {
-        const carSec = document.getElementById('section-Cars');
-        if (carSec) carSec.style.display = 'block';
-        if (condSec) condSec.style.display = 'block';
-    } else if (categoryValue === "Real Estate") {
-        const reSec = document.getElementById('section-RealEstate');
-        if (reSec) reSec.style.display = 'block';
-    } else if (categoryValue !== "Jobs") {
-        if (condSec) condSec.style.display = 'block';
     }
 }
 
