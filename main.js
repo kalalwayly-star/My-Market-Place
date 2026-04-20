@@ -39,6 +39,7 @@ function goToDetails(id) {
 }
 
 /* --- 3. UI RENDERING --- */
+/* --- 3. UI RENDERING --- */
 function renderAds(adsArray, containerId = "listings", userCoords = null) {
     const container = document.getElementById(containerId);
     if (!container) return;
@@ -59,7 +60,7 @@ function renderAds(adsArray, containerId = "listings", userCoords = null) {
         let distanceHTML = "";
         if (userCoords && ad.lat && ad.lng) {
             const d = calculateDistance(userCoords.lat, userCoords.lon, ad.lat, ad.lng);
-            distanceHTML = `<span style="font-size:0.75rem; color:#28a745; font-weight: bold;">📍 ${d.toFixed(1)} km</span>`;
+            distanceHTML = `<span style="font-size:0.75rem; color:#28a745; font-weight: bold;">(${d.toFixed(1)} km)</span>`;
         }
 
         // Fix Image Logic
@@ -78,15 +79,21 @@ function renderAds(adsArray, containerId = "listings", userCoords = null) {
                 <div style="padding:15px;">
                     <div style="display:flex; justify-content:space-between; align-items: center;">
                         <span style="font-size:0.8rem; color:#666; font-weight: bold; text-transform: uppercase;">${ad.category || "General"}</span>
-                        ${distanceHTML}
                     </div>
                     <h3 style="margin:5px 0; font-size: 1.1rem;">${ad.title}</h3>
-                    <p style="color:#007bff; font-size: 1rem; margin: 0;"><strong>$${ad.price}</strong></p>
+                    
+                    <!-- LOCATION & DISTANCE SECTION -->
+                    <p style="margin: 0; font-size: 0.85rem; color: #555;">
+                        📍 ${ad.location || "Location N/A"} ${distanceHTML}
+                    </p>
+
+                    <p style="color:#007bff; font-size: 1.1rem; margin-top: 5px;"><strong>$${ad.price}</strong></p>
                 </div>
             </div>
         `;
     }).join('');
 }
+
 
 /* --- 4. FILTERS --- */
 
