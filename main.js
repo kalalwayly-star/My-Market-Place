@@ -77,6 +77,12 @@ function renderAds(adsArray, containerId = "listings", userCoords = null) {
     container.innerHTML = adsArray.map(ad => {
         const isSold = ad.status === 'Sold';
         const isFeatured = ad.isFeatured === true;
+        // This version uses your ar.json for "km"
+distanceHTML = `
+    <span class="distance-tag" style="font-size: 0.75rem; color: #28a745; margin-left: 10px;">
+        📍 ${dist.toFixed(1)} <span data-i18n="km">km</span>
+    </span>`;
+
 
         // Distance Calculation for the UI
         let distanceHTML = "";
