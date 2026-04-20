@@ -373,6 +373,16 @@ img {
 .cat-card, .btn-search, .btn-link, .card {
     cursor: pointer !important;
 }
+.input-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.category-details {
+    background-color: #fcfcfc;
+    margin-top: 10px;
+}
 
 
 
