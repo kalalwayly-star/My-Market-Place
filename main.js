@@ -1,3 +1,12 @@
+
+const SEARCH_RELATIONS = {
+    "pants": ["clothing", "fashion", "jeans", "trousers", "t-shirt", "shirt", "apparel"],
+    "t-shirt": ["clothing", "fashion", "top", "shirt", "apparel"],
+    "car": ["vehicle", "truck", "toyota", "honda", "auto", "transport"],
+    "furniture": ["chair", "table", "sofa", "bed", "home decor"],
+    "phone": ["iphone", "samsung", "electronics", "mobile", "tech"]
+};
+
 /* --- 1. CONFIGURATION & HELPERS --- */
 const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
@@ -109,20 +118,67 @@ function filterByCategory(category) {
 }
 
 // Search Button
+// Search Button (Smart Search + Distance Sort)
 function applyFilters() {
-    const val = document.querySelector('.search-container input').value.toLowerCase();
-    const filtered = getAds().filter(ad => ad.title.toLowerCase().includes(val));
-    renderAds(filtered, "listings");
+    const searchInput = document.querySelector('.search-container input');
+    if (!searchInput) return;
+    
+    const query = searchInput.value.toLowerCase().trim();
+    if (!query) {
+        resetFilters();
+        return;
+    }
+
+    const relatedTerms = SEARCH_RELATIONS[query] || [];
+    
+    navigator.geolocation.getCurrentPosition((pos) => {
+        const uCoords = { lat: pos.coords.latitude, lon: pos.coords.longitude };
+        
+        const filtered = getAds().filter(ad => {
+            const title = ad.title.toLowerCase();
+            const cat = (ad.category || "").toLowerCase();
+            const matchQuery = title.includes(query) || cat.includes(query);
+            const matchRelated = relatedTerms.some(term => title.includes(term) || cat.includes(term));
+            return matchQuery || matchRelated;
+        });
+
+        // Sort: Closest items first
+        filtered.sort((a, b) => {
+            if (!a.lat || !a.lng) return 1;
+            if (!b.lat || !b.lng) return -1;
+            return calculateDistance(uCoords.lat, uCoords.lon, a.lat, a.lng) - 
+                   calculateDistance(uCoords.lat, uCoords.lon, b.lat, b.lng);
+        });
+
+        renderAds(filtered, "listings", uCoords);
+    }, () => {
+        const filtered = getAds().filter(ad => ad.title.toLowerCase().includes(query));
+        renderAds(filtered, "listings");
+    });
 }
 
-// View All Button
+// View All Button (75km local filter)
 function resetFilters() {
-    const activeAds = getAds().filter(ad => ad.status !== "Sold");
-    renderAds(activeAds, "listings");
-    // Clear search inputs
+    navigator.geolocation.getCurrentPosition((pos) => {
+        const uCoords = { lat: pos.coords.latitude, lon: pos.coords.longitude };
+        
+        const localAds = getAds().filter(ad => {
+            if (ad.status === "Sold") return false;
+            if (ad.lat && ad.lng) {
+                return calculateDistance(uCoords.lat, uCoords.lon, ad.lat, ad.lng) <= 75;
+            }
+            return false; 
+        });
+
+        renderAds(localAds, "listings", uCoords);
+    }, () => {
+        renderAds(getAds().filter(ad => ad.status !== "Sold"), "listings");
+    });
+
     const searchInput = document.querySelector('.search-container input');
     if (searchInput) searchInput.value = '';
 }
+
 
 /* --- 5. INITIALIZATION --- */
 function initMain() {
