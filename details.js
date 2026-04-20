@@ -1,23 +1,21 @@
-// details.js (FIXED VERSION)
-
-// details.js (FIXED VERSION)
+// details.js (STABILIZED VERSION)
 
 const params = new URLSearchParams(window.location.search);
-// Fix: Use String() for IDs to ensure they match exactly what is in storage
 const adId = params.get("id"); 
 
 let ad;
 
+// Handle initialization
 function initDetailsPage() {
     if (!adId) {
         window.location.href = "index.html";
         return;
     }
 
-    // FIX: Change "ads" to "marketplace_ads"
+    // Connect to the master storage key
     const ads = JSON.parse(localStorage.getItem("marketplace_ads") || "[]");
     
-    // FIX: Compare as Strings to avoid type errors
+    // Find the ad using string comparison for safety
     ad = ads.find(item => String(item.id) === String(adId));
 
     if (!ad) {
@@ -29,15 +27,17 @@ function initDetailsPage() {
     renderAdDetails();
 }
 
-// Keep your existing listeners below this...
-
-
+// Ensure init runs
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initDetailsPage);
+} else {
+    initDetailsPage();
+}
 
 // =======================
-// RENDER AD
+// RENDER AD DATA
 // =======================
 function renderAdDetails() {
-
     setText("adTitle", ad.title);
     setText("adPrice", `$${ad.price}`);
     setText("adCategory", ad.category);
@@ -48,7 +48,7 @@ function renderAdDetails() {
 }
 
 // =======================
-// IMAGE RENDER (FIXED)
+// IMAGE RENDER (FIXED LOGIC)
 // =======================
 function renderImages() {
     const imgContainer = document.getElementById("adImageContainer");
@@ -56,24 +56,23 @@ function renderImages() {
 
     let photoList = [];
 
-    // 1. Force the image data into a clean array
+    // Handle array or string data
     if (ad.image) {
         if (Array.isArray(ad.image)) {
-            // Filter out any null or empty strings
             photoList = ad.image.filter(img => img && img !== "");
         } else if (typeof ad.image === 'string') {
             photoList = [ad.image];
         }
     }
 
-    // 2. If absolutely no photo, use a better placeholder
+    // Placeholder fallback
     if (photoList.length === 0) {
         photoList = ["https://placeholder.com"];
     }
 
-    // 3. Update the HTML
+    // Render with corrected thumbnail click logic
     imgContainer.innerHTML = `
-        <div style="width:100%; text-align:center; background:#f4f4f4; border-radius:10px; overflow:hidden; margin-bottom:15px;">
+        <div style="width:100%; text-align:center; background:#f4f4f4; border-radius:10px; overflow:hidden; margin-bottom:15px; border:1px solid #ddd;">
             <img id="mainDisplayImg" src="${photoList[0]}" 
                  style="max-width:100%; max-height:500px; object-fit:contain; display: block; margin: 0 auto;">
         </div>
@@ -81,16 +80,17 @@ function renderImages() {
         <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:10px;">
             ${photoList.length > 1 ? photoList.map(img => `
                 <img src="${img}"
-                     onclick="document.getElementById('mainDisplayImg').src='${this.src}'"
-                     style="width:70px; height:70px; object-fit:cover; cursor:pointer; border-radius:5px; border:1px solid #ddd;">
+                     onclick="document.getElementById('mainDisplayImg').src='${img}'"
+                     style="width:70px; height:70px; object-fit:cover; cursor:pointer; border-radius:5px; border:1px solid #ccc; transition: 0.2s;"
+                     onmouseover="this.style.borderColor='#007bff'"
+                     onmouseout="this.style.borderColor='#ccc'">
             `).join('') : ""}
         </div>
     `;
 }
 
-
 // =======================
-// MESSAGING (TRANSLATED)
+// MESSAGING SYSTEM
 // =======================
 function sendMessage() {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
@@ -124,29 +124,25 @@ function sendMessage() {
     localStorage.setItem("messages", JSON.stringify(messages));
 
     alert(getText("message_sent") || "Message sent!");
-
     messageInput.value = "";
 }
 
 // =======================
-// REPORT SYSTEM (FIXED DUPLICATE REMOVED)
+// REPORT MODAL
 // =======================
 function showReportModal() {
-    document.getElementById("reportModal").style.display = "block";
+    const modal = document.getElementById("reportModal");
+    if (modal) modal.style.display = "block";
 }
 
 function closeModal() {
-    document.getElementById("reportModal").style.display = "none";
+    const modal = document.getElementById("reportModal");
+    if (modal) modal.style.display = "none";
 }
 
 function submitReport() {
-    const reason = document.getElementById("reportReason").value;
-
-    const reportData = {
-        adId,
-        reason,
-        timestamp: new Date().toISOString()
-    };
+    const reason = document.getElementById("reportReason")?.value;
+    const reportData = { adId: ad.id, reason, timestamp: new Date().toISOString() };
 
     let reports = JSON.parse(localStorage.getItem("flaggedAds") || "[]");
     reports.push(reportData);
@@ -157,7 +153,7 @@ function submitReport() {
 }
 
 // =======================
-// HELPERS (LANGUAGE SAFE)
+// HELPERS
 // =======================
 function setText(id, value) {
     const el = document.getElementById(id);
@@ -165,5 +161,7 @@ function setText(id, value) {
 }
 
 function getText(key) {
-    return window.translations?.[key];
+    // Falls back to the key name if translation is missing
+    return (window.translations && window.translations[key]) ? window.translations[key] : key;
 }
+
