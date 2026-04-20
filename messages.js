@@ -55,10 +55,15 @@ function renderTab() {
     const allMessages = JSON.parse(localStorage.getItem("marketplace_messages") || "[]");
     
     // Filter based on Sent or Received
-    const filtered = allMessages.filter(msg => {
-        if (currentTab === 'received') return msg.receiver === currentUser.email;
-        return msg.sender === currentUser.email;
-    });
+    // Filter based on Sent or Received using the new Email keys
+const filtered = allMessages.filter(msg => {
+    if (currentTab === 'received') {
+        return msg.receiverEmail === currentUser.email;
+    } else {
+        return msg.senderEmail === currentUser.email;
+    }
+});
+
 
     if (filtered.length === 0) {
         container.innerHTML = `<p style="text-align:center; padding:20px; color:#666;">No ${currentTab} messages found.</p>`;
@@ -66,21 +71,21 @@ function renderTab() {
     }
 
     container.innerHTML = filtered.map(msg => `
-        <div class="message-card" style="border:1px solid #ddd; padding:15px; margin-bottom:12px; border-radius:8px; position:relative; background:white; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-            <p style="font-size:0.85rem; color:#007bff; margin-bottom:5px; font-weight:bold;">
-                ${currentTab === 'received' ? 'From: ' + msg.sender : 'To: ' + msg.receiver}
-            </p>
-            <p style="margin:0; color:#333; line-height:1.4;">${msg.text}</p>
-            <p style="font-size:0.7rem; color:#999; margin-top:8px;">${msg.date || ''}</p>
+    <div class="message-card" style="border:1px solid #ddd; padding:15px; margin-bottom:12px; border-radius:8px; position:relative; background:white;">
+        <p style="font-size:0.85rem; color:#007bff; margin-bottom:5px; font-weight:bold;">
+            ${currentTab === 'received' ? 'From: ' + msg.senderEmail : 'To: ' + msg.receiverEmail}
+        </p>
+        <p style="margin:0; color:#333;">${msg.text}</p>
+        <p style="font-size:0.7rem; color:#999; margin-top:8px;">${msg.date || ''}</p>
 
-            <!-- DELETE BUTTON -->
-            <button onclick="deleteMsg('${msg.id}')" 
-                    style="position:absolute; top:12px; right:12px; background:none; border:none; color:#ff4d4d; cursor:pointer; font-size:1.1rem;">
-                <i class="fas fa-trash-alt"></i>
-            </button>
-        </div>
-    `).join('');
-}
+        <!-- DELETE BUTTON (Now works with msg.id) -->
+        <button onclick="deleteMsg('${msg.id}')" 
+                style="position:absolute; top:12px; right:12px; background:none; border:none; color:#ff4d4d; cursor:pointer;">
+            <i class="fas fa-trash-alt"></i>
+        </button>
+    </div>
+`).join('');
+
 
 function deleteMsg(id) {
     if (!confirm("Are you sure you want to delete this message?")) return;
