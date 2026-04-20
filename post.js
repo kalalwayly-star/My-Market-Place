@@ -1,5 +1,6 @@
-// 1. GLOBAL VARIABLES
+// 1. GLOBAL VARIABLES & KEY SYNC
 const currentUser = JSON.parse(localStorage.getItem("currentUser")) || { email: "Guest" };
+const STORAGE_KEY = "marketplace_ads"; // Matches your main.js/storage.js
 let uploadedImages = []; 
 
 // 2. HANDLE CATEGORY CHANGES
@@ -7,15 +8,12 @@ function handleCategoryChange() {
     const mainCategorySelect = document.getElementById('postCategory');
     const commonFields = document.getElementById('commonFields');
     const sections = document.querySelectorAll('.category-details');
+    const condSec = document.getElementById('conditionSection');
 
     if (!mainCategorySelect) return;
     const categoryValue = mainCategorySelect.value;
 
-    // Hide all dynamic sections
     sections.forEach(sec => sec.style.display = 'none');
-    
-    // Hide condition section by default
-    const condSec = document.getElementById('conditionSection');
     if (condSec) condSec.style.display = 'none';
 
     if (categoryValue === "") {
@@ -27,28 +25,22 @@ function handleCategoryChange() {
 
     // Show specific sections
     if (categoryValue === "Cars & Trucks") {
-        document.getElementById('section-Cars').style.display = 'block';
+        const carSec = document.getElementById('section-Cars');
+        if (carSec) carSec.style.display = 'block';
         if (condSec) condSec.style.display = 'block';
     } else if (categoryValue === "Real Estate") {
-        document.getElementById('section-RealEstate').style.display = 'block';
+        const reSec = document.getElementById('section-RealEstate');
+        if (reSec) reSec.style.display = 'block';
     } else if (categoryValue !== "Jobs") {
         if (condSec) condSec.style.display = 'block';
     }
 }
 
-// 3. PHOTO UPLOAD LOGIC
-// 3. PHOTO UPLOAD LOGIC (Stabilized)
+// 3. PHOTO UPLOAD & COMPRESSION
 async function handlePhotoUpload(event) {
     const gallery = document.getElementById('galleryPreview');
-    const commonFields = document.getElementById('commonFields');
     const files = Array.from(event.target.files);
-
     if (!gallery) return;
-
-    // FIX: Force the form to stay visible
-    if (commonFields) {
-        commonFields.style.display = 'block';
-    }
 
     if (uploadedImages.length + files.length > 10) {
         alert("Maximum 10 photos allowed.");
@@ -57,30 +49,21 @@ async function handlePhotoUpload(event) {
 
     for (const file of files) {
         try {
-            // Use a standard reader for better reliability
             const base64 = await compressImage(file);
             uploadedImages.push(base64);
-
             const div = document.createElement('div');
-            // Class name for your CSS + Inline styles for safety
-            div.className = "preview-container";
             div.style.cssText = "position:relative; width:100px; height:100px; display:inline-block; margin:5px;";
-            
             div.innerHTML = `
                 <img src="${base64}" style="width:100%; height:100%; object-fit:cover; border-radius:8px; border:1px solid #ddd;">
                 <button type="button" onclick="removeImg(event, '${base64}', this)" 
-                    style="position:absolute; top:-5px; right:-5px; background:red; color:white; border:none; border-radius:50%; width:22px; height:22px; cursor:pointer; font-weight:bold; display:flex; align-items:center; justify-content:center; line-height:1;">×</button>
+                    style="position:absolute; top:-2px; right:-2px; background:red; color:white; border:none; border-radius:50%; width:20px; height:20px; cursor:pointer;">×</button>
             `;
             gallery.appendChild(div);
-        } catch (error) {
-            console.error("Error processing image:", error);
-        }
+        } catch (e) { console.error(e); }
     }
-    // Clear the input so you can select the same file again if deleted
     event.target.value = ""; 
 }
 
-// 3b. COMPRESS IMAGE (With error handling)
 function compressImage(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -90,110 +73,50 @@ function compressImage(file) {
             img.src = e.target.result;
             img.onload = () => {
                 const canvas = document.createElement('canvas');
-                let width = img.width;
-                let height = img.height;
-                const MAX = 800;
-                if (width > height && width > MAX) { height *= MAX / width; width = MAX; }
-                else if (height > MAX) { width *= MAX / height; height = MAX; }
-                canvas.width = width; 
-                canvas.height = height;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0, width, height);
+                let w = img.width, h = img.height, MAX = 800;
+                if (w > h && w > MAX) { h *= MAX / w; w = MAX; }
+                else if (h > MAX) { w *= MAX / h; h = MAX; }
+                canvas.width = w; canvas.height = h;
+                canvas.getContext('2d').drawImage(img, 0, 0, w, h);
                 resolve(canvas.toDataURL('image/jpeg', 0.7));
             };
-            img.onerror = reject;
         };
-        reader.onerror = reject;
     });
 }
 
-// 3c. REMOVE IMAGE (With propagation fix)
 function removeImg(e, data, btn) {
-    if (e) {
-        e.preventDefault();
-        e.stopPropagation(); // Prevents the upload window from popping up again
-    }
+    e.stopPropagation();
     uploadedImages = uploadedImages.filter(img => img !== data);
     btn.parentElement.remove();
 }
 
-// 4. PAYPAL LOGIC
-function togglePayPal(checkbox) {
-    const container = document.getElementById('paypal-button-container');
-    const postBtn = document.getElementById('postBtn');
-    
-    if (checkbox.checked) {
-        container.style.display = 'block';
-        postBtn.style.display = 'none';
-        renderPayPalButtons();
-    } else {
-        container.style.display = 'none';
-        postBtn.style.display = 'block';
-    }
-}
-
-function renderPayPalButtons() {
-    const payContainer = document.getElementById('paypal-button-container');
-    if (!payContainer) return;
-    payContainer.innerHTML = ''; 
-
-    if (typeof paypal === 'undefined') {
-        payContainer.innerHTML = '<p style="color:red;">PayPal failed to load.</p>';
-        return;
-    }
-
-    paypal.Buttons({
-        createOrder: (data, actions) => {
-            return actions.order.create({ purchase_units: [{ amount: { value: '4.99' } }] });
-        },
-        onApprove: (data, actions) => {
-            return actions.order.capture().then(details => {
-                finalizeAd(true);
-            });
-        }
-    }).render('#paypal-button-container');
-}
-
-// 5. SAVE LOGIC
+// 4. SAVE & GPS LOGIC
 function saveNewAd(event) {
     if (event) event.preventDefault();
-    
-    // 1. Basic Auth Check
-    if (!currentUser) { 
-        alert("Please login first."); 
-        return; 
-    }
+    if (!currentUser || currentUser.email === "Guest") { alert("Please login first."); return; }
 
-    // 2. Location Field Check (Manual check in case browser validation is skipped)
-    const locationInput = document.getElementById('adLocation');
-    if (!locationInput.value.trim()) {
-        alert("Location is mandatory.");
-        locationInput.focus();
-        return;
-    }
+    const locVal = document.getElementById('adLocation').value.trim();
+    if (!locVal) { alert("Location is mandatory."); return; }
 
-    // 3. Get GPS coordinates BEFORE finalizing
-    // This ensures every ad can be filtered by the 75km radius
+    // Grab coordinates for 75km filter
     navigator.geolocation.getCurrentPosition(
-        (position) => {
-            // Store coordinates globally or pass them to finalizeAd
-            window.currentAdLat = position.coords.latitude;
-            window.currentAdLng = position.coords.longitude;
-            
-            // Now that we have the GPS, call your existing finalize function
+        (pos) => {
+            window.currentAdLat = pos.coords.latitude;
+            window.currentAdLng = pos.coords.longitude;
             finalizeAd(false);
         },
-        (error) => {
-            // If GPS fails/blocked, warn user but still allow (or block if you prefer)
-            alert("Warning: Location access denied. Your ad won't show in 'Nearby' searches.");
+        () => {
+            alert("Proceeding without GPS. Ad won't show in 'Nearby' filters.");
             finalizeAd(false);
         },
         { timeout: 5000 }
     );
 }
 
-
 function finalizeAd(featuredStatus) {
+    // Get Selected Condition (Radio buttons fix)
+    const conditionEl = document.querySelector('input[name="condition"]:checked');
+    
     const newAd = {
         id: Date.now(),
         userEmail: currentUser.email,
@@ -201,24 +124,24 @@ function finalizeAd(featuredStatus) {
         title: document.getElementById('adTitle').value,
         price: document.getElementById('adPrice').value,
         location: document.getElementById('adLocation').value,
-        // --- ADD THESE TWO LINES ---
         lat: window.currentAdLat || null,
         lng: window.currentAdLng || null,
-        // ---------------------------
         description: document.getElementById('adDesc').value,
+        condition: conditionEl ? conditionEl.value : "N/A",
+        // Car specific data
+        carYear: document.getElementById('carYear')?.value || "",
+        carMileage: document.getElementById('carMileage')?.value || "",
+        carFuel: document.getElementById('carFuel')?.value || "",
         image: uploadedImages.length > 0 ? uploadedImages : ['https://placeholder.com'],
         isFeatured: featuredStatus,
+        status: "Active",
         date: new Date().toLocaleDateString()
     };
  
-    const ads = JSON.parse(localStorage.getItem("ads") || "[]");
+    const ads = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
     ads.push(newAd);
-    localStorage.setItem("ads", JSON.stringify(ads));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(ads));
 
-    alert(featuredStatus ? "Featured Ad Posted!" : "Ad Posted Successfully!");
+    alert("Ad Posted Successfully!");
     window.location.href = "index.html";
 }
-
-
-
-
