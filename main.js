@@ -14,10 +14,11 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
 }
 
 // Helper to get ads safely from storage
+// Helper to get ads safely from storage
 function getAds() {
     try {
-        // Updated to use the key from your storage.js
-        return JSON.parse(localStorage.getItem("ads") || "[]");
+        // Updated to match storage.js key
+        return JSON.parse(localStorage.getItem("marketplace_ads") || "[]");
     } catch (e) {
         console.error("Error parsing ads:", e);
         return [];
@@ -26,8 +27,10 @@ function getAds() {
 
 // Helper to save ads
 function saveAds(adsArray) {
-    localStorage.setItem("ads", JSON.stringify(adsArray));
+    // Updated to match storage.js key
+    localStorage.setItem("marketplace_ads", JSON.stringify(adsArray));
 }
+
 
 /* --- 2. NAVIGATION & AUTH ACTIONS --- */
 function goToDetails(id) {
