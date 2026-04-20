@@ -171,12 +171,13 @@ function togglePayPal(checkbox) {
                         purchase_units: [{ amount: { value: '4.99' } }]
                     });
                 },
-                onApprove: (data, actions) => {
-                    return actions.order.capture().then(details => {
-                        alert('Payment Successful!');
-                        checkbox.dataset.paid = "true";
-                    });
-                }
+               onApprove: function(data, actions) {
+    return actions.order.capture().then(function(details) {
+        alert('Payment Complete!');
+        finalizeAd(true); // This saves the ad immediately as featured
+    });
+}
+
             }).render('#paypal-button-container');
         }
     } else {
