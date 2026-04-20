@@ -2,7 +2,19 @@
 
 // 1. Get all ads from memory
 function getAllAds() {
-    return JSON.parse(localStorage.getItem("marketplace_ads")) || [];
+    let ads = JSON.parse(localStorage.getItem("marketplace_ads")) || [];
+    
+    // INITIALIZE WITH SAMPLE DATA (if empty)
+    // This makes sure your categories have something to show right away
+    if (ads.length === 0) {
+        ads = [
+            { id: Date.now() + 1, title: "Modern Villa", category: "Real Estate", location: "Dubai", price: "200000", image: "https://placeholder.com" },
+            { id: Date.now() + 2, title: "Sport Sedan", category: "Cars & Trucks", location: "Riyadh", price: "45000", image: "https://placeholder.com" },
+            { id: Date.now() + 3, title: "Office Desk", category: "Furniture", location: "Cairo", price: "300", image: "https://placeholder.com" }
+        ];
+        localStorage.setItem("marketplace_ads", JSON.stringify(ads));
+    }
+    return ads;
 }
 
 // 2. Save a completely new list (used for deleting or updating)
@@ -18,12 +30,13 @@ function saveToLocalStorage(adObject) {
     console.log("Ad saved successfully!", adObject);
 }
 
-// 4. Utility to find a single ad by ID (useful for details.html)
+// 4. Utility to find a single ad by ID
 function getAdById(id) {
     const ads = getAllAds();
     return ads.find(ad => ad.id == id);
 }
 
+// 5. Moderation Logic
 function sendToModerationQueue(ad, fraudData) {
     const queue = JSON.parse(localStorage.getItem("moderationQueue")) || [];
 
