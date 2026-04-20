@@ -1,12 +1,12 @@
 // details.js (FIXED VERSION)
 
+// details.js (FIXED VERSION)
+
 const params = new URLSearchParams(window.location.search);
-const adId = Number(params.get("id"));
+// Fix: Use String() for IDs to ensure they match exactly what is in storage
+const adId = params.get("id"); 
 
 let ad;
-
-// SAFE INIT (NO window.onload conflict)
-document.addEventListener("DOMContentLoaded", initDetailsPage);
 
 function initDetailsPage() {
     if (!adId) {
@@ -14,8 +14,11 @@ function initDetailsPage() {
         return;
     }
 
-    const ads = JSON.parse(localStorage.getItem("ads") || "[]");
-    ad = ads.find(item => item.id === adId);
+    // FIX: Change "ads" to "marketplace_ads"
+    const ads = JSON.parse(localStorage.getItem("marketplace_ads") || "[]");
+    
+    // FIX: Compare as Strings to avoid type errors
+    ad = ads.find(item => String(item.id) === String(adId));
 
     if (!ad) {
         alert(getText("ad_not_found") || "Ad not found!");
@@ -25,11 +28,9 @@ function initDetailsPage() {
 
     renderAdDetails();
 }
-if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initDetailsPage);
-} else {
-    initDetailsPage();
-}
+
+// Keep your existing listeners below this...
+
 
 
 // =======================
