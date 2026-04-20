@@ -56,28 +56,38 @@ function renderImages() {
 
     let photoList = [];
 
-    if (Array.isArray(ad.image)) {
-        photoList = ad.image;
-    } else if (ad.image) {
-        photoList = [ad.image];
-    } else {
-        photoList = ["https://via.placeholder.com/600"];
+    // 1. Force the image data into a clean array
+    if (ad.image) {
+        if (Array.isArray(ad.image)) {
+            // Filter out any null or empty strings
+            photoList = ad.image.filter(img => img && img !== "");
+        } else if (typeof ad.image === 'string') {
+            photoList = [ad.image];
+        }
     }
 
+    // 2. If absolutely no photo, use a better placeholder
+    if (photoList.length === 0) {
+        photoList = ["https://placeholder.com"];
+    }
+
+    // 3. Update the HTML
     imgContainer.innerHTML = `
         <div style="width:100%; text-align:center; background:#f4f4f4; border-radius:10px; overflow:hidden; margin-bottom:15px;">
-            <img id="mainDisplayImg" src="${photoList[0]}" style="max-width:100%; max-height:500px; object-fit:contain;">
+            <img id="mainDisplayImg" src="${photoList[0]}" 
+                 style="max-width:100%; max-height:500px; object-fit:contain; display: block; margin: 0 auto;">
         </div>
 
-        <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
-            ${photoList.map(img => `
+        <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:10px;">
+            ${photoList.length > 1 ? photoList.map(img => `
                 <img src="${img}"
-                     onclick="document.getElementById('mainDisplayImg').src='${img}'"
-                     style="width:70px; height:70px; object-fit:cover; cursor:pointer; border-radius:5px;">
-            `).join('')}
+                     onclick="document.getElementById('mainDisplayImg').src='${this.src}'"
+                     style="width:70px; height:70px; object-fit:cover; cursor:pointer; border-radius:5px; border:1px solid #ddd;">
+            `).join('') : ""}
         </div>
     `;
 }
+
 
 // =======================
 // MESSAGING (TRANSLATED)
