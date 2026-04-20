@@ -200,5 +200,44 @@ function displayAds(adsArray) {
         container.innerHTML += adCard;
     });
 }
+// Function to calculate distance between two points (in km)
+function getDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371; // Earth's radius
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+              Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
+}
+
+// Updated Category Filter with 75km Radius
+function filterByCategory(categoryName) {
+    // 1. Get user's current position (using browser GPS)
+    navigator.geolocation.getCurrentPosition((position) => {
+        const userLat = position.coords.latitude;
+        const userLon = position.coords.longitude;
+
+        const allAds = getAllAds();
+        
+        const filtered = allAds.filter(ad => {
+            const isSameCategory = ad.category === categoryName;
+            
+            // 2. Check if ad is within 75km
+            // Note: Your ad objects must have ad.lat and ad.lng
+            const distance = getDistance(userLat, userLon, ad.lat, ad.lng);
+            
+            return isSameCategory && distance <= 75;
+        });
+
+        renderAds(filtered);
+    }, () => {
+        // Fallback if user blocks GPS: Just filter by category
+        alert("Please enable location for local results.");
+        const allAds = getAllAds();
+        renderAds(allAds.filter(ad => ad.category === categoryName));
+    });
+}
 
 
