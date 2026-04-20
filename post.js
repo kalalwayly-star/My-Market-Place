@@ -122,7 +122,7 @@ function finalizeAd(featuredStatus) {
         ? uploadedImages 
         : ['https://placeholder.com'];
 
-    const newAd = {
+        const newAd = {
         id: Date.now(),
         userEmail: currentUser.email,
         category: document.getElementById('postCategory').value,
@@ -133,15 +133,20 @@ function finalizeAd(featuredStatus) {
         lng: window.currentAdLng || null,
         description: document.getElementById('adDesc').value,
         condition: conditionEl ? conditionEl.value : "N/A",
-        // Use ?. to prevent errors if the field is hidden
+        // Car & Truck Specific Fields
+        carMake: document.getElementById('carMake')?.value || "",
         carYear: document.getElementById('carYear')?.value || "",
-        carMileage: document.getElementById('carKM')?.value || document.getElementById('carMileage')?.value || "",
+        carMileage: document.getElementById('carMileage')?.value || "",
         carFuel: document.getElementById('carFuel')?.value || "",
+        carTransmission: document.getElementById('carTrans')?.value || "",
+        carBody: document.getElementById('carBody')?.value || "",
+        // Image and Status
         image: currentImages,
-        isFeatured: featuredStatus, // This comes from the PayPal 'onApprove'
+        isFeatured: featuredStatus,
         status: "Active",
         date: new Date().toLocaleDateString()
     };
+
  
     // Use 'myAds' if STORAGE_KEY is not defined elsewhere
     const key = typeof STORAGE_KEY !== 'undefined' ? STORAGE_KEY : 'myAds';
