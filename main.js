@@ -45,7 +45,7 @@ function renderAds(adsArray, containerId = "listings", userCoords = null) {
     if (!container) return;
 
     container.innerHTML = "";
-    const isMyAdsPage = (containerId === "myAds");
+    const isMyAdsPage = (containerId === "myAds"); // Check if we are on My Ads page
 
     if (!adsArray || adsArray.length === 0) {
         container.innerHTML = `<p class='no-ads' style="text-align:center; width:100%; padding: 20px;" data-i18n="no_items_found">No items found.</p>`;
@@ -53,46 +53,35 @@ function renderAds(adsArray, containerId = "listings", userCoords = null) {
     }
 
     container.innerHTML = adsArray.map(ad => {
-        const isSold = ad.status === 'Sold';
         const isFeatured = ad.isFeatured === true;
-        
-        // Calculate Distance display
-        let distanceHTML = "";
-        if (userCoords && ad.lat && ad.lng) {
-            const d = calculateDistance(userCoords.lat, userCoords.lon, ad.lat, ad.lng);
-            distanceHTML = `<span style="font-size:0.75rem; color:#28a745; font-weight: bold;">(${d.toFixed(1)} km)</span>`;
-        }
-
-        // Fix Image Logic
-        let displayImage = 'https://placeholder.com';
-        if (ad.image) {
-            displayImage = Array.isArray(ad.image) ? ad.image[0] : ad.image;
-        }
+        let displayImage = ad.image && Array.isArray(ad.image) ? ad.image[0] : (ad.image || 'https://placeholder.com');
 
         return `
             <div class="card ${isFeatured ? 'featured-card' : ''}" 
-                 onclick="${isMyAdsPage ? '' : `goToDetails('${ad.id}')`}" 
-                 style="cursor:pointer; border:1px solid #ddd; border-radius:10px; background:white; margin-bottom:15px; overflow:hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                <div style="height:180px; background:#f0f0f0;">
+                 style="border:1px solid #ddd; border-radius:10px; background:white; margin-bottom:15px; overflow:hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <div onclick="goToDetails('${ad.id}')" style="cursor:pointer; height:180px; background:#f0f0f0;">
                     <img src="${displayImage}" alt="${ad.title}" onerror="this.src='https://placeholder.com'" style="width:100%; height:100%; object-fit:cover;">
                 </div>
                 <div style="padding:15px;">
                     <div style="display:flex; justify-content:space-between; align-items: center;">
                         <span style="font-size:0.8rem; color:#666; font-weight: bold; text-transform: uppercase;">${ad.category || "General"}</span>
                     </div>
-                    <h3 style="margin:5px 0; font-size: 1.1rem;">${ad.title}</h3>
-                    
-                    <!-- LOCATION & DISTANCE SECTION -->
-                    <p style="margin: 0; font-size: 0.85rem; color: #555;">
-                        📍 ${ad.location || "Location N/A"} ${distanceHTML}
-                    </p>
-
+                    <h3 style="margin:5px 0; font-size: 1.1rem; cursor:pointer;" onclick="goToDetails('${ad.id}')">${ad.title}</h3>
+                    <p style="margin: 0; font-size: 0.85rem; color: #555;">📍 ${ad.location || "Location N/A"}</p>
                     <p style="color:#007bff; font-size: 1.1rem; margin-top: 5px;"><strong>$${ad.price}</strong></p>
+                    
+                    ${isMyAdsPage ? `
+                        <button onclick="deleteAd('${ad.id}')" 
+                                style="margin-top:10px; width:100%; background:#ff4d4d; color:white; border:none; padding:8px; border-radius:5px; cursor:pointer; font-weight:bold;">
+                                Delete Ad
+                        </button>
+                    ` : ''}
                 </div>
             </div>
         `;
     }).join('');
 }
+
 
 
 /* --- 4. FILTERS --- */
@@ -157,6 +146,22 @@ function initMain() {
 // Run logic when page loads
 document.addEventListener("DOMContentLoaded", initMain);
 
+function deleteAd(id) {
+    if (confirm("Are you sure you want to delete this ad?")) {
+        let allAds = getAds();
+        // Filter out the ad with the matching ID
+        const updatedAds = allAds.filter(ad => String(ad.id) !== String(id));
+        
+        // Save back to localStorage
+        saveAds(updatedAds);
+        
+        // Refresh the My Ads view
+        const userAds = updatedAds.filter(ad => ad.userEmail === currentUser.email);
+        renderAds(userAds, "myAds");
+        
+        alert("Ad deleted successfully.");
+    }
+}
 
 
 
