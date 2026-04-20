@@ -53,48 +53,67 @@
            </div>
 
            <!-- DYNAMIC SECTIONS -->
-           <div id="section-Cars" class="category-details" style="display:none;">
-               <div class="input-group">
-                   <label data-i18n="label_make">Make/Model</label>
-                   <input type="text" id="carMake" data-i18n-placeholder="placeholder_make" placeholder="e.g. Toyota Camry">
-               </div>
-               <div class="input-group">
-                   <label data-i18n="label_year">Year</label>
-                   <input type="number" id="carYear" data-i18n-placeholder="placeholder_year" placeholder="2024">
-               </div>
-               <div class="input-group">
-                   <label data-i18n="label_km">Mileage (KM)</label>
-                   <input type="number" id="carMileage" data-i18n-placeholder="placeholder_km" placeholder="0">
-               </div>
-              <!-- PLACE THIS INSIDE YOUR FORM -->
-<div id="conditionSection" class="input-group" style="display:none; margin-bottom: 15px;">
-    <label data-i18n="label_condition" style="display:block; margin-bottom:5px;">Condition</label>
-    <div style="display: flex; gap: 20px; align-items: center;">
-        <label><input type="radio" name="condition" value="New" checked> <span data-i18n="opt_new">New</span></label>
-        <label><input type="radio" name="condition" value="Used"> <span data-i18n="opt_used">Used</span></label>
+           <div id="section-Cars" class="category-details" style="display:none; border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+    <!-- Make & Model -->
+    <div class="input-group">
+        <label data-i18n="label_make">Make/Model</label>
+        <input type="text" id="carMake" placeholder="e.g. Toyota Camry">
+    </div>
+
+    <!-- Year & Mileage -->
+    <div style="display: flex; gap: 15px;">
+        <div class="input-group" style="flex: 1;">
+            <label data-i18n="label_year">Year</label>
+            <input type="number" id="carYear" placeholder="2024">
+        </div>
+        <div class="input-group" style="flex: 1;">
+            <label data-i18n="label_mileage">Mileage (KM)</label>
+            <input type="number" id="carMileage" placeholder="0">
+        </div>
+    </div>
+
+    <!-- Fuel & Transmission -->
+    <div style="display: flex; gap: 15px;">
+        <div class="input-group" style="flex: 1;">
+            <label data-i18n="label_fuel">Fuel Type</label>
+            <select id="carFuel">
+                <option value="Petrol">Petrol</option>
+                <option value="Diesel">Diesel</option>
+                <option value="Electric">Electric</option>
+                <option value="Hybrid">Hybrid</option>
+            </select>
+        </div>
+        <div class="input-group" style="flex: 1;">
+            <label data-i18n="label_trans">Transmission</label>
+            <select id="carTrans">
+                <option value="Automatic">Automatic</option>
+                <option value="Manual">Manual</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Body Type -->
+    <div class="input-group">
+        <label data-i18n="label_body">Body Type</label>
+        <select id="carBody">
+            <option value="Sedan">Sedan</option>
+            <option value="SUV">SUV</option>
+            <option value="Truck/Pickup">Truck / Pickup</option>
+            <option value="Hatchback">Hatchback</option>
+            <option value="Coupe">Coupe</option>
+        </select>
+    </div>
+
+    <!-- Condition (Radio) -->
+    <div class="input-group" style="margin-top: 10px;">
+        <label data-i18n="label_condition" style="display:block; margin-bottom:5px;">Condition</label>
+        <div style="display: flex; gap: 20px; align-items: center;">
+            <label><input type="radio" name="condition" value="New" checked> <span data-i18n="opt_new">New</span></label>
+            <label><input type="radio" name="condition" value="Used"> <span data-i18n="opt_used">Used</span></label>
+        </div>
     </div>
 </div>
 
-<!-- PLACE THIS WHERE YOUR OTHER CATEGORY SECTIONS ARE -->
-<div id="section-Cars" class="category-details" style="display:none; border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-    <div class="input-group">
-        <label data-i18n="label_year">Year</label>
-        <input type="number" id="carYear" placeholder="e.g. 2022">
-    </div>
-    <div class="input-group">
-        <label data-i18n="label_mileage">Mileage (km)</label>
-        <input type="number" id="carMileage" placeholder="e.g. 50000">
-    </div>
-    <div class="input-group">
-        <label data-i18n="label_fuel">Fuel Type</label>
-        <select id="carFuel">
-            <option value="Petrol">Petrol</option>
-            <option value="Diesel">Diesel</option>
-            <option value="Electric">Electric</option>
-            <option value="Hybrid">Hybrid</option>
-        </select>
-    </div>
-</div>
 
            </div>
 
