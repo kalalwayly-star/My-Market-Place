@@ -117,6 +117,11 @@ function saveNewAd(event) {
 function finalizeAd(featuredStatus) {
     const conditionEl = document.querySelector('input[name="condition"]:checked');
     
+    // Safety check for images
+    const currentImages = (typeof uploadedImages !== 'undefined' && uploadedImages.length > 0) 
+        ? uploadedImages 
+        : ['https://placeholder.com'];
+
     const newAd = {
         id: Date.now(),
         userEmail: currentUser.email,
@@ -128,18 +133,21 @@ function finalizeAd(featuredStatus) {
         lng: window.currentAdLng || null,
         description: document.getElementById('adDesc').value,
         condition: conditionEl ? conditionEl.value : "N/A",
+        // Use ?. to prevent errors if the field is hidden
         carYear: document.getElementById('carYear')?.value || "",
-        carMileage: document.getElementById('carMileage')?.value || "",
+        carMileage: document.getElementById('carKM')?.value || document.getElementById('carMileage')?.value || "",
         carFuel: document.getElementById('carFuel')?.value || "",
-        image: uploadedImages.length > 0 ? uploadedImages : ['https://placeholder.com'],
-        isFeatured: featuredStatus,
+        image: currentImages,
+        isFeatured: featuredStatus, // This comes from the PayPal 'onApprove'
         status: "Active",
         date: new Date().toLocaleDateString()
     };
  
-    const ads = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    // Use 'myAds' if STORAGE_KEY is not defined elsewhere
+    const key = typeof STORAGE_KEY !== 'undefined' ? STORAGE_KEY : 'myAds';
+    const ads = JSON.parse(localStorage.getItem(key) || "[]");
     ads.push(newAd);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(ads));
+    localStorage.setItem(key, JSON.stringify(ads));
 
     alert("Ad Posted Successfully!");
     window.location.href = "index.html";
