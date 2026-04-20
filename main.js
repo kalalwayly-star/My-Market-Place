@@ -61,9 +61,8 @@ function logout() {
     localStorage.removeItem("currentUser");
     window.location.href = "index.html";
 }
-
-/* --- 3. UI RENDERING --- */
-function renderAds(adsArray, containerId = "listings") {
+/* --- UPDATED UI RENDERING WITH DISTANCE --- */
+function renderAds(adsArray, containerId = "listings", userCoords = null) {
     const container = document.getElementById(containerId);
     if (!container) return;
 
@@ -78,6 +77,13 @@ function renderAds(adsArray, containerId = "listings") {
     container.innerHTML = adsArray.map(ad => {
         const isSold = ad.status === 'Sold';
         const isFeatured = ad.isFeatured === true;
+
+        // Distance Calculation for the UI
+        let distanceHTML = "";
+        if (userCoords && ad.lat && ad.lng) {
+            const dist = calculateDistance(userCoords.lat, userCoords.lon, ad.lat, ad.lng);
+            distanceHTML = `<span class="distance-tag" style="font-size: 0.75rem; color: #28a745; margin-left: 10px;">📍 ${dist.toFixed(1)} km</span>`;
+        }
 
         let displayImage = 'https://placeholder.com';
         if (ad.image) {
@@ -99,7 +105,10 @@ function renderAds(adsArray, containerId = "listings") {
                 </div>
               
                 <div class="ad-content" style="padding: 15px;">
-                    <span class="category-tag" style="font-size: 0.8rem; color: #666; font-weight: bold; text-transform: uppercase;">${ad.category || "General"}</span>
+                    <div style="display:flex; justify-content: space-between; align-items: center;">
+                        <span class="category-tag" style="font-size: 0.8rem; color: #666; font-weight: bold; text-transform: uppercase;">${ad.category || "General"}</span>
+                        ${distanceHTML}
+                    </div>
                     <h3 style="margin: 5px 0;">${ad.title || "Untitled"}</h3>
                     <p style="margin: 5px 0; color: #007bff;"><strong>$${ad.price || "0"}</strong></p>
                   
@@ -116,9 +125,7 @@ function renderAds(adsArray, containerId = "listings") {
     }).join('');
 }
 
-/* --- 4. FILTERING LOGIC --- */
-
-// FILTER BY CATEGORY (75km logic)
+/* --- UPDATED CATEGORY FILTER --- */
 function filterByCategory(category) {
     navigator.geolocation.getCurrentPosition((position) => {
         const uLat = position.coords.latitude;
@@ -133,13 +140,16 @@ function filterByCategory(category) {
             }
             return matchesCat;
         });
-        renderAds(filtered, "listings");
+
+        // Pass user coordinates to show distances in the card
+        renderAds(filtered, "listings", { lat: uLat, lon: uLon });
     }, () => {
-        // Fallback if GPS blocked
         const allAds = getAds();
         renderAds(allAds.filter(ad => ad.category === category), "listings");
     });
 }
+
+
 
 // SEARCH BUTTON
 function applyFilters() {
@@ -157,11 +167,19 @@ function applyFilters() {
 
 // VIEW ALL
 function resetFilters() {
-    const allAds = getAds();
-    const activeAds = allAds.filter(ad => ad.status !== "Sold");
-    renderAds(activeAds, "listings");
+    navigator.geolocation.getCurrentPosition((position) => {
+        const uLat = position.coords.latitude;
+        const uLon = position.coords.longitude;
+        const activeAds = getAds().filter(ad => ad.status !== "Sold");
+        renderAds(activeAds, "listings", { lat: uLat, lon: uLon });
+    }, () => {
+        const activeAds = getAds().filter(ad => ad.status !== "Sold");
+        renderAds(activeAds, "listings");
+    });
+
     document.querySelectorAll('.search-container input').forEach(input => input.value = '');
 }
+
 
 /* --- 5. INITIALIZATION --- */
 function initMain() {
