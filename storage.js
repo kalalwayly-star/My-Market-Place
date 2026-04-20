@@ -2,7 +2,7 @@
 
 // 1. Get all ads from memory
 function getAllAds() {
-    // We use "marketplace_ads" as your primary key
+    // Master key used by both main.js and storage.js
     let ads = JSON.parse(localStorage.getItem("marketplace_ads")) || [];
     
     // INITIALIZE WITH SAMPLE DATA (if empty)
@@ -17,7 +17,8 @@ function getAllAds() {
                 lng: 55.2708, 
                 price: "200,000", 
                 image: "https://placeholder.com",
-                status: "Active"
+                status: "Active",
+                userEmail: "test@test.com"
             },
             { 
                 id: 102, 
@@ -28,7 +29,8 @@ function getAllAds() {
                 lng: 46.6753, 
                 price: "45,000", 
                 image: "https://placeholder.com",
-                status: "Active"
+                status: "Active",
+                userEmail: "test@test.com"
             },
             { 
                 id: 103, 
@@ -39,7 +41,8 @@ function getAllAds() {
                 lng: 31.2357, 
                 price: "300", 
                 image: "https://placeholder.com",
-                status: "Active"
+                status: "Active",
+                userEmail: "test@test.com"
             }
         ];
         localStorage.setItem("marketplace_ads", JSON.stringify(ads));
@@ -47,19 +50,19 @@ function getAllAds() {
     return ads;
 }
 
-// 2. Save a completely new list
+// 2. Save a completely new list (used for deleting or updating)
 function saveAdsList(adsArray) {
     localStorage.setItem("marketplace_ads", JSON.stringify(adsArray));
 }
 
-// 3. Add a single new ad
+// 3. Add a single new ad to the existing list
 function saveToLocalStorage(adObject) {
     const ads = getAllAds();
     ads.push(adObject);
     saveAdsList(ads);
 }
 
-// 4. Find single ad by ID
+// 4. Utility to find a single ad by ID
 function getAdById(id) {
     const ads = getAllAds();
     return ads.find(ad => String(ad.id) === String(id));
@@ -77,3 +80,4 @@ function sendToModerationQueue(ad, fraudData) {
     });
     localStorage.setItem("moderationQueue", JSON.stringify(queue));
 }
+
