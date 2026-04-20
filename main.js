@@ -144,4 +144,19 @@ if (document.readyState === "loading") {
 } else {
     initMain();
 }
+function filterByCategory(category) {
+    const ads = document.querySelectorAll('.ad-card'); // Make sure your ads have this class
+    
+    ads.forEach(ad => {
+        // We get the category stored on the ad element
+        const adCategory = ad.getAttribute('data-category');
+        
+        if (category === 'all' || adCategory === category) {
+            ad.style.display = 'block';
+        } else {
+            ad.style.display = 'none';
+        }
+    });
+}
+
 
