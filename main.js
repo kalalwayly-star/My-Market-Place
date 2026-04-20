@@ -144,18 +144,60 @@ if (document.readyState === "loading") {
 } else {
     initMain();
 }
+// 1. FILTER BY CATEGORY
 function filterByCategory(category) {
-    const ads = document.querySelectorAll('.ad-card'); // Make sure your ads have this class
+    const allAds = JSON.parse(localStorage.getItem('ads')) || []; // Assuming ads are in storage.js
+    const filtered = allAds.filter(ad => ad.category === category);
+    displayAds(filtered);
+}
+
+// 2. SEARCH BUTTON (applyFilters)
+function applyFilters() {
+    const searchTerm = document.querySelector('[data-i18n-placeholder="search_placeholder"]').value.toLowerCase();
+    const locationTerm = document.querySelector('[data-i18n-placeholder="location_placeholder"]').value.toLowerCase();
     
-    ads.forEach(ad => {
-        // We get the category stored on the ad element
-        const adCategory = ad.getAttribute('data-category');
-        
-        if (category === 'all' || adCategory === category) {
-            ad.style.display = 'block';
-        } else {
-            ad.style.display = 'none';
-        }
+    const allAds = JSON.parse(localStorage.getItem('ads')) || [];
+    
+    const filtered = allAds.filter(ad => {
+        const matchesSearch = ad.title.toLowerCase().includes(searchTerm) || ad.description.toLowerCase().includes(searchTerm);
+        const matchesLocation = ad.location.toLowerCase().includes(locationTerm);
+        return matchesSearch && matchesLocation;
+    });
+    
+    displayAds(filtered);
+}
+
+// 3. VIEW ALL BUTTON (resetFilters)
+function resetFilters() {
+    const allAds = JSON.parse(localStorage.getItem('ads')) || [];
+    displayAds(allAds);
+    
+    // Clear the search inputs
+    document.querySelectorAll('.search-container input').forEach(input => input.value = '');
+}
+
+// 4. DISPLAY FUNCTION (The Bridge)
+function displayAds(adsArray) {
+    const container = document.getElementById('listings');
+    container.innerHTML = ''; // Clear current ads
+
+    if (adsArray.length === 0) {
+        container.innerHTML = '<p style="text-align:center; width:100%;" data-i18n="no_ads_found">No ads found</p>';
+        // Trigger translation refresh if your library supports it
+        if(window.updateContent) window.updateContent(); 
+        return;
+    }
+
+    adsArray.forEach(ad => {
+        const adCard = `
+            <div class="ad-card">
+                <img src="${ad.image || 'placeholder.jpg'}" alt="${ad.title}">
+                <h4>${ad.title}</h4>
+                <p>${ad.price} $</p>
+                <p class="category-label">${ad.category}</p>
+            </div>
+        `;
+        container.innerHTML += adCard;
     });
 }
 
