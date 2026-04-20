@@ -54,15 +54,13 @@
 
            
 <!-- UNIFIED CARS & TRUCKS SECTION -->
+<!-- DYNAMIC SECTIONS -->
 <div id="section-Cars" class="category-details" style="display:none; border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin-bottom: 20px; background: #fafafa;">
-    
-    <!-- Make & Model -->
     <div class="input-group" style="margin-bottom: 15px;">
         <label>Make/Model</label>
         <input type="text" id="carMake" placeholder="e.g. Toyota Camry" style="width: 100%; padding: 8px; box-sizing: border-box;">
     </div>
 
-    <!-- Year & Mileage -->
     <div style="display: flex; gap: 15px; margin-bottom: 15px;">
         <div style="flex: 1;">
             <label>Year</label>
@@ -74,7 +72,6 @@
         </div>
     </div>
 
-    <!-- Fuel & Transmission -->
     <div style="display: flex; gap: 15px; margin-bottom: 15px;">
         <div style="flex: 1;">
             <label>Fuel Type</label>
@@ -94,7 +91,6 @@
         </div>
     </div>
 
-    <!-- Body Type -->
     <div class="input-group" style="margin-bottom: 15px;">
         <label data-i18n="label_body">Body Type</label>
         <select id="carBody" style="width: 100%; padding: 8px;">
@@ -106,7 +102,6 @@
         </select>
     </div>
 
-    <!-- Condition -->
     <div class="input-group">
         <label>Condition</label>
         <div style="display: flex; gap: 20px; padding: 5px 0;">
@@ -114,68 +109,62 @@
             <label style="font-weight: normal;"><input type="radio" name="condition" value="Used"> Used</label>
         </div>
     </div>
+</div>
 
-</div> <!-- ONLY ONE CLOSING TAG HERE -->
+<div id="section-RealEstate" class="category-details" style="display:none;">
+    <div class="input-group">
+        <label data-i18n="label_bedrooms">Bedrooms</label>
+        <input type="number" id="reBeds" placeholder="2">
+    </div>
+    <div class="input-group">
+        <label data-i18n="label_bathrooms">Bathrooms</label>
+        <input type="number" id="reBaths" placeholder="1">
+    </div>
+</div>
 
-
-           <div id="section-RealEstate" class="category-details" style="display:none;">
-               <div class="input-group">
-                   <label data-i18n="label_bedrooms">Bedrooms</label>
-                   <input type="number" id="reBeds" placeholder="2">
-               </div>
-               <div class="input-group">
-                   <label data-i18n="label_bathrooms">Bathrooms</label>
-                   <input type="number" id="reBaths" placeholder="1">
-               </div>
-           </div>
-
-          
-
-           <!-- COMMON FIELDS -->
-           <div id="commonFields" style="display:none; margin-top:20px;">
-               <hr>
-               <form id="postAdForm">
-    <!-- ... your other inputs (title, price, category) ... -->
-
+<!-- COMMON FIELDS -->
+<div id="commonFields" style="display:none; margin-top:20px;">
+    <hr>
     <div class="input-group">
         <label data-i18n="label_location">City/Location</label>
-        <input type="text" id="adLocation" data-i18n-placeholder="placeholder_location" required>
+        <input type="text" id="adLocation" required>
     </div>
 
-   
+    <div class="input-group">
+        <label data-i18n="label_title">Ad Title</label>
+        <input type="text" id="adTitle" required>
+    </div>
 
-               <div class="input-group">
-                   <label data-i18n="label_title">Ad Title</label>
-                   <input type="text" id="adTitle" data-i18n-placeholder="placeholder_title" required>
-               </div>
-               <div class="input-group">
-                   <label data-i18n="label_price">Price ($)</label>
-                   <input type="number" id="adPrice" data-i18n-placeholder="placeholder_price" required>
-               </div>
-               <div class="input-group">
-                   <label data-i18n="label_description">Description</label>
-                   <textarea id="adDesc" data-i18n-placeholder="placeholder_desc" rows="4"></textarea>
-               </div>
+    <div class="input-group">
+        <label data-i18n="label_price">Price ($)</label>
+        <input type="number" id="adPrice" required>
+    </div>
 
-               <!-- FEATURE OPTION -->
-               <div class="form-group" style="background: #fff8e1; padding: 10px; border-radius: 5px; margin: 15px 0;">
-                   <label for="isFeatured" style="cursor:pointer; font-weight: bold;">
-                       <input type="checkbox" id="isFeatured" onchange="togglePayPal(this)">
-                       <span data-i18n="feature_text">✨ Feature this ad for only $4.99 (Stay at the top!)</span>
-                   </label>
-               </div>
+    <div class="input-group">
+        <label data-i18n="label_description">Description</label>
+        <textarea id="adDesc" rows="4"></textarea>
+    </div>
 
-               <div id="paypal-button-container" style="display:none;"></div>
-               <button type="button" id="postBtn" onclick="saveNewAd(event)" class="btn-primary-large" data-i18n="post_btn">Post Ad Now</button>
-           </div>
-       </div>
-   </div>
+    <div class="form-group" style="background: #fff8e1; padding: 10px; border-radius: 5px; margin: 15px 0;">
+        <label for="isFeatured" style="cursor:pointer; font-weight: bold;">
+            <input type="checkbox" id="isFeatured" onchange="togglePayPal(this)">
+            <span data-i18n="feature_text">✨ Feature this ad for only $4.99</span>
+        </label>
+    </div>
+
+    <div id="paypal-button-container" style="display:none; margin-bottom: 10px;"></div>
+    <button type="button" id="postBtn" onclick="saveNewAd(event)" class="btn-primary-large">Post Ad Now</button>
+</div>
+
 <script>
 function togglePayPal(checkbox) {
     const paypalContainer = document.getElementById('paypal-button-container');
+    const postBtn = document.getElementById('postBtn');
+    
     if (checkbox.checked) {
         paypalContainer.style.display = 'block';
-        // This 'draws' the buttons if the box is empty
+        if (postBtn) postBtn.style.display = 'none'; // Hide post button until paid
+        
         if (paypalContainer.innerHTML === "") {
             paypal.Buttons({
                 createOrder: (data, actions) => {
@@ -183,20 +172,21 @@ function togglePayPal(checkbox) {
                         purchase_units: [{ amount: { value: '4.99' } }]
                     });
                 },
-               onApprove: function(data, actions) {
-    return actions.order.capture().then(function(details) {
-        alert('Payment Complete!');
-        finalizeAd(true); // This saves the ad immediately as featured
-    });
-}
-
+                onApprove: function(data, actions) {
+                    return actions.order.capture().then(function(details) {
+                        alert('Payment Complete!');
+                        finalizeAd(true);
+                    });
+                }
             }).render('#paypal-button-container');
         }
     } else {
         paypalContainer.style.display = 'none';
+        if (postBtn) postBtn.style.display = 'block';
     }
 }
 </script>
+
 
    <!-- SCRIPTS -->
    <script src="storage.js"></script>
