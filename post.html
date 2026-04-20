@@ -63,6 +63,36 @@
                    <label data-i18n="label_km">Mileage (KM)</label>
                    <input type="number" id="carKM" data-i18n-placeholder="placeholder_km" placeholder="0">
                </div>
+              <!-- PLACE THIS INSIDE YOUR FORM -->
+<div id="conditionSection" class="input-group" style="display:none; margin-bottom: 15px;">
+    <label data-i18n="label_condition" style="display:block; margin-bottom:5px;">Condition</label>
+    <div style="display: flex; gap: 20px; align-items: center;">
+        <label><input type="radio" name="condition" value="New" checked> <span data-i18n="opt_new">New</span></label>
+        <label><input type="radio" name="condition" value="Used"> <span data-i18n="opt_used">Used</span></label>
+    </div>
+</div>
+
+<!-- PLACE THIS WHERE YOUR OTHER CATEGORY SECTIONS ARE -->
+<div id="section-Cars" class="category-details" style="display:none; border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+    <div class="input-group">
+        <label data-i18n="label_year">Year</label>
+        <input type="number" id="carYear" placeholder="e.g. 2022">
+    </div>
+    <div class="input-group">
+        <label data-i18n="label_mileage">Mileage (km)</label>
+        <input type="number" id="carMileage" placeholder="e.g. 50000">
+    </div>
+    <div class="input-group">
+        <label data-i18n="label_fuel">Fuel Type</label>
+        <select id="carFuel">
+            <option value="Petrol">Petrol</option>
+            <option value="Diesel">Diesel</option>
+            <option value="Electric">Electric</option>
+            <option value="Hybrid">Hybrid</option>
+        </select>
+    </div>
+</div>
+
            </div>
 
            <div id="section-RealEstate" class="category-details" style="display:none;">
