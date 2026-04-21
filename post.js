@@ -1,10 +1,13 @@
-// 1. GLOBAL VARIABLES
+// 1. FIREBASE CONNECTION
+import { db, ref, push } from "./firebase-config.js";
+
+// 2. GLOBAL VARIABLES
 const STORAGE_KEY = "marketplace_ads"; 
 const currentUser = JSON.parse(localStorage.getItem("currentUser")) || { email: "Guest" };
 let uploadedImages = []; 
 
-// 2. HANDLE CATEGORY CHANGES
-function handleCategoryChange() {
+// 3. HANDLE CATEGORY CHANGES
+window.handleCategoryChange = function() {
     const mainCategorySelect = document.getElementById('postCategory');
     const commonFields = document.getElementById('commonFields');
     const sections = document.querySelectorAll('.category-details');
@@ -13,34 +16,28 @@ function handleCategoryChange() {
     if (!mainCategorySelect) return;
     const categoryValue = mainCategorySelect.value;
 
-    // Hide all dynamic sections first
     if (sections) {
         sections.forEach(sec => sec.style.display = 'none');
     }
 
-    // If nothing selected, hide everything and exit
     if (categoryValue === "") {
         if (commonFields) commonFields.style.display = 'none';
         if (condSec) condSec.style.display = 'none';
         return;
     }
 
-    // Show Title, Price, Location, etc.
     if (commonFields) commonFields.style.display = 'block';
 
-    // Show Car section specifically
     const carSec = document.getElementById('section-Cars');
     if (categoryValue === 'Cars & Trucks' && carSec) {
         carSec.style.display = 'block';
     }
 
-    // Show Real Estate section specifically
     const reSec = document.getElementById('section-RealEstate');
     if (categoryValue === 'Real Estate' && reSec) {
         reSec.style.display = 'block';
     }
 
-    // Condition Box logic (Hide for Pets, Jobs, Real Estate)
     const noCondition = ['Pets', 'Jobs', 'Real Estate'];
     if (condSec) {
         if (noCondition.includes(categoryValue)) {
@@ -51,8 +48,8 @@ function handleCategoryChange() {
     }
 }
 
-// 3. PHOTO UPLOAD
-async function handlePhotoUpload(event) {
+// 4. PHOTO UPLOAD
+window.handlePhotoUpload = async function(event) {
     const gallery = document.getElementById('galleryPreview');
     const files = Array.from(event.target.files);
     if (!gallery) return;
@@ -99,14 +96,14 @@ function compressImage(file) {
     });
 }
 
-function removeImg(e, data, btn) {
+window.removeImg = function(e, data, btn) {
     e.stopPropagation();
     uploadedImages = uploadedImages.filter(img => img !== data);
     btn.parentElement.remove();
 }
 
-// 4. SAVE LOGIC
-function saveNewAd(event) {
+// 5. SAVE LOGIC
+window.saveNewAd = function(event) {
     if (event) event.preventDefault();
     if (!currentUser || currentUser.email === "Guest") { alert("Please login first."); return; }
 
@@ -154,12 +151,16 @@ function finalizeAd(featuredStatus) {
         date: new Date().toLocaleDateString()
     };
 
-    const ads = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-    ads.push(newAd);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(ads));
-
-    alert("Ad Posted Successfully!");
-    window.location.href = "index.html";
+    // SAVE TO CLOUD (Firebase)
+    const adsRef = ref(db, "marketplace_ads");
+    push(adsRef, newAd)
+        .then(() => {
+            alert("Ad Posted Successfully to the Cloud!");
+            window.location.href = "index.html";
+        })
+        .catch((error) => {
+            alert("Error saving to cloud: " + error.message);
+        });
 }
 
 
