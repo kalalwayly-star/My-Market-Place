@@ -54,6 +54,12 @@ function handleCategoryChange() {
         condSec.style.display = noCondition.includes(categoryValue) ? 'none' : 'block';
     }
 }
+// Add this at the bottom of handleCategoryChange inside post.js
+if (window.loadLanguage) {
+    // This just checks WHAT language YOU picked (En, Ar, Fr)
+    const savedLang = localStorage.getItem("language") || "en";
+    window.loadLanguage(savedLang); 
+}
 
 
 // 4. PHOTO UPLOAD
@@ -158,6 +164,8 @@ function finalizeAd(featuredStatus) {
         status: "Active",
         date: new Date().toLocaleDateString()
     };
+
+
 
     // SAVE TO CLOUD (Firebase)
     const adsRef = ref(db, "marketplace_ads");
