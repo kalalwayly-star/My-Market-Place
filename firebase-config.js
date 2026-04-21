@@ -3,7 +3,7 @@ import { getDatabase, ref, push, onValue, set, remove } from "https://gstatic.co
 
 const firebaseConfig = {
   apiKey: "AIzaSyDBT8jv057_JQL6pIUYk-U_LQ8uJHlFi-o",
-  authDomain: "kal-marketplace.firebaseapp.com",
+  authDomain: "://firebaseapp.com",
   databaseURL: "https://firebaseio.com",
   projectId: "kal-marketplace",
   storageBucket: "kal-marketplace.firebasestorage.app",
@@ -16,6 +16,7 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 export { db, ref, push, onValue, set, remove };
+
 
 
 
