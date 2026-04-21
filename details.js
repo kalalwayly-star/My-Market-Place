@@ -113,14 +113,16 @@ function sendMessage() {
 
     // 3. Create Message Object
     const newMessage = {
-        id: Date.now(), // Unique ID for deleting
-        adId: ad.id,
-        adTitle: ad.title,
-        senderEmail: currentUser.email,
-        receiverEmail: ad.userEmail, // The person who posted the ad
-        text: messageText,
-        date: new Date().toLocaleString()
-    };
+    id: Date.now(),
+    adTitle: ad.title,
+    senderEmail: currentUser.email,
+    receiverEmail: ad.userEmail,
+    text: messageText,
+    date: new Date().toLocaleString(),
+    deletedBySender: false,   // New marker
+    deletedByReceiver: false  // New marker
+};
+
 
     // 4. Save to localStorage
     try {
