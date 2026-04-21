@@ -161,22 +161,21 @@ function finalizeAd(featuredStatus) {
 }
 
 // Export for HTML
+// AT THE VERY BOTTOM OF post.js
+// 1. Manually attach to the window so HTML onchange/onclick works
 window.handleCategoryChange = handleCategoryChange;
+window.handlePhotoUpload = handlePhotoUpload;
+window.saveNewAd = saveNewAd;
+window.removeImg = removeImg;
 
-// Add this to the very bottom of your post.js file
+// 2. Also attach via Event Listeners for backup
 document.addEventListener('DOMContentLoaded', () => {
-    // Category Change
     document.getElementById('postCategory')?.addEventListener('change', handleCategoryChange);
-    
-    // Photo Upload
     document.getElementById('photoInput')?.addEventListener('change', handlePhotoUpload);
-    
-    // Save Button
     document.getElementById('postBtn')?.addEventListener('click', saveNewAd);
     
-    // Initialize state
+    // Run once to see if commonFields should be visible
     handleCategoryChange();
 });
-
 
 
