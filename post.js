@@ -1,10 +1,14 @@
 // 1. FIREBASE CONNECTION
 import { db, ref, push } from "./firebase-config.js";
 
-// 2. GLOBAL VARIABLES
-const STORAGE_KEY = "marketplace_ads"; 
+// Global Variables
 const currentUser = JSON.parse(localStorage.getItem("currentUser")) || { email: "Guest" };
 let uploadedImages = []; 
+
+// Connect functions to the window so HTML buttons can find them
+window.handleCategoryChange = handleCategoryChange;
+window.handlePhotoUpload = handlePhotoUpload;
+window.saveNewAd = saveNewAd;
 
 // 3. HANDLE CATEGORY CHANGES
 window.handleCategoryChange = function() {
