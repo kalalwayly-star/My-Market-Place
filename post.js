@@ -177,10 +177,12 @@ function finalizeAd(featuredStatus) {
 if (window.loadLanguage) {
     window.loadLanguage(localStorage.getItem("language") || "en");
 }
-// This makes the functions visible to your HTML buttons
+// Add these to the end of post.js
 window.handleCategoryChange = handleCategoryChange;
 window.handlePhotoUpload = handlePhotoUpload;
 window.saveNewAd = saveNewAd;
+window.finalizeAd = finalizeAd;
+
 
 
 
