@@ -1,8 +1,9 @@
-import { db, ref, onValue, remove } from "./firebase-config.js";
+import { db, ref, push } from "./firebase-config.js";
 
-/* --- 1. CONFIGURATION & HELPERS --- */
-const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-let globalAds = []; // This replaces localStorage as our data source
+// Global Variables
+const currentUser = JSON.parse(localStorage.getItem("currentUser")) || { email: "Guest" };
+let uploadedImages = []; 
+
 
 const SEARCH_RELATIONS = {
     "pants": ["clothing", "fashion", "jeans", "trousers", "t-shirt", "shirt", "apparel"],
