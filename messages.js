@@ -1,5 +1,7 @@
-import { db, ref, onValue, remove, set } from "./firebase-config.js";
+import { db, ref, onValue, push } from "./firebase-config.js";
 
+const params = new URLSearchParams(window.location.search);
+const adId = params.get("id"); // This is now the Firebase unique key
 /* --- 1. CONFIGURATION & TRANSLATIONS --- */
 let currentLanguage = localStorage.getItem("language") || "en";
 const currentUser = JSON.parse(localStorage.getItem("currentUser"));
