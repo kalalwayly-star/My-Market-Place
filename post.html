@@ -1,164 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-   <meta charset="UTF-8">
-   <title data-i18n="post_page_title">Post Ad | Marketplace</title>
-   <link rel="stylesheet" href="style.css">
-   <!-- PayPal SDK -->
-    <script src="https://www.paypal.com/sdk/js?client-id=AR_Wf3aXLq7GxACeo57SjDfghIrCso96DnHoZiMpLnKUsAaePgUoQyVKMbVt8B-RNMiVoPLCSXctDk6I&components=buttons"></script>
-</head>
-<body>
-   <header class="header">
-       <div class="container">
-           <h1 data-i18n="myTitle">My Marketplace</h1>
-           <div class="nav"><a href="index.html" class="btn text" data-i18n="home">Home</a></div>
-       </div>
-   </header>
-
-   <div class="form-wrapper">
-       <div class="form-card">
-          <!-- Place this exactly where you want the photo to appear -->
-<div id="adImageContainer"></div>
-
-           <h2 data-i18n="post_ad_header">Post a New Listing</h2>
-          
-           <div class="input-group">
-               <label data-i18n="label_category">Category</label>
-               <select id="postCategory" required onchange="handleCategoryChange()">
-                   <option value="" data-i18n="select_category">Choose Category</option>
-                   <option value="Real Estate" data-i18n="cat_realestate">Real Estate</option>
-                   <option value="Cars & Trucks" data-i18n="cat_cars_trucks">Cars and Trucks</option>
-                   <option value="Furniture" data-i18n="cat_furniture">Furniture</option>
-                   <option value="Jobs" data-i18n="cat_jobs">Jobs</option>
-                   <option value="Fashion" data-i18n="cat_fashion">Fashion</option>
-                   <option value="Pets" data-i18n="cat_pets">Pets</option>
-                   <option value="Sports" data-i18n="cat_sports">Sports</option>
-                   <option value="Books" data-i18n="cat_books">Books</option>
-                   <option value="Appliances" data-i18n="cat_appliances">Appliances</option>
-                   <option value="Toys" data-i18n="cat_toys">Toys</option>
-               </select>
-           </div>
-
-           <!-- PHOTO SECTION -->
-           <div class="form-section">
-               <h3 data-i18n="photo_header">Photos (At least 1 required, max 10)</h3>
-               <div class="upload-container">
-                   <label for="photoInput" class="upload-box" style="border: 2px dashed #ccc; padding: 20px; display: block; text-align: center; cursor: pointer;">
-                       <div class="icon">📸</div>
-                       <span data-i18n="click_to_add">Click to add photos</span>
-                       <input type="file" id="photoInput" accept="image/*" multiple onchange="handlePhotoUpload(event)" hidden>
-                   </label>
-                   <div id="galleryPreview" class="gallery-grid" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px;"></div>
-               </div>
-           </div>
-
-           
-
-<!-- DYNAMIC SECTIONS (CARS & TRUCKS) -->
-<div id="section-Cars" class="category-details" style="display:none; border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin-bottom: 20px; background: #fafafa;">
-    
-    <div class="input-group" style="margin-bottom: 15px;">
-        <label data-i18n="label_make">Make/Model</label>
-        <input type="text" id="carMake" data-i18n-placeholder="placeholder_make" placeholder="e.g. Toyota Camry" style="width: 100%; padding: 8px; box-sizing: border-box;">
-    </div>
-
-    <div style="display: flex; gap: 15px; margin-bottom: 15px;">
-        <div style="flex: 1;">
-            <label data-i18n="label_year">Year</label>
-            <input type="number" id="carYear" data-i18n-placeholder="placeholder_year" placeholder="2024" style="width: 100%; padding: 8px; box-sizing: border-box;">
-        </div>
-        <div style="flex: 1;">
-            <label data-i18n="label_km">Mileage (KM)</label>
-            <input type="number" id="carMileage" data-i18n-placeholder="placeholder_km" placeholder="0" style="width: 100%; padding: 8px; box-sizing: border-box;">
-        </div>
-    </div>
-
-    <div style="display: flex; gap: 15px; margin-bottom: 15px;">
-        <div style="flex: 1;">
-            <label data-i18n="label_fuel">Fuel Type</label>
-            <select id="carFuel" style="width: 100%; padding: 8px;">
-                <option value="Petrol" data-i18n="fuel_petrol">Petrol</option>
-                <option value="Diesel" data-i18n="fuel_diesel">Diesel</option>
-                <option value="Electric" data-i18n="fuel_electric">Electric</option>
-                <option value="Hybrid" data-i18n="fuel_hybrid">Hybrid</option>
-            </select>
-        </div>
-        <div style="flex: 1;">
-            <label data-i18n="label_trans">Transmission</label>
-            <select id="carTrans" style="width: 100%; padding: 8px;">
-                <option value="Automatic" data-i18n="trans_auto">Automatic</option>
-                <option value="Manual" data-i18n="trans_manual">Manual</option>
-            </select>
-        </div>
-    </div>
-
-    <div class="input-group" style="margin-bottom: 15px;">
-        <label data-i18n="label_body">Body Type</label>
-        <select id="carBody" style="width: 100%; padding: 8px;">
-            <option value="Sedan" data-i18n="body_sedan">Sedan</option>
-            <option value="SUV" data-i18n="body_suv">SUV</option>
-            <option value="Truck/Pickup" data-i18n="body_truck">Truck / Pickup</option>
-            <option value="Hatchback" data-i18n="body_hatch">Hatchback</option>
-        </select>
-    </div>
-</div>
-
-<!-- COMMON FIELDS (Shows for Furniture, Cars, etc.) -->
-<div id="commonFields" style="display:none; margin-top:20px;">
-    <hr>
-    
-    <!-- CONDITION MOVED HERE -->
-    <div id="globalCondition" class="input-group" style="margin-bottom: 20px; background: #f0f7ff; padding: 10px; border-radius: 5px; display: none;">
-    <label data-i18n="label_condition" style="font-weight: bold; display: block; margin-bottom: 8px;">Item Condition</label>
-    <div style="display: flex; gap: 30px;">
-        <label style="cursor:pointer;"><input type="radio" name="condition" value="New" checked> <span data-i18n="opt_new">New</span></label>
-        <label style="cursor:pointer;"><input type="radio" name="condition" value="Used"> <span data-i18n="opt_used">Used</span></label>
-    </div>
-</div>
-
-
-
-    <div class="input-group">
-        <label>City/Location</label>
-        <input type="text" id="adLocation" required>
-    </div>
-
-    <div class="input-group">
-        <label>Ad Title</label>
-        <input type="text" id="adTitle" required>
-    </div>
-
-    <div class="input-group">
-        <label>Price ($)</label>
-        <input type="number" id="adPrice" required>
-    </div>
-
-    <div class="input-group">
-        <label>Description</label>
-        <textarea id="adDesc" rows="4" style="width:100%; box-sizing: border-box;"></textarea>
-    </div>
-
-    <!-- FEATURE OPTION & PAYPAL -->
-    <div class="form-group" style="background: #fff8e1; padding: 10px; border-radius: 5px; margin: 15px 0;">
-        <label for="isFeatured" style="cursor:pointer; font-weight: bold;">
-            <input type="checkbox" id="isFeatured" onchange="togglePayPal(this)">
-            <span>✨ Feature this ad for $4.99</span>
-        </label>
-    </div>
-
-    <div id="paypal-button-container" style="display:none; margin-bottom: 15px;"></div>
-    <button type="button" id="postBtn" onclick="saveNewAd(event)" class="btn-primary-large">Post Ad Now</button>
-</div>
-
-
 <script>
+// 1. PayPal Logic
 function togglePayPal(checkbox) {
     const paypalContainer = document.getElementById('paypal-button-container');
     const postBtn = document.getElementById('postBtn');
     
     if (checkbox.checked) {
         paypalContainer.style.display = 'block';
-        if (postBtn) postBtn.style.display = 'none'; // Hide post button until paid
+        if (postBtn) postBtn.style.display = 'none'; 
         
         if (paypalContainer.innerHTML === "") {
             paypal.Buttons({
@@ -170,7 +18,8 @@ function togglePayPal(checkbox) {
                 onApprove: function(data, actions) {
                     return actions.order.capture().then(function(details) {
                         alert('Payment Complete!');
-                        finalizeAd(true);
+                        // Trigger the save function inside post.js
+                        if (window.finalizeAd) window.finalizeAd(true);
                     });
                 }
             }).render('#paypal-button-container');
@@ -182,18 +31,13 @@ function togglePayPal(checkbox) {
 }
 </script>
 
-
-   <!-- SCRIPTS -->
-   <script src="storage.js"></script>
-<!-- Put this FIRST so the translation library is ready -->
+<!-- 2. SCRIPTS ORDER -->
 <script src="languages.js"></script> 
-
-<!-- Put this SECOND -->
+<!-- The 'type=module' is what allows Firebase to work -->
 <script type="module" src="post.js"></script>
-
-
 </body>
 </html>
+
 
 
 
