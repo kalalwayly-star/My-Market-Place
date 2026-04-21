@@ -178,6 +178,10 @@ function finalizeAd(featuredStatus) {
             alert("Error saving to cloud: " + error.message);
         });
 }
+// This tells the language script to translate the new fields that just appeared
+if (window.loadLanguage) {
+    window.loadLanguage(localStorage.getItem("language") || "en");
+}
 
 
 
