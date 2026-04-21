@@ -5,13 +5,14 @@ import { db, ref, push } from "./firebase-config.js";
 const currentUser = JSON.parse(localStorage.getItem("currentUser")) || { email: "Guest" };
 let uploadedImages = []; 
 
-// Connect functions to the window so HTML buttons can find them
 window.handleCategoryChange = handleCategoryChange;
 window.handlePhotoUpload = handlePhotoUpload;
 window.saveNewAd = saveNewAd;
+window.removeImg = removeImg;
+
 
 // 3. HANDLE CATEGORY CHANGES
-window.handleCategoryChange = function() {
+function handleCategoryChange() {
     const mainCategorySelect = document.getElementById('postCategory');
     const commonFields = document.getElementById('commonFields');
     const sections = document.querySelectorAll('.category-details');
@@ -20,37 +21,40 @@ window.handleCategoryChange = function() {
     if (!mainCategorySelect) return;
     const categoryValue = mainCategorySelect.value;
 
+    // Hide all sections first
     if (sections) {
         sections.forEach(sec => sec.style.display = 'none');
     }
 
+    // If nothing selected, hide everything and stop
     if (categoryValue === "") {
         if (commonFields) commonFields.style.display = 'none';
         if (condSec) condSec.style.display = 'none';
         return;
     }
 
+    // Show common fields (Title, Price, Location)
     if (commonFields) commonFields.style.display = 'block';
 
+    // Show Car & Truck Section
     const carSec = document.getElementById('section-Cars');
     if (categoryValue === 'Cars & Trucks' && carSec) {
         carSec.style.display = 'block';
     }
 
+    // Show Real Estate Section
     const reSec = document.getElementById('section-RealEstate');
     if (categoryValue === 'Real Estate' && reSec) {
         reSec.style.display = 'block';
     }
 
+    // Condition logic: Hide for Pets, Jobs, Real Estate
     const noCondition = ['Pets', 'Jobs', 'Real Estate'];
     if (condSec) {
-        if (noCondition.includes(categoryValue)) {
-            condSec.style.display = 'none';
-        } else {
-            condSec.style.display = 'block';
-        }
+        condSec.style.display = noCondition.includes(categoryValue) ? 'none' : 'block';
     }
 }
+
 
 // 4. PHOTO UPLOAD
 window.handlePhotoUpload = async function(event) {
