@@ -111,5 +111,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     loadLanguage(currentLanguage);
 });
+function deleteMsg(id) {
+    if (!confirm("Delete this message?")) return;
+    let all = JSON.parse(localStorage.getItem("marketplace_messages") || "[]");
+    const updated = all.filter(m => String(m.id) !== String(id));
+    localStorage.setItem("marketplace_messages", JSON.stringify(updated));
+    renderTab(); // Refresh the list
+}
 
 
