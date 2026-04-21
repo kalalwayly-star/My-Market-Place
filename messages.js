@@ -70,21 +70,30 @@ const filtered = allMessages.filter(msg => {
         return;
     }
 
-    container.innerHTML = filtered.map(msg => `
-    <div class="message-card" style="border:1px solid #ddd; padding:15px; margin-bottom:12px; border-radius:8px; position:relative; background:white;">
-        <p style="font-size:0.85rem; color:#007bff; margin-bottom:5px; font-weight:bold;">
-            ${currentTab === 'received' ? 'From: ' + msg.senderEmail : 'To: ' + msg.receiverEmail}
-        </p>
-        <p style="margin:0; color:#333;">${msg.text}</p>
-        <p style="font-size:0.7rem; color:#999; margin-top:8px;">${msg.date || ''}</p>
+   container.innerHTML = filtered.map(msg => {
+    // Fallback logic to replace "undefined" with "Reply"
+    const sender = msg.senderEmail || msg.sender || "Reply";
+    const adTitle = msg.adTitle || "Reply";
+    const msgId = msg.id || Date.now(); // Ensure there is an ID to delete
 
-        <!-- DELETE BUTTON (Now works with msg.id) -->
-        <button onclick="deleteMsg('${msg.id}')" 
-                style="position:absolute; top:12px; right:12px; background:none; border:none; color:#ff4d4d; cursor:pointer;">
-            <i class="fas fa-trash-alt"></i>
-        </button>
-    </div>
-`).join('');
+    return `
+        <div class="message-card" style="border:1px solid #ddd; padding:15px; margin-bottom:12px; border-radius:8px; position:relative; background:white; min-height: 80px;">
+            <p style="font-size:0.85rem; color:#007bff; font-weight:bold; margin-bottom:5px;">
+                ${currentTab === 'received' ? 'From: ' + sender : 'To: ' + (msg.receiverEmail || "Reply")}
+            </p>
+            <p style="margin:5px 0; color:#333;">${msg.text}</p>
+            <p style="font-size:0.7rem; color:#999; margin-top:5px;">${msg.date || 'Reply'}</p>
+
+            <!-- DELETE BUTTON -->
+            <button onclick="deleteMsg('${msgId}')" 
+                    style="position:absolute; top:12px; right:12px; background:#fff; border:1px solid #ff4d4d; color:#ff4d4d; cursor:pointer; padding:5px; border-radius:4px; display: flex; align-items: center; justify-content: center;"
+                    title="Delete Message">
+                <i class="fas fa-trash-alt"></i>
+            </button>
+        </div>
+    `;
+}).join('');
+
 
 
 function deleteMsg(id) {
