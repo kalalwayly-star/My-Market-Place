@@ -1,15 +1,50 @@
 import { db, ref, push, onValue, set, remove } from "./firebase-config.js";
 
-// ADD THESE 4 LINES HERE:
-window.handleCategoryChange = handleCategoryChange;
+// THIS PART IS CRITICAL:
+window.handleCategoryChange = function() {
+    const mainCategorySelect = document.getElementById('postCategory');
+    const commonFields = document.getElementById('commonFields');
+    const sections = document.querySelectorAll('.category-details');
+    const condSec = document.getElementById('globalCondition');
+
+    if (!mainCategorySelect) return;
+    const categoryValue = mainCategorySelect.value;
+
+    // Hide everything first
+    sections.forEach(sec => sec.style.display = 'none');
+
+    if (categoryValue === "") {
+        if (commonFields) commonFields.style.display = 'none';
+        if (condSec) condSec.style.display = 'none';
+        return;
+    }
+
+    // Show sections
+    if (commonFields) commonFields.style.display = 'block';
+    
+    const carSec = document.getElementById('section-Cars');
+    if (categoryValue === 'Cars & Trucks' && carSec) carSec.style.display = 'block';
+
+    const reSec = document.getElementById('section-RealEstate');
+    if (categoryValue === 'Real Estate' && reSec) reSec.style.display = 'block';
+
+    const noCondition = ['Pets', 'Jobs', 'Real Estate'];
+    if (condSec) {
+        condSec.style.display = noCondition.includes(categoryValue) ? 'none' : 'block';
+    }
+
+    if (window.loadLanguage) {
+        window.loadLanguage(localStorage.getItem("language") || "en");
+    }
+};
+
+// Map other functions to window so HTML can see them
 window.handlePhotoUpload = handlePhotoUpload;
 window.saveNewAd = saveNewAd;
 window.removeImg = removeImg;
-const currentUser = JSON.parse(localStorage.getItem("currentUser")) || { email: "Guest" };
-let uploadedImages = []; 
 
+// ... rest of your code (uploadedImages, compressImage, etc) ...
 
-// ... the rest of your post.js code ...
 
 
 // 1. INITIALIZE & TRANSLATE
