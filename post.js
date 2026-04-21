@@ -181,7 +181,6 @@ if (window.loadLanguage) {
 window.handleCategoryChange = handleCategoryChange;
 window.handlePhotoUpload = handlePhotoUpload;
 window.saveNewAd = saveNewAd;
-window.removeImg = removeImg;
 
 
 
