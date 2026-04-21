@@ -22,8 +22,8 @@
           
            <div class="input-group">
                <label data-i18n="label_category">Category</label>
-               <!-- Removed inline onchange; post.js handles this now -->
-               <select id="postCategory" required>
+               <!-- FIXED: Added onchange back -->
+               <select id="postCategory" required onchange="handleCategoryChange()">
                    <option value="" data-i18n="select_category">Choose Category</option>
                    <option value="Real Estate" data-i18n="cat_realestate">Real Estate</option>
                    <option value="Cars & Trucks" data-i18n="cat_cars_trucks">Cars and Trucks</option>
@@ -45,7 +45,8 @@
                    <label for="photoInput" class="upload-box" style="border: 2px dashed #ccc; padding: 20px; display: block; text-align: center; cursor: pointer;">
                        <div class="icon">📸</div>
                        <span data-i18n="click_to_add">Click to add photos</span>
-                       <input type="file" id="photoInput" accept="image/*" multiple hidden>
+                       <!-- FIXED: Added onchange back -->
+                       <input type="file" id="photoInput" accept="image/*" multiple onchange="handlePhotoUpload(event)" hidden>
                    </label>
                    <div id="galleryPreview" class="gallery-grid" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px;"></div>
                </div>
@@ -69,10 +70,16 @@
                </div>
            </div>
 
+           <!-- REAL ESTATE SECTION -->
+           <div id="section-RealEstate" class="category-details" style="display:none; border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin-bottom: 20px; background: #fafafa;">
+                <label>Property Details</label>
+                <input type="text" placeholder="e.g. 3 Bedroom Apartment" style="width: 100%; padding: 8px;">
+           </div>
+
            <!-- COMMON FIELDS -->
            <div id="commonFields" style="display:none; margin-top:20px;">
                <hr>
-               <div id="globalCondition" class="input-group" style="margin-bottom: 20px; background: #f0f7ff; padding: 10px; border-radius: 5px;">
+               <div id="globalCondition" class="input-group" style="margin-bottom: 20px; background: #f0f7ff; padding: 10px; border-radius: 5px; display: none;">
                    <label data-i18n="label_condition" style="font-weight: bold;">Item Condition</label>
                    <div style="display: flex; gap: 30px;">
                        <label><input type="radio" name="condition" value="New" checked> <span data-i18n="opt_new">New</span></label>
@@ -106,7 +113,8 @@
                </div>
 
                <div id="paypal-button-container" style="display:none; margin-bottom: 15px;"></div>
-               <button type="button" id="postBtn" class="btn-primary-large">Post Ad Now</button>
+               <!-- FIXED: Added onclick back -->
+               <button type="button" id="postBtn" onclick="saveNewAd(event)" class="btn-primary-large">Post Ad Now</button>
            </div>
        </div>
    </div>
