@@ -1,21 +1,21 @@
-
-
 import { initializeApp } from "https://gstatic.com";
-import { getDatabase, ref, push, onValue, set, remove } from "https://gstatic.com";
+import { getFirestore } from "https://gstatic.com";
 
+// Replace the values below with your actual Firebase project settings
 const firebaseConfig = {
-  apiKey: "AIzaSyDBT8jv057_JQL6pIUYk-U_LQ8uJHlFi-o",
-  authDomain: "://firebaseapp.com",
-  projectId: "kal-marketplace",
-  storageBucket: "kal-marketplace.firebasestorage.app",
-  messagingSenderId: "745728416819",
-  appId: "1:745728416819:web:da2dfb86cc5b79fb0d1746",
-  measurementId: "G-FFHYQC4YJV"
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_://firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_://appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
 
-export { db, ref, push, onValue, set, remove };
+// Export the database for post.js to use
+export const db = getFirestore(app);
+
 
 
