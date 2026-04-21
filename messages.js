@@ -50,49 +50,43 @@ function changeTab(tab) {
 
 function renderTab() {
     const container = document.getElementById('messageContainer');
-    if (!container) return;
-
     const allMessages = JSON.parse(localStorage.getItem("marketplace_messages") || "[]");
     
-    // Filter based on Sent or Received
-    // Filter based on Sent or Received using the new Email keys
-const filtered = allMessages.filter(msg => {
-    if (currentTab === 'received') {
-        return msg.receiverEmail === currentUser.email;
-    } else {
-        return msg.senderEmail === currentUser.email;
-    }
-});
-
+    const filtered = allMessages.filter(msg => 
+        currentTab === 'received' 
+            ? (msg.receiverEmail === currentUser.email || msg.receiver === currentUser.email)
+            : (msg.senderEmail === currentUser.email || msg.sender === currentUser.email)
+    );
 
     if (filtered.length === 0) {
-        container.innerHTML = `<p style="text-align:center; padding:20px; color:#666;">No ${currentTab} messages found.</p>`;
+        container.innerHTML = `<p style="text-align:center; padding:20px;">No messages found.</p>`;
         return;
     }
 
-   container.innerHTML = filtered.map(msg => {
-    // Fallback logic to replace "undefined" with "Reply"
-    const sender = msg.senderEmail || msg.sender || "Reply";
-    const adTitle = msg.adTitle || "Reply";
-    const msgId = msg.id || Date.now(); // Ensure there is an ID to delete
+    container.innerHTML = filtered.map(msg => {
+        // 1. FIX UNDEFINED: If name or date is missing, show "Reply"
+        const person = (currentTab === 'received' ? (msg.senderEmail || msg.sender) : (msg.receiverEmail || msg.receiver)) || "Reply";
+        const msgDate = msg.date || "Reply";
+        const msgId = msg.id || "Reply";
 
-    return `
-        <div class="message-card" style="border:1px solid #ddd; padding:15px; margin-bottom:12px; border-radius:8px; position:relative; background:white; min-height: 80px;">
-            <p style="font-size:0.85rem; color:#007bff; font-weight:bold; margin-bottom:5px;">
-                ${currentTab === 'received' ? 'From: ' + sender : 'To: ' + (msg.receiverEmail || "Reply")}
-            </p>
-            <p style="margin:5px 0; color:#333;">${msg.text}</p>
-            <p style="font-size:0.7rem; color:#999; margin-top:5px;">${msg.date || 'Reply'}</p>
+        return `
+            <div class="message-card" style="border:1px solid #ddd; padding:15px; margin-bottom:12px; border-radius:8px; position:relative; background:white; min-height:60px;">
+                <p style="font-size:0.85rem; color:#007bff; font-weight:bold; margin:0 0 5px 0;">
+                    ${currentTab === 'received' ? 'From: ' : 'To: '} ${person}
+                </p>
+                <p style="margin:5px 0; color:#333;">${msg.text}</p>
+                <p style="font-size:0.7rem; color:#999; margin:5px 0 0 0;">${msgDate}</p>
 
-            <!-- DELETE BUTTON -->
-            <button onclick="deleteMsg('${msgId}')" 
-                    style="position:absolute; top:12px; right:12px; background:#fff; border:1px solid #ff4d4d; color:#ff4d4d; cursor:pointer; padding:5px; border-radius:4px; display: flex; align-items: center; justify-content: center;"
-                    title="Delete Message">
-                <i class="fas fa-trash-alt"></i>
-            </button>
-        </div>
-    `;
-}).join('');
+                <!-- 2. FIX DELETE BUTTON: Using text [X] so it shows even if icons fail -->
+                <button onclick="deleteMsg('${msgId}')" 
+                        style="position:absolute; top:10px; right:10px; background:#ff4d4d; color:white; border:none; border-radius:4px; padding:4px 8px; cursor:pointer; font-size:0.7rem; font-weight:bold;">
+                    DELETE
+                </button>
+            </div>
+        `;
+    }).join('');
+}
+
 
 
 
