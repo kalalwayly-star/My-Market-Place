@@ -1,3 +1,13 @@
+import { db, ref, onValue, remove } from "./firebase-config.js";
+
+/* --- 1. CONFIGURATION & HELPERS --- */
+const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+const STORAGE_KEY = "marketplace_ads"; 
+
+// DELETE the old getAds() and saveAds() functions entirely.
+// Firebase handles this for us now.
+
+
 const SEARCH_RELATIONS = {
     "pants": ["clothing", "fashion", "jeans", "trousers", "t-shirt", "shirt", "apparel"],
     "t-shirt": ["clothing", "fashion", "top", "shirt", "apparel"],
@@ -20,28 +30,7 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
     return R * c;
 }
 
-function getAds() {
-    try {
-        return JSON.parse(localStorage.getItem("marketplace_ads") || "[]");
-    } catch (e) {
-        console.error("Error parsing ads:", e);
-        return [];
-    }
-}
 
-function saveAds(adsArray) {
-    localStorage.setItem("marketplace_ads", JSON.stringify(adsArray));
-}
-
-/* --- 2. ACTIONS --- */
-function logout() {
-    localStorage.removeItem("currentUser");
-    window.location.href = "index.html";
-}
-
-function goToDetails(id) {
-    window.location.href = `details.html?id=${id}`;
-}
 
 /* --- 3. UI RENDERING --- */
 function renderAds(adsArray, containerId = "listings", userCoords = null) {
