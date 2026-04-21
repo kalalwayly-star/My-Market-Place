@@ -5,11 +5,6 @@ import { db, ref, push } from "./firebase-config.js";
 const currentUser = JSON.parse(localStorage.getItem("currentUser")) || { email: "Guest" };
 let uploadedImages = []; 
 
-window.handleCategoryChange = handleCategoryChange;
-window.handlePhotoUpload = handlePhotoUpload;
-window.saveNewAd = saveNewAd;
-window.removeImg = removeImg;
-
 
 // 3. HANDLE CATEGORY CHANGES
 function handleCategoryChange() {
@@ -182,6 +177,12 @@ function finalizeAd(featuredStatus) {
 if (window.loadLanguage) {
     window.loadLanguage(localStorage.getItem("language") || "en");
 }
+// This makes the functions visible to your HTML buttons
+window.handleCategoryChange = handleCategoryChange;
+window.handlePhotoUpload = handlePhotoUpload;
+window.saveNewAd = saveNewAd;
+window.removeImg = removeImg;
+
 
 
 
