@@ -1,7 +1,16 @@
 import { db, ref, push, onValue, set, remove } from "./firebase-config.js";
 
+// ADD THESE 4 LINES HERE:
+window.handleCategoryChange = handleCategoryChange;
+window.handlePhotoUpload = handlePhotoUpload;
+window.saveNewAd = saveNewAd;
+window.removeImg = removeImg;
 const currentUser = JSON.parse(localStorage.getItem("currentUser")) || { email: "Guest" };
 let uploadedImages = []; 
+
+
+// ... the rest of your post.js code ...
+
 
 // 1. INITIALIZE & TRANSLATE
 document.addEventListener('DOMContentLoaded', () => {
