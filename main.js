@@ -2,11 +2,7 @@ import { db, ref, onValue, remove } from "./firebase-config.js";
 
 /* --- 1. CONFIGURATION & HELPERS --- */
 const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-const STORAGE_KEY = "marketplace_ads"; 
-
-// DELETE the old getAds() and saveAds() functions entirely.
-// Firebase handles this for us now.
-
+let globalAds = []; // This replaces localStorage as our data source
 
 const SEARCH_RELATIONS = {
     "pants": ["clothing", "fashion", "jeans", "trousers", "t-shirt", "shirt", "apparel"],
@@ -15,9 +11,6 @@ const SEARCH_RELATIONS = {
     "furniture": ["chair", "table", "sofa", "bed", "home decor"],
     "phone": ["iphone", "samsung", "electronics", "mobile", "tech"]
 };
-
-/* --- 1. CONFIGURATION & HELPERS --- */
-const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
 function calculateDistance(lat1, lon1, lat2, lon2) {
     const R = 6371; 
@@ -30,10 +23,23 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
     return R * c;
 }
 
+// Global Helper to get ads (Now uses the cloud data)
+function getAds() {
+    return globalAds;
+}
 
+/* --- 2. ACTIONS --- */
+window.logout = function() {
+    localStorage.removeItem("currentUser");
+    window.location.href = "index.html";
+}
+
+window.goToDetails = function(id) {
+    window.location.href = `details.html?id=${id}`;
+}
 
 /* --- 3. UI RENDERING --- */
-function renderAds(adsArray, containerId = "listings", userCoords = null) {
+window.renderAds = function(adsArray, containerId = "listings", userCoords = null) {
     const container = document.getElementById(containerId);
     if (!container) return;
 
@@ -47,24 +53,26 @@ function renderAds(adsArray, containerId = "listings", userCoords = null) {
 
     container.innerHTML = adsArray.map(ad => {
         const isFeatured = ad.isFeatured === true;
+        // Use firebaseId for the key, fallback to ad.id
+        const uniqueId = ad.firebaseId || ad.id;
         let displayImage = ad.image && Array.isArray(ad.image) ? ad.image[0] : (ad.image || 'https://placeholder.com');
 
         return `
             <div class="card ${isFeatured ? 'featured-card' : ''}" 
                  style="border:1px solid #ddd; border-radius:10px; background:white; margin-bottom:15px; overflow:hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                <div onclick="goToDetails('${ad.id}')" style="cursor:pointer; height:180px; background:#f0f0f0;">
+                <div onclick="goToDetails('${uniqueId}')" style="cursor:pointer; height:180px; background:#f0f0f0;">
                     <img src="${displayImage}" alt="${ad.title}" onerror="this.src='https://placeholder.com'" style="width:100%; height:100%; object-fit:cover;">
                 </div>
                 <div style="padding:15px;">
                     <div style="display:flex; justify-content:space-between; align-items: center;">
                         <span style="font-size:0.8rem; color:#666; font-weight: bold; text-transform: uppercase;">${ad.category || "General"}</span>
                     </div>
-                    <h3 style="margin:5px 0; font-size: 1.1rem; cursor:pointer;" onclick="goToDetails('${ad.id}')">${ad.title}</h3>
+                    <h3 style="margin:5px 0; font-size: 1.1rem; cursor:pointer;" onclick="goToDetails('${uniqueId}')">${ad.title}</h3>
                     <p style="margin: 0; font-size: 0.85rem; color: #555;">📍 ${ad.location || "Location N/A"}</p>
                     <p style="color:#007bff; font-size: 1.1rem; margin-top: 5px;"><strong>$${ad.price}</strong></p>
                     
                     ${isMyAdsPage ? `
-                        <button onclick="deleteAd('${ad.id}')" 
+                        <button onclick="deleteAd('${uniqueId}')" 
                                 style="margin-top:10px; width:100%; background:#ff4d4d; color:white; border:none; padding:8px; border-radius:5px; cursor:pointer; font-weight:bold;">
                                 Delete Ad
                         </button>
@@ -76,7 +84,7 @@ function renderAds(adsArray, containerId = "listings", userCoords = null) {
 }
 
 /* --- 4. FILTERS --- */
-function filterByCategory(category) {
+window.filterByCategory = function(category) {
     navigator.geolocation.getCurrentPosition((pos) => {
         const uCoords = { lat: pos.coords.latitude, lon: pos.coords.longitude };
         const filtered = getAds().filter(ad => {
@@ -93,7 +101,7 @@ function filterByCategory(category) {
     });
 }
 
-function applyFilters() {
+window.applyFilters = function() {
     const searchInput = document.querySelector('.search-container input');
     if (!searchInput) return;
     
@@ -122,7 +130,7 @@ function applyFilters() {
     });
 }
 
-function resetFilters() {
+window.resetFilters = function() {
     const allActive = getAds().filter(ad => ad.status !== "Sold");
     
     navigator.geolocation.getCurrentPosition((pos) => {
@@ -143,32 +151,41 @@ function resetFilters() {
 }
 
 /* --- 5. INITIALIZATION & DELETE --- */
-function deleteAd(id) {
+window.deleteAd = function(firebaseId) {
     if (confirm("Are you sure you want to delete this ad?")) {
-        let allAds = getAds();
-        const updatedAds = allAds.filter(ad => String(ad.id) !== String(id));
-        saveAds(updatedAds);
-        
-        if (document.getElementById("myAds")) {
-            const userAds = updatedAds.filter(ad => ad.userEmail === currentUser.email);
-            renderAds(userAds, "myAds");
-        } else {
-            resetFilters();
-        }
-        alert("Ad deleted successfully.");
+        const adRef = ref(db, `marketplace_ads/${firebaseId}`);
+        remove(adRef)
+            .then(() => alert("Ad deleted successfully from cloud."))
+            .catch((error) => alert("Error: " + error.message));
     }
 }
 
 function initMain() {
-    if (document.getElementById("listings")) { resetFilters(); }
-    const myAdsContainer = document.getElementById("myAds");
-    if (myAdsContainer && currentUser) {
-        const userAds = getAds().filter(ad => ad.userEmail === currentUser.email);
-        renderAds(userAds, "myAds");
-    }
+    const adsRef = ref(db, "marketplace_ads");
+
+    onValue(adsRef, (snapshot) => {
+        const data = snapshot.val();
+        globalAds = [];
+        if (data) {
+            for (let id in data) {
+                globalAds.push({ firebaseId: id, ...data[id] });
+            }
+        }
+
+        if (document.getElementById("listings")) {
+            resetFilters();
+        }
+        
+        const myAdsContainer = document.getElementById("myAds");
+        if (myAdsContainer && currentUser) {
+            const userAds = globalAds.filter(ad => ad.userEmail === currentUser.email);
+            renderAds(userAds, "myAds");
+        }
+    });
 }
 
 document.addEventListener("DOMContentLoaded", initMain);
+
 
 
 
