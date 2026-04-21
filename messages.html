@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
   <title data-i18n="messages_title">My Messages | Marketplace</title>
-  <!-- FIXED: Correct Font Awesome Link -->
   <link rel="stylesheet" href="https://cloudflare.com">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -14,45 +12,43 @@
       <div class="nav"><a href="index.html" class="btn text" data-i18n="home">Home</a></div>
   </header>
 
-  <div class="container" style="margin-top: 50px;">
+  <br><br>
+  <div class="container">
       <!-- Search Bar -->
       <div class="search-messages-container" style="margin-bottom: 20px;">
           <input 
             type="text" 
             id="msgSearch" 
-            placeholder="Search messages..." 
+            placeholder="" 
             data-i18n-placeholder="search_messages"
             style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;">
       </div>
       
       <!-- Tabs: Received/Sent -->
-      <div class="message-tabs" style="margin-bottom: 20px; display: flex; gap: 10px;">
-          <button onclick="changeTab('received')" id="btnReceived" class="btn text active" style="padding: 10px 20px;">
-              <i class="fas fa-inbox"></i> <span data-i18n="received">Received</span>
-          </button>
-          <button onclick="changeTab('sent')" id="btnSent" class="btn text" style="padding: 10px 20px;">
-              <i class="fas fa-paper-plane"></i> <span data-i18n="sent">Sent</span>
-          </button>
-      </div>
+     <div class="message-tabs" style="margin-bottom: 20px;">
+    <button onclick="changeTab('received')" id="btnReceived" class="btn text active" data-i18n="received">
+        <i class="fas fa-inbox"></i> Received
+    </button>
+    <button onclick="changeTab('sent')" id="btnSent" class="btn text" data-i18n="sent">
+        <i class="fas fa-paper-plane"></i> Sent
+    </button>
+</div>
+
+
 
       <!-- Messages List -->
       <div id="messageList" class="message-grid"></div>
   </div>
 
-  <!-- FIXED: Only load necessary scripts -->
   <script src="main.js"></script>
-  <script src="languages.js"></script> 
 
   <script>
   let currentTab = 'received';
-  // FIXED: Matches your details.js storage key
-  const STORAGE_KEY = "marketplace_messages"; 
+  let allMessages = JSON.parse(localStorage.getItem("messages") || "[]");
 
   function renderMessages(filterText = "") {
-      const allMessages = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
       const currentUser = JSON.parse(localStorage.getItem("currentUser"));
       const container = document.getElementById("messageList");
-      
       if (!currentUser || !container) return;
 
       let filtered = allMessages.filter(m => 
@@ -67,70 +63,63 @@
               (m.text && m.text.toLowerCase().includes(query))
           );
       }
+const lang = localStorage.getItem("language") || "en";
 
-      // FIXED: Safer translation fallbacks
-      const t = window.translations || {};
-      const txt_no_msg = t.no_messages || "No messages found.";
-      const txt_from = t.label_from || "From";
-      const txt_to = t.label_to || "To";
-      const txt_reply = t.reply || "Reply";
-      const txt_delete = t.delete || "Delete";
+const t = window.translations || {
+    received: "Received",
+    sent: "Sent",
+    no_messages: "No messages",
+    From: "From",
+    To: "To",
+    reply_placeholder: "Write a reply...",
+    send_reply: "Send"
+};
+      
 
       if (filtered.length === 0) {
-          container.innerHTML = `<p style="text-align:center; padding:20px;">${txt_no_msg}</p>`;    
+          container.innerHTML = `<p>${t.no_messages}</p>`;    
       } else {
           container.innerHTML = filtered.map(m => `
-              <div class="message-card" style="border: 1px solid #eee; padding: 15px; margin-bottom: 10px; border-radius: 8px; background: white; position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                  <h4 style="margin:0 0 5px 0;">Re: ${m.adTitle || "Marketplace Item"}</h4>
-                  <p style="font-size: 0.9em; color: #555;">
-                    <strong>${currentTab === 'received' ? txt_from : txt_to}:</strong> 
-                    ${currentTab === 'received' ? (m.senderEmail || "Reply") : (m.receiverEmail || "Reply")}
-                  </p>
-                  <p class="msg-text" style="margin: 10px 0;">"${m.text || ""}"</p>
-                  <span class="msg-date" style="font-size: 0.75em; color: #888;">${m.date || ""}</span>
+              <div class="message-card" style="border: 1px solid #eee; padding: 15px; margin-bottom: 10px; border-radius: 8px;">
+                  <h4>Re: ${m.adTitle}</h4>
+                  <p><strong>${currentTab === 'received' ? t.from : t.to}:</strong> ${currentTab === 'received' ? m.senderEmail : m.receiverEmail}</p>
+                  <p class="msg-text">"${m.text}"</p>
+                  <span class="msg-date" style="font-size: 0.8em; color: #888;">${m.date}</span>
                   
-                  <div style="margin-top: 10px; display: flex; gap: 15px; align-items: center;">
-                      ${currentTab === 'received' ? `
-                          <button onclick="toggleReply('${m.id}')" style="color: #007bff; cursor: pointer; background: none; border: none; padding: 0; font-weight: bold; text-decoration: underline;">
-                              <i class="fas fa-reply"></i> ${txt_reply}
-                          </button>
-                      ` : ''}
-                      
-                      <!-- DELETE BUTTON -->
-                      <button onclick="deleteMessage('${m.id}')" style="color: #dc3545; cursor: pointer; background: none; border: none; padding: 0; font-weight: bold;">
-                          <i class="fas fa-trash-alt"></i> ${txt_delete}
-                      </button>
-                  </div>
-
-                  <!-- REPLY BOX -->
-                  <div id="reply-box-${m.id}" style="display: none; margin-top: 10px; background: #f9f9f9; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
-                      <textarea id="reply-text-${m.id}" placeholder="Write your reply..." style="width: 100%; height: 60px; margin-bottom: 5px; border-radius: 4px; border: 1px solid #ccc; padding: 5px;"></textarea>
-                      <button onclick="sendReply('${m.id}')" class="btn" style="background: #28a745; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">
-                          Send Reply
-                      </button>
-                  </div>
+                  ${currentTab === 'received' ? `
+                      <div style="margin-top: 10px;">
+                          <button onclick="toggleReply(${m.id})" class="btn-link" style="color: blue; cursor: pointer; background: none; border: none; padding: 0; text-decoration: underline;" data-i18n="reply">${t.reply}</button>
+                          
+                          <div id="reply-box-${m.id}" style="display: none; margin-top: 10px; background: #f9f9f9; padding: 10px; border-radius: 5px;">
+                              <textarea 
+                                  id="reply-text-${m.id}" 
+                                  placeholder="${t.reply_placeholder}" 
+                                  style="width: 100%; height: 60px; margin-bottom: 5px;">
+                              </textarea>
+                              <button 
+                                  onclick="sendReply(${m.id})" 
+                                  class="btn" 
+                                  style="background: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
+                                  ${t.send_reply}
+                              </button>
+                          </div>
+                      </div>
+                  ` : ''}
               </div>
           `).join('');
       }
   }
 
-  function deleteMessage(id) {
-      if (!confirm("Are you sure you want to delete this message?")) return;
-      let allMessages = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-      const updated = allMessages.filter(m => String(m.id) !== String(id));
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-      renderMessages();
-  }
-
   function toggleReply(id) {
       const box = document.getElementById(`reply-box-${id}`);
-      if (box) box.style.display = (box.style.display === 'none') ? 'block' : 'none';
+      if (box) {
+          box.style.display = (box.style.display === 'none' || box.style.display === '') ? 'block' : 'none';
+      }
   }
 
   function sendReply(originalMsgId) {
       const textInput = document.getElementById(`reply-text-${originalMsgId}`);
-      const allMessages = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-      const originalMsg = allMessages.find(m => String(m.id) === String(originalMsgId));
+      const originalMsg = allMessages.find(m => m.id === originalMsgId);
       const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
       if (!textInput.value.trim()) return alert("Please enter a message.");
@@ -145,23 +134,34 @@
       };
 
       allMessages.push(newReply);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(allMessages));
+      localStorage.setItem("messages", JSON.stringify(allMessages));
       
       alert("Reply sent!");
-      renderMessages();
+      textInput.value = "";
+      toggleReply(originalMsgId);
+      renderMessages(); // Refresh the list
   }
+
+  document.getElementById("msgSearch").addEventListener("input", (e) => {
+      renderMessages(e.target.value);
+  });
 
   function changeTab(tab) {
       currentTab = tab;
       document.getElementById("btnReceived").classList.toggle("active", tab === 'received');
       document.getElementById("btnSent").classList.toggle("active", tab === 'sent');
-      renderMessages();
+      renderMessages(document.getElementById("msgSearch").value);
   }
 
-  document.getElementById("msgSearch").addEventListener("input", (e) => renderMessages(e.target.value));
   window.onload = () => renderMessages();
   </script>
+ <script src="storage.js"></script>
+   <script src="post.js"></script>
+   <script src="languages.js"></script> 
+   <script src="main.js"></script>
 </body>
 </html>
+
+
 
 
