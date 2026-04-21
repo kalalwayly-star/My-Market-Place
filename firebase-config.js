@@ -1,11 +1,11 @@
+
+
 import { initializeApp } from "https://gstatic.com";
 import { getDatabase, ref, push, onValue, set, remove } from "https://gstatic.com";
 
-
-
 const firebaseConfig = {
   apiKey: "AIzaSyDBT8jv057_JQL6pIUYk-U_LQ8uJHlFi-o",
-  authDomain: "kal-marketplace.firebaseapp.com",
+  authDomain: "://firebaseapp.com",
   projectId: "kal-marketplace",
   storageBucket: "kal-marketplace.firebasestorage.app",
   messagingSenderId: "745728416819",
@@ -13,9 +13,9 @@ const firebaseConfig = {
   measurementId: "G-FFHYQC4YJV"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// Export tools for your other files
 export { db, ref, push, onValue, set, remove };
+
+
