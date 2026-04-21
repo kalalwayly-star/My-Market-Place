@@ -163,6 +163,20 @@ function finalizeAd(featuredStatus) {
 // Export for HTML
 window.handleCategoryChange = handleCategoryChange;
 
+// Add this to the very bottom of your post.js file
+document.addEventListener('DOMContentLoaded', () => {
+    // Category Change
+    document.getElementById('postCategory')?.addEventListener('change', handleCategoryChange);
+    
+    // Photo Upload
+    document.getElementById('photoInput')?.addEventListener('change', handlePhotoUpload);
+    
+    // Save Button
+    document.getElementById('postBtn')?.addEventListener('click', saveNewAd);
+    
+    // Initialize state
+    handleCategoryChange();
+});
 
 
 
