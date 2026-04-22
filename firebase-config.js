@@ -1,25 +1,21 @@
-import { initializeApp } from "https://gstatic.com";
-import { getDatabase, ref, push, onValue, set, remove } from "https://gstatic.com";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, push, onValue, set, remove } 
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDBT8jv057_JQL6pIUYk-U_LQ8uJHlFi-o",
-  authDomain: "://firebaseapp.com",
-  
-  // 📍 YOUR URL GOES HERE:
-  databaseURL: "https://kal-marketplace-default-rtdb.firebaseio.com", 
-
+  apiKey: "AIzaSy...",
+  authDomain: "kal-marketplace.firebaseapp.com",
+  databaseURL: "https://kal-marketplace-default-rtdb.firebaseio.com",
   projectId: "kal-marketplace",
   storageBucket: "kal-marketplace.firebasestorage.app",
   messagingSenderId: "745728416819",
-  appId: "1:745728416819:web:da2dfb86cc5b79fb0d1746",
-  measurementId: "G-FFHYQC4YJV"
+  appId: "1:745728416819:web:da2dfb86cc5b79fb0d1746"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 export { db, ref, push, onValue, set, remove };
-
 
 
 
