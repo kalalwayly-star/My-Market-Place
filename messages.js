@@ -1,25 +1,27 @@
-import { db, ref, onValue, push } from "./firebase-config.js";
+import { db, ref, onValue, push, remove, set } from "./firebase-config.js";
 
 const params = new URLSearchParams(window.location.search);
-const adId = params.get("id"); // This is now the Firebase unique key
-/* --- 1. CONFIGURATION & TRANSLATIONS --- */
+const adId = params.get("id");
+
 let currentLanguage = localStorage.getItem("language") || "en";
 const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 let currentTab = 'received';
-let globalMessages = []; // Stores cloud data
+let globalMessages = [];
 
+/* --- LANGUAGE --- */
 async function loadLanguage(lang) {
     try {
         const response = await fetch(`languages/${lang}.json`);
-        if (!response.ok) throw new Error("Could not load language file");
         const translations = await response.json();
+
         localStorage.setItem("language", lang);
-        updatePageContent(translations, lang);
         window.translations = translations;
-        initMessages(); 
-    } catch (error) {
-        console.error('Error loading language:', error);
-        initMessages(); 
+
+        updatePageContent(translations, lang);
+        initMessages();
+    } catch (err) {
+        console.error(err);
+        initMessages();
     }
 }
 
@@ -28,11 +30,12 @@ function updatePageContent(translations, lang) {
         const key = el.getAttribute('data-i18n');
         if (translations[key]) el.innerText = translations[key];
     });
-    document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+
     document.documentElement.lang = lang;
+    document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
 }
 
-/* --- 2. MESSAGING LOGIC --- */
+/* --- TABS --- */
 window.changeTab = function(tab) {
     currentTab = tab;
     document.getElementById('btnReceived')?.classList.toggle('active', tab === 'received');
@@ -40,94 +43,136 @@ window.changeTab = function(tab) {
     renderTab();
 }
 
+/* --- INIT --- */
 function initMessages() {
-    const container = document.getElementById('messageList'); // Ensure this ID matches your HTML
+    const container = document.getElementById('messageList');
+
     if (!currentUser || currentUser.email === "Guest") {
-        if (container) container.innerHTML = "<p style='text-align:center; padding:20px;'>Please login to see messages.</p>";
+        if (container) {
+            container.innerHTML = "<p style='text-align:center;'>Please login to see messages.</p>";
+        }
         return;
     }
 
-    // LISTEN TO CLOUD
     const msgRef = ref(db, "marketplace_messages");
+
     onValue(msgRef, (snapshot) => {
         const data = snapshot.val();
         globalMessages = [];
+
         if (data) {
             for (let id in data) {
                 globalMessages.push({ firebaseId: id, ...data[id] });
             }
         }
+
         renderTab();
     });
 }
 
+/* --- RENDER --- */
 window.renderTab = function() {
     const container = document.getElementById('messageList');
     if (!container) return;
 
     const filtered = globalMessages.filter(m => {
         if (currentTab === 'received') {
-            return m.receiverEmail === currentUser.email && m.deletedByReceiver !== true;
+            return m.receiverEmail === currentUser.email;
         } else {
-            return m.senderEmail === currentUser.email && m.deletedBySender !== true;
+            return m.senderEmail === currentUser.email;
         }
     });
 
     if (filtered.length === 0) {
-        container.innerHTML = `<p style="text-align:center; padding:20px;">No messages found.</p>`;
+        container.innerHTML = `<p style="text-align:center;">No messages found.</p>`;
         return;
     }
 
     container.innerHTML = filtered.map(m => {
         const person = (currentTab === 'received' ? m.senderEmail : m.receiverEmail) || "User";
-        const uniqueId = m.firebaseId;
+        const id = m.firebaseId;
 
         return `
-            <div class="message-card" style="border:1px solid #ddd; padding:15px; margin-bottom:12px; border-radius:8px; position:relative; background:white;">
-                <p style="font-size:0.85rem; color:#007bff; font-weight:bold; margin:0 0 5px 0;">
-                    ${currentTab === 'received' ? 'From: ' : 'To: '} ${person}
-                </p>
-                <p style="margin:5px 0; color:#333;">${m.text}</p>
-                <p style="font-size:0.7rem; color:#999; margin:5px 0 0 0;">${m.date || ""}</p>
+        <div class="message-card" style="border:1px solid #ddd; padding:15px; margin-bottom:12px; border-radius:8px; background:white;">
 
-                <div style="margin-top:10px; display:flex; gap:10px;">
-                    <button onclick="deleteMsg('${uniqueId}')" 
-                            style="background:#ff4d4d; color:white; border:none; border-radius:4px; padding:4px 8px; cursor:pointer; font-size:0.7rem; font-weight:bold;">
-                        DELETE
-                    </button>
-                </div>
+            <p style="font-size:0.85rem; color:#007bff; font-weight:bold;">
+                ${currentTab === 'received' ? 'From' : 'To'}: ${person}
+            </p>
+
+            <p>${m.text}</p>
+
+            <p style="font-size:0.7rem; color:#999;">${m.date || ""}</p>
+
+            <div style="display:flex; gap:10px; margin-top:10px; align-items:center;">
+
+                <button onclick="deleteMsg('${id}')"
+                    style="background:#ff4d4d; color:white; border:none; padding:5px 8px; cursor:pointer;">
+                    Delete
+                </button>
+
+                ${currentTab === 'received' ? `
+                <button onclick="toggleReply('${id}')"
+                    style="background:none; border:none; color:#007bff; font-weight:bold; cursor:pointer;">
+                    Reply
+                </button>
+                ` : ''}
+
             </div>
+
+            <div id="reply-box-${id}" style="display:none; margin-top:10px;">
+                <textarea id="reply-text-${id}" style="width:100%; height:60px; padding:8px;"></textarea>
+                <button onclick="sendReply('${id}')"
+                    style="margin-top:5px; background:#28a745; color:white; border:none; padding:6px 10px; cursor:pointer;">
+                    Send
+                </button>
+            </div>
+
+        </div>
         `;
     }).join('');
 }
 
-window.deleteMsg = function(firebaseId) {
-    if (!confirm("Delete this message?")) return;
-    
-    // SMART DELETE: Hide for current user, only remove from cloud if both delete
-    const msgRef = ref(db, `marketplace_messages/${firebaseId}`);
-    const msgData = globalMessages.find(m => m.firebaseId === firebaseId);
-
-    if (currentTab === 'received') {
-        msgData.deletedByReceiver = true;
-    } else {
-        msgData.deletedBySender = true;
-    }
-
-    if (msgData.deletedBySender && msgData.deletedByReceiver) {
-        remove(msgRef); // Remove from Cloud completely
-    } else {
-        set(msgRef, msgData); // Update Cloud to hide for this user
+/* --- REPLY FUNCTIONS --- */
+window.toggleReply = function(id) {
+    const box = document.getElementById(`reply-box-${id}`);
+    if (box) {
+        box.style.display = box.style.display === "none" ? "block" : "none";
     }
 }
 
-/* --- 3. INITIALIZATION --- */
-document.addEventListener('DOMContentLoaded', () => {
-    const switcher = document.getElementById('languageSwitcher');
-    if (switcher) {
-        switcher.value = currentLanguage;
-        switcher.addEventListener('change', (e) => loadLanguage(e.target.value));
+window.sendReply = function(id) {
+    const text = document.getElementById(`reply-text-${id}`).value;
+
+    if (!text.trim()) {
+        alert("Reply cannot be empty");
+        return;
     }
+
+    const original = globalMessages.find(m => m.firebaseId === id);
+
+    const msgRef = ref(db, "marketplace_messages");
+
+    push(msgRef, {
+        text,
+        senderEmail: currentUser.email,
+        receiverEmail: original?.senderEmail,
+        adId,
+        date: new Date().toLocaleString()
+    });
+
+    alert("Reply sent!");
+}
+
+/* --- DELETE --- */
+window.deleteMsg = function(id) {
+    if (!confirm("Delete this message?")) return;
+
+    const msgRef = ref(db, `marketplace_messages/${id}`);
+    remove(msgRef);
+}
+
+/* --- START --- */
+document.addEventListener('DOMContentLoaded', () => {
     loadLanguage(currentLanguage);
 });
 
