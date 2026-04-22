@@ -1,6 +1,8 @@
 import { db, ref, onValue, push, remove, auth } from "./firebase-config.js";
 import { onAuthStateChanged, signOut } from "https://gstatic.com";
 
+
+
 let globalAds = [];
 let uploadedImages = []; 
 
