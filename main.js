@@ -1,3 +1,4 @@
+let globalAds = [];
 import { db, ref, onValue, push, remove } from "./firebase-config.js";
 // Global Variables
 const currentUser = JSON.parse(localStorage.getItem("currentUser")) || { email: "Guest" };
@@ -165,7 +166,6 @@ function initMain() {
 
     onValue(adsRef, (snapshot) => {
         const data = snapshot.val();
-   let globalAds = [];
         if (data) {
             for (let id in data) {
                 globalAds.push({ firebaseId: id, ...data[id] });
