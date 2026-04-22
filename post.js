@@ -1,7 +1,7 @@
 import { db, ref, push, onValue, set, remove } from "./firebase-config.js";
 
 // 1. GLOBAL VARIABLES
-const currentUser = JSON.parse(localStorage.getItem("currentUser")) || { email: "Guest" };
+import { auth } from "./firebase-config.js";let uploadedImages = [];
 let uploadedImages = [];
 
 // 2. HELPER TO TRIGGER YOUR TRANSLATION
@@ -122,21 +122,25 @@ function saveNewAd(event) {
 }
 
 function finalizeAd(featuredStatus) {
+
+    const user = auth.currentUser;
+
+    if (!user) {
+        alert("You must be logged in to post ads.");
+        return;
+    }
+
     const conditionEl = document.querySelector('input[name="condition"]:checked');
+
     const newAd = {
         id: Date.now(),
-        userEmail: currentUser.email,
+        userEmail: user.email,   // ✅ stable & guaranteed
         category: document.getElementById('postCategory').value,
         title: document.getElementById('adTitle').value,
         price: document.getElementById('adPrice').value,
         location: document.getElementById('adLocation').value,
-        lat: window.currentAdLat || null,
-        lng: window.currentAdLng || null,
         description: document.getElementById('adDesc').value,
-        condition: conditionEl ? conditionEl.value : "N/A",
-        carMake: document.getElementById('carMake')?.value || "",
-        carYear: document.getElementById('carYear')?.value || "",
-        image: uploadedImages.length > 0 ? uploadedImages : ['https://placeholder.com'],
+        image: uploadedImages.length > 0 ? uploadedImages : ['https://via.placeholder.com/300'],
         status: "Active",
         date: new Date().toLocaleDateString()
     };
