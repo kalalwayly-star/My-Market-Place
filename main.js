@@ -165,7 +165,7 @@ function initMain() {
 
     onValue(adsRef, (snapshot) => {
         const data = snapshot.val();
-        globalAds = [];
+   let globalAds = [];
         if (data) {
             for (let id in data) {
                 globalAds.push({ firebaseId: id, ...data[id] });
