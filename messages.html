@@ -93,10 +93,11 @@ function renderMessages(filterText = "") {
                         <i class="fas fa-trash-alt"></i> Delete
                     </button>
 
-                    ${currentTab === 'received' ? `
-                    <button onclick="toggleReply('${m.id}')" style="color: #007bff; cursor: pointer; background: none; border: none; font-weight: bold; display: flex; align-items: center; gap: 4px;">
-                        <i class="fas fa-reply"></i> Reply
-                    </button>` : ''}
+                   ${(currentTab || 'received') === 'received' ? `
+<button onclick="toggleReply('${m.id}')"
+    style="color: #007bff; cursor: pointer; background: none; border: none; font-weight: bold; display: flex; align-items: center; gap: 4px;">
+    <i class="fas fa-reply"></i> Reply
+</button>` : ''}
                 </div>
 
                 <div id="reply-box-${m.id}" style="display: none; margin-top: 10px; border-top: 1px solid #eee; padding-top: 10px;">
