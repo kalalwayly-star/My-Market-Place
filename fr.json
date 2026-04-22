@@ -108,7 +108,13 @@
   "terms_title": "Conditions d'utilisation",
 "terms_header": "Conditions d'utilisation",
 "terms_acceptance_title": "1. Acceptation des conditions",
-"terms_listings_text": "Les utilisateurs sont responsables du contenu qu'ils publient. Nous n'autorisons pas les articles illégaux."
+"terms_listings_text": "Les utilisateurs sont responsables du contenu qu'ils publient. Nous n'autorisons pas les articles illégaux.",
+  "cat_electronics": "Électronique",
+"cat_services": "Services",
+"cat_garden": "Jardin",
+"cat_health": "Santé",
+"cat_baby": "Articles pour bébé"
+
 
   
 }
