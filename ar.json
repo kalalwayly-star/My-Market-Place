@@ -137,7 +137,10 @@
 "login_subtitle": "يرجى إدخال بياناتك لتسجيل الدخول.",
 "placeholder_password": "كلمة المرور",
 "or_divider": "أو",
-"create_account_btn": "إنشاء حساب جديد"
+"create_account_btn": "إنشاء حساب جديد",
+"already_have_account": "لديك حساب بالفعل؟",
+"login_here": "سجل الدخول من هنا"
+
 
 
 
