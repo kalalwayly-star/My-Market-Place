@@ -166,11 +166,13 @@ function initMain() {
 
     onValue(adsRef, (snapshot) => {
         const data = snapshot.val();
-        if (data) {
-            for (let id in data) {
-                globalAds.push({ firebaseId: id, ...data[id] });
-            }
-        }
+       globalAds = [];
+
+if (data) {
+    for (let id in data) {
+        globalAds.push({ firebaseId: id, ...data[id] });
+    }
+}
 
         if (document.getElementById("listings")) {
             resetFilters();
