@@ -11,6 +11,17 @@ onAuthStateChanged(auth, (user) => {
     const emailSpan = document.getElementById("header-user-email");
     const loginLink = document.getElementById("userAuth");
     const logoutBtn = document.getElementById("logout-btn");
+    const logoutBtn = document.getElementById("logout-btn");
+
+if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+        signOut(auth)
+            .then(() => console.log("Logged out"))
+            .catch((error) => console.error(error));
+    });
+}
+    onAuthStateChanged(auth, (user) => {
+    console.log("USER:", user); // 👈 add this
 
     if (user) {
         if (userInfoDiv) userInfoDiv.style.display = "block";
