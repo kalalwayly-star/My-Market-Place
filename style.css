@@ -506,6 +506,23 @@ img {
         display: block !important; /* Removes the 3-4px gap under inline images */
         margin-bottom: 0 !important;
     }
+/* Removes gaps caused by vertical alignment */
+.card a, .card div {
+    vertical-align: top !important;
+    line-height: 0 !important; /* Forces containers to collapse around the image */
+}
+
+/* Restores line height for text so price/title looks normal */
+.card-content, .card-title, .price {
+    line-height: 1.4 !important; 
+    margin-top: -2px !important; /* Pulls text up slightly into any remaining gap */
+}
+
+/* Ensures the image has no margin at the bottom */
+.card img {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
 
     /* 2. Kill the Grey Space in the Container */
     .card {
