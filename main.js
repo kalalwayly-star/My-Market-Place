@@ -3,7 +3,27 @@ import { db, ref, onValue, push, remove } from "./firebase-config.js";
 // Global Variables
 const currentUser = JSON.parse(localStorage.getItem("currentUser")) || { email: "Guest" };
 let uploadedImages = []; 
+import { auth } from './firebase-config.js';
+import { onAuthStateChanged } from "https://gstatic.com";
 
+// This function runs automatically whenever the user's login state changes
+onAuthStateChanged(auth, (user) => {
+    const userInfoDiv = document.getElementById("user-info-header");
+    const emailSpan = document.getElementById("header-user-email");
+
+    if (user) {
+        // User is logged in
+        if (userInfoDiv) userInfoDiv.style.display = "block";
+        if (emailSpan) emailSpan.innerText = user.email;
+        
+        // Optional: Hide the Login/Register buttons since they are already in
+        const loginBtn = document.getElementById("login-nav-btn");
+        if (loginBtn) loginBtn.style.display = "none";
+    } else {
+        // User is logged out
+        if (userInfoDiv) userInfoDiv.style.display = "none";
+    }
+});
 
 const SEARCH_RELATIONS = {
     "pants": ["clothing", "fashion", "jeans", "trousers", "t-shirt", "shirt", "apparel"],
