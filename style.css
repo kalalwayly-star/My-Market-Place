@@ -473,24 +473,26 @@ img {
         height: 120px !important;
     }
 }
-/* clean card spacing */
-.card {
-    border-radius: 10px;
-    overflow: hidden;
-    background: white;
-}
 
-/* reduce text spacing */
-.card h3 {
-    margin: 5px 0;
-    font-size: 14px;
-}
 
-.card p {
-    margin: 2px 0;
-    font-size: 12px;
-}
+/* Targets screens smaller than 768px (typical phone/tablet) */
+@media (max-width: 768px) {
+  .photo-container {
+    aspect-ratio: 1 / 1 !important; /* Forces square on mobile */
+    height: auto !important;        /* Prevents old height from causing gaps */
+    margin-bottom: 0px;             /* Pulls the price area up */
+  }
 
+  .item-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0; /* Removes any default gap between photo and text */
+  }
+
+  .grey-space-class { 
+    display: none; /* If there's a specific empty div causing the gap */
+  }
+}
 
 
 
