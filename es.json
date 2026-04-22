@@ -116,5 +116,11 @@
   "terms_title": "Términos de Servicio",
 "terms_header": "Términos de Servicio",
 "terms_acceptance_title": "1. Aceptación de los términos",
-"terms_listings_text": "Los usuarios son responsables del contenido que publican. No permitimos artículos ilegales."
+"terms_listings_text": "Los usuarios son responsables del contenido que publican. No permitimos artículos ilegales.",
+  "cat_electronics": "Electrónica",
+"cat_services": "Servicios",
+"cat_garden": "Jardín",
+"cat_health": "Salud",
+"cat_baby": "Artículos para bebés"
+
 }
