@@ -142,18 +142,36 @@ window.resetFilters = function() {
 // 6. INITIALIZATION
 function initMain() {
     const adsRef = ref(db, "marketplace_ads");
+
     onValue(adsRef, (snapshot) => {
         const data = snapshot.val();
         globalAds = [];
+
         if (data) {
             Object.keys(data).forEach(key => {
                 globalAds.push({ ...data[key], firebaseId: key });
             });
         }
-        renderAds(globalAds);
+
+        // 👉 CHECK WHICH PAGE YOU ARE ON
+        const isMyAdsPage = document.getElementById("myAds");
+
+        if (isMyAdsPage) {
+            const user = JSON.parse(localStorage.getItem("currentUser"));
+
+            if (user) {
+                const myAds = globalAds.filter(ad => ad.userEmail === user.email);
+                renderAds(myAds, "myAds");
+            } else {
+                document.getElementById("myAds").innerHTML = "Please login to see your ads.";
+            }
+        } else {
+            renderAds(globalAds, "listings");
+        }
     });
 }
 
+document.addEventListener("DOMContentLoaded", initMain);
 document.addEventListener("DOMContentLoaded", initMain);
 window.functionName = function() {}
 
