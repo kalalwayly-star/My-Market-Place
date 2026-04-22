@@ -121,7 +121,10 @@
 "placeholder_password": "Mot de passe",
 "forgot_password": "Mot de passe oublié ?",
 "or_divider": "OU",
-"create_account_btn": "Créer un compte"
+"create_account_btn": "Créer un compte",
+  "already_have_account": "Vous avez déjà un compte ?",
+"login_here": "Connectez-vous ici"
+
 
 
 
