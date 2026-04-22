@@ -64,7 +64,7 @@ let displayImage =
             <div class="card ${isFeatured ? 'featured-card' : ''}" 
                  style="border:1px solid #ddd; border-radius:10px; background:white; margin-bottom:15px; overflow:hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
                 <div onclick="goToDetails('${uniqueId}')" style="cursor:pointer; height:180px; background:#f0f0f0;">
-                    <img src="${displayImage}" alt="${ad.title}" onerror="this.src='https://placeholder.com'" style="width:100%; height:100%; object-fit:cover;">
+                    <img src="${displayImage}" alt="${ad.title}" onerror="this.src='https://placeholder.com'" style="width:100%; aspect-ratio:1/1; object-fit:cover;">
                 </div>
                 <div style="padding:15px;">
                     <div style="display:flex; justify-content:space-between; align-items: center;">
