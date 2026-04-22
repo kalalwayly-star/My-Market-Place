@@ -383,8 +383,26 @@ img {
     background-color: #fcfcfc;
     margin-top: 10px;
 }
+@media (max-width: 600px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
 
+    .card {
+        font-size: 0.85rem;
+    }
 
+    .card img {
+        height: 120px;
+        object-fit: cover;
+    }
+}
+@media (max-width: 600px) {
+    .card {
+        padding: 8px;
+    }
+}
 
 
 
