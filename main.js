@@ -1,6 +1,5 @@
 import { db, ref, onValue, push, remove, auth } from "./firebase-config.js";
-import { onAuthStateChanged, signOut } from "https://gstatic.com";
-
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
 let globalAds = [];
@@ -139,7 +138,8 @@ function initMain() {
 }
 
 document.addEventListener("DOMContentLoaded", initMain);
-
+window.filterByCategory = filterByCategory;
+window.resetFilters = resetFilters;
 
 
 
