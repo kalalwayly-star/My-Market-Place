@@ -463,33 +463,7 @@ img {
     }
 
    
-/* ADS GRID (2 per row on phone) */
-.grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-}
 
-/* FIX: Forces square aspect ratio and removes the grey gap */
-.card img {
-    width: 100% !important;
-    height: auto !important;
-    aspect-ratio: 1 / 1 !important; /* Makes it a perfect square */
-    object-fit: cover;               /* Prevents stretching */
-    display: block;                  /* Removes tiny bottom gap */
-}
-
-/* Ensure the container doesn't have extra padding/height */
-.card {
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
-
-/* Pulls the info section tight against the photo */
-.card-content, .price-section {
-    padding-top: 5px !important; 
-    margin-top: 0 !important;
-}
 /* CLEAN MOBILE FIX */
 @media (max-width: 768px) {
     /* Moves photo LEFT and text RIGHT */
