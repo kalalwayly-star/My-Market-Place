@@ -462,38 +462,34 @@ img {
         grid-template-columns: repeat(2, 1fr);
     }
 
-    /* ADS GRID (2 per row on phone) */
-    .grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-    }
-
-    /* CARD IMAGE SMALLER */
-    .card img {
-        height: 120px !important;
-    }
+   
+/* ADS GRID (2 per row on phone) */
+.grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
 }
 
+/* FIX: Forces square aspect ratio and removes the grey gap */
+.card img {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1 / 1 !important; /* Makes it a perfect square */
+    object-fit: cover;               /* Prevents stretching */
+    display: block;                  /* Removes tiny bottom gap */
+}
 
-/* Targets screens smaller than 768px (typical phone/tablet) */
-@media (max-width: 768px) {
-  .photo-container {
-    aspect-ratio: 1 / 1 !important; /* Forces square on mobile */
-    height: auto !important;        /* Prevents old height from causing gaps */
-    margin-bottom: 0px;             /* Pulls the price area up */
-  }
-
-  .item-card {
+/* Ensure the container doesn't have extra padding/height */
+.card {
     display: flex;
     flex-direction: column;
-    gap: 0; /* Removes any default gap between photo and text */
-  }
-
-  .grey-space-class { 
-    display: none; /* If there's a specific empty div causing the gap */
-  }
+    overflow: hidden;
 }
 
+/* Pulls the info section tight against the photo */
+.card-content, .price-section {
+    padding-top: 5px !important; 
+    margin-top: 0 !important;
+}
 
 
 
