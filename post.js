@@ -1,63 +1,8 @@
 import { db, ref, push, onValue, set, remove } from "./firebase-config.js";
 
-// THIS PART IS CRITICAL:
-window.handleCategoryChange = function() {
-    const mainCategorySelect = document.getElementById('postCategory');
-    const commonFields = document.getElementById('commonFields');
-    const sections = document.querySelectorAll('.category-details');
-    const condSec = document.getElementById('globalCondition');
-
-    if (!mainCategorySelect) return;
-    const categoryValue = mainCategorySelect.value;
-
-    // Hide everything first
-    sections.forEach(sec => sec.style.display = 'none');
-
-    if (categoryValue === "") {
-        if (commonFields) commonFields.style.display = 'none';
-        if (condSec) condSec.style.display = 'none';
-        return;
-    }
-
-    // Show sections
-    if (commonFields) commonFields.style.display = 'block';
-    
-    const carSec = document.getElementById('section-Cars');
-    if (categoryValue === 'Cars & Trucks' && carSec) carSec.style.display = 'block';
-
-    const reSec = document.getElementById('section-RealEstate');
-    if (categoryValue === 'Real Estate' && reSec) reSec.style.display = 'block';
-
-    const noCondition = ['Pets', 'Jobs', 'Real Estate'];
-    if (condSec) {
-        condSec.style.display = noCondition.includes(categoryValue) ? 'none' : 'block';
-    }
-
-    if (window.loadLanguage) {
-        window.loadLanguage(localStorage.getItem("language") || "en");
-    }
-};
-
-// Map other functions to window so HTML can see them
-window.handlePhotoUpload = handlePhotoUpload;
-window.saveNewAd = saveNewAd;
-window.removeImg = removeImg;
-
-// ... rest of your code (uploadedImages, compressImage, etc) ...
-
-
-
-// 1. INITIALIZE & TRANSLATE
-document.addEventListener('DOMContentLoaded', () => {
-    const mainCategorySelect = document.getElementById('postCategory');
-    if (mainCategorySelect) {
-        mainCategorySelect.addEventListener('change', handleCategoryChange);
-    }
-    
-    // Initial run to set up UI and translate
-    handleCategoryChange();
-    runTranslation(); 
-});
+// 1. GLOBAL VARIABLES
+const currentUser = JSON.parse(localStorage.getItem("currentUser")) || { email: "Guest" };
+let uploadedImages = [];
 
 // 2. HELPER TO TRIGGER YOUR TRANSLATION
 function runTranslation() {
@@ -100,12 +45,12 @@ function handleCategoryChange() {
         condSec.style.display = noCondition.includes(categoryValue) ? 'none' : 'block';
     }
 
-    // IMPORTANT: Re-translate the newly visible fields
+    // Re-translate the newly visible fields
     runTranslation();
 }
 
-// 4. PHOTO UPLOAD
-window.handlePhotoUpload = async function(event) {
+// 4. PHOTO UPLOAD & COMPRESSION
+async function handlePhotoUpload(event) {
     const gallery = document.getElementById('galleryPreview');
     const files = Array.from(event.target.files);
     if (!gallery) return;
@@ -124,7 +69,7 @@ window.handlePhotoUpload = async function(event) {
             div.innerHTML = `
                 <img src="${base64}" style="width:100%; height:100%; object-fit:cover; border-radius:5px;">
                 <button type="button" onclick="removeImg(event, '${base64}', this)" 
-                    style="position:absolute; top:-5px; right:-5px; background:red; color:white; border:none; border-radius:50%; cursor:pointer;">×</button>
+                    style="position:absolute; top:-5px; right:-5px; background:red; color:white; border:none; border-radius:50%; cursor:pointer; width:20px; height:20px; line-height:15px;">×</button>
             `;
             gallery.appendChild(div);
         } catch (e) { console.error(e); }
@@ -151,14 +96,14 @@ function compressImage(file) {
     });
 }
 
-window.removeImg = function(e, data, btn) {
-    e.stopPropagation();
+function removeImg(e, data, btn) {
+    if(e) e.stopPropagation();
     uploadedImages = uploadedImages.filter(img => img !== data);
     btn.parentElement.remove();
 }
 
 // 5. SAVE LOGIC
-window.saveNewAd = function(event) {
+function saveNewAd(event) {
     if (event) event.preventDefault();
     if (!currentUser || currentUser.email === "Guest") { alert("Please login."); return; }
 
@@ -204,23 +149,19 @@ function finalizeAd(featuredStatus) {
         .catch(err => alert("Error: " + err.message));
 }
 
-// Export for HTML
-// AT THE VERY BOTTOM OF post.js
-// 1. Manually attach to the window so HTML onchange/onclick works
+// 6. INITIALIZE & ATTACH TO WINDOW
+// This makes the functions available to HTML attributes like onchange=""
 window.handleCategoryChange = handleCategoryChange;
 window.handlePhotoUpload = handlePhotoUpload;
 window.saveNewAd = saveNewAd;
 window.removeImg = removeImg;
 
-// 2. Also attach via Event Listeners for backup
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('postCategory')?.addEventListener('change', handleCategoryChange);
-    document.getElementById('photoInput')?.addEventListener('change', handlePhotoUpload);
-    document.getElementById('postBtn')?.addEventListener('click', saveNewAd);
-    
-    // Run once to see if commonFields should be visible
+    // Initial run to set up UI
     handleCategoryChange();
+    runTranslation(); 
 });
+
 
 
 
