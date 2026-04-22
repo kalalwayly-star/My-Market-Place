@@ -7,22 +7,15 @@ let uploadedImages = [];
 
 // 1. LOGIN LISTENER (Fixed link and logic)
 onAuthStateChanged(auth, (user) => {
+
     const userInfoDiv = document.getElementById("user-info-header");
     const emailSpan = document.getElementById("header-user-email");
     const loginLink = document.getElementById("userAuth");
     const logoutBtn = document.getElementById("logout-btn");
-    const logoutBtn = document.getElementById("logout-btn");
 
-if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => {
-        signOut(auth)
-            .then(() => console.log("Logged out"))
-            .catch((error) => console.error(error));
-    });
-}
-    onAuthStateChanged(auth, (user) => {
-    console.log("USER:", user); // 👈 add this
+    console.log("USER:", user);
 
+    // SHOW / HIDE UI
     if (user) {
         if (userInfoDiv) userInfoDiv.style.display = "block";
         if (emailSpan) emailSpan.innerText = user.email;
@@ -33,7 +26,20 @@ if (logoutBtn) {
         if (loginLink) loginLink.style.display = "inline-block";
         if (logoutBtn) logoutBtn.style.display = "none";
     }
+
 });
+
+const logoutBtn = document.getElementById("logout-btn");
+
+if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+        signOut(auth)
+            .then(() => {
+                console.log("Logged out");
+            })
+            .catch((error) => console.error(error));
+    });
+}
 
 // 2. SEARCH & DISTANCE LOGIC
 const SEARCH_RELATIONS = {
@@ -149,9 +155,8 @@ function initMain() {
 }
 
 document.addEventListener("DOMContentLoaded", initMain);
-window.filterByCategory = filterByCategory;
-window.resetFilters = resetFilters;
-
+function functionName() {}
+window.functionName = functionName;
 
 
 
