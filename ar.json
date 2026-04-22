@@ -132,7 +132,13 @@
 "cat_services": "خدمات",
 "cat_garden": "حديقة",
 "cat_health": "صحة",
-"cat_baby": "مستلزمات أطفال"
+"cat_baby": "مستلزمات أطفال",
+    "welcome_back": "مرحباً بعودتك",
+"login_subtitle": "يرجى إدخال بياناتك لتسجيل الدخول.",
+"placeholder_password": "كلمة المرور",
+"or_divider": "أو",
+"create_account_btn": "إنشاء حساب جديد"
+
 
 
 }
