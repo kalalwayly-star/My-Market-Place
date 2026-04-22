@@ -403,7 +403,76 @@ img {
         padding: 8px;
     }
 }
+/* 📱 MOBILE FIX */
+@media (max-width: 600px) {
 
+    /* HEADER FIX */
+    .nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        justify-content: center;
+    }
+
+    .nav a, .nav button {
+        font-size: 12px;
+        padding: 6px 8px;
+    }
+
+    .lang-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+
+    .lang-buttons button {
+        font-size: 12px;
+        padding: 5px 8px;
+    }
+
+    /* HERO TEXT */
+    .hero h2 {
+        font-size: 20px;
+        text-align: center;
+    }
+
+    /* SEARCH FIX (IMPORTANT) */
+    .search-container {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .search-container input {
+        width: 100%;
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .btn-search {
+        width: 100%;
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    /* CATEGORY GRID */
+    .category-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* ADS GRID (2 per row on phone) */
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    /* CARD IMAGE SMALLER */
+    .card img {
+        height: 120px !important;
+    }
+}
 
 
 
