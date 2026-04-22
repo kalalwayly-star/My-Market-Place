@@ -114,7 +114,15 @@
 "cat_garden": "Jardin",
 "cat_health": "Santé",
 "cat_baby": "Articles pour bébé",
-  "label_featured": "✨ Mettez cette annonce en avant pour 4,99 $ pour rester en haut (5 jours)"
+  "label_featured": "✨ Mettez cette annonce en avant pour 4,99 $ pour rester en haut (5 jours)",
+  "welcome_back": "Bon retour",
+"login_subtitle": "Veuillez entrer vos informations pour vous connecter.",
+"placeholder_email": "Entrez votre email",
+"placeholder_password": "Mot de passe",
+"forgot_password": "Mot de passe oublié ?",
+"or_divider": "OU",
+"create_account_btn": "Créer un compte"
+
 
 
 
