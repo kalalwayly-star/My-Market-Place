@@ -129,6 +129,9 @@
 "placeholder_email": "Introduce tu correo electrónico",
 "placeholder_password": "Contraseña",
 "or_divider": "O",
-"create_account_btn": "Crear cuenta"
+"create_account_btn": "Crear cuenta",
+"already_have_account": "¿Ya tienes una cuenta?",
+"login_here": "Inicia sesión aquí"
+
 
 }
