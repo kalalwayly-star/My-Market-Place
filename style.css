@@ -473,14 +473,23 @@ img {
         height: 120px !important;
     }
 }
-/* 🟦 FORCE SQUARE IMAGES */
-.card img {
-    width: 100%;
-    aspect-ratio: 1 / 1;   /* makes it square */
-    object-fit: cover;     /* crop nicely */
-    border-radius: 8px;
+/* clean card spacing */
+.card {
+    border-radius: 10px;
+    overflow: hidden;
+    background: white;
 }
 
+/* reduce text spacing */
+.card h3 {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.card p {
+    margin: 2px 0;
+    font-size: 12px;
+}
 
 
 
