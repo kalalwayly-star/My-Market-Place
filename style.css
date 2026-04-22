@@ -490,6 +490,39 @@ img {
     padding-top: 5px !important; 
     margin-top: 0 !important;
 }
+/* ADS GRID (2 per row on phone) */
+@media (max-width: 768px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    /* 1. Reset Image Display */
+    .card img {
+        width: 100% !important;
+        height: auto !important;
+        aspect-ratio: 1 / 1 !important;
+        object-fit: cover;
+        display: block !important; /* Removes the 3-4px gap under inline images */
+        margin-bottom: 0 !important;
+    }
+
+    /* 2. Kill the Grey Space in the Container */
+    .card {
+        display: flex;
+        flex-direction: column;
+        background-color: white; /* Match your card color */
+        padding: 0 !important;   /* Removes space around the edge */
+        overflow: hidden;
+    }
+
+    /* 3. Tighten the Price/Text Section */
+    .card-content, .card-footer, .price-section {
+        margin-top: 0 !important;
+        padding-top: 5px !important; /* Just enough for a clean look */
+        line-height: 1.2 !important; /* Prevents text boxes from being too tall */
+    }
+}
 
 
 
