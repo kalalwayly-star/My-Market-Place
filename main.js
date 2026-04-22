@@ -27,7 +27,6 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-// SAFE logout binding (ONLY ONCE DOM IS READY)
 document.addEventListener("DOMContentLoaded", () => {
     const logoutBtn = document.getElementById("logout-btn");
 
@@ -35,7 +34,6 @@ document.addEventListener("DOMContentLoaded", () => {
         logoutBtn.addEventListener("click", () => {
             signOut(auth)
                 .then(() => {
-                    localStorage.removeItem("currentUser");
                     window.location.href = "index.html";
                 })
                 .catch(console.error);
