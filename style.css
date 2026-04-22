@@ -490,61 +490,44 @@ img {
     padding-top: 5px !important; 
     margin-top: 0 !important;
 }
-/* ADS GRID (2 per row on phone) */
+/* CLEAN MOBILE FIX */
 @media (max-width: 768px) {
-    .grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
+    /* Moves photo LEFT and text RIGHT */
+    .card {
+        display: flex !important;
+        flex-direction: row !important; 
+        background-color: #ffffff !important; /* Turns grey to white */
+        align-items: flex-start;
+        gap: 15px;
+        padding: 12px !important;
+        height: auto !important; /* Fixes the massive height gap */
+        border-bottom: 1px solid #eee; /* Adds a clean separator line */
     }
 
-    /* 1. Reset Image Display */
+    /* Makes the photo a perfect square on the left */
     .card img {
-        width: 100% !important;
-        height: auto !important;
+        width: 110px !important; 
+        height: 110px !important;
         aspect-ratio: 1 / 1 !important;
         object-fit: cover;
-        display: block !important; /* Removes the 3-4px gap under inline images */
-        margin-bottom: 0 !important;
+        border-radius: 8px;
+        flex-shrink: 0; /* Ensures the image doesn't get squashed */
     }
-/* Removes gaps caused by vertical alignment */
-.card a, .card div {
-    vertical-align: top !important;
-    line-height: 0 !important; /* Forces containers to collapse around the image */
-}
 
-/* Restores line height for text so price/title looks normal */
-.card-content, .card-title, .price {
-    line-height: 1.4 !important; 
-    margin-top: -2px !important; /* Pulls text up slightly into any remaining gap */
-}
-
-/* Ensures the image has no margin at the bottom */
-.card img {
-    margin-bottom: 0 !important;
-    padding-bottom: 0 !important;
-}
-
-    /* 2. Kill the Grey Space in the Container */
-    .card {
+    /* Fixes text overlapping and spacing */
+    .card-content {
         display: flex;
         flex-direction: column;
-        background-color: white; /* Match your card color */
-        padding: 0 !important;   /* Removes space around the edge */
-        overflow: hidden;
+        justify-content: flex-start;
+        width: 100%;
+        line-height: 1.5 !important; /* Stops text from overlapping */
+        padding: 0 !important;
     }
 
-    /* 3. Tighten the Price/Text Section */
-    .card-content, .card-footer, .price-section {
-        margin-top: 0 !important;
-        padding-top: 5px !important; /* Just enough for a clean look */
-        line-height: 1.2 !important; /* Prevents text boxes from being too tall */
+    /* Ensures price and title are legible */
+    .card-title, .price, .category-label {
+        position: static !important; /* Prevents text from floating over image */
+        margin: 2px 0 !important;
+        display: block !important;
     }
 }
-
-
-
-
-
-
-
-
