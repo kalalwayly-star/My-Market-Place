@@ -1,5 +1,4 @@
-import { db, ref, onValue, push } from "./firebase-config.js";
-
+import { db, ref, onValue, push, remove } from "./firebase-config.js";
 // Global Variables
 const currentUser = JSON.parse(localStorage.getItem("currentUser")) || { email: "Guest" };
 let uploadedImages = []; 
