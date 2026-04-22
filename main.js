@@ -155,8 +155,7 @@ function initMain() {
 }
 
 document.addEventListener("DOMContentLoaded", initMain);
-function functionName() {}
-window.functionName = functionName;
+window.functionName = function() {}
 
 
 
