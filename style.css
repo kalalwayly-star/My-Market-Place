@@ -505,3 +505,14 @@ img {
         display: block !important;
     }
 }
+#user-info-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #ddd;
+    color: #333;
+}
+
+/* For Arabic (RTL) users */
+[lang="ar"] #user-info-header {
+    text-align: left !important;
+    direction: rtl;
+}
