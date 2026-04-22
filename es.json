@@ -122,7 +122,13 @@
 "cat_garden": "Jardín",
 "cat_health": "Salud",
 "cat_baby": "Artículos para bebés",
-  "label_featured": "✨ Destaca este anuncio por $4.99 para que aparezca arriba (5 días)"
-
+  "label_featured": "✨ Destaca este anuncio por $4.99 para que aparezca arriba (5 días)",
+  
+"welcome_back": "Bienvenido de nuevo",
+"login_subtitle": "Por favor, introduce tus datos para iniciar sesión.",
+"placeholder_email": "Introduce tu correo electrónico",
+"placeholder_password": "Contraseña",
+"or_divider": "O",
+"create_account_btn": "Crear cuenta"
 
 }
