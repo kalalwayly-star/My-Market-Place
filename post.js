@@ -161,7 +161,51 @@ document.addEventListener('DOMContentLoaded', () => {
     handleCategoryChange();
     runTranslation(); 
 });
+function initPayPal() {
+    const container = document.getElementById("paypal-button-container");
 
+    if (!container || !window.paypal) return;
 
+    container.innerHTML = "";
+    container.style.display = "block";
 
+    paypal.Buttons({
+        createOrder: (data, actions) => {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: { value: "4.99" }
+                }]
+            });
+        },
 
+        onApprove: (data, actions) => {
+            return actions.order.capture().then(() => {
+                alert("Payment successful ✔");
+                document.getElementById("postBtn").disabled = false;
+            });
+        },
+
+        onError: (err) => {
+            console.error(err);
+            alert("Payment failed");
+        }
+    }).render("#paypal-button-container");
+}
+window.initPayPal = initPayPal;
+document.addEventListener("DOMContentLoaded", () => {
+    const featured = document.getElementById("isFeatured");
+    const payContainer = document.getElementById("paypal-button-container");
+    const postBtn = document.getElementById("postBtn");
+
+    if (!featured) return;
+
+    featured.addEventListener("change", function () {
+        if (this.checked) {
+            initPayPal();
+            if (postBtn) postBtn.disabled = true;
+        } else {
+            if (payContainer) payContainer.style.display = "none";
+            if (postBtn) postBtn.disabled = false;
+        }
+    });
+});
