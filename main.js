@@ -174,9 +174,9 @@ if (data) {
     }
 }
 
-        if (document.getElementById("listings")) {
-            resetFilters();
-        }
+        setTimeout(() => {
+    resetFilters();
+}, 200);
         
         const myAdsContainer = document.getElementById("myAds");
         if (myAdsContainer && currentUser) {
