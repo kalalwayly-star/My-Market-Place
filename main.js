@@ -13,9 +13,8 @@ onAuthStateChanged(auth, (user) => {
     const loginLink = document.getElementById("userAuth");
     const logoutBtn = document.getElementById("logout-btn");
 
-    console.log("USER:", user);
+    console.log("AUTH USER:", user);
 
-    // SHOW / HIDE UI
     if (user) {
         if (userInfoDiv) userInfoDiv.style.display = "block";
         if (emailSpan) emailSpan.innerText = user.email;
@@ -26,20 +25,23 @@ onAuthStateChanged(auth, (user) => {
         if (loginLink) loginLink.style.display = "inline-block";
         if (logoutBtn) logoutBtn.style.display = "none";
     }
-
 });
 
-const logoutBtn = document.getElementById("logout-btn");
+// SAFE logout binding (ONLY ONCE DOM IS READY)
+document.addEventListener("DOMContentLoaded", () => {
+    const logoutBtn = document.getElementById("logout-btn");
 
-if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => {
-        signOut(auth)
-            .then(() => {
-                console.log("Logged out");
-            })
-            .catch((error) => console.error(error));
-    });
-}
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", () => {
+            signOut(auth)
+                .then(() => {
+                    localStorage.removeItem("currentUser");
+                    window.location.href = "index.html";
+                })
+                .catch(console.error);
+        });
+    }
+});
 
 // 2. SEARCH & DISTANCE LOGIC
 const SEARCH_RELATIONS = {
@@ -64,12 +66,7 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
 function getAds() { return globalAds; }
 
 // 3. GLOBAL ACTIONS (Attached to window so buttons work)
-window.logout = function() {
-    signOut(auth).then(() => {
-        localStorage.removeItem("currentUser");
-        window.location.href = "index.html";
-    });
-}
+
 
 window.goToDetails = function(id) {
     window.location.href = `details.html?id=${id}`;
@@ -171,7 +168,6 @@ function initMain() {
     });
 }
 
-document.addEventListener("DOMContentLoaded", initMain);
 document.addEventListener("DOMContentLoaded", initMain);
 window.functionName = function() {}
 
