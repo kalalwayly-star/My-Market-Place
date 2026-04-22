@@ -56,8 +56,10 @@ window.renderAds = function(adsArray, containerId = "listings", userCoords = nul
         const isFeatured = ad.isFeatured === true;
         // Use firebaseId for the key, fallback to ad.id
         const uniqueId = ad.firebaseId || ad.id;
-        let displayImage = ad.image && Array.isArray(ad.image) ? ad.image[0] : (ad.image || 'https://placeholder.com');
-
+let displayImage =
+    Array.isArray(ad.image) ? ad.image[0] :
+    typeof ad.image === "string" ? ad.image :
+    ad.images?.[0] || 'https://via.placeholder.com/300';
         return `
             <div class="card ${isFeatured ? 'featured-card' : ''}" 
                  style="border:1px solid #ddd; border-radius:10px; background:white; margin-bottom:15px; overflow:hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
