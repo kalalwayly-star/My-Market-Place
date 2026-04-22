@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, push, onValue, set, remove } 
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getDatabase, ref, push, onValue, set, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getAuth } from "https://gstatic.com"; // 1. Added Auth Import
 
 const firebaseConfig = {
   apiKey: "AIzaSy...",
@@ -14,8 +14,9 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+const auth = getAuth(app); // 2. Initialized Auth
 
-export { db, ref, push, onValue, set, remove };
+export { db, auth, ref, push, onValue, set, remove }; // 3. Added auth to export
 
 
 
