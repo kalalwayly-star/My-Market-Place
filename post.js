@@ -114,6 +114,7 @@ function saveNewAd(event) {
     console.log("saveNewAd function triggered");
 
     const user = auth.currentUser;
+    condition: conditionEl ? conditionEl.value : "Unknown",
 
     // Check if the user is logged in
     if (!user) {
@@ -161,6 +162,7 @@ function saveNewAd(event) {
 // Finalize Ad Submission (save to Firestore)
 function finalizeAd(condition, featuredStatus) {
     const user = auth.currentUser;
+const conditionEl = document.querySelector('input[name="condition"]:checked');
 
     if (!user) {
         alert("You must be logged in to post ads.");
