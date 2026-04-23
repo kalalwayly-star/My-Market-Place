@@ -7,7 +7,7 @@ import {
 /* --- LOGIN FUNCTION --- */
 window.login = function () {
     const email = document.getElementById('loginEmail').value.trim();
-const password = document.getElementById('password').value; 
+const password = document.getElementById('loginPassword').value;
     const errorMsg = document.getElementById('error-message');
 
     // Clear previous error message
