@@ -138,8 +138,7 @@ function saveNewAd(event) {
    // 1. Get the value from your HTML element first
 const condition = document.getElementById('condition-selector').value; 
 
-// 2. Now you can use it
-console.log("Selected condition: " + condition); 
+ 
 
 
     // Assuming you want to get geolocation data before posting the ad
