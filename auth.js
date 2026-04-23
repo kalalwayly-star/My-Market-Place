@@ -2,33 +2,27 @@
 const getErrorEl = () => document.getElementById('error-message');
 
 /* --- LOGIN FUNCTION --- */
-function login() {
-    const emailEl = document.getElementById('loginEmail') || document.getElementById('email');
-    const email = emailEl ? emailEl.value.trim() : "";
-    
+import { auth } from "./firebase-config.js";
+import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+window.login = function () {
+    const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value;
-    const errorMsg = getErrorEl();
+    const errorMsg = document.getElementById('error-message');
 
     if (!email || !password) {
         errorMsg.innerText = "Please fill in all fields.";
         return;
     }
 
-    if (password.length < 7) {
-        errorMsg.innerText = "Password must be at least 7 characters.";
-        return;
-    }
-
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
-    const user = users.find(u => u.email === email && u.password === password);
-
-    if (user) {
-        localStorage.setItem("currentUser", JSON.stringify(user));
-        window.location.href = "myads.html";
-    } else {
-        errorMsg.innerText = "Invalid email or password.";
-    }
-}
+    signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+            window.location.href = "index.html"; // or myads.html
+        })
+        .catch((error) => {
+            errorMsg.innerText = error.message;
+        });
+};
 
 /* --- REGISTRATION FUNCTION --- */
 function register() {
