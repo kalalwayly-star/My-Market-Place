@@ -134,7 +134,9 @@ function finalizeAd(featuredStatus) {
 
     const newAd = {
         id: Date.now(),
-        userEmail: user.email,   // ✅ stable & guaranteed
+        userEmail: user.email,   // keep for display (optional)
+        userId: user.uid,        // ✅ ADD THIS (IMPORTANT FIX)
+
         category: document.getElementById('postCategory').value,
         title: document.getElementById('adTitle').value,
         price: document.getElementById('adPrice').value,
