@@ -107,12 +107,14 @@ function removeImg(e, data, btn) {
 function saveNewAd(event) {
     if (event) event.preventDefault();
     const user = auth.currentUser;
+    
+console.log("SAVE FUNCTION RUNNING");
 
     if (!user) {
         alert("You must be logged in to post ads.");
         return;
     }
-
+    
     const locVal = document.getElementById('adLocation').value.trim();
     if (!locVal) { alert("Location required."); return; }
 
@@ -222,6 +224,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const featured = document.getElementById("isFeatured");
     const payContainer = document.getElementById("paypal-button-container");
     const postBtn = document.getElementById("postBtn");
+
+    const form = document.getElementById("postForm");
+
+if (form) {
+    form.addEventListener("submit", saveNewAd);
+}
 
      if (postBtn) {
         postBtn.addEventListener("click", saveNewAd);
