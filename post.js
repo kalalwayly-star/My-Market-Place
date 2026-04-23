@@ -223,6 +223,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const payContainer = document.getElementById("paypal-button-container");
     const postBtn = document.getElementById("postBtn");
 
+     if (postBtn) {
+        postBtn.addEventListener("click", saveNewAd);
+    }
+
+
     if (!featured) return;
 
     featured.addEventListener("change", function () {
@@ -235,3 +240,4 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+
