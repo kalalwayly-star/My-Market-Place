@@ -19,8 +19,8 @@ document.addEventListener("DOMContentLoaded", () => {
             if (userInfoDiv) userInfoDiv.style.display = "block";
             if (emailSpan) emailSpan.innerText = user.email;
             if (loginLink) loginLink.style.display = "none";
-            if (logoutBtn) logoutBtn.style.display = "inline-block";
-        } else {
+if (logoutBtn) logoutBtn.style.display = "inline-block";
+if (emailSpan) emailSpan.innerText = "TEST USER";        } else {
             if (userInfoDiv) userInfoDiv.style.display = "none";
             if (loginLink) loginLink.style.display = "inline-block";
             if (logoutBtn) logoutBtn.style.display = "none";
