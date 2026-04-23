@@ -1,9 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getDatabase, ref, push, onValue, set, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getAuth, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-setPersistence(auth, browserLocalPersistence);
 const firebaseConfig = {
   apiKey: "AIzaSy...",
   authDomain: "kal-marketplace.firebaseapp.com",
@@ -16,9 +14,12 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-const auth = getAuth(app); // 2. Initialized Auth
+const auth = getAuth(app); // ✅ FIRST create auth
 
-export { db, auth, ref, push, onValue, set, remove }; // 3. Added auth to export
+// ✅ THEN set persistence
+setPersistence(auth, browserLocalPersistence);
+
+export { db, auth, ref, push, onValue, set, remove };
 
 
 
