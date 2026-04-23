@@ -4,7 +4,7 @@ import { collection, addDoc } from "https://www.gstatic.com/firebasejs/12.12.1/f
 // GLOBAL VARIABLES
 let uploadedImages = [];
 
-// 2. HELPER TO TRIGGER YOUR TRANSLATION
+// Helper to trigger your translation
 function runTranslation() {
     if (typeof window.loadLanguage === "function") {
         const savedLang = localStorage.getItem("language") || "en";
@@ -12,7 +12,7 @@ function runTranslation() {
     }
 }
 
-// 3. HANDLE CATEGORY CHANGES
+// Handle Category Changes
 window.handleCategoryChange = function () {
     const mainCategorySelect = document.getElementById('postCategory');
     const commonFields = document.getElementById('commonFields');
@@ -35,12 +35,14 @@ window.handleCategoryChange = function () {
     // Show shared fields
     if (commonFields) commonFields.style.display = 'block';
 
+    // Handle specific categories
     const carSec = document.getElementById('section-Cars');
     if (categoryValue === 'Cars & Trucks' && carSec) carSec.style.display = 'block';
 
     const reSec = document.getElementById('section-RealEstate');
     if (categoryValue === 'Real Estate' && reSec) reSec.style.display = 'block';
 
+    // Hide or show condition field
     const noCondition = ['Pets', 'Jobs', 'Real Estate'];
     if (condSec) {
         condSec.style.display = noCondition.includes(categoryValue) ? 'none' : 'block';
@@ -50,7 +52,7 @@ window.handleCategoryChange = function () {
     runTranslation();
 };
 
-// 4. PHOTO UPLOAD & COMPRESSION
+// Photo Upload and Compression
 async function handlePhotoUpload(event) {
     const gallery = document.getElementById('galleryPreview');
     const files = Array.from(event.target.files);
@@ -73,7 +75,9 @@ async function handlePhotoUpload(event) {
                     style="position:absolute; top:-5px; right:-5px; background:red; color:white; border:none; border-radius:50%; cursor:pointer; width:20px; height:20px; line-height:15px;">×</button>
             `;
             gallery.appendChild(div);
-        } catch (e) { console.error(e); }
+        } catch (e) {
+            console.error(e);
+        }
     }
 }
 
@@ -103,10 +107,9 @@ function removeImg(e, data, btn) {
     btn.parentElement.remove();
 }
 
-// 5. SAVE LOGIC
+// Save Logic - Posts the new ad to Firebase
 function saveNewAd(event) {
-    // Prevent the default form submission
-    if (event) event.preventDefault();
+    event.preventDefault();
 
     console.log("saveNewAd function triggered");
 
@@ -122,6 +125,7 @@ function saveNewAd(event) {
     console.log("User is logged in:", user.email);
 
     const locVal = document.getElementById('adLocation').value.trim();
+    const condition = document.querySelector('input[name="condition"]:checked').value;
 
     // Validate location field
     if (!locVal) {
@@ -131,6 +135,7 @@ function saveNewAd(event) {
     }
 
     console.log("Location provided:", locVal);
+    console.log("Selected condition:", condition);
 
     // Assuming you want to get geolocation data before posting the ad
     if (navigator.geolocation) {
@@ -139,21 +144,22 @@ function saveNewAd(event) {
                 window.currentAdLat = pos.coords.latitude;
                 window.currentAdLng = pos.coords.longitude;
                 console.log("Geolocation retrieved:", window.currentAdLat, window.currentAdLng);
-                finalizeAd(false);  // Proceed after geolocation retrieval
+                finalizeAd(condition, false);  // Proceed after geolocation retrieval
             },
             (error) => {
                 console.warn("Geolocation failed:", error.message);
-                finalizeAd(false);  // Proceed even if geolocation fails
+                finalizeAd(condition, false);  // Proceed even if geolocation fails
             },
             { timeout: 3000 }
         );
     } else {
         console.warn("Geolocation not supported or denied.");
-        finalizeAd(false);  // Proceed if geolocation is not available
+        finalizeAd(condition, false);  // Proceed if geolocation is not available
     }
 }
 
-function finalizeAd(featuredStatus) {
+// Finalize Ad Submission (save to Firestore)
+function finalizeAd(condition, featuredStatus) {
     const user = auth.currentUser;
 
     if (!user) {
@@ -181,6 +187,7 @@ function finalizeAd(featuredStatus) {
         price: priceEl.value,
         location: locationEl.value,
         description: descEl.value,
+        condition: condition,
         image: (uploadedImages.length > 0) ? uploadedImages : ['https://via.placeholder.com/300'],
         status: "Active",
         date: new Date().toLocaleDateString(),
@@ -199,7 +206,7 @@ function finalizeAd(featuredStatus) {
         });
 }
 
-// 6. INITIALIZE & ATTACH TO WINDOW
+// Initialize and Attach Functions to Window
 window.handleCategoryChange = handleCategoryChange;
 window.handlePhotoUpload = handlePhotoUpload;
 window.saveNewAd = saveNewAd;
@@ -249,7 +256,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const payContainer = document.getElementById("paypal-button-container");
     const postBtn = document.getElementById("postBtn");
 
-    // Ensure postBtn exists and attach event listener for form submission
     if (postBtn) {
         postBtn.addEventListener("click", (event) => {
             event.preventDefault(); // Prevent default form submission
@@ -257,7 +263,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Check for featured checkbox and handle its change
     if (featured) {
         featured.addEventListener("change", function () {
             if (this.checked) {
