@@ -134,9 +134,6 @@ function saveNewAd(event) {
     }
 
     console.log("Location provided:", locVal);
-    
-   // 1. Get the value from your HTML element first
-const condition = document.getElementById('condition-selector').value; 
 
  
 
