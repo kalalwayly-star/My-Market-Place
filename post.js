@@ -13,13 +13,15 @@ function runTranslation() {
 }
 
 // 3. HANDLE CATEGORY CHANGES
-function handleCategoryChange() {
+window.handleCategoryChange = function () {
+
     const mainCategorySelect = document.getElementById('postCategory');
     const commonFields = document.getElementById('commonFields');
     const sections = document.querySelectorAll('.category-details');
     const condSec = document.getElementById('globalCondition');
 
     if (!mainCategorySelect) return;
+
     const categoryValue = mainCategorySelect.value;
 
     // Hide all sections first
@@ -30,6 +32,7 @@ function handleCategoryChange() {
         if (condSec) condSec.style.display = 'none';
         return;
     }
+};
 
     // Show shared fields
     if (commonFields) commonFields.style.display = 'block';
