@@ -2,7 +2,7 @@ import { db, ref, push, onValue, set, remove } from "./firebase-config.js";
 
 // 1. GLOBAL VARIABLES
 import { auth } from "./firebase-config.js";let uploadedImages = [];
-let uploadedImages = [];
+
 
 // 2. HELPER TO TRIGGER YOUR TRANSLATION
 function runTranslation() {
