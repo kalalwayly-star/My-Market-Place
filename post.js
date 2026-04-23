@@ -124,9 +124,7 @@ function saveNewAd(event) {
         return;
     }
 
-    // ✅ get condition correctly
-    const conditionEl = document.querySelector('input[name="condition"]:checked');
-    const condition = conditionEl ? conditionEl.value : "Unknown";
+   
 
     const btn = document.getElementById("postBtn");
     btn.disabled = true;
