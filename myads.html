@@ -44,19 +44,26 @@
 
 <!-- SCRIPTS -->
 <script src="storage.js"></script>
-    <script src="languages.js"></script>
-    <script type="module" src="main.js"></script>
+<script src="languages.js"></script>
+<script type="module" src="main.js"></script>
 
+<!-- ✅ FIXED USER GREETING (FIREBASE ONLY - SAFE) -->
+<script type="module">
+import { auth } from "./firebase-config.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-<!-- SAFE USER GREETING (NO CONFLICT WITH i18n) -->
-<script>
 document.addEventListener("DOMContentLoaded", () => {
-    const user = JSON.parse(localStorage.getItem("currentUser"));
+
     const el = document.getElementById("userGreeting");
 
-    if (user && el) {
-        el.innerText = user.email;
-    }
+    onAuthStateChanged(auth, (user) => {
+        if (user && el) {
+            el.innerText = user.email;
+        } else if (el) {
+            el.innerText = "";
+        }
+    });
+
 });
 </script>
 
