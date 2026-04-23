@@ -11,19 +11,22 @@ window.login = function () {
     const password = document.getElementById('loginPassword').value;
     const errorMsg = document.getElementById('error-message');
 
+    // Clear any previous error message
     errorMsg.innerText = '';
 
+    // Validation
     if (!email || !password) {
         errorMsg.innerText = "Please fill in all fields.";
         return;
     }
 
+    // Login with email and password
     signInWithEmailAndPassword(auth, email, password)
         .then(() => {
-            window.location.href = "index.html";
+            window.location.href = "index.html"; // Redirect after successful login
         })
         .catch((error) => {
-            console.error("LOGIN ERROR:", error);
+            console.error("LOGIN ERROR:", error); // Log the error for debugging
 
             let errorMessage = error.message;
 
@@ -35,14 +38,14 @@ window.login = function () {
                 errorMessage = "Invalid email format.";
             }
 
-            errorMsg.innerText = errorMessage;
+            errorMsg.innerText = errorMessage; // Display a custom error message
         });
 };
 
 /* --- REGISTER FUNCTION --- */
 window.register = function () {
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('loginPassword').value;
+    const email = document.getElementById('registerEmail').value.trim(); // Updated to registerEmail
+    const password = document.getElementById('registerPassword').value; // Updated to registerPassword
     const errorMsg = document.getElementById('error-message');
 
     if (!email || !password) {
@@ -57,14 +60,14 @@ window.register = function () {
 
     createUserWithEmailAndPassword(auth, email, password)
         .then(() => {
-            window.location.href = "myads.html";
+            window.location.href = "myads.html"; // Redirect after successful registration
         })
         .catch((error) => {
-            errorMsg.innerText = error.message;
+            errorMsg.innerText = error.message; // Display registration error message
         });
 };
 
-/* --- ADMIN CHECK --- */
+/* --- ADMIN CHECK (UNCHANGED) --- */
 window.checkAdminAccess = function () {
     const pass = prompt("Enter Admin Password:");
 
@@ -78,5 +81,5 @@ window.checkAdminAccess = function () {
 
 /* --- DEBUG AUTH STATE --- */
 onAuthStateChanged(auth, (user) => {
-    console.log("AUTH STATE:", user);
+    console.log("AUTH STATE:", user); // Log current user state for debugging
 });
