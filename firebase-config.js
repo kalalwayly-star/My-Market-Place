@@ -3,7 +3,7 @@ import { getDatabase } from "https://www.gstatic.com/firebasejs/10.12.2/firebase
 import { getAuth, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
-  apiKey: "YOUR_KEY",
+apiKey: "AIzaSyDBT8jv057_JQL6pIUYk-U_LQ8uJHlFi-o",  
   authDomain: "kal-marketplace.firebaseapp.com",
   databaseURL: "https://kal-marketplace-default-rtdb.firebaseio.com",
   projectId: "kal-marketplace",
