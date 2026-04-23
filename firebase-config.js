@@ -12,17 +12,16 @@ const firebaseConfig = {
   appId: "1:745728416819:web:da2dfb86cc5b79fb0d1746"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Services
 const db = getDatabase(app);
 const auth = getAuth(app);
 
-// 🔥 IMPORTANT: persistence must be AFTER auth init
+// 🔥 IMPORTANT
 setPersistence(auth, browserLocalPersistence);
 
 export { db, auth };
+
 
 
 
