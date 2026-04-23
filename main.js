@@ -1,11 +1,11 @@
-import { db, ref, onValue, push, remove, auth } from "./firebase-config.js";
+import { db, ref, onValue, remove, auth } from "./firebase-config.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-
 let globalAds = [];
-let uploadedImages = []; 
 
-// 1. LOGIN LISTENER (Fixed link and logic)
+/* =========================
+   AUTH LISTENER (NAVBAR)
+========================= */
 document.addEventListener("DOMContentLoaded", () => {
 
     onAuthStateChanged(auth, (user) => {
@@ -19,124 +19,30 @@ document.addEventListener("DOMContentLoaded", () => {
             if (userInfoDiv) userInfoDiv.style.display = "block";
             if (emailSpan) emailSpan.innerText = user.email;
             if (loginLink) loginLink.style.display = "none";
-if (logoutBtn) logoutBtn.style.display = "inline-block";
-if (emailSpan) emailSpan.innerText = "TEST USER";        } else {
+            if (logoutBtn) logoutBtn.style.display = "inline-block";
+        } else {
             if (userInfoDiv) userInfoDiv.style.display = "none";
             if (loginLink) loginLink.style.display = "inline-block";
             if (logoutBtn) logoutBtn.style.display = "none";
         }
     });
 
-});
-
-document.addEventListener("DOMContentLoaded", () => {
+    /* LOGOUT */
     const logoutBtn = document.getElementById("logout-btn");
 
     if (logoutBtn) {
         logoutBtn.addEventListener("click", () => {
-            signOut(auth)
-                .then(() => {
-                    window.location.href = "index.html";
-                })
-                .catch(console.error);
+            signOut(auth).then(() => {
+                window.location.href = "index.html";
+            });
         });
     }
 });
 
-// 2. SEARCH & DISTANCE LOGIC
-const SEARCH_RELATIONS = {
-    "pants": ["clothing", "fashion", "jeans", "trousers", "t-shirt", "shirt", "apparel"],
-    "t-shirt": ["clothing", "fashion", "top", "shirt", "apparel"],
-    "car": ["vehicle", "truck", "toyota", "honda", "auto", "transport"],
-    "furniture": ["chair", "table", "sofa", "bed", "home decor"],
-    "phone": ["iphone", "samsung", "electronics", "mobile", "tech"]
-};
 
-function calculateDistance(lat1, lon1, lat2, lon2) {
-    const R = 6371; 
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLon = (lon2 - lon1) * Math.PI / 180;
-    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
-              Math.sin(dLon/2) * Math.sin(dLon/2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-    return R * c;
-}
-
-function getAds() { return globalAds; }
-
-// 3. GLOBAL ACTIONS (Attached to window so buttons work)
-
-
-window.goToDetails = function(id) {
-    window.location.href = `details.html?id=${id}`;
-}
-
-window.deleteAd = function(firebaseId) {
-    if (confirm("Are you sure you want to delete this ad?")) {
-        const adRef = ref(db, `marketplace_ads/${firebaseId}`);
-        remove(adRef)
-            .then(() => alert("Ad deleted successfully."))
-            .catch((error) => alert("Error: " + error.message));
-    }
-}
-
-// 4. UI RENDERING
-window.renderAds = function(adsArray, containerId = "listings", userCoords = null) {
-    const container = document.getElementById(containerId);
-    if (!container) return;
-    container.innerHTML = "";
-    const isMyAdsPage = (containerId === "myAds");
-
-    if (!adsArray || adsArray.length === 0) {
-        container.innerHTML = `<p class='no-ads' style="text-align:center; width:100%; padding: 20px;">No items found.</p>`;
-        return;
-    }
-
-    container.innerHTML = adsArray.map(ad => {
-        const isFeatured = ad.isFeatured === true;
-        const uniqueId = ad.firebaseId || ad.id;
-        let displayImage = Array.isArray(ad.image) ? ad.image[0] : (typeof ad.image === "string" ? ad.image : (ad.images?.[0] || 'https://via.placeholder.com/300'));
-        
-        return `
-            <div class="card ${isFeatured ? 'featured-card' : ''}">
-                <div onclick="goToDetails('${uniqueId}')" style="cursor:pointer; aspect-ratio:1/1; background:#f0f0f0; overflow:hidden;">
-                    <img src="${displayImage}" alt="${ad.title}" onerror="this.src='https://via.placeholder.com/300'" style="width:100%; height:100%; object-fit:cover;">
-                </div>
-                <div class="card-content">
-                    <span class="category-label">${ad.category || "General"}</span>
-                    <h3 onclick="goToDetails('${uniqueId}')">${ad.title}</h3>
-                    <p class="location">📍 ${ad.location || "Location N/A"}</p>
-                    <p class="price"><strong>$${ad.price}</strong></p>
-                    ${isMyAdsPage ? `<button onclick="deleteAd('${uniqueId}')" class="btn-delete">Delete Ad</button>` : ''}
-                </div>
-            </div>
-        `;
-    }).join('');
-}
-
-// 5. FILTERS
-window.filterByCategory = function(category) {
-    const filtered = getAds().filter(ad => ad.category === category);
-    renderAds(filtered, "listings");
-}
-
-window.applyFilters = function() {
-    const searchInput = document.getElementById('searchInput');
-    if (!searchInput) return;
-    const query = searchInput.value.toLowerCase().trim();
-    if (!query) { resetFilters(); return; }
-    const filtered = getAds().filter(ad => ad.title.toLowerCase().includes(query) || (ad.category || "").toLowerCase().includes(query));
-    renderAds(filtered, "listings");
-}
-
-window.resetFilters = function() {
-    renderAds(globalAds, "listings");
-    const searchInput = document.getElementById('searchInput');
-    if (searchInput) searchInput.value = '';
-}
-
-// 6. INITIALIZATION
+/* =========================
+   ADS LOAD FROM FIREBASE
+========================= */
 function initMain() {
     const adsRef = ref(db, "marketplace_ads");
 
@@ -150,27 +56,105 @@ function initMain() {
             });
         }
 
-        // 👉 CHECK WHICH PAGE YOU ARE ON
-        const isMyAdsPage = document.getElementById("myAds");
-
-        if (isMyAdsPage) {
-            const user = JSON.parse(localStorage.getItem("currentUser"));
-
-            if (user) {
-                const myAds = globalAds.filter(ad => ad.userEmail === user.email);
-                renderAds(myAds, "myAds");
-            } else {
-                document.getElementById("myAds").innerHTML = "Please login to see your ads.";
-            }
-        } else {
-            renderAds(globalAds, "listings");
-        }
+        renderAds(globalAds, "listings");
     });
 }
 
 document.addEventListener("DOMContentLoaded", initMain);
-window.functionName = function() {}
 
+
+/* =========================
+   GLOBAL HELPERS
+========================= */
+function getAds() {
+    return globalAds;
+}
+
+window.goToDetails = function(id) {
+    window.location.href = `details.html?id=${id}`;
+};
+
+window.deleteAd = function(firebaseId) {
+    if (confirm("Are you sure you want to delete this ad?")) {
+        const adRef = ref(db, `marketplace_ads/${firebaseId}`);
+        remove(adRef);
+    }
+};
+
+
+/* =========================
+   FILTERS (CLEAN VERSION)
+========================= */
+window.filterByCategory = function(category) {
+    const filtered = getAds().filter(ad => ad.category === category);
+    renderAds(filtered, "listings");
+};
+
+window.applyFilters = function() {
+    const searchInput = document.getElementById('searchInput');
+    if (!searchInput) return;
+
+    const query = searchInput.value.toLowerCase().trim();
+
+    if (!query) {
+        renderAds(globalAds, "listings");
+        return;
+    }
+
+    const filtered = getAds().filter(ad =>
+        ad.title.toLowerCase().includes(query) ||
+        (ad.category || "").toLowerCase().includes(query)
+    );
+
+    renderAds(filtered, "listings");
+};
+
+window.resetFilters = function() {
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) searchInput.value = '';
+    renderAds(globalAds, "listings");
+};
+
+
+/* =========================
+   RENDER ADS
+========================= */
+window.renderAds = function(adsArray, containerId = "listings") {
+
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    if (!adsArray || adsArray.length === 0) {
+        container.innerHTML = `<p style="text-align:center;">No items found.</p>`;
+        return;
+    }
+
+    container.innerHTML = adsArray.map(ad => {
+
+        const uniqueId = ad.firebaseId;
+        const image = Array.isArray(ad.image)
+            ? ad.image[0]
+            : (ad.image || 'https://via.placeholder.com/300');
+
+        return `
+        <div class="card">
+            <div onclick="goToDetails('${uniqueId}')" style="cursor:pointer;">
+                <img src="${image}" style="width:100%; height:200px; object-fit:cover;">
+            </div>
+
+            <div class="card-content">
+                <h3>${ad.title}</h3>
+                <p>📍 ${ad.location || "No location"}</p>
+                <p><b>$${ad.price}</b></p>
+
+                <button onclick="deleteAd('${uniqueId}')">Delete</button>
+            </div>
+        </div>
+        `;
+    }).join("");
+};
 
 
 
