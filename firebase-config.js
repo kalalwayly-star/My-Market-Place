@@ -1,14 +1,12 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, push, onValue, set, remove } 
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+// firebase-config.js
 
-import { getAuth, setPersistence, browserLocalPersistence } 
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDBT8jv057_JQL6pIUYk-U_LQ8uJHlFi-o",
   authDomain: "kal-marketplace.firebaseapp.com",
-  databaseURL: "https://kal-marketplace-default-rtdb.firebaseio.com",
   projectId: "kal-marketplace",
   storageBucket: "kal-marketplace.firebasestorage.app",
   messagingSenderId: "745728416819",
@@ -17,10 +15,10 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-const db = getDatabase(app);
-const auth = getAuth(app);
+export const auth = getAuth(app);
+export const db = getFirestore(app);
 
-setPersistence(auth, browserLocalPersistence);
+
 
 // ✅ EXPORT EVERYTHING YOU USE
 export { db, auth, ref, push, onValue, set, remove };
