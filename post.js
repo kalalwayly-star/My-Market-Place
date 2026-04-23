@@ -136,7 +136,8 @@ function saveNewAd(event) {
     console.log("Location provided:", locVal);
 
  
-
+document.getElementById("postBtn").innerText = "Posting...";
+document.getElementById("postBtn").disabled = true;
 
     // Assuming you want to get geolocation data before posting the ad
     if (navigator.geolocation) {
@@ -162,8 +163,9 @@ function saveNewAd(event) {
 // Finalize Ad Submission (save to Firestore)
 function finalizeAd(condition, featuredStatus) {
     const user = auth.currentUser;
-const conditionEl = document.querySelector('input[name="condition"]:checked');
+const condition = conditionEl ? conditionEl.value : "Unknown";
 
+finalizeAd(condition, false);
     if (!user) {
         alert("You must be logged in to post ads.");
         return;
@@ -181,7 +183,6 @@ const conditionEl = document.querySelector('input[name="condition"]:checked');
     }
 
     const newAd = {
-        id: Date.now(),
         userId: user.uid,
         userEmail: user.email,
         category: categoryEl.value,
@@ -258,12 +259,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const payContainer = document.getElementById("paypal-button-container");
     const postBtn = document.getElementById("postBtn");
 
-    if (postBtn) {
-        postBtn.addEventListener("click", (event) => {
-            event.preventDefault(); // Prevent default form submission
-            saveNewAd(event);       // Trigger the ad-saving function
-        });
-    }
+   const form = document.getElementById("postForm");
+
+if (form) {
+    form.addEventListener("submit", saveNewAd);
+}
 
     if (featured) {
         featured.addEventListener("change", function () {
