@@ -1,19 +1,14 @@
-import { db, ref, onValue, remove, auth } from "./firebase-config.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { auth } from "./firebase-config.js";
 
-let globalAds = [];
-
-/* =========================
-   AUTH LISTENER (NAVBAR)
-========================= */
 document.addEventListener("DOMContentLoaded", () => {
 
-    onAuthStateChanged(auth, (user) => {
+    const userInfoDiv = document.getElementById("user-info-header");
+    const emailSpan = document.getElementById("header-user-email");
+    const loginLink = document.getElementById("userAuth");
+    const logoutBtn = document.getElementById("logout-btn");
 
-        const userInfoDiv = document.getElementById("user-info-header");
-        const emailSpan = document.getElementById("header-user-email");
-        const loginLink = document.getElementById("userAuth");
-        const logoutBtn = document.getElementById("logout-btn");
+    onAuthStateChanged(auth, (user) => {
 
         if (user) {
             if (userInfoDiv) userInfoDiv.style.display = "block";
@@ -27,9 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    /* LOGOUT */
-    const logoutBtn = document.getElementById("logout-btn");
-
+    // LOGOUT
     if (logoutBtn) {
         logoutBtn.addEventListener("click", () => {
             signOut(auth).then(() => {
@@ -38,7 +31,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
-
 
 /* =========================
    ADS LOAD FROM FIREBASE
