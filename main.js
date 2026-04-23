@@ -58,6 +58,22 @@ function initMain() {
 
         renderAds(globalAds, "listings");
     });
+   onAuthStateChanged(auth, (user) => {
+
+    const isMyAdsPage = document.getElementById("myAds");
+
+    if (isMyAdsPage && user) {
+
+        const myAds = globalAds.filter(ad => ad.userId === user.uid);
+
+        renderAds(myAds, "myAds");
+
+    } else if (isMyAdsPage) {
+
+        document.getElementById("myAds").innerHTML =
+            "Please login to see your ads.";
+    }
+});
 }
 
 document.addEventListener("DOMContentLoaded", initMain);
