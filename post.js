@@ -105,24 +105,41 @@ function removeImg(e, data, btn) {
 
 // 5. SAVE LOGIC
 function saveNewAd(event) {
+    // Prevent the default form submission
     if (event) event.preventDefault();
+
+    console.log("saveNewAd function triggered");
+
     const user = auth.currentUser;
 
+    // Check if the user is logged in
     if (!user) {
         alert("You must be logged in to post ads.");
+        console.log("User is not logged in.");
         return;
     }
 
-    const locVal = document.getElementById('adLocation').value.trim();
-    if (!locVal) { alert("Location required."); return; }
+    console.log("User is logged in:", user.email);
 
-    // Geolocation for coordinates
+    const locVal = document.getElementById('adLocation').value.trim();
+
+    // Validate location field
+    if (!locVal) {
+        alert("Location required.");
+        console.log("Location field is empty");
+        return;
+    }
+
+    console.log("Location provided:", locVal);
+
+    // Assuming you want to get geolocation data before posting the ad
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             (pos) => {
                 window.currentAdLat = pos.coords.latitude;
                 window.currentAdLng = pos.coords.longitude;
-                finalizeAd(false);  // Proceed after getting the location
+                console.log("Geolocation retrieved:", window.currentAdLat, window.currentAdLng);
+                finalizeAd(false);  // Proceed after geolocation retrieval
             },
             (error) => {
                 console.warn("Geolocation failed:", error.message);
@@ -131,6 +148,7 @@ function saveNewAd(event) {
             { timeout: 3000 }
         );
     } else {
+        console.warn("Geolocation not supported or denied.");
         finalizeAd(false);  // Proceed if geolocation is not available
     }
 }
