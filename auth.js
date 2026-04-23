@@ -2,8 +2,7 @@ import { auth } from "./firebase-config.js";
 import { 
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword
-} from "https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js";
-
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
 /* --- LOGIN FUNCTION --- */
 window.login = function () {
     const email = document.getElementById('loginEmail').value.trim();
