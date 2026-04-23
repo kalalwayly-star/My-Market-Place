@@ -133,29 +133,46 @@ function finalizeAd(featuredStatus) {
         return;
     }
 
-    const conditionEl = document.querySelector('input[name="condition"]:checked');
+    const categoryEl = document.getElementById('postCategory');
+    const titleEl = document.getElementById('adTitle');
+    const priceEl = document.getElementById('adPrice');
+    const locationEl = document.getElementById('adLocation');
+    const descEl = document.getElementById('adDesc');
+
+    if (!categoryEl || !titleEl || !priceEl || !locationEl || !descEl) {
+        alert("Form fields missing in HTML!");
+        return;
+    }
 
     const newAd = {
         id: Date.now(),
-        userEmail: user.email,   // keep for display (optional)
-        userId: user.uid,        // ✅ ADD THIS (IMPORTANT FIX)
 
-        category: document.getElementById('postCategory').value,
-        title: document.getElementById('adTitle').value,
-        price: document.getElementById('adPrice').value,
-        location: document.getElementById('adLocation').value,
-        description: document.getElementById('adDesc').value,
-        image: uploadedImages.length > 0 ? uploadedImages : ['https://via.placeholder.com/300'],
+        userId: user.uid,
+        userEmail: user.email,
+
+        category: categoryEl.value,
+        title: titleEl.value,
+        price: priceEl.value,
+        location: locationEl.value,
+        description: descEl.value,
+
+        image: (typeof uploadedImages !== "undefined" && uploadedImages.length > 0)
+            ? uploadedImages
+            : ['https://via.placeholder.com/300'],
+
         status: "Active",
         date: new Date().toLocaleDateString()
     };
 
     push(ref(db, "marketplace_ads"), newAd)
         .then(() => {
-            alert("Success!");
+            alert("Ad posted successfully!");
             window.location.href = "index.html";
         })
-        .catch(err => alert("Error: " + err.message));
+        .catch(err => {
+            alert("Error: " + err.message);
+            console.error(err);
+        });
 }
 
 // 6. INITIALIZE & ATTACH TO WINDOW
