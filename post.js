@@ -1,8 +1,10 @@
 import { db, ref, push, onValue, set, remove } from "./firebase-config.js";
 
 // 1. GLOBAL VARIABLES
-import { auth } from "./firebase-config.js";let uploadedImages = [];
+import { db, ref, push, onValue, set, remove, auth } from "./firebase-config.js";
 
+// GLOBAL VARIABLES
+let uploadedImages = [];
 
 // 2. HELPER TO TRIGGER YOUR TRANSLATION
 function runTranslation() {
@@ -235,3 +237,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+window.saveNewAd = function (event) {
+    finalizeAd();
+};
