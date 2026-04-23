@@ -2,7 +2,7 @@ import { auth } from "./firebase-config.js";
 import { 
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+} from "https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js";
 
 /* --- LOGIN FUNCTION --- */
 window.login = function () {
@@ -24,18 +24,21 @@ window.login = function () {
         .then(() => {
             window.location.href = "index.html"; // Redirect after successful login
         })
-        .catch((error) => {
-            let errorMessage = "An error occurred. Please try again.";
-            if (error.code === 'auth/user-not-found') {
-                errorMessage = "No user found with this email.";
-            } else if (error.code === 'auth/wrong-password') {
-                errorMessage = "Incorrect password. Please try again.";
-            } else if (error.code === 'auth/invalid-email') {
-                errorMessage = "Invalid email format.";
-            }
-            errorMsg.innerText = errorMessage; // Display a custom error message
-        });
-};
+       .catch((error) => {
+    console.error("LOGIN ERROR:", error); // 👈 ADD THIS
+
+    let errorMessage = error.message; // 👈 CHANGE THIS (show real error)
+
+    if (error.code === 'auth/user-not-found') {
+        errorMessage = "No user found with this email.";
+    } else if (error.code === 'auth/wrong-password') {
+        errorMessage = "Incorrect password. Please try again.";
+    } else if (error.code === 'auth/invalid-email') {
+        errorMessage = "Invalid email format.";
+    }
+
+    errorMsg.innerText = errorMessage;
+});
 
 /* --- REGISTER FUNCTION (FIREBASE CLEAN VERSION) --- */
 window.register = function () {
@@ -74,4 +77,9 @@ window.checkAdminAccess = function () {
         alert("Access Denied");
     }
 };
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+
+onAuthStateChanged(auth, (user) => {
+    console.log("AUTH STATE:", user); // 👈 helps debugging
+});
 
