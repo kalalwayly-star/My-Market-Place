@@ -1,6 +1,6 @@
 import { auth, db } from "./firebase-config.js";
-
 import { collection, addDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
 // GLOBAL VARIABLES
 let uploadedImages = [];
 
@@ -107,39 +107,36 @@ function removeImg(e, data, btn) {
 function saveNewAd(event) {
     if (event) event.preventDefault();
     const user = auth.currentUser;
-    
-console.log("SAVE FUNCTION RUNNING");
 
     if (!user) {
         alert("You must be logged in to post ads.");
         return;
     }
-    
+
     const locVal = document.getElementById('adLocation').value.trim();
     if (!locVal) { alert("Location required."); return; }
 
-    console.log("Before geolocation");
-
-   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-        (pos) => {
-            window.currentAdLat = pos.coords.latitude;
-            window.currentAdLng = pos.coords.longitude;
-            finalizeAd(false); // Proceed with posting the ad
-        },
-        (error) => {
-            console.warn("Geolocation failed:", error.message); // Show error message in console
-            finalizeAd(false); // Proceed even if geolocation fails
-        },
-        { timeout: 3000 } // Timeout after 3 seconds
-    );
-} else {
-    finalizeAd(false); // Proceed if geolocation is not available
+    // Geolocation for coordinates
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (pos) => {
+                window.currentAdLat = pos.coords.latitude;
+                window.currentAdLng = pos.coords.longitude;
+                finalizeAd(false);  // Proceed after getting the location
+            },
+            (error) => {
+                console.warn("Geolocation failed:", error.message);
+                finalizeAd(false);  // Proceed even if geolocation fails
+            },
+            { timeout: 3000 }
+        );
+    } else {
+        finalizeAd(false);  // Proceed if geolocation is not available
+    }
 }
 
 function finalizeAd(featuredStatus) {
     const user = auth.currentUser;
-    console.log("FINALIZE RUNNING");
 
     if (!user) {
         alert("You must be logged in to post ads.");
@@ -166,17 +163,17 @@ function finalizeAd(featuredStatus) {
         price: priceEl.value,
         location: locationEl.value,
         description: descEl.value,
-        image: (typeof uploadedImages !== "undefined" && uploadedImages.length > 0)
-            ? uploadedImages
-            : ['https://via.placeholder.com/300'],
+        image: (uploadedImages.length > 0) ? uploadedImages : ['https://via.placeholder.com/300'],
         status: "Active",
-        date: new Date().toLocaleDateString()
+        date: new Date().toLocaleDateString(),
+        lat: window.currentAdLat || null,
+        lng: window.currentAdLng || null
     };
 
-addDoc(collection(db, "marketplace_ads"), newAd)      
-    .then(() => {
+    addDoc(collection(db, "marketplace_ads"), newAd)
+        .then(() => {
             alert("Ad posted successfully!");
-            window.location.href = "index.html";
+            window.location.href = "index.html";  // Redirect after posting
         })
         .catch(err => {
             alert("Error: " + err.message);
@@ -185,18 +182,17 @@ addDoc(collection(db, "marketplace_ads"), newAd)
 }
 
 // 6. INITIALIZE & ATTACH TO WINDOW
-// This makes the functions available to HTML attributes like onchange=""
 window.handleCategoryChange = handleCategoryChange;
 window.handlePhotoUpload = handlePhotoUpload;
 window.saveNewAd = saveNewAd;
 window.removeImg = removeImg;
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Initial run to set up UI
-    handleCategoryChange();
-    runTranslation(); 
+    handleCategoryChange();  // Initialize category sections
+    runTranslation();  // Handle translations if any
 });
 
+// PayPal integration
 function initPayPal() {
     const container = document.getElementById("paypal-button-container");
 
@@ -227,6 +223,7 @@ function initPayPal() {
         }
     }).render("#paypal-button-container");
 }
+
 window.initPayPal = initPayPal;
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -234,16 +231,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const payContainer = document.getElementById("paypal-button-container");
     const postBtn = document.getElementById("postBtn");
 
-    const form = document.getElementById("postForm");
-
-if (form) {
-    form.addEventListener("submit", saveNewAd);
-}
-
-     if (postBtn) {
+    if (postBtn) {
         postBtn.addEventListener("click", saveNewAd);
     }
-
 
     if (!featured) return;
 
@@ -257,4 +247,3 @@ if (form) {
         }
     });
 });
-
