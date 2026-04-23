@@ -1,45 +1,45 @@
 import { auth } from "./firebase-config.js";
 import { 
     signInWithEmailAndPassword,
-    createUserWithEmailAndPassword
+    createUserWithEmailAndPassword,
+    onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+
 /* --- LOGIN FUNCTION --- */
 window.login = function () {
     const email = document.getElementById('loginEmail').value.trim();
-const password = document.getElementById('loginPassword').value;
+    const password = document.getElementById('loginPassword').value;
     const errorMsg = document.getElementById('error-message');
 
-    // Clear previous error message
     errorMsg.innerText = '';
 
-    // Validation
     if (!email || !password) {
         errorMsg.innerText = "Please fill in all fields.";
         return;
     }
 
-    // Sign In
     signInWithEmailAndPassword(auth, email, password)
         .then(() => {
-            window.location.href = "index.html"; // Redirect after successful login
+            window.location.href = "index.html";
         })
-       .catch((error) => {
-    console.error("LOGIN ERROR:", error); // 👈 ADD THIS
+        .catch((error) => {
+            console.error("LOGIN ERROR:", error);
 
-    let errorMessage = error.message; // 👈 CHANGE THIS (show real error)
+            let errorMessage = error.message;
 
-    if (error.code === 'auth/user-not-found') {
-        errorMessage = "No user found with this email.";
-    } else if (error.code === 'auth/wrong-password') {
-        errorMessage = "Incorrect password. Please try again.";
-    } else if (error.code === 'auth/invalid-email') {
-        errorMessage = "Invalid email format.";
-    }
+            if (error.code === 'auth/user-not-found') {
+                errorMessage = "No user found with this email.";
+            } else if (error.code === 'auth/wrong-password') {
+                errorMessage = "Incorrect password. Please try again.";
+            } else if (error.code === 'auth/invalid-email') {
+                errorMessage = "Invalid email format.";
+            }
 
-    errorMsg.innerText = errorMessage;
-});
+            errorMsg.innerText = errorMessage;
+        });
+};
 
-/* --- REGISTER FUNCTION (FIREBASE CLEAN VERSION) --- */
+/* --- REGISTER FUNCTION --- */
 window.register = function () {
     const email = document.getElementById('email').value.trim();
     const password = document.getElementById('loginPassword').value;
@@ -64,8 +64,7 @@ window.register = function () {
         });
 };
 
-
-/* --- ADMIN CHECK (UNCHANGED) --- */
+/* --- ADMIN CHECK --- */
 window.checkAdminAccess = function () {
     const pass = prompt("Enter Admin Password:");
 
@@ -76,9 +75,8 @@ window.checkAdminAccess = function () {
         alert("Access Denied");
     }
 };
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
 
+/* --- DEBUG AUTH STATE --- */
 onAuthStateChanged(auth, (user) => {
-    console.log("AUTH STATE:", user); // 👈 helps debugging
+    console.log("AUTH STATE:", user);
 });
-
