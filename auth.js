@@ -10,20 +10,32 @@ window.login = function () {
     const password = document.getElementById('loginPassword').value;
     const errorMsg = document.getElementById('error-message');
 
+    // Clear previous error message
+    errorMsg.innerText = '';
+
+    // Validation
     if (!email || !password) {
         errorMsg.innerText = "Please fill in all fields.";
         return;
     }
 
+    // Sign In
     signInWithEmailAndPassword(auth, email, password)
         .then(() => {
-            window.location.href = "index.html";
+            window.location.href = "index.html"; // Redirect after successful login
         })
         .catch((error) => {
-            errorMsg.innerText = error.message;
+            let errorMessage = "An error occurred. Please try again.";
+            if (error.code === 'auth/user-not-found') {
+                errorMessage = "No user found with this email.";
+            } else if (error.code === 'auth/wrong-password') {
+                errorMessage = "Incorrect password. Please try again.";
+            } else if (error.code === 'auth/invalid-email') {
+                errorMessage = "Invalid email format.";
+            }
+            errorMsg.innerText = errorMessage; // Display a custom error message
         });
 };
-
 
 /* --- REGISTER FUNCTION (FIREBASE CLEAN VERSION) --- */
 window.register = function () {
