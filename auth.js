@@ -1,9 +1,9 @@
-// HELPER: Get error message element
-const getErrorEl = () => document.getElementById('error-message');
-
 /* --- LOGIN FUNCTION --- */
 import { auth } from "./firebase-config.js";
 import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+// HELPER: Get error message element
+const getErrorEl = () => document.getElementById('error-message');
 
 window.login = function () {
     const email = document.getElementById('loginEmail').value.trim();
