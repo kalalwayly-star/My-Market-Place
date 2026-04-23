@@ -118,19 +118,28 @@ console.log("SAVE FUNCTION RUNNING");
     const locVal = document.getElementById('adLocation').value.trim();
     if (!locVal) { alert("Location required."); return; }
 
+    console.log("Before geolocation");
+
+   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
         (pos) => {
             window.currentAdLat = pos.coords.latitude;
             window.currentAdLng = pos.coords.longitude;
-            finalizeAd(false);
+            finalizeAd(false); // Proceed with posting the ad
         },
-        () => { finalizeAd(false); },
-        { timeout: 3000 }
+        (error) => {
+            console.warn("Geolocation failed:", error.message); // Show error message in console
+            finalizeAd(false); // Proceed even if geolocation fails
+        },
+        { timeout: 3000 } // Timeout after 3 seconds
     );
+} else {
+    finalizeAd(false); // Proceed if geolocation is not available
 }
 
 function finalizeAd(featuredStatus) {
     const user = auth.currentUser;
+    console.log("FINALIZE RUNNING");
 
     if (!user) {
         alert("You must be logged in to post ads.");
