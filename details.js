@@ -8,25 +8,23 @@ let ad;
 const currentUser = JSON.parse(localStorage.getItem("currentUser")) || { email: "Guest" };
 
 // 1. INITIALIZATION (Load from Cloud)
-function initDetailsPage() {
+async function initDetailsPage() {
     if (!adId) {
         window.location.href = "index.html";
         return;
     }
 
-    const adRef = ref(db, `marketplace_ads/${adId}`);
-    
-    onValue(adRef, (snapshot) => {
-        ad = snapshot.val();
+    const docRef = doc(db, "marketplace_ads", adId);
+    const snap = await getDoc(docRef);
 
-        if (!ad) {
-            alert("Ad not found in the cloud!");
-            window.location.href = "index.html";
-            return;
-        }
+    if (!snap.exists()) {
+        alert("Ad not found!");
+        window.location.href = "index.html";
+        return;
+    }
 
-        renderAdDetails();
-    });
+    ad = snap.data();
+    renderAdDetails();
 }
 
 // 2. RENDER AD DATA
@@ -93,14 +91,13 @@ window.sendMessage = function() {
     };
 
     // SAVE TO FIREBASE MESSAGES
-    const msgRef = ref(db, "marketplace_messages");
-    push(msgRef, newMessage)
-        .then(() => {
-            alert(getText("message_sent") || "Message sent to the cloud!");
-            if (messageInput) messageInput.value = "";
-            if (typeof closeMessageModal === "function") closeMessageModal();
-        })
-        .catch(err => alert("Error: " + err.message));
+   addDoc(collection(db, "marketplace_messages"), newMessage)
+    .then(() => {
+        alert(getText("message_sent") || "Message sent to the cloud!");
+        if (messageInput) messageInput.value = "";
+        if (typeof closeMessageModal === "function") closeMessageModal();
+    })
+    .catch(err => alert("Error: " + err.message));
 }
 
 // 4. REPORT SYSTEM (Cloud Version)
