@@ -6,25 +6,27 @@ let globalAds = [];
 let uploadedImages = []; 
 
 // 1. LOGIN LISTENER (Fixed link and logic)
-onAuthStateChanged(auth, (user) => {
+document.addEventListener("DOMContentLoaded", () => {
 
-    const userInfoDiv = document.getElementById("user-info-header");
-    const emailSpan = document.getElementById("header-user-email");
-    const loginLink = document.getElementById("userAuth");
-    const logoutBtn = document.getElementById("logout-btn");
+    onAuthStateChanged(auth, (user) => {
 
-    console.log("AUTH USER:", user);
+        const userInfoDiv = document.getElementById("user-info-header");
+        const emailSpan = document.getElementById("header-user-email");
+        const loginLink = document.getElementById("userAuth");
+        const logoutBtn = document.getElementById("logout-btn");
 
-    if (user) {
-        if (userInfoDiv) userInfoDiv.style.display = "block";
-        if (emailSpan) emailSpan.innerText = user.email;
-        if (loginLink) loginLink.style.display = "none";
-        if (logoutBtn) logoutBtn.style.display = "inline-block";
-    } else {
-        if (userInfoDiv) userInfoDiv.style.display = "none";
-        if (loginLink) loginLink.style.display = "inline-block";
-        if (logoutBtn) logoutBtn.style.display = "none";
-    }
+        if (user) {
+            if (userInfoDiv) userInfoDiv.style.display = "block";
+            if (emailSpan) emailSpan.innerText = user.email;
+            if (loginLink) loginLink.style.display = "none";
+            if (logoutBtn) logoutBtn.style.display = "inline-block";
+        } else {
+            if (userInfoDiv) userInfoDiv.style.display = "none";
+            if (loginLink) loginLink.style.display = "inline-block";
+            if (logoutBtn) logoutBtn.style.display = "none";
+        }
+    });
+
 });
 
 document.addEventListener("DOMContentLoaded", () => {
