@@ -231,19 +231,24 @@ document.addEventListener("DOMContentLoaded", () => {
     const payContainer = document.getElementById("paypal-button-container");
     const postBtn = document.getElementById("postBtn");
 
+    // Ensure postBtn exists and attach event listener for form submission
     if (postBtn) {
-        postBtn.addEventListener("click", saveNewAd);
+        postBtn.addEventListener("click", (event) => {
+            event.preventDefault(); // Prevent default form submission
+            saveNewAd(event);       // Trigger the ad-saving function
+        });
     }
 
-    if (!featured) return;
-
-    featured.addEventListener("change", function () {
-        if (this.checked) {
-            initPayPal();
-            if (postBtn) postBtn.disabled = true;
-        } else {
-            if (payContainer) payContainer.style.display = "none";
-            if (postBtn) postBtn.disabled = false;
-        }
-    });
+    // Check for featured checkbox and handle its change
+    if (featured) {
+        featured.addEventListener("change", function () {
+            if (this.checked) {
+                initPayPal();  // Initialize PayPal if checkbox is checked
+                if (postBtn) postBtn.disabled = true;  // Disable the button
+            } else {
+                if (payContainer) payContainer.style.display = "none"; // Hide PayPal button
+                if (postBtn) postBtn.disabled = false;  // Enable the button
+            }
+        });
+    }
 });
