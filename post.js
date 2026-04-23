@@ -114,7 +114,6 @@ function saveNewAd(event) {
     console.log("saveNewAd function triggered");
 
     const user = auth.currentUser;
-    condition: conditionEl ? conditionEl.value : "Unknown",
 
     // Check if the user is logged in
     if (!user) {
@@ -126,7 +125,6 @@ function saveNewAd(event) {
     console.log("User is logged in:", user.email);
 
     const locVal = document.getElementById('adLocation').value.trim();
-    const condition = document.querySelector('input[name="condition"]:checked').value;
 
     // Validate location field
     if (!locVal) {
