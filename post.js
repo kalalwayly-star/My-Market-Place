@@ -1,7 +1,6 @@
 import { auth, db } from "./firebase-config.js";
 
-import { push, ref } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js";
-
+import { collection, addDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 // GLOBAL VARIABLES
 let uploadedImages = [];
 
@@ -163,8 +162,8 @@ function finalizeAd(featuredStatus) {
         date: new Date().toLocaleDateString()
     };
 
-    push(ref(db, "marketplace_ads"), newAd)
-        .then(() => {
+addDoc(collection(db, "marketplace_ads"), newAd)      
+    .then(() => {
             alert("Ad posted successfully!");
             window.location.href = "index.html";
         })
