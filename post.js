@@ -1,7 +1,4 @@
-import { db, ref, push, onValue, set, remove } from "./firebase-config.js";
-
-// 1. GLOBAL VARIABLES
-import { db, ref, push, onValue, set, remove, auth } from "./firebase-config.js";
+import { db, ref, push, auth } from "./firebase-config.js";
 
 // GLOBAL VARIABLES
 let uploadedImages = [];
@@ -16,7 +13,6 @@ function runTranslation() {
 
 // 3. HANDLE CATEGORY CHANGES
 window.handleCategoryChange = function () {
-
     const mainCategorySelect = document.getElementById('postCategory');
     const commonFields = document.getElementById('commonFields');
     const sections = document.querySelectorAll('.category-details');
@@ -34,7 +30,6 @@ window.handleCategoryChange = function () {
         if (condSec) condSec.style.display = 'none';
         return;
     }
-};
 
     // Show shared fields
     if (commonFields) commonFields.style.display = 'block';
@@ -52,7 +47,7 @@ window.handleCategoryChange = function () {
 
     // Re-translate the newly visible fields
     runTranslation();
-}
+};
 
 // 4. PHOTO UPLOAD & COMPRESSION
 async function handlePhotoUpload(event) {
@@ -102,7 +97,7 @@ function compressImage(file) {
 }
 
 function removeImg(e, data, btn) {
-    if(e) e.stopPropagation();
+    if (e) e.stopPropagation();
     uploadedImages = uploadedImages.filter(img => img !== data);
     btn.parentElement.remove();
 }
@@ -110,7 +105,12 @@ function removeImg(e, data, btn) {
 // 5. SAVE LOGIC
 function saveNewAd(event) {
     if (event) event.preventDefault();
-    if (!currentUser || currentUser.email === "Guest") { alert("Please login."); return; }
+    const user = auth.currentUser;
+
+    if (!user) {
+        alert("You must be logged in to post ads.");
+        return;
+    }
 
     const locVal = document.getElementById('adLocation').value.trim();
     if (!locVal) { alert("Location required."); return; }
@@ -127,7 +127,6 @@ function saveNewAd(event) {
 }
 
 function finalizeAd(featuredStatus) {
-
     const user = auth.currentUser;
 
     if (!user) {
@@ -148,20 +147,16 @@ function finalizeAd(featuredStatus) {
 
     const newAd = {
         id: Date.now(),
-
         userId: user.uid,
         userEmail: user.email,
-
         category: categoryEl.value,
         title: titleEl.value,
         price: priceEl.value,
         location: locationEl.value,
         description: descEl.value,
-
         image: (typeof uploadedImages !== "undefined" && uploadedImages.length > 0)
             ? uploadedImages
             : ['https://via.placeholder.com/300'],
-
         status: "Active",
         date: new Date().toLocaleDateString()
     };
@@ -189,6 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
     handleCategoryChange();
     runTranslation(); 
 });
+
 function initPayPal() {
     const container = document.getElementById("paypal-button-container");
 
@@ -220,6 +216,7 @@ function initPayPal() {
     }).render("#paypal-button-container");
 }
 window.initPayPal = initPayPal;
+
 document.addEventListener("DOMContentLoaded", () => {
     const featured = document.getElementById("isFeatured");
     const payContainer = document.getElementById("paypal-button-container");
@@ -237,6 +234,3 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
-window.saveNewAd = function (event) {
-    finalizeAd();
-};
