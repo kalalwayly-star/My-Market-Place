@@ -1,4 +1,6 @@
-import { db, ref, push, auth } from "./firebase-config.js";
+import { auth, db } from "./firebase-config.js";
+
+import { push, ref } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js";
 
 // GLOBAL VARIABLES
 let uploadedImages = [];
