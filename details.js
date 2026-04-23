@@ -1,5 +1,6 @@
-import { db, ref, onValue, push } from "./firebase-config.js";
+import { db } from "./firebase-config.js";
 
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 const params = new URLSearchParams(window.location.search);
 const adId = params.get("id"); // This is now the Firebase unique key
 
