@@ -1,6 +1,9 @@
-import { auth } from "./firebase-config.js"; // For Firebase Authentication
+import { auth } from "./firebase-config.js";  // For Firebase Authentication
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js"; // Authentication functions
-import { db, ref, onValue } from "./firebase-config.js"; // For Firebase Realtime Database functions
+import { db, ref, onValue } from "./firebase-config.js";  // For Firebase Realtime Database functions
+
+// Global variable to store ads
+let globalAds = [];
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -9,8 +12,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const loginLink = document.getElementById("userAuth");
     const logoutBtn = document.getElementById("logout-btn");
 
+    // Firebase authentication state listener
     onAuthStateChanged(auth, (user) => {
-
         if (user) {
             if (userInfoDiv) userInfoDiv.style.display = "block";
             if (emailSpan) emailSpan.innerText = user.email;
@@ -23,6 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    // Logout button event listener
     if (logoutBtn) {
         logoutBtn.addEventListener("click", () => {
             signOut(auth).then(() => {
@@ -38,6 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function initMain() {
     const adsRef = ref(db, "marketplace_ads");
 
+    // Listen for changes to marketplace_ads data in Firebase Realtime Database
     onValue(adsRef, (snapshot) => {
         const data = snapshot.val();
         globalAds = [];
@@ -50,22 +55,17 @@ function initMain() {
 
         renderAds(globalAds, "listings");
     });
-   onAuthStateChanged(auth, (user) => {
 
-    const isMyAdsPage = document.getElementById("myAds");
-
-    if (isMyAdsPage && user) {
-
-        const myAds = globalAds.filter(ad => ad.userId === user.uid);
-
-        renderAds(myAds, "myAds");
-
-    } else if (isMyAdsPage) {
-
-        document.getElementById("myAds").innerHTML =
-            "Please login to see your ads.";
-    }
-});
+    // If on "My Ads" page, display only the logged-in user's ads
+    onAuthStateChanged(auth, (user) => {
+        const isMyAdsPage = document.getElementById("myAds");
+        if (isMyAdsPage && user) {
+            const myAds = globalAds.filter(ad => ad.userId === user.uid);
+            renderAds(myAds, "myAds");
+        } else if (isMyAdsPage) {
+            document.getElementById("myAds").innerHTML = "Please login to see your ads.";
+        }
+    });
 }
 
 document.addEventListener("DOMContentLoaded", initMain);
@@ -85,7 +85,7 @@ window.goToDetails = function(id) {
 window.deleteAd = function(firebaseId) {
     if (confirm("Are you sure you want to delete this ad?")) {
         const adRef = ref(db, `marketplace_ads/${firebaseId}`);
-        remove(adRef);
+        remove(adRef);  // Remove ad from Firebase
     }
 };
 
@@ -103,12 +103,14 @@ window.filterByCategory = function(category) {
     } else {
         filteredAds = allAds.filter(ad => ad.category === category);  // Filter by selected category
     }
-console.log("Filtered ads:", filteredAds);  // Log filtered ads
+
+    // Log filtered ads for debugging
+    console.log("Filtered ads:", filteredAds);
 
     // Render filtered ads
     renderAds(filteredAds, "listings");
 
-    // Show or hide "No items found" message
+    // Show or hide "No items found" message based on the filtered results
     const noItemsMessage = document.getElementById('no-items-message');
     if (filteredAds.length === 0) {
         noItemsMessage.style.display = 'block';  // Show "No items found" if no ads match
@@ -126,6 +128,7 @@ window.resetFilters = function() {
     noItemsMessage.style.display = 'none';  // Hide "No items found" message
 };
 
+// UPDATED: Apply Filters (search)
 window.applyFilters = function() {
     const searchInput = document.getElementById('searchInput');
     const query = searchInput.value.toLowerCase().trim();
@@ -151,6 +154,7 @@ window.applyFilters = function() {
     }
 };
 
+
 /* =========================
    RENDER ADS
 ========================= */
@@ -159,18 +163,18 @@ window.renderAds = function(adsArray, containerId = "listings") {
     if (!container) return;
 
     container.innerHTML = "";  // Clear the existing ads in the container
-console.log("Filtered ads:", filteredAds);  // Log filtered ads
+
+    // Log the filtered ads for debugging
+    console.log("Filtered ads:", adsArray);
 
     if (!adsArray || adsArray.length === 0) {
-        container.innerHTML = `<p style="text-align:center;">No items found.</p>`;
+        container.innerHTML = `<p style="text-align:center;">No items found.</p>`;  // If no ads match
         return;
     }
 
     container.innerHTML = adsArray.map(ad => {
         const uniqueId = ad.firebaseId;
-        const image = Array.isArray(ad.image)
-            ? ad.image[0]
-            : (ad.image || 'https://via.placeholder.com/300');
+        const image = Array.isArray(ad.image) ? ad.image[0] : (ad.image || 'https://via.placeholder.com/300');
 
         return `
         <div class="card">
