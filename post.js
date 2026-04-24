@@ -158,19 +158,38 @@ function saveNewAd(event) {
 // FINAL SAVE
 function finalizeAd(condition) {
     const user = auth.currentUser;
-    if (!user) return;
+
+    const conditionEl = document.querySelector('input[name="condition"]:checked');
+
+    if (!user) {
+        alert("You must be logged in to post ads.");
+        return;
+    }
+
+    const categoryEl = document.getElementById('postCategory');
+    const titleEl = document.getElementById('adTitle');
+    const priceEl = document.getElementById('adPrice');
+    const locationEl = document.getElementById('adLocation');
+    const descEl = document.getElementById('adDesc');
+
+    if (!categoryEl || !titleEl || !priceEl || !locationEl || !descEl) {
+        alert("Form fields missing in HTML!");
+        return;
+    }
+
+    // Get the selected condition (New or Used)
+    const adCondition = conditionEl ? conditionEl.value : "Unknown";
 
     const newAd = {
         userId: user.uid,
         userEmail: user.email,
-        category: document.getElementById('postCategory')?.value || "",
-        title: document.getElementById('adTitle')?.value || "",
-        price: document.getElementById('adPrice')?.value || "",
-        location: document.getElementById('adLocation')?.value || "",
-        description: document.getElementById('adDesc')?.value || "",
-        condition: condition,
+        category: categoryEl.value,
+        title: titleEl.value,
+        price: priceEl.value,
+        location: locationEl.value,
+        description: descEl.value,
+        condition: adCondition,  // Store the condition value
         image: uploadedImages.length ? uploadedImages : ['https://via.placeholder.com/300'],
-        status: "Active",
         date: new Date().toLocaleDateString(),
         lat: window.currentAdLat || null,
         lng: window.currentAdLng || null
@@ -178,25 +197,12 @@ function finalizeAd(condition) {
 
     addDoc(collection(db, "marketplace_ads"), newAd)
         .then(() => {
-            alert("Posted successfully!");
-
-            const btn = document.getElementById("postBtn");
-            if (btn) {
-                btn.disabled = false;
-                btn.innerText = "Post Ad Now";
-            }
-
-            window.location.href = "index.html";
+            alert("Ad posted successfully!");
+            window.location.href = "index.html";  // Redirect after posting
         })
         .catch(err => {
+            alert("Error: " + err.message);
             console.error(err);
-            alert(err.message);
-
-            const btn = document.getElementById("postBtn");
-            if (btn) {
-                btn.disabled = false;
-                btn.innerText = "Post Ad Now";
-            }
         });
 }
 
