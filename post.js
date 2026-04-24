@@ -23,27 +23,33 @@ window.handleCategoryChange = function () {
 
     const val = category.value;
 
+    // Hide all sections first
     sections.forEach(sec => sec.style.display = 'none');
+
+    // Reset the condition field visibility
+    if (conditionBox) conditionBox.style.display = 'none';
 
     if (!val) {
         if (common) common.style.display = 'none';
-        if (conditionBox) conditionBox.style.display = 'none';
         return;
     }
 
     if (common) common.style.display = 'block';
 
+    // Show condition field only for specific categories
+    const categoriesWithCondition = ['Electronics', 'Furniture', 'Cars & Trucks', 'Fashion'];
+
+    if (categoriesWithCondition.includes(val)) {
+        if (conditionBox) conditionBox.style.display = 'block';
+    }
+
+    // Handle specific categories
     if (val === 'Cars & Trucks') {
         document.getElementById('section-Cars')?.style.display = 'block';
     }
 
     if (val === 'Real Estate') {
         document.getElementById('section-RealEstate')?.style.display = 'block';
-    }
-
-    const noCondition = ['Pets', 'Jobs', 'Real Estate'];
-    if (conditionBox) {
-        conditionBox.style.display = noCondition.includes(val) ? 'none' : 'block';
     }
 
     runTranslation();
