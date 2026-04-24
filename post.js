@@ -148,7 +148,6 @@ function finalizeAd() {
     // ✅ correct condition selector
     const condition = document.querySelector('input[name="condition"]:checked')?.value || "N/A";
 
-    console.log("Selected condition:", condition);
 
     const newAd = {
         userId: user.uid,
