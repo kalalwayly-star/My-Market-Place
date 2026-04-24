@@ -13,12 +13,13 @@ window.handlePhotoUpload = function (event) {
     const files = Array.from(event.target.files || []);
     const preview = document.getElementById("galleryPreview");
 
-    if (!preview) return;
+    if (!preview || !files.length) return;
 
-    preview.innerHTML = "";
-    uploadedImages = [];
+    // limit total to 10
+    const remainingSlots = 10 - uploadedImages.length;
+    const filesToAdd = files.slice(0, remainingSlots);
 
-    files.slice(0, 10).forEach(file => {
+    filesToAdd.forEach(file => {
         // preview
         const img = document.createElement("img");
         img.src = URL.createObjectURL(file);
@@ -34,6 +35,9 @@ window.handlePhotoUpload = function (event) {
         };
         reader.readAsDataURL(file);
     });
+
+    // reset input so same file can be selected again
+    event.target.value = "";
 };
 
 /* =======================
