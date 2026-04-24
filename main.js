@@ -1,5 +1,6 @@
-import { auth } from "./firebase-config.js";
-import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+import { auth } from "./firebase-config.js"; // For Firebase Authentication
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js"; // Authentication functions
+import { db, ref, onValue } from "./firebase-config.js"; // For Firebase Realtime Database functions
 
 document.addEventListener("DOMContentLoaded", () => {
 
