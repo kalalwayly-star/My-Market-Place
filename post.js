@@ -108,6 +108,10 @@ function saveNewAd(event) {
         btn.disabled = true;
         btn.innerText = "Posting...";
     }
+   // Add this line to find which radio button is checked
+const conditionElement = document.querySelector('input[name="itemCondition"]:checked');
+const condition = conditionElement ? conditionElement.value : "Not Specified";
+
 
     const goNext = () => finalizeAd();
 
@@ -131,9 +135,6 @@ function saveNewAd(event) {
 ======================= */
 function finalizeAd() {
     const user = auth.currentUser;
-// Add this line to find which radio button is checked
-const conditionElement = document.querySelector('input[name="itemCondition"]:checked');
-const condition = conditionElement ? conditionElement.value : "Not Specified";
 
 // Now your existing line below will work:
 console.log("Selected condition: " + condition); 
