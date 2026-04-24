@@ -510,6 +510,40 @@ img {
     border-bottom: 1px solid #ddd;
     color: #333;
 }
+  .input-group {
+    margin-bottom: 12px;
+}
+
+.input-group input,
+.input-group select,
+.input-group textarea {
+    width: 100%;
+    max-width: 420px;   /* 👈 controls size */
+    padding: 8px;
+    font-size: 14px;
+}
+
+.form-section {
+    margin-bottom: 20px;
+}
+
+.upload-box {
+    border: 2px dashed #ccc;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.radio-row {
+    display: flex;
+    gap: 20px;
+}
+
+.feature-box {
+    background: #fff8e1;
+    padding: 10px;
+    border-radius: 5px;
+}
 
 /* For Arabic (RTL) users */
 [lang="ar"] #user-info-header {
