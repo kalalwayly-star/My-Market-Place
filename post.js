@@ -3,6 +3,33 @@ import { collection, addDoc } from "https://www.gstatic.com/firebasejs/12.12.1/f
 
 // GLOBAL
 let uploadedImages = [];
+window.handlePhotoUpload = function (event) {
+    const files = Array.from(event.target.files);
+
+    if (!files.length) return;
+
+    const preview = document.getElementById("galleryPreview");
+    preview.innerHTML = "";
+
+    uploadedImages = []; // reset
+
+    files.slice(0, 10).forEach(file => {
+        // Preview
+        const img = document.createElement("img");
+        img.src = URL.createObjectURL(file);
+        img.style.width = "100px";
+        img.style.height = "100px";
+        img.style.objectFit = "cover";
+        preview.appendChild(img);
+
+        // Convert to base64 (so Firestore can store it)
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            uploadedImages.push(e.target.result);
+        };
+        reader.readAsDataURL(file);
+    });
+};
 
 // TRANSLATION
 function runTranslation() {
@@ -40,11 +67,13 @@ window.handleCategoryChange = function () {
 
     // Show specific sections based on category
     if (val === 'Cars & Trucks') {
-        document.getElementById('section-Cars')?.style.display = 'block';
+       const el = document.getElementById('section-Cars');
+if (el) el.style.display = 'block';
     }
 
     if (val === 'Real Estate') {
-        document.getElementById('section-RealEstate')?.style.display = 'block';
+        const el = document.getElementById('section-Cars');
+if (el) el.style.display = 'block';
     }
 
     // Hide condition for specific categories
