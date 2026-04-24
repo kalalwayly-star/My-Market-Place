@@ -21,8 +21,8 @@
            <h2 data-i18n="post_ad_header">Post a New Listing</h2>
 
            <!-- Wrap all the form fields inside the form element -->
-           <form id="postForm">
-               <div class="input-group">
+<form id="postForm" enctype="multipart/form-data">
+   <div class="input-group">
                    <label data-i18n="label_category">Category</label>
                    <select id="postCategory" required onchange="handleCategoryChange()">
                        <option value="" data-i18n="select_category">Choose Category</option>
@@ -56,7 +56,7 @@
                        <div id="galleryPreview" class="gallery-grid" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px;"></div>
                    </div>
                </div>
-              <div id="globalCondition" class="input-group" style="margin-bottom: 20px; background: #f0f7ff; padding: 10px; border-radius: 5px;">
+            
   <!-- Item Condition Field (New or Used) -->
 <div id="globalCondition" class="input-group" style="margin-bottom: 20px; background: #f0f7ff; padding: 10px; border-radius: 5px; display:none;">
     <label for="itemCondition" style="font-weight: bold;" data-i18n="label_condition">Item Condition</label>
