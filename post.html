@@ -24,7 +24,7 @@
            <form id="postForm">
                <div class="input-group">
                    <label data-i18n="label_category">Category</label>
-                   <select id="postCategory" required>
+                   <select id="postCategory" required onchange="handleCategoryChange()">
                        <option value="" data-i18n="select_category">Choose Category</option>
                        <option value="Real Estate" data-i18n="cat_realestate">Real Estate</option>
                        <option value="Cars & Trucks" data-i18n="cat_cars_trucks">Cars and Trucks</option>
