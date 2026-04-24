@@ -13,7 +13,7 @@ function runTranslation() {
 }
 
 // CATEGORY
-/ CATEGORY CHANGE HANDLER
+// CATEGORY CHANGE HANDLER
 window.handleCategoryChange = function () {
     const category = document.getElementById('postCategory');
     const common = document.getElementById('commonFields');
