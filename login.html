@@ -37,8 +37,10 @@
             </a>
         </div>
 
-        <!-- Login Button -->
-<button type="submit" class="btn-primary" data-i18n="login_btn">Login</button>
+        <!-- Login Form -->
+        <form id="loginForm" onsubmit="event.preventDefault(); login();">
+            <button type="submit" class="btn-primary" data-i18n="login_btn">Login</button>
+        </form>
         
         <div class="divider"><span data-i18n="or_divider">OR</span></div>
 
@@ -67,6 +69,11 @@
 
 </body>
 </html>
+
+
+
+
+
 
 
 
