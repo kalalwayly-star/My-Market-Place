@@ -1,4 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
 import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js";
 
 const firebaseConfig = {
@@ -11,6 +12,7 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);  // Initialize Realtime Database
 
-export { db, ref, onValue };  // Export Realtime Database functions
+export const auth = getAuth(app);  // Export Firebase Authentication
+export const db = getDatabase(app);  // Export Firebase Realtime Database functions
+export { ref, onValue };  // Export Realtime Database functions
