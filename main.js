@@ -102,6 +102,7 @@ window.filterByCategory = function(category) {
     } else {
         filteredAds = allAds.filter(ad => ad.category === category);  // Filter by selected category
     }
+console.log("Filtered ads:", filteredAds);  // Log filtered ads
 
     // Render filtered ads
     renderAds(filteredAds, "listings");
@@ -132,6 +133,7 @@ window.renderAds = function(adsArray, containerId = "listings") {
     if (!container) return;
 
     container.innerHTML = "";  // Clear the existing ads in the container
+console.log("Filtered ads:", filteredAds);  // Log filtered ads
 
     if (!adsArray || adsArray.length === 0) {
         container.innerHTML = `<p style="text-align:center;">No items found.</p>`;
