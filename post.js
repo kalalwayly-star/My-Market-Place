@@ -96,7 +96,7 @@ function saveNewAd(event) {
         alert("Login required");
         return;
     }
-
+console.log("submit started");
     const category = document.getElementById('postCategory')?.value;
 
     if (!category) {
@@ -119,21 +119,20 @@ function saveNewAd(event) {
 
     const condition = document.querySelector('input[name="condition"]:checked')?.value || "";
 
-    const goNext = () => finalizeAd(condition);
+    const goNext = () => finalizeAd();
 
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            pos => {
-                window.currentAdLat = pos.coords.latitude;
-                window.currentAdLng = pos.coords.longitude;
-                goNext();
-            },
-            () => goNext(),
-            { timeout: 3000 }
-        );
-    } else {
-        goNext();
-    }
+if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+        pos => {
+            window.currentAdLat = pos.coords.latitude;
+            window.currentAdLng = pos.coords.longitude;
+            goNext();
+        },
+        () => goNext(),
+        { timeout: 5000 }
+    );
+} else {
+    goNext();
 }
 
 // FINALIZE AD SUBMISSION
@@ -155,7 +154,11 @@ function finalizeAd() {
         lat: window.currentAdLat || null,
         lng: window.currentAdLng || null
     };
-
+if (!auth.currentUser) {
+    alert("You are not logged in");
+    return;
+    console.log("finalizeAd running");
+}
     // Add ad to Firestore
     addDoc(collection(db, "marketplace_ads"), newAd)
         .then(() => {
