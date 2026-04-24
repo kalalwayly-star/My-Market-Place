@@ -1,6 +1,7 @@
-import { db } from "./firebase-config.js";
+import { auth } from "./firebase-config.js";  // For Firebase Authentication
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js"; // Authentication functions
+import { db, ref, onValue } from "./firebase-config.js";  // For Firebase Realtime Database functions
 
-import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 const params = new URLSearchParams(window.location.search);
 const adId = params.get("id");
 
