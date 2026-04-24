@@ -1,20 +1,25 @@
 import { auth, db } from "./firebase-config.js";
 import { collection, addDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-// GLOBAL
+/* =======================
+   GLOBAL
+======================= */
 let uploadedImages = [];
+
+/* =======================
+   PHOTO UPLOAD
+======================= */
 window.handlePhotoUpload = function (event) {
-    const files = Array.from(event.target.files);
-
-    if (!files.length) return;
-
+    const files = Array.from(event.target.files || []);
     const preview = document.getElementById("galleryPreview");
-    preview.innerHTML = "";
 
-    uploadedImages = []; // reset
+    if (!preview) return;
+
+    preview.innerHTML = "";
+    uploadedImages = [];
 
     files.slice(0, 10).forEach(file => {
-        // Preview
+        // preview
         const img = document.createElement("img");
         img.src = URL.createObjectURL(file);
         img.style.width = "100px";
@@ -22,16 +27,18 @@ window.handlePhotoUpload = function (event) {
         img.style.objectFit = "cover";
         preview.appendChild(img);
 
-        // Convert to base64 (so Firestore can store it)
+        // convert to base64
         const reader = new FileReader();
-        reader.onload = function (e) {
+        reader.onload = (e) => {
             uploadedImages.push(e.target.result);
         };
         reader.readAsDataURL(file);
     });
 };
 
-// TRANSLATION
+/* =======================
+   TRANSLATION
+======================= */
 function runTranslation() {
     if (typeof window.loadLanguage === "function") {
         const savedLang = localStorage.getItem("language") || "en";
@@ -39,75 +46,60 @@ function runTranslation() {
     }
 }
 
-// CATEGORY
+/* =======================
+   CATEGORY HANDLER
+======================= */
 window.handleCategoryChange = function () {
-    const category = document.getElementById('postCategory');
-    const common = document.getElementById('commonFields');
-    const sections = document.querySelectorAll('.category-details');
-    const conditionBox = document.getElementById('globalCondition');
+    const category = document.getElementById("postCategory");
+    const common = document.getElementById("commonFields");
+    const conditionBox = document.getElementById("globalCondition");
 
     if (!category) return;
 
     const val = category.value;
 
-    // Hide all category-specific sections
-    sections.forEach(sec => {
-        sec.style.display = 'none';
+    // hide everything first
+    document.querySelectorAll(".category-details").forEach(sec => {
+        sec.style.display = "none";
     });
 
-    // Hide the common fields if no category is selected
     if (!val) {
-        if (common) common.style.display = 'none';
-        if (conditionBox) conditionBox.style.display = 'none';
+        if (common) common.style.display = "none";
+        if (conditionBox) conditionBox.style.display = "none";
         return;
     }
 
-    // Show common fields when category is selected
-    if (common) common.style.display = 'block';
+    if (common) common.style.display = "block";
 
-    // Show specific sections based on category
-    if (val === 'Cars & Trucks') {
-       const el = document.getElementById('section-Cars');
-if (el) el.style.display = 'block';
+    // FIXED IDs (was wrong before)
+    if (val === "Cars & Trucks") {
+        const el = document.getElementById("section-Cars");
+        if (el) el.style.display = "block";
     }
 
-    if (val === 'Real Estate') {
-        const el = document.getElementById('section-Cars');
-if (el) el.style.display = 'block';
+    if (val === "Real Estate") {
+        const el = document.getElementById("section-RealEstate");
+        if (el) el.style.display = "block";
     }
 
-    // Hide condition for specific categories
-    const noCondition = ['Pets', 'Jobs', 'Real Estate'];
+    const noCondition = ["Pets", "Jobs", "Real Estate"];
     if (conditionBox) {
-        conditionBox.style.display = noCondition.includes(val) ? 'none' : 'block';
+        conditionBox.style.display = noCondition.includes(val) ? "none" : "block";
     }
 
-    runTranslation();  // Trigger translation if needed
+    runTranslation();
 };
-// SAVE LOGIC - POST AD
+
+/* =======================
+   SAVE AD
+======================= */
 function saveNewAd(event) {
     event.preventDefault();
-
-    console.log("saveNewAd triggered");
 
     const user = auth.currentUser;
 
     if (!user) {
         alert("Login required");
-        return;
-    }
-console.log("submit started");
-    const category = document.getElementById('postCategory')?.value;
-
-    if (!category) {
-        alert("Please select a category");
-        return;
-    }
-
-    const location = document.getElementById('adLocation')?.value.trim();
-
-    if (!location) {
-        alert("Location required");
         return;
     }
 
@@ -117,53 +109,53 @@ console.log("submit started");
         btn.innerText = "Posting...";
     }
 
-    const condition = document.querySelector('input[name="condition"]:checked')?.value || "";
-
     const goNext = () => finalizeAd();
 
-if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-        pos => {
-            window.currentAdLat = pos.coords.latitude;
-            window.currentAdLng = pos.coords.longitude;
-            goNext();
-        },
-        () => goNext(),
-        { timeout: 5000 }
-    );
-} else {
-    goNext();
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            pos => {
+                window.currentAdLat = pos.coords.latitude;
+                window.currentAdLng = pos.coords.longitude;
+                goNext();
+            },
+            () => goNext(),
+            { timeout: 5000 }
+        );
+    } else {
+        goNext();
+    }
 }
 
-// FINALIZE AD SUBMISSION
+/* =======================
+   FINALIZE AD
+======================= */
 function finalizeAd() {
     const user = auth.currentUser;
-    const condition = document.querySelector('input[name="condition"]:checked')?.value || "N/A";
-    
+
+    if (!user) {
+        alert("You are not logged in");
+        return;
+    }
+
     const newAd = {
         userId: user.uid,
         userEmail: user.email,
-        category: document.getElementById('postCategory').value,
-        title: document.getElementById('adTitle').value,
-        price: document.getElementById('adPrice').value,
-        location: document.getElementById('adLocation').value,
-        description: document.getElementById('adDesc').value,
-        condition: condition, // Condition value (New or Used)
-        image: uploadedImages.length ? uploadedImages : ['https://via.placeholder.com/300'],
+        category: document.getElementById("postCategory")?.value || "",
+        title: document.getElementById("adTitle")?.value || "",
+        price: document.getElementById("adPrice")?.value || "",
+        location: document.getElementById("adLocation")?.value || "",
+        description: document.getElementById("adDesc")?.value || "",
+        condition: document.querySelector('input[name="condition"]:checked')?.value || "N/A",
+        image: uploadedImages.length ? uploadedImages : ["https://via.placeholder.com/300"],
         date: new Date().toLocaleDateString(),
         lat: window.currentAdLat || null,
         lng: window.currentAdLng || null
     };
-if (!auth.currentUser) {
-    alert("You are not logged in");
-    return;
-    console.log("finalizeAd running");
-}
-    // Add ad to Firestore
+
     addDoc(collection(db, "marketplace_ads"), newAd)
         .then(() => {
             alert("Ad posted successfully!");
-            window.location.href = "index.html"; // Redirect after posting
+            window.location.href = "index.html";
         })
         .catch(err => {
             alert("Error: " + err.message);
@@ -171,51 +163,40 @@ if (!auth.currentUser) {
         });
 }
 
-// EVENT LISTENERS & INITIALIZATION
+/* =======================
+   INIT
+======================= */
 document.addEventListener("DOMContentLoaded", () => {
     runTranslation();
-
-    // Initialize form state on load
     handleCategoryChange();
 
-    // 🔥 IMPORTANT: make category actually react when user changes it
-    const category = document.getElementById("postCategory");
-    if (category) {
-        category.addEventListener("change", handleCategoryChange);
-    }
-const photoInput = document.getElementById("photoInput");
+    document.getElementById("postCategory")
+        ?.addEventListener("change", handleCategoryChange);
 
-if (photoInput) {
-    photoInput.addEventListener("change", (event) => {
-        handlePhotoUpload(event);
-    });
-}
-    // Form submit
-    const form = document.getElementById("postForm");
-    if (form) {
-        form.addEventListener("submit", saveNewAd);
-    }
+    document.getElementById("photoInput")
+        ?.addEventListener("change", handlePhotoUpload);
 
-    // PayPal / Featured logic
+    document.getElementById("postForm")
+        ?.addEventListener("submit", saveNewAd);
+
+    // PayPal
     const featured = document.getElementById("isFeatured");
-    const payContainer = document.getElementById("paypal-button-container");
-    const postBtn = document.getElementById("postBtn");
+    const btn = document.getElementById("postBtn");
 
-    if (featured) {
-        featured.addEventListener("change", () => {
-            if (featured.checked) {
-                initPayPal();
-                if (postBtn) postBtn.disabled = true;
-            } else {
-                if (payContainer) payContainer.style.display = "none";
-                if (postBtn) postBtn.disabled = false;
-            }
-        });
-    }
+    featured?.addEventListener("change", () => {
+        if (featured.checked) {
+            initPayPal();
+            if (btn) btn.disabled = true;
+        } else {
+            document.getElementById("paypal-button-container").style.display = "none";
+            if (btn) btn.disabled = false;
+        }
+    });
 });
 
-
-// PAYPAL
+/* =======================
+   PAYPAL
+======================= */
 function initPayPal() {
     const container = document.getElementById("paypal-button-container");
     if (!container || !window.paypal) return;
