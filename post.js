@@ -55,9 +55,9 @@ window.handleCategoryChange = function () {
 
 // SAVE LOGIC - POST AD
 function saveNewAd(event) {
-    event.preventDefault(); // Prevent the default form submission
+    event.preventDefault();
 
-    console.log("saveNewAd function triggered");
+    console.log("saveNewAd triggered");
 
     const user = auth.currentUser;
 
@@ -66,7 +66,14 @@ function saveNewAd(event) {
         return;
     }
 
-    const location = document.getElementById('adLocation').value.trim();
+    const category = document.getElementById('postCategory')?.value;
+
+    if (!category) {
+        alert("Please select a category");
+        return;
+    }
+
+    const location = document.getElementById('adLocation')?.value.trim();
 
     if (!location) {
         alert("Location required");
@@ -74,30 +81,35 @@ function saveNewAd(event) {
     }
 
     const btn = document.getElementById("postBtn");
-    btn.disabled = true;
-    btn.innerText = "Posting...";
+    if (btn) {
+        btn.disabled = true;
+        btn.innerText = "Posting...";
+    }
 
-    // Get geolocation data before submitting the ad
+    const condition = document.querySelector('input[name="condition"]:checked')?.value || "";
+
+    const goNext = () => finalizeAd(condition);
+
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             pos => {
                 window.currentAdLat = pos.coords.latitude;
                 window.currentAdLng = pos.coords.longitude;
-                finalizeAd();  // Proceed after geolocation retrieval
+                goNext();
             },
-            () => finalizeAd(), // Fallback if geolocation fails
+            () => goNext(),
             { timeout: 3000 }
         );
     } else {
-        finalizeAd(); // Proceed if geolocation is not available
+        goNext();
     }
 }
 
 // FINALIZE AD SUBMISSION
 function finalizeAd() {
     const user = auth.currentUser;
-    const condition = document.querySelector('input[name="condition"]:checked')?.value || "Unknown"; // Get the selected condition (New/Used)
-
+    const condition = document.querySelector('input[name="condition"]:checked')?.value || "N/A";
+    
     const newAd = {
         userId: user.uid,
         userEmail: user.email,
