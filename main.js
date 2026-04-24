@@ -125,6 +125,31 @@ window.resetFilters = function() {
     noItemsMessage.style.display = 'none';  // Hide "No items found" message
 };
 
+window.applyFilters = function() {
+    const searchInput = document.getElementById('searchInput');
+    const query = searchInput.value.toLowerCase().trim();
+
+    if (!query) {
+        renderAds(globalAds, "listings");  // If search is empty, show all ads
+        return;
+    }
+
+    const filteredAds = globalAds.filter(ad =>
+        ad.title.toLowerCase().includes(query) || 
+        (ad.category || "").toLowerCase().includes(query)
+    );
+
+    renderAds(filteredAds, "listings");
+
+    // Show or hide the "No items found" message based on the filtered results
+    const noItemsMessage = document.getElementById('no-items-message');
+    if (filteredAds.length === 0) {
+        noItemsMessage.style.display = 'block';  // Show "No items found" if no matching ads
+    } else {
+        noItemsMessage.style.display = 'none';  // Hide message if ads are found
+    }
+};
+
 /* =========================
    RENDER ADS
 ========================= */
