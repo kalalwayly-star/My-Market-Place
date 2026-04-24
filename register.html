@@ -21,19 +21,26 @@
         <!-- Step 1: Basic Info -->
         <div class="input-group">
             <label>Email Address</label>
-            <input type="email" id="email" placeholder="name@example.com" required>
+<input 
+  type="email" 
+  id="registerEmail" 
+  data-i18n-placeholder="enter_email"
+  placeholder="Enter your email">
         </div>
 
         <div class="input-group">
             <label>Password</label>
-            <input type="password" id="loginPassword" placeholder="Min. 7 characters" required>
+            <input 
+  type="password" 
+  id="registerPassword" 
+  data-i18n-placeholder="enter_password"
+  placeholder="Enter your password">
             <!-- Icon will now show up because of the Font Awesome fix -->
             <i class="fas fa-eye" id="toggleRegPassword"></i>
         </div>
 
         <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
 
-        
 
         <!-- Action Button -->
         <button type="button" class="btn-primary" onclick="register()">Create Account</button>
