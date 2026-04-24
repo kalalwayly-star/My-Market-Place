@@ -131,7 +131,7 @@ window.renderAds = function(adsArray, containerId = "listings") {
     const container = document.getElementById(containerId);
     if (!container) return;
 
-    container.innerHTML = "";
+    container.innerHTML = "";  // Clear the existing ads in the container
 
     if (!adsArray || adsArray.length === 0) {
         container.innerHTML = `<p style="text-align:center;">No items found.</p>`;
@@ -161,10 +161,3 @@ window.renderAds = function(adsArray, containerId = "listings") {
         `;
     }).join("");
 };
-
-
-
-
-
-
-
