@@ -118,17 +118,21 @@ function saveNewAd(event) {
         return;
     }
 
-    const location = document.getElementById('adLocation').value.trim();
-    if (!location) {
+    const locationVal = document.getElementById('adLocation').value.trim();
+    if (!locationVal) {
         alert("Location required");
         return;
     }
 
-   
+    // ✅ GET CONDITION PROPERLY
+    const conditionEl = document.querySelector('input[name="condition"]:checked');
+    const condition = conditionEl ? conditionEl.value : "Unknown";
 
     const btn = document.getElementById("postBtn");
-    btn.disabled = true;
-    btn.innerText = "Posting...";
+    if (btn) {
+        btn.disabled = true;
+        btn.innerText = "Posting...";
+    }
 
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -148,17 +152,19 @@ function saveNewAd(event) {
 // FINAL SAVE
 function finalizeAd(condition) {
     const user = auth.currentUser;
+    if (!user) return;
 
     const newAd = {
         userId: user.uid,
         userEmail: user.email,
-        category: document.getElementById('postCategory').value,
-        title: document.getElementById('adTitle').value,
-        price: document.getElementById('adPrice').value,
-        location: document.getElementById('adLocation').value,
-        description: document.getElementById('adDesc').value,
+        category: document.getElementById('postCategory')?.value || "",
+        title: document.getElementById('adTitle')?.value || "",
+        price: document.getElementById('adPrice')?.value || "",
+        location: document.getElementById('adLocation')?.value || "",
+        description: document.getElementById('adDesc')?.value || "",
         condition: condition,
         image: uploadedImages.length ? uploadedImages : ['https://via.placeholder.com/300'],
+        status: "Active",
         date: new Date().toLocaleDateString(),
         lat: window.currentAdLat || null,
         lng: window.currentAdLng || null
@@ -166,12 +172,25 @@ function finalizeAd(condition) {
 
     addDoc(collection(db, "marketplace_ads"), newAd)
         .then(() => {
-            alert("Posted!");
+            alert("Posted successfully!");
+
+            const btn = document.getElementById("postBtn");
+            if (btn) {
+                btn.disabled = false;
+                btn.innerText = "Post Ad Now";
+            }
+
             window.location.href = "index.html";
         })
         .catch(err => {
-            alert(err.message);
             console.error(err);
+            alert(err.message);
+
+            const btn = document.getElementById("postBtn");
+            if (btn) {
+                btn.disabled = false;
+                btn.innerText = "Post Ad Now";
+            }
         });
 }
 
