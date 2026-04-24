@@ -47,16 +47,13 @@
     </div>
 
     <!-- PHOTO -->
-    <div class="form-section">
-        <h3 data-i18n="photo_header">Photos (Max 10)</h3>
-
-        <label for="photoInput" class="upload-box">
-            <div>📸 <span data-i18n="click_to_add">Click to add photos</span></div>
-            <input type="file" id="photoInput" accept="image/*" multiple hidden>
-        </label>
-
-        <div id="galleryPreview" class="gallery-grid"></div>
-    </div>
+    <div class="form-section"> <h3 data-i18n="photo_header">Photos (Max 10)</h3> <div class="upload-container"> 
+       <label for="photoInput" class="upload-box" style="border: 2px dashed #ccc; padding: 20px; display: block; text-align: center; cursor: pointer;"> 
+          <div class="icon">📸</div> <span data-i18n="click_to_add">Click to add photos</span> 
+          <input type="file" id="photoInput" accept="image/*" multiple hidden> 
+    </label> <div id="galleryPreview" class="gallery-grid" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px;">
+       
+    </div> </div> </div>
 
     <!-- CONDITION -->
     <div id="globalCondition" class="input-group" style="display:none;">
