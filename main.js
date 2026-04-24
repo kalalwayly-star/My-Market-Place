@@ -93,20 +93,24 @@ window.deleteAd = function(firebaseId) {
    FILTERS (CLEAN VERSION)
 ========================= */
 window.filterByCategory = function(category) {
-    const filtered = getAds().filter(ad => ad.category === category);
+    const filtered = category === 'All' 
+        ? getAds()  // If 'All' is selected, show all ads
+        : getAds().filter(ad => ad.category === category);
+
     renderAds(filtered, "listings");
 };
 
 window.applyFilters = function() {
     const searchInput = document.getElementById('searchInput');
-    if (!searchInput) return;
-
     const query = searchInput.value.toLowerCase().trim();
 
-    if (!query) {
-        renderAds(globalAds, "listings");
-        return;
-    }
+    const filtered = getAds().filter(ad =>
+        ad.title.toLowerCase().includes(query) ||
+        (ad.category || "").toLowerCase().includes(query)
+    );
+
+    renderAds(filtered, "listings");
+};
 
     const filtered = getAds().filter(ad =>
         ad.title.toLowerCase().includes(query) ||
@@ -127,7 +131,6 @@ window.resetFilters = function() {
    RENDER ADS
 ========================= */
 window.renderAds = function(adsArray, containerId = "listings") {
-
     const container = document.getElementById(containerId);
     if (!container) return;
 
@@ -139,7 +142,6 @@ window.renderAds = function(adsArray, containerId = "listings") {
     }
 
     container.innerHTML = adsArray.map(ad => {
-
         const uniqueId = ad.firebaseId;
         const image = Array.isArray(ad.image)
             ? ad.image[0]
