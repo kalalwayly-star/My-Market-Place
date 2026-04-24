@@ -1,6 +1,5 @@
 import { auth } from "./firebase-config.js";  // For Firebase Authentication
-import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js"; // Authentication functions
-import { db, ref, onValue } from "./firebase-config.js";  // For Firebase Realtime Database functions
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js"; // Firebase Authentication functions
 
 /* --- LOGIN FUNCTION --- */
 window.login = function () {
@@ -23,7 +22,7 @@ window.login = function () {
             window.location.href = "index.html"; // Redirect after successful login
         })
         .catch((error) => {
-            console.error("LOGIN ERROR:", error); // Log the error for debugging
+            console.error("LOGIN ERROR:", error);
 
             let errorMessage = error.message;
 
@@ -41,10 +40,11 @@ window.login = function () {
 
 /* --- REGISTER FUNCTION --- */
 window.register = function () {
-    const email = document.getElementById('registerEmail').value.trim(); // Updated to registerEmail
-    const password = document.getElementById('registerPassword').value; // Updated to registerPassword
+    const email = document.getElementById('registerEmail').value.trim();
+    const password = document.getElementById('registerPassword').value;
     const errorMsg = document.getElementById('error-message');
 
+    // Validation
     if (!email || !password) {
         errorMsg.innerText = "Please fill in all fields.";
         return;
@@ -55,6 +55,7 @@ window.register = function () {
         return;
     }
 
+    // Create user with email and password
     createUserWithEmailAndPassword(auth, email, password)
         .then(() => {
             window.location.href = "myads.html"; // Redirect after successful registration
@@ -75,8 +76,3 @@ window.checkAdminAccess = function () {
         alert("Access Denied");
     }
 };
-
-/* --- DEBUG AUTH STATE --- */
-onAuthStateChanged(auth, (user) => {
-    console.log("AUTH STATE:", user); // Log current user state for debugging
-});
