@@ -57,10 +57,12 @@
                    </div>
                </div>
               <div id="globalCondition" class="input-group" style="margin-bottom: 20px; background: #f0f7ff; padding: 10px; border-radius: 5px;">
-    <label for="itemCondition" style="font-weight: bold;">Item Condition</label>
+   <!-- Item Condition Field (New or Used) -->
+<div id="globalCondition" class="input-group" style="margin-bottom: 20px; background: #f0f7ff; padding: 10px; border-radius: 5px;">
+    <label for="itemCondition" style="font-weight: bold;" data-i18n="label_condition">Item Condition</label>
     <div style="display: flex; gap: 30px;">
-        <label><input type="radio" name="condition" value="New" checked> New</label>
-        <label><input type="radio" name="condition" value="Used"> Used</label>
+        <label><input type="radio" name="condition" value="New" checked> <span data-i18n="opt_new">New</span></label>
+        <label><input type="radio" name="condition" value="Used"> <span data-i18n="opt_used">Used</span></label>
     </div>
 </div>
        </div>
