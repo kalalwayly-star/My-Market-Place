@@ -135,23 +135,16 @@ const condition = conditionElement ? conditionElement.value : "Not Specified";
 ======================= */
 function finalizeAd() {
     const user = auth.currentUser;
-   
-function finalizeAd() {
-    // 1. ADD THIS LINE FIRST:
-    const condition = document.querySelector('input[name="itemCondition"]:checked')?.value || "Not Specified";
-
-    // 2. Now your line 140 (which probably looks like this) will work:
-    console.log("Finalizing ad with condition: " + condition); 
-    
-    // ... rest of your code
-}
-// Now your existing line below will work:
-console.log("Selected condition: " + condition); 
 
     if (!user) {
         alert("You are not logged in");
         return;
     }
+
+    // ✅ correct condition selector
+    const condition = document.querySelector('input[name="condition"]:checked')?.value || "N/A";
+
+    console.log("Selected condition:", condition);
 
     const newAd = {
         userId: user.uid,
@@ -161,12 +154,17 @@ console.log("Selected condition: " + condition);
         price: document.getElementById("adPrice")?.value || "",
         location: document.getElementById("adLocation")?.value || "",
         description: document.getElementById("adDesc")?.value || "",
-        condition: document.querySelector('input[name="condition"]:checked')?.value || "N/A",
+        condition: condition,
+
+        // ⚠️ keep this for now (but may cause size issues)
         image: uploadedImages.length ? uploadedImages : ["https://via.placeholder.com/300"],
+
         date: new Date().toLocaleDateString(),
         lat: window.currentAdLat || null,
         lng: window.currentAdLng || null
     };
+
+    console.log("Submitting ad:", newAd);
 
     addDoc(collection(db, "marketplace_ads"), newAd)
         .then(() => {
@@ -174,8 +172,8 @@ console.log("Selected condition: " + condition);
             window.location.href = "index.html";
         })
         .catch(err => {
+            console.error("Firestore error:", err);
             alert("Error: " + err.message);
-            console.error(err);
         });
 }
 
