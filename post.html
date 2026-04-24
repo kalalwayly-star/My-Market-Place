@@ -56,21 +56,26 @@
     </div> </div> </div>
 
     <!-- CONDITION -->
-    <div id="globalCondition" class="input-group" style="display:none;">
-        <label data-i18n="label_condition"><b>Item Condition</b></label>
+   <!-- Item Condition Field -->
+<div id="globalCondition" class="input-group condition-box" style="display:none;">
+    
+    <label class="condition-label" data-i18n="label_condition">
+        Item Condition
+    </label>
 
-        <div class="radio-row">
-            <label>
-                <input type="radio" name="condition" value="New" checked>
-                <span data-i18n="opt_new">New</span>
-            </label>
-            <label>
-                <input type="radio" name="condition" value="Used">
-                <span data-i18n="opt_used">Used</span>
-            </label>
-        </div>
+    <div class="condition-row">
+        <label class="condition-option">
+            <input type="radio" name="condition" value="New" checked>
+            <span data-i18n="opt_new">New</span>
+        </label>
+
+        <label class="condition-option">
+            <input type="radio" name="condition" value="Used">
+            <span data-i18n="opt_used">Used</span>
+        </label>
     </div>
 
+</div>
     <!-- COMMON FIELDS -->
     <div id="commonFields" style="display:none;">
 
