@@ -13,11 +13,12 @@ function runTranslation() {
 }
 
 // CATEGORY
+/ CATEGORY CHANGE HANDLER
 window.handleCategoryChange = function () {
     const category = document.getElementById('postCategory');
     const common = document.getElementById('commonFields');
     const sections = document.querySelectorAll('.category-details');
-    const conditionBox = document.getElementById('globalCondition');
+    const conditionBox = document.getElementById('globalCondition'); // This is the condition section
 
     if (!category) return;
 
@@ -26,24 +27,15 @@ window.handleCategoryChange = function () {
     // Hide all sections first
     sections.forEach(sec => sec.style.display = 'none');
 
-    // Reset the condition field visibility
-    if (conditionBox) conditionBox.style.display = 'none';
-
     if (!val) {
         if (common) common.style.display = 'none';
+        if (conditionBox) conditionBox.style.display = 'none'; // Hide condition section if no category selected
         return;
     }
 
     if (common) common.style.display = 'block';
 
-    // Show condition field only for specific categories
-    const categoriesWithCondition = ['Electronics', 'Furniture', 'Cars & Trucks', 'Fashion'];
-
-    if (categoriesWithCondition.includes(val)) {
-        if (conditionBox) conditionBox.style.display = 'block';
-    }
-
-    // Handle specific categories
+    // Show specific sections for categories
     if (val === 'Cars & Trucks') {
         document.getElementById('section-Cars')?.style.display = 'block';
     }
@@ -52,153 +44,80 @@ window.handleCategoryChange = function () {
         document.getElementById('section-RealEstate')?.style.display = 'block';
     }
 
-    runTranslation();
-};
-
-// PHOTO UPLOAD
-window.handlePhotoUpload = async function (event) {
-    const gallery = document.getElementById('galleryPreview');
-    const files = Array.from(event.target.files);
-    if (!gallery) return;
-
-    if (uploadedImages.length + files.length > 10) {
-        alert("Max 10 photos.");
-        return;
+    // Show or hide the condition field for specific categories
+    const noCondition = ['Pets', 'Jobs', 'Real Estate']; // Categories that do not require condition
+    if (conditionBox) {
+        conditionBox.style.display = noCondition.includes(val) ? 'none' : 'block'; // Hide for Real Estate, Pets, and Jobs
     }
 
-    for (const file of files) {
-        const base64 = await compressImage(file);
-        uploadedImages.push(base64);
-
-        const div = document.createElement('div');
-        div.style.cssText = "position:relative;width:80px;height:80px;margin:5px;display:inline-block;";
-        div.innerHTML = `
-            <img src="${base64}" style="width:100%;height:100%;object-fit:cover;">
-            <button type="button" onclick="removeImg(event, '${base64}', this)">×</button>
-        `;
-        gallery.appendChild(div);
-    }
+    runTranslation(); // Trigger translation on visible sections
 };
 
-function compressImage(file) {
-    return new Promise(resolve => {
-        const reader = new FileReader();
-        reader.onload = e => {
-            const img = new Image();
-            img.onload = () => {
-                const canvas = document.createElement('canvas');
-                let w = img.width, h = img.height, max = 800;
-
-                if (w > max || h > max) {
-                    if (w > h) { h *= max / w; w = max; }
-                    else { w *= max / h; h = max; }
-                }
-
-                canvas.width = w;
-                canvas.height = h;
-                canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-
-                resolve(canvas.toDataURL('image/jpeg', 0.6));
-            };
-            img.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-    });
-}
-
-window.removeImg = function (e, data, btn) {
-    e.stopPropagation();
-    uploadedImages = uploadedImages.filter(img => img !== data);
-    btn.parentElement.remove();
-};
-
-// SAVE AD
+// SAVE LOGIC - POST AD
 function saveNewAd(event) {
-    event.preventDefault();
+    event.preventDefault(); // Prevent the default form submission
 
-    console.log("SAVE CLICKED");
+    console.log("saveNewAd function triggered");
 
     const user = auth.currentUser;
+
     if (!user) {
         alert("Login required");
         return;
     }
 
-    const locationVal = document.getElementById('adLocation').value.trim();
-    if (!locationVal) {
+    const location = document.getElementById('adLocation').value.trim();
+
+    if (!location) {
         alert("Location required");
         return;
     }
 
-    // ✅ GET CONDITION PROPERLY
-    const conditionEl = document.querySelector('input[name="condition"]:checked');
-    const condition = conditionEl ? conditionEl.value : "Unknown";
-
     const btn = document.getElementById("postBtn");
-    if (btn) {
-        btn.disabled = true;
-        btn.innerText = "Posting...";
-    }
+    btn.disabled = true;
+    btn.innerText = "Posting...";
 
+    // Get geolocation data before submitting the ad
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             pos => {
                 window.currentAdLat = pos.coords.latitude;
                 window.currentAdLng = pos.coords.longitude;
-                finalizeAd(condition);
+                finalizeAd();  // Proceed after geolocation retrieval
             },
-            () => finalizeAd(condition),
+            () => finalizeAd(), // Fallback if geolocation fails
             { timeout: 3000 }
         );
     } else {
-        finalizeAd(condition);
+        finalizeAd(); // Proceed if geolocation is not available
     }
 }
 
-// FINAL SAVE
-function finalizeAd(condition) {
+// FINALIZE AD SUBMISSION
+function finalizeAd() {
     const user = auth.currentUser;
-
-    const conditionEl = document.querySelector('input[name="condition"]:checked');
-
-    if (!user) {
-        alert("You must be logged in to post ads.");
-        return;
-    }
-
-    const categoryEl = document.getElementById('postCategory');
-    const titleEl = document.getElementById('adTitle');
-    const priceEl = document.getElementById('adPrice');
-    const locationEl = document.getElementById('adLocation');
-    const descEl = document.getElementById('adDesc');
-
-    if (!categoryEl || !titleEl || !priceEl || !locationEl || !descEl) {
-        alert("Form fields missing in HTML!");
-        return;
-    }
-
-    // Get the selected condition (New or Used)
-    const adCondition = conditionEl ? conditionEl.value : "Unknown";
+    const condition = document.querySelector('input[name="condition"]:checked')?.value || "Unknown"; // Get the selected condition (New/Used)
 
     const newAd = {
         userId: user.uid,
         userEmail: user.email,
-        category: categoryEl.value,
-        title: titleEl.value,
-        price: priceEl.value,
-        location: locationEl.value,
-        description: descEl.value,
-        condition: adCondition,  // Store the condition value
+        category: document.getElementById('postCategory').value,
+        title: document.getElementById('adTitle').value,
+        price: document.getElementById('adPrice').value,
+        location: document.getElementById('adLocation').value,
+        description: document.getElementById('adDesc').value,
+        condition: condition, // Condition value (New or Used)
         image: uploadedImages.length ? uploadedImages : ['https://via.placeholder.com/300'],
         date: new Date().toLocaleDateString(),
         lat: window.currentAdLat || null,
         lng: window.currentAdLng || null
     };
 
+    // Add ad to Firestore
     addDoc(collection(db, "marketplace_ads"), newAd)
         .then(() => {
             alert("Ad posted successfully!");
-            window.location.href = "index.html";  // Redirect after posting
+            window.location.href = "index.html"; // Redirect after posting
         })
         .catch(err => {
             alert("Error: " + err.message);
@@ -206,14 +125,14 @@ function finalizeAd(condition) {
         });
 }
 
-// INIT
+// EVENT LISTENERS & INITIALIZATION
 document.addEventListener("DOMContentLoaded", () => {
-    runTranslation();
-    handleCategoryChange();
+    runTranslation();  // Handle translations
+    handleCategoryChange();  // Initialize category section visibility
 
     const form = document.getElementById("postForm");
     if (form) {
-        form.addEventListener("submit", saveNewAd);
+        form.addEventListener("submit", saveNewAd); // Attach form submission to saveNewAd function
     }
 
     const featured = document.getElementById("isFeatured");
@@ -223,15 +142,16 @@ document.addEventListener("DOMContentLoaded", () => {
     if (featured) {
         featured.addEventListener("change", () => {
             if (featured.checked) {
-                initPayPal();
+                initPayPal(); // Initialize PayPal if checkbox is checked
                 if (postBtn) postBtn.disabled = true;
             } else {
-                if (payContainer) payContainer.style.display = "none";
+                if (payContainer) payContainer.style.display = "none"; // Hide PayPal button
                 if (postBtn) postBtn.disabled = false;
             }
         });
     }
 });
+
 
 // PAYPAL
 function initPayPal() {
