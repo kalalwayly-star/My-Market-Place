@@ -180,7 +180,13 @@ document.addEventListener("DOMContentLoaded", () => {
     if (category) {
         category.addEventListener("change", handleCategoryChange);
     }
+const photoInput = document.getElementById("photoInput");
 
+if (photoInput) {
+    photoInput.addEventListener("change", (event) => {
+        handlePhotoUpload(event);
+    });
+}
     // Form submit
     const form = document.getElementById("postForm");
     if (form) {
