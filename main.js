@@ -92,40 +92,37 @@ window.deleteAd = function(firebaseId) {
 /* =========================
    FILTERS (CLEAN VERSION)
 ========================= */
+// UPDATED: filterByCategory
 window.filterByCategory = function(category) {
-    const filtered = category === 'All' 
-        ? getAds()  // If 'All' is selected, show all ads
-        : getAds().filter(ad => ad.category === category);
+    const allAds = getAds();
+    let filteredAds = [];
 
-    renderAds(filtered, "listings");
+    if (category === 'All') {
+        filteredAds = allAds;  // If 'All' is selected, show all ads
+    } else {
+        filteredAds = allAds.filter(ad => ad.category === category);  // Filter by selected category
+    }
+
+    // Render filtered ads
+    renderAds(filteredAds, "listings");
+
+    // Show or hide "No items found" message
+    const noItemsMessage = document.getElementById('no-items-message');
+    if (filteredAds.length === 0) {
+        noItemsMessage.style.display = 'block';  // Show "No items found" if no ads match
+    } else {
+        noItemsMessage.style.display = 'none';  // Hide message if ads are found
+    }
 };
 
-window.applyFilters = function() {
-    const searchInput = document.getElementById('searchInput');
-    const query = searchInput.value.toLowerCase().trim();
-
-    const filtered = getAds().filter(ad =>
-        ad.title.toLowerCase().includes(query) ||
-        (ad.category || "").toLowerCase().includes(query)
-    );
-
-    renderAds(filtered, "listings");
-};
-
-    const filtered = getAds().filter(ad =>
-        ad.title.toLowerCase().includes(query) ||
-        (ad.category || "").toLowerCase().includes(query)
-    );
-
-    renderAds(filtered, "listings");
-};
-
+// UPDATED: Reset Filters
 window.resetFilters = function() {
     const searchInput = document.getElementById('searchInput');
-    if (searchInput) searchInput.value = '';
-    renderAds(globalAds, "listings");
+    if (searchInput) searchInput.value = '';  // Reset search input
+    renderAds(getAds(), "listings");  // Render all ads
+    const noItemsMessage = document.getElementById('no-items-message');
+    noItemsMessage.style.display = 'none';  // Hide "No items found" message
 };
-
 
 /* =========================
    RENDER ADS
