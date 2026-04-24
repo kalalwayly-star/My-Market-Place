@@ -13,29 +13,32 @@ function runTranslation() {
 }
 
 // CATEGORY
-// CATEGORY CHANGE HANDLER
 window.handleCategoryChange = function () {
     const category = document.getElementById('postCategory');
     const common = document.getElementById('commonFields');
     const sections = document.querySelectorAll('.category-details');
-    const conditionBox = document.getElementById('globalCondition'); // This is the condition section
+    const conditionBox = document.getElementById('globalCondition');
 
     if (!category) return;
 
     const val = category.value;
 
-    // Hide all sections first
-    sections.forEach(sec => sec.style.display = 'none');
+    // Hide all category-specific sections
+    sections.forEach(sec => {
+        sec.style.display = 'none';
+    });
 
+    // Hide the common fields if no category is selected
     if (!val) {
         if (common) common.style.display = 'none';
-        if (conditionBox) conditionBox.style.display = 'none'; // Hide condition section if no category selected
+        if (conditionBox) conditionBox.style.display = 'none';
         return;
     }
 
+    // Show common fields when category is selected
     if (common) common.style.display = 'block';
 
-    // Show specific sections for categories
+    // Show specific sections based on category
     if (val === 'Cars & Trucks') {
         document.getElementById('section-Cars')?.style.display = 'block';
     }
@@ -44,15 +47,14 @@ window.handleCategoryChange = function () {
         document.getElementById('section-RealEstate')?.style.display = 'block';
     }
 
-    // Show or hide the condition field for specific categories
-    const noCondition = ['Pets', 'Jobs', 'Real Estate']; // Categories that do not require condition
+    // Hide condition for specific categories
+    const noCondition = ['Pets', 'Jobs', 'Real Estate'];
     if (conditionBox) {
-        conditionBox.style.display = noCondition.includes(val) ? 'none' : 'block'; // Hide for Real Estate, Pets, and Jobs
+        conditionBox.style.display = noCondition.includes(val) ? 'none' : 'block';
     }
 
-    runTranslation(); // Trigger translation on visible sections
+    runTranslation();  // Trigger translation if needed
 };
-
 // SAVE LOGIC - POST AD
 function saveNewAd(event) {
     event.preventDefault();
@@ -139,14 +141,24 @@ function finalizeAd() {
 
 // EVENT LISTENERS & INITIALIZATION
 document.addEventListener("DOMContentLoaded", () => {
-    runTranslation();  // Handle translations
-    handleCategoryChange();  // Initialize category section visibility
+    runTranslation();
 
-    const form = document.getElementById("postForm");
-    if (form) {
-        form.addEventListener("submit", saveNewAd); // Attach form submission to saveNewAd function
+    // Initialize form state on load
+    handleCategoryChange();
+
+    // 🔥 IMPORTANT: make category actually react when user changes it
+    const category = document.getElementById("postCategory");
+    if (category) {
+        category.addEventListener("change", handleCategoryChange);
     }
 
+    // Form submit
+    const form = document.getElementById("postForm");
+    if (form) {
+        form.addEventListener("submit", saveNewAd);
+    }
+
+    // PayPal / Featured logic
     const featured = document.getElementById("isFeatured");
     const payContainer = document.getElementById("paypal-button-container");
     const postBtn = document.getElementById("postBtn");
@@ -154,10 +166,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (featured) {
         featured.addEventListener("change", () => {
             if (featured.checked) {
-                initPayPal(); // Initialize PayPal if checkbox is checked
+                initPayPal();
                 if (postBtn) postBtn.disabled = true;
             } else {
-                if (payContainer) payContainer.style.display = "none"; // Hide PayPal button
+                if (payContainer) payContainer.style.display = "none";
                 if (postBtn) postBtn.disabled = false;
             }
         });
