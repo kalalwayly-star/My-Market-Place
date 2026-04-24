@@ -567,3 +567,38 @@ img {
 .radio-row input[type="radio"] {
     margin: 0;
 }
+/* container */
+.condition-box {
+    margin-bottom: 20px;
+    background: #f0f7ff;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* label */
+.condition-label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 8px;
+}
+
+/* row layout */
+.condition-row {
+    display: flex;
+    align-items: center;   /* 🔥 KEY FIX */
+    gap: 25px;
+}
+
+/* each option */
+.condition-option {
+    display: flex;
+    align-items: center;   /* 🔥 aligns radio + text */
+    gap: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* radio reset */
+.condition-option input[type="radio"] {
+    margin: 0;             /* 🔥 removes browser weird spacing */
+}
