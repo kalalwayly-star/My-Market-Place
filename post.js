@@ -135,7 +135,16 @@ const condition = conditionElement ? conditionElement.value : "Not Specified";
 ======================= */
 function finalizeAd() {
     const user = auth.currentUser;
+   
+function finalizeAd() {
+    // 1. ADD THIS LINE FIRST:
+    const condition = document.querySelector('input[name="itemCondition"]:checked')?.value || "Not Specified";
 
+    // 2. Now your line 140 (which probably looks like this) will work:
+    console.log("Finalizing ad with condition: " + condition); 
+    
+    // ... rest of your code
+}
 // Now your existing line below will work:
 console.log("Selected condition: " + condition); 
 
