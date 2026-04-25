@@ -176,7 +176,6 @@ function finalizeAd() {
         lng: window.currentAdLng || null
     };
 
-    console.log("Submitting ad:", newAd);
 
     // Corrected: Get a reference to the collection and add the document
     const adsCollectionRef = collection(db, "marketplace_ads");  // Correct reference
