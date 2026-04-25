@@ -141,6 +141,7 @@ function saveNewAd(event) {
 /* =======================
    FINALIZE AD HANDLER (POST AD TO FIRESTORE)
 ======================= */
+// FINALIZE AD HANDLER (POST AD TO FIRESTORE)
 function finalizeAd() {
     const user = auth.currentUser;
 
@@ -149,7 +150,7 @@ function finalizeAd() {
         return;
     }
 
-    // Get condition (corrected selector)
+    // ✅ correct condition selector
     const condition = document.querySelector('input[name="condition"]:checked')?.value || "N/A";
 
     const newAd = {
@@ -161,7 +162,10 @@ function finalizeAd() {
         location: document.getElementById("adLocation")?.value || "",
         description: document.getElementById("adDesc")?.value || "",
         condition: condition,
-        image: uploadedImages.length ? uploadedImages : ["https://via.placeholder.com/300"],  // Default image if none
+
+        // ⚠️ keep this for now (but may cause size issues)
+        image: uploadedImages.length ? uploadedImages : ["https://via.placeholder.com/300"],
+
         date: new Date().toLocaleDateString(),
         lat: window.currentAdLat || null,
         lng: window.currentAdLng || null
@@ -169,7 +173,9 @@ function finalizeAd() {
 
     console.log("Submitting ad:", newAd);
 
-    addDoc(collection(db, "marketplace_ads"), newAd)
+    // Corrected: Get a reference to the collection and add the document
+    const adsCollectionRef = collection(db, "marketplace_ads");  // Correct reference
+    addDoc(adsCollectionRef, newAd)  // Correct use of addDoc with collection reference
         .then(() => {
             alert("Ad posted successfully!");
             window.location.href = "index.html";  // Redirect after posting
