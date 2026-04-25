@@ -1,12 +1,13 @@
-import { auth } from "./firebase-config.js"; // Firebase Authentication
-import { db, doc, getDoc } from "./firebase-config.js"; // Firestore functions
-import { rtdb, ref, onValue } from "./firebase-config.js"; // Realtime Database functions
+// 1. CLEAN IMPORTS - No double declarations
+import { auth, rtdb } from "./firebase-config.js"; 
+import { ref, onValue, push, remove } from "https://gstatic.com";
 
 const params = new URLSearchParams(window.location.search);
 const adId = params.get("id");
 
 let currentLanguage = localStorage.getItem("language") || "en";
-const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+// Use a fallback for currentUser to prevent crashes
+const currentUser = JSON.parse(localStorage.getItem("currentUser")) || { email: "Guest" };
 let currentTab = 'received';
 let globalMessages = [];
 
@@ -22,7 +23,7 @@ async function loadLanguage(lang) {
         updatePageContent(translations, lang);
         initMessages();
     } catch (err) {
-        console.error(err);
+        console.error("Language Load Error:", err);
         initMessages();
     }
 }
@@ -56,7 +57,8 @@ function initMessages() {
         return;
     }
 
-    const msgRef = ref(db, "marketplace_messages");
+    // FIXED: Using 'rtdb' instead of 'db'
+    const msgRef = ref(rtdb, "marketplace_messages");
 
     onValue(msgRef, (snapshot) => {
         const data = snapshot.val();
@@ -67,7 +69,6 @@ function initMessages() {
                 globalMessages.push({ firebaseId: id, ...data[id] });
             }
         }
-
         renderTab();
     });
 }
@@ -96,39 +97,30 @@ window.renderTab = function() {
 
         return `
         <div class="message-card" style="border:1px solid #ddd; padding:15px; margin-bottom:12px; border-radius:8px; background:white;">
-
             <p style="font-size:0.85rem; color:#007bff; font-weight:bold;">
                 ${currentTab === 'received' ? 'From' : 'To'}: ${person}
             </p>
-
             <p>${m.text}</p>
-
             <p style="font-size:0.7rem; color:#999;">${m.date || ""}</p>
-
             <div style="display:flex; gap:10px; margin-top:10px; align-items:center;">
-
                 <button onclick="deleteMsg('${id}')"
-                    style="background:#ff4d4d; color:white; border:none; padding:5px 8px; cursor:pointer;">
+                    style="background:#ff4d4d; color:white; border:none; padding:5px 8px; cursor:pointer; border-radius:4px;">
                     Delete
                 </button>
-
                 ${currentTab === 'received' ? `
                 <button onclick="toggleReply('${id}')"
                     style="background:none; border:none; color:#007bff; font-weight:bold; cursor:pointer;">
                     Reply
                 </button>
                 ` : ''}
-
             </div>
-
             <div id="reply-box-${id}" style="display:none; margin-top:10px;">
-                <textarea id="reply-text-${id}" style="width:100%; height:60px; padding:8px;"></textarea>
+                <textarea id="reply-text-${id}" style="width:100%; height:60px; padding:8px; border:1px solid #ccc; border-radius:4px;"></textarea>
                 <button onclick="sendReply('${id}')"
-                    style="margin-top:5px; background:#28a745; color:white; border:none; padding:6px 10px; cursor:pointer;">
+                    style="margin-top:5px; background:#28a745; color:white; border:none; padding:6px 10px; cursor:pointer; border-radius:4px;">
                     Send
                 </button>
             </div>
-
         </div>
         `;
     }).join('');
@@ -143,7 +135,8 @@ window.toggleReply = function(id) {
 }
 
 window.sendReply = function(id) {
-    const text = document.getElementById(`reply-text-${id}`).value;
+    const textInput = document.getElementById(`reply-text-${id}`);
+    const text = textInput.value;
 
     if (!text.trim()) {
         alert("Reply cannot be empty");
@@ -152,30 +145,36 @@ window.sendReply = function(id) {
 
     const original = globalMessages.find(m => m.firebaseId === id);
 
-    const msgRef = ref(db, "marketplace_messages");
+    // FIXED: Using 'rtdb'
+    const msgRef = ref(rtdb, "marketplace_messages");
 
     push(msgRef, {
-        text,
+        text: text,
         senderEmail: currentUser.email,
         receiverEmail: original?.senderEmail,
-        adId,
+        adId: adId || "General",
         date: new Date().toLocaleString()
+    }).then(() => {
+        alert("Reply sent!");
+        textInput.value = "";
+        window.toggleReply(id);
     });
-
-    alert("Reply sent!");
 }
 
 /* --- DELETE --- */
 window.deleteMsg = function(id) {
     if (!confirm("Delete this message?")) return;
-
-    const msgRef = ref(db, `marketplace_messages/${id}`);
-    remove(msgRef);
+    // FIXED: Using 'rtdb'
+    const msgRef = ref(rtdb, `marketplace_messages/${id}`);
+    remove(msgRef).then(() => {
+        alert("Message deleted.");
+    });
 }
 
 /* --- START --- */
 document.addEventListener('DOMContentLoaded', () => {
     loadLanguage(currentLanguage);
 });
+
 
 
