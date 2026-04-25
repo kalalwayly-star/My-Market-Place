@@ -1,40 +1,21 @@
-// ALWAYS FIRST: Local config
+// Import Firebase and other utilities
 import { auth, db, rtdb } from "./firebase-config.js";
-// ALWAYS SECOND: Full CDN URLs
 import { onAuthStateChanged, signOut } from "https://gstatic.com";
-import { collection, onSnapshot } from "https://gstatic.com";
+import { doc, getDoc } from "https://gstatic.com";
 
-// ALWAYS THIRD: Your page logic
-document.addEventListener("DOMContentLoaded", () => {
-    const loginLink = document.getElementById("userAuth");
-    const logoutBtn = document.getElementById("logout-btn");
-    const emailSpan = document.getElementById("header-user-email");
-
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            // User is logged in
-            if (loginLink) loginLink.style.display = "none";
-            if (logoutBtn) logoutBtn.style.display = "inline-block";
-            if (emailSpan) emailSpan.innerText = user.email;
-        } else {
-            // User is logged out
-            if (loginLink) loginLink.style.display = "inline-block";
-            if (logoutBtn) logoutBtn.style.display = "none";
-            if (emailSpan) emailSpan.innerText = "";
-        }
-    });
-});
-
-
-// Use Firebase Auth to get the current user reliably
+// Initialize variables
 let currentUserEmail = "Guest";
 let ad;
 const adId = new URLSearchParams(window.location.search).get("id");
+
+// Check auth state
 onAuthStateChanged(auth, (user) => {
-    if (user) currentUserEmail = user.email;
+    if (user) {
+        currentUserEmail = user.email;
+    }
 });
 
-// 2. INITIALIZATION
+// Initialize the details page
 async function initDetailsPage() {
     if (!adId) {
         window.location.href = "index.html";
@@ -42,7 +23,6 @@ async function initDetailsPage() {
     }
 
     try {
-        // Correct: Fetching from Firestore
         const adRef = doc(db, "marketplace_ads", adId);
         const snapshot = await getDoc(adRef);
 
@@ -52,14 +32,15 @@ async function initDetailsPage() {
             return;
         }
 
-        ad = snapshot.data(); 
-        renderAdDetails(); 
+        ad = snapshot.data();
+        renderAdDetails();
     } catch (error) {
         console.error("Error loading ad:", error);
+        alert("Failed to load ad details.");
     }
 }
 
-// 3. RENDER LOGIC
+// Render the ad details
 function renderAdDetails() {
     setText("adTitle", ad.title);
     setText("adPrice", `$${ad.price}`);
@@ -69,11 +50,12 @@ function renderAdDetails() {
     renderImages();
 }
 
+// Render images
 function renderImages() {
     const imgContainer = document.getElementById("adImageContainer");
     if (!imgContainer) return;
 
-    let photoList = Array.isArray(ad.image) ? ad.image : (ad.image ? [ad.image] : ["https://placeholder.com"]);
+    let photoList = Array.isArray(ad.image) ? ad.image : (ad.image ? [ad.image] : ["https://via.placeholder.com/300"]);
 
     imgContainer.innerHTML = `
         <div style="width:100%; text-align:center; background:#f4f4f4; border-radius:10px; overflow:hidden; margin-bottom:15px; border:1px solid #ddd;">
@@ -88,7 +70,7 @@ function renderImages() {
     `;
 }
 
-// 4. MESSAGING (Using rtdb)
+// Send a message to the seller
 window.sendMessage = function() {
     if (currentUserEmail === "Guest") {
         alert("Please login first.");
@@ -109,7 +91,6 @@ window.sendMessage = function() {
         date: new Date().toLocaleString()
     };
 
-    // Use 'rtdb' variable here, NOT 'db'
     const messagesRef = ref(rtdb, "marketplace_messages");
     push(messagesRef, newMessage)
         .then(() => {
@@ -119,7 +100,7 @@ window.sendMessage = function() {
         .catch(err => alert("Error: " + err.message));
 }
 
-// 5. REPORT SYSTEM
+// Report an ad
 window.submitReport = function() {
     const reason = document.getElementById("reportReason")?.value;
     if (!reason) return alert("Please select a reason.");
@@ -128,11 +109,11 @@ window.submitReport = function() {
     push(reportRef, { adId, reason, timestamp: new Date().toISOString() })
         .then(() => {
             alert("Report submitted.");
-            if (typeof closeModal === "function") closeModal();
+            closeModal();
         });
 }
 
-// HELPERS
+// Helper functions
 function setText(id, value) {
     const el = document.getElementById(id);
     if (el) el.innerText = value;
