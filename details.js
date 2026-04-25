@@ -1,9 +1,8 @@
 // ALWAYS FIRST: Local config
-import { auth, db, rtdb } from "./firebase-config.js";/firebasejs/12.12.1/firebase-firestore.js 
-
+import { auth, db, rtdb } from "./firebase-config.js";
 // ALWAYS SECOND: Full CDN URLs
-import { onAuthStateChanged, signOut } from "https://gstatic.com";/firebasejs/12.12.1/firebase-firestore.js 
-import { collection, onSnapshot } from "https://gstatic.com";/firebasejs/12.12.1/firebase-firestore.js 
+import { onAuthStateChanged, signOut } from "https://gstatic.com";
+import { collection, onSnapshot } from "https://gstatic.com";
 
 // ALWAYS THIRD: Your page logic
 document.addEventListener("DOMContentLoaded", () => {
