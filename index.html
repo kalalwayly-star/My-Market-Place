@@ -6,7 +6,6 @@
    <title data-i18n="greeting">Marketplace | Find Anything</title>
    <link rel="stylesheet" href="style.css">
    <style>
-       /* Ensures category cards show the pointer hand */
        .cat-card, .btn-search, .btn-link, .card { cursor: pointer; }
        .category-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 15px; margin-top: 20px; }
        .cat-card { text-align: center; padding: 15px; border: 1px solid #eee; border-radius: 8px; transition: 0.2s; }
@@ -19,11 +18,8 @@
 
 <header class="header">
     <div class="container">
-
-        <!-- BRAND -->
         <h1 data-i18n="greeting">My Marketplace</h1>
 
-        <!-- LANGUAGE SWITCH -->
         <div class="lang-buttons">
             <button id="lang-en">English</button>
             <button id="lang-fr">Français</button>
@@ -31,175 +27,124 @@
             <button id="lang-ar">العربية</button>
         </div>
 
-        <!-- NAV -->
         <div class="nav">
-
-            <a href="index.html" class="btn text" data-i18n="home"></a>
-            <a href="messages.html" class="btn text" data-i18n="nav_messages"></a>
-            <a href="myads.html" class="btn secondary" data-i18n="myAds"></a>
-            <a href="post.html" class="btn primary" data-i18n="postAd"></a>
-
-            <!-- LOGIN -->
+            <a href="index.html" class="btn text" data-i18n="home">Home</a>
+            <a href="messages.html" class="btn text" data-i18n="nav_messages">Messages</a>
+            <a href="myads.html" class="btn secondary" data-i18n="myAds">My Ads</a>
+            <a href="post.html" class="btn primary" data-i18n="postAd">Post Ad</a>
             <a id="userAuth" href="login.html" class="btn" data-i18n="nav_login">Login</a>
-           
-<button id="logout-btn" class="btn logout-btn" style="display:none;">Logout</button>            
-
+            <button id="logout-btn" class="btn logout-btn" style="display:none;" data-i18n="nav_logout">Logout</button>            
         </div>
 
-        <!-- USER INFO -->
         <div id="user-info-header" style="display:none; padding:10px; text-align:right;">
             <span data-i18n="logged_in_as">Logged in as:</span>
             <span id="header-user-email" style="font-weight:bold; color:#007bff;"></span>
         </div>
-
     </div>
 </header>
 
-
-<!-- HERO -->
 <section class="hero">
    <div class="hero-content">
-
        <h2 data-i18n="hero_title">Find anything in your city</h2>
-
        <div class="search-container">
-
-           <input type="text" id="searchInput"
-                  data-i18n-placeholder="search_placeholder" placeholder="what are you looking for?">
-
-           <input type="text" id="locationInput"
-                  data-i18n-placeholder="location_placeholder" placeholder="City or Neighborhood">
-
-           <button onclick="applyFilters()"
-                   class="btn-search"
-                   data-i18n="btn_search">Search</button>
-
+           <!-- Note: Ensure languages.js handles data-i18n-placeholder -->
+           <input type="text" id="searchInput" data-i18n-placeholder="search_placeholder" placeholder="What are you looking for?">
+           <input type="text" id="locationInput" data-i18n-placeholder="location_placeholder" placeholder="City or Neighborhood">
+           <button onclick="applyFilters()" class="btn-search" data-i18n="btn_search">Search</button>
        </div>
-
    </div>
 </section>
 
-<!-- CATEGORIES -->
 <section class="categories-section container">
-
    <h3 data-i18n="cat_header">Browse Categories</h3>
-
    <div class="category-grid">
-
        <div class="cat-card" onclick="filterByCategory('Real Estate')">
            <span class="icon" style="font-size: 2rem;">🏠</span>
            <p data-i18n="cat_realestate">Real Estate</p>
        </div>
-
        <div class="cat-card" onclick="filterByCategory('Cars & Trucks')">
            <span class="icon" style="font-size: 2rem;">🚗</span>
            <p data-i18n="cat_cars_trucks">Cars</p>
        </div>
-
        <div class="cat-card" onclick="filterByCategory('Furniture')">
            <span class="icon" style="font-size: 2rem;">🛋️</span>
            <p data-i18n="cat_furniture">Furniture</p>
        </div>
-
        <div class="cat-card" onclick="filterByCategory('Jobs')">
            <span class="icon" style="font-size: 2rem;">💼</span>
            <p data-i18n="cat_jobs">Jobs</p>
        </div>
-
        <div class="cat-card" onclick="filterByCategory('Fashion')">
            <span class="icon" style="font-size: 2rem;">👕</span>
            <p data-i18n="cat_fashion">Fashion</p>
        </div>
-
        <div class="cat-card" onclick="filterByCategory('Pets')">
            <span class="icon" style="font-size: 2rem;">🐾</span>
            <p data-i18n="cat_pets">Pets</p>
        </div>
-
        <div class="cat-card" onclick="filterByCategory('Sports')">
            <span class="icon" style="font-size: 2rem;">🏀</span>
            <p data-i18n="cat_sports">Sports</p>
        </div>
-
        <div class="cat-card" onclick="filterByCategory('Books')">
            <span class="icon" style="font-size: 2rem;">📚</span>
            <p data-i18n="cat_books">Books</p>
        </div>
-
        <div class="cat-card" onclick="filterByCategory('Appliances')">
            <span class="icon" style="font-size: 2rem;">🍳</span>
            <p data-i18n="cat_appliances">Appliances</p>
        </div>
-
        <div class="cat-card" onclick="filterByCategory('Toys')">
            <span class="icon" style="font-size: 2rem;">🧸</span>
            <p data-i18n="cat_toys">Toys</p>
        </div>
-             <div class="cat-card" onclick="filterByCategory('Electronics')">
+       <div class="cat-card" onclick="filterByCategory('Electronics')">
            <span class="icon" style="font-size: 2rem;">📱</span>
            <p data-i18n="cat_electronics">Electronics</p>
        </div>
-
        <div class="cat-card" onclick="filterByCategory('Services')">
            <span class="icon" style="font-size: 2rem;">🛠️</span>
            <p data-i18n="cat_services">Services</p>
        </div>
-
        <div class="cat-card" onclick="filterByCategory('Garden')">
            <span class="icon" style="font-size: 2rem;">🌻</span>
            <p data-i18n="cat_garden">Garden</p>
        </div>
-
        <div class="cat-card" onclick="filterByCategory('Health')">
            <span class="icon" style="font-size: 2rem;">💊</span>
            <p data-i18n="cat_health">Health</p>
        </div>
-
        <div class="cat-card" onclick="filterByCategory('Baby')">
            <span class="icon" style="font-size: 2rem;">👶</span>
            <p data-i18n="cat_baby">Baby Items</p>
        </div>
-
-
    </div>
 </section>
 
-<!-- LISTINGS -->
 <section class="main-content container">
     <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <h3 data-i18n="viewTitle">Latest Ads</h3>
         <button onclick="resetFilters()" class="btn-link" data-i18n="btn_view_all" style="background: none; border: none; color: #007bff; text-decoration: underline;">View All</button>
     </div>
-
-    <!-- No items found message -->
-    <p id="no-items-message" style="display:none; text-align:center;">No items found.</p>
-
-    <!-- Ads container -->
+    <p id="no-items-message" style="display:none; text-align:center;" data-i18n="no_items">No items found.</p>
     <div id="listings" class="grid"></div>
 </section>
 
-<!-- FOOTER -->
 <footer>
     <div id="footer" class="container" style="text-align: center; padding: 40px 0; border-top: 1px solid #eee;">
-
         <p style="display: inline; margin: 0 10px;"><a href="terms.html" data-i18n="footer_terms">Terms</a></p>
-
         <p style="display: inline; margin: 0 10px;"><a href="safety.html" data-i18n="footer_safety">Safety</a></p>
-
         <p style="display: inline; margin: 0 10px;"><a href="privacy.html" data-i18n="footer_privacy_header">Privacy</a></p>
-
     </div>
 </footer>
 
-<!-- SCRIPTS -->
 <script src="storage.js"></script>
 <script src="languages.js"></script>
 <script type="module" src="main.js"></script>
    
-
-
 </body>
 </html>
+
 
 
 
