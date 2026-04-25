@@ -1,6 +1,7 @@
-import { auth } from "./firebase-config.js"; // Firebase Authentication
 import { db, doc, getDoc } from "./firebase-config.js"; // Firestore functions
-import { rtdb, ref, onValue } from "./firebase-config.js"; // Realtime Database functions
+import { auth, db, rtdb } from "./firebase-config.js"; 
+import { ref, onValue, get, push, child } from "https://gstatic.com";
+
 
 let ad;
 const currentUser = JSON.parse(localStorage.getItem("currentUser")) || { email: "Guest" };
