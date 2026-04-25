@@ -1,9 +1,7 @@
-import { auth } from "./firebase-config.js";  // For Firebase Authentication
-import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js"; // Authentication functions
-import { db, ref, onValue } from "./firebase-config.js";  // For Firebase Realtime Database functions
+import { db, ref, get, push } from "./firebase-config.js";  // Using Realtime Database functions
 
 const params = new URLSearchParams(window.location.search);
-const adId = params.get("id"); // This is now the Firebase unique key
+const adId = params.get("id");  // This is now the Firebase unique key
 
 let ad;
 const currentUser = JSON.parse(localStorage.getItem("currentUser")) || { email: "Guest" };
@@ -15,17 +13,23 @@ async function initDetailsPage() {
         return;
     }
 
-    const docRef = doc(db, "marketplace_ads", adId);
-    const snap = await getDoc(docRef);
+    try {
+        const adRef = ref(db, "marketplace_ads/" + adId);  // Using Realtime Database reference
+        const snapshot = await get(adRef);  // Fetch the ad details
 
-    if (!snap.exists()) {
-        alert("Ad not found!");
-        window.location.href = "index.html";
-        return;
+        if (!snapshot.exists()) {
+            alert("Ad not found!");
+            window.location.href = "index.html";
+            return;
+        }
+
+        ad = snapshot.val();  // Extract ad data from the snapshot
+        renderAdDetails();  // Render the ad details
+
+    } catch (error) {
+        console.error("Error loading ad:", error);
+        alert("Failed to load ad.");
     }
-
-    ad = snap.data();
-    renderAdDetails();
 }
 
 // 2. RENDER AD DATA
@@ -64,7 +68,7 @@ function renderImages() {
     `;
 }
 
-// 3. MESSAGING SYSTEM (Cloud Version)
+// 3. MESSAGING SYSTEM (Realtime Database Version)
 window.sendMessage = function() {
     if (!currentUser || currentUser.email === "Guest") {
         alert(getText("login_required") || "Please login first.");
@@ -91,17 +95,18 @@ window.sendMessage = function() {
         deletedByReceiver: false
     };
 
-    // SAVE TO FIREBASE MESSAGES
-   addDoc(collection(db, "marketplace_messages"), newMessage)
-    .then(() => {
-        alert(getText("message_sent") || "Message sent to the cloud!");
-        if (messageInput) messageInput.value = "";
-        if (typeof closeMessageModal === "function") closeMessageModal();
-    })
-    .catch(err => alert("Error: " + err.message));
+    // SAVE TO FIREBASE MESSAGES (Realtime Database)
+    const messagesRef = ref(db, "marketplace_messages");
+    push(messagesRef, newMessage)
+        .then(() => {
+            alert(getText("message_sent") || "Message sent to the cloud!");
+            if (messageInput) messageInput.value = "";
+            if (typeof closeMessageModal === "function") closeMessageModal();
+        })
+        .catch(err => alert("Error: " + err.message));
 }
 
-// 4. REPORT SYSTEM (Cloud Version)
+// 4. REPORT SYSTEM (Realtime Database Version)
 window.showReportModal = function() {
     const modal = document.getElementById("reportModal");
     if (modal) modal.style.display = "block";
