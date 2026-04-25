@@ -1,10 +1,13 @@
 
 // 1. Your custom config imports
-import { auth, db, rtdb, ref, onValue } from "./firebase-config.js";
+import { auth, db } from "./firebase-config.js";
 
-// 2. Corrected CDN imports (added full paths)
+// 2. Full CDN paths for Auth
 import { onAuthStateChanged, signOut } from "https://gstatic.com";
+
+// 3. Full CDN paths for Firestore
 import { addDoc, collection } from "https://gstatic.com";
+
 
 
 /* =======================
