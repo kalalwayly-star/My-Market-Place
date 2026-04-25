@@ -2,10 +2,9 @@
 <html lang="en">
 <head>
    <meta charset="UTF-8">
-   <title>Ad Details | My Marketplace</title>
+   <title data-i18n="ad_details_title">Ad Details | My Marketplace</title>
    <link rel="stylesheet" href="style.css">
    <style>
-       /* Basic Fix for Grid Layout */
        .detail-grid { display: flex; gap: 30px; margin-top: 20px; }
        .content-main { flex: 2; }
        .content-sidebar { flex: 1; min-width: 300px; }
@@ -26,7 +25,7 @@
 
 <header class="header">
    <div class="container" style="display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 1200px; margin: 0 auto;">
-       <h1>My Marketplace</h1>
+       <h1 data-i18n="header_title">My Marketplace</h1>
        <div class="nav">
            <a href="index.html" class="btn text" data-i18n="back_home">Back to Browse</a>
        </div>
@@ -38,10 +37,7 @@
        
        <!-- Left Side: Image and Description -->
        <div class="content-main">
-           <!-- THE IMAGE BOX -->
-           <div id="adImageContainer" class="main-image">
-               <!-- Image injected by details.js -->
-           </div>
+           <div id="adImageContainer" class="main-image"></div>
 
            <div class="description-section">
                 <h2 data-i18n="label_description">Description</h2>
@@ -60,8 +56,6 @@
                <hr>
               
                <h3 data-i18n="contact_seller">Contact Seller</h3>
-               
-               <!-- Messaging Section -->
                <div id="contactSection" style="margin-top: 20px;">
                    <textarea 
                         id="messageText" 
@@ -113,7 +107,6 @@
     </div>
 </footer>
 
-<!-- Scripts -->
 <script src="languages.js"></script>
 <script src="storage.js"></script>
 <script type="module" src="details.js"></script>
