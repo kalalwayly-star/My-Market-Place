@@ -1,5 +1,5 @@
-import { auth } from "./firebase-config.js"; /firebasejs/12.12.1/firebase-firestore.js  // For Firebase Authentication
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js"; // Firebase Authentication functions
+import { auth } from "./firebase-config.js";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
 
 /* --- LOGIN FUNCTION --- */
 window.login = function () {
@@ -10,13 +10,13 @@ window.login = function () {
     // Clear any previous error message
     errorMsg.innerText = '';
 
-    // Validation
+    // Input validation
     if (!email || !password) {
         errorMsg.innerText = "Please fill in all fields.";
         return;
     }
 
-    // Login with email and password
+    // Attempt to log in with Firebase Authentication
     signInWithEmailAndPassword(auth, email, password)
         .then(() => {
             window.location.href = "index.html"; // Redirect after successful login
@@ -26,6 +26,7 @@ window.login = function () {
 
             let errorMessage = error.message;
 
+            // Custom error messages for specific Firebase errors
             if (error.code === 'auth/user-not-found') {
                 errorMessage = "No user found with this email.";
             } else if (error.code === 'auth/wrong-password') {
@@ -34,7 +35,7 @@ window.login = function () {
                 errorMessage = "Invalid email format.";
             }
 
-            errorMsg.innerText = errorMessage; // Display a custom error message
+            errorMsg.innerText = errorMessage; // Display the error message to the user
         });
 };
 
@@ -44,7 +45,7 @@ window.register = function () {
     const password = document.getElementById('registerPassword').value;
     const errorMsg = document.getElementById('error-message');
 
-    // Validation
+    // Input validation
     if (!email || !password) {
         errorMsg.innerText = "Please fill in all fields.";
         return;
@@ -55,13 +56,13 @@ window.register = function () {
         return;
     }
 
-    // Create user with email and password
+    // Create a new user with email and password using Firebase Authentication
     createUserWithEmailAndPassword(auth, email, password)
         .then(() => {
             window.location.href = "myads.html"; // Redirect after successful registration
         })
         .catch((error) => {
-            errorMsg.innerText = error.message; // Display registration error message
+            errorMsg.innerText = error.message; // Display the error message to the user
         });
 };
 
