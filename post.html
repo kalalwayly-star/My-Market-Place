@@ -1,127 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-   <meta charset="UTF-8">
-   <title data-i18n="post_page_title">Post Ad | Marketplace</title>
-   <link rel="stylesheet" href="style.css">
-   <!-- PayPal SDK -->
-   <script src="https://www.paypal.com/sdk/js?client-id=AR_Wf3aXLq7GxACeo57SjDfghIrCso96DnHoZiMpLnKUsAaePgUoQyVKMbVt8B-RNMiVoPLCSXctDk6I&components=buttons"></script>
+    <meta charset="UTF-8">
+    <title data-i18n="post_page_title">Post Ad | Marketplace</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- PayPal SDK -->
+    <script src="https://www.paypal.com/sdk/js?client-id=AR_Wf3aXLq7GxACeo57SjDfghIrCso96DnHoZiMpLnKUsAaePgUoQyVKMbVt8B-RNMiVoPLCSXctDk6I&components=buttons"></script>
 </head>
 <body>
-   <header class="header">
-       <div class="container">
-           <h1 data-i18n="myTitle">My Marketplace</h1>
-           <div class="nav"><a href="index.html" class="btn text" data-i18n="home">Home</a></div>
-       </div>
-   </header>
-
-   <div class="form-wrapper">
-       <div class="form-card">
-           <div id="adImageContainer"></div>
-           <h2 data-i18n="post_ad_header">Post a New Listing</h2>
-
-           <!-- Wrap all the form fields inside the form element -->
-<form id="postForm" enctype="multipart/form-data">
-
-    <!-- CATEGORY -->
-    <div class="input-group">
-        <label data-i18n="label_category">Category</label>
-        <select id="postCategory" required>
-            <option value="" data-i18n="select_category">Choose Category</option>
-            <option value="Real Estate" data-i18n="cat_realestate">Real Estate</option>
-            <option value="Cars & Trucks" data-i18n="cat_cars_trucks">Cars and Trucks</option>
-            <option value="Furniture" data-i18n="cat_furniture">Furniture</option>
-            <option value="Jobs" data-i18n="cat_jobs">Jobs</option>
-            <option value="Fashion" data-i18n="cat_fashion">Fashion</option>
-            <option value="Pets" data-i18n="cat_pets">Pets</option>
-            <option value="Sports" data-i18n="cat_sports">Sports</option>
-            <option value="Books" data-i18n="cat_books">Books</option>
-            <option value="Appliances" data-i18n="cat_appliances">Appliances</option>
-            <option value="Toys" data-i18n="cat_toys">Toys</option>
-            <option value="Electronics" data-i18n="cat_electronics">Electronics</option>
-            <option value="Services" data-i18n="cat_services">Services</option>
-            <option value="Garden" data-i18n="cat_garden">Garden</option>
-            <option value="Health" data-i18n="cat_health">Health</option>
-            <option value="Baby" data-i18n="cat_baby">Baby Items</option>
-        </select>
-    </div>
-
-    <!-- PHOTO -->
-    <div class="form-section"> <h3 data-i18n="photo_header">Photos (Max 10)</h3> <div class="upload-container"> 
-       <label for="photoInput" class="upload-box" style="border: 2px dashed #ccc; padding: 20px; display: block; text-align: center; cursor: pointer;"> 
-          <div class="icon">📸</div> <span data-i18n="click_to_add">Click to add photos</span> 
-          <input type="file" id="photoInput" accept="image/*" multiple hidden> 
-    </label> <div id="galleryPreview" class="gallery-grid" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px;">
-       
-    </div> </div> </div>
-
-    <!-- CONDITION -->
-   <!-- Item Condition Field -->
-<div id="globalCondition" class="input-group condition-box" style="display:none;">
-    
-    <label class="condition-label" data-i18n="label_condition">
-        Item Condition
-    </label>
-
-    <div id="globalCondition">
-    <label>
-        <input type="radio" name="condition" value="New"> 
-        <span data-i18n="new">New</span>
-    </label>
-    <label>
-        <input type="radio" name="condition" value="Used"> 
-        <span data-i18n="used">Used</span>
-    </label>
-</div>
-
-
-</div>
-    <!-- COMMON FIELDS -->
-    <div id="commonFields" style="display:none;">
-
-        <div class="input-group">
-            <label data-i18n="label_location">City/Location</label>
-            <input type="text" id="adLocation">
+    <header class="header">
+        <div class="container">
+            <h1 data-i18n="myTitle">My Marketplace</h1>
+            <div class="nav">
+                <a href="index.html" class="btn text" data-i18n="home">Home</a>
+            </div>
         </div>
+    </header>
 
-        <div class="input-group">
-            <label data-i18n="label_title">Ad Title</label>
-            <input type="text" id="adTitle">
-        </div>
+    <div class="form-wrapper">
+        <div class="form-card">
+            <h2 data-i18n="post_ad_header">Post a New Listing</h2>
+            <form id="postForm" enctype="multipart/form-data">
 
-        <div class="input-group">
-            <label data-i18n="label_price">Price ($)</label>
-            <input type="number" id="adPrice">
-        </div>
+                <!-- CATEGORY -->
+                <div class="input-group">
+                    <label data-i18n="label_category">Category</label>
+                    <select id="postCategory" required>
+                        <option value="" data-i18n="select_category">Choose Category</option>
+                        <option value="Real Estate" data-i18n="cat_realestate">Real Estate</option>
+                        <option value="Cars & Trucks" data-i18n="cat_cars_trucks">Cars and Trucks</option>
+                        <option value="Furniture" data-i18n="cat_furniture">Furniture</option>
+                        <!-- More options as needed -->
+                    </select>
+                </div>
 
-        <div class="input-group">
-            <label data-i18n="label_description">Description</label>
-            <textarea id="adDesc" rows="4"></textarea>
-        </div>
-
-        <!-- FEATURE -->
-        <div class="form-group feature-box">
-            <label>
-                <input type="checkbox" id="isFeatured">
-                <span data-i18n="label_featured">
-                    ✨ Feature this ad for $4.99 to stay at top (5 days)
-                </span>
-            </label>
-        </div>
-
-        <div id="paypal-button-container" style="display:none;"></div>
-
-    </div>
-
-    <form id="postForm" enctype="multipart/form-data">
-    <!-- Form Fields -->
-    <button type="submit" id="postBtn" class="btn primary" data-i18n="post_btn">Post Ad Now</button>
-</form>
-
-</form>
-
-   <!-- CORE SCRIPTS -->
-   <script src="languages.js"></script>
-   <script type="module" src="post.js"></script>
-</body>
-</html>
+                <!-- PHOTO -->
+                <div class="form-section">
+                    <h3 data-i18n="photo_header">Photos (Max 10)</h3>
+                    <div class="upload-container">
+                        <label for="photoInput" class="upload-box">
+                            <div class="icon">📸
