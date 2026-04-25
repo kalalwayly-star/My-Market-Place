@@ -9,6 +9,7 @@ import { ref, onValue, remove } from "https://gstatic.com";
 // Full URLs for Firestore
 import { collection, onSnapshot, query } from "https://gstatic.com";
 
+
 // Global variable to store ads
 let globalAds = [];
 
