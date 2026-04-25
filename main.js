@@ -1,14 +1,7 @@
-import { auth, db, rtdb } from "./firebase-config.js";
-
-// Full URLs for Auth
+// 1. CLEAN IMPORTS (All at the top, full URLs)
+import { auth, db } from "./firebase-config.js";
 import { onAuthStateChanged, signOut } from "https://gstatic.com";
-
-// Full URLs for Realtime Database
-import { ref, onValue, remove } from "https://gstatic.com";
-
-// Full URLs for Firestore
-import { collection, onSnapshot, query } from "https://gstatic.com";
-
+import { collection, onSnapshot } from "https://gstatic.com";
 
 // Global variable to store ads
 let globalAds = [];
@@ -198,3 +191,4 @@ window.renderAds = function(adsArray, containerId = "listings") {
         `;
     }).join("");
 };
+
