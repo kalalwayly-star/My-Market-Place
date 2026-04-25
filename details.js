@@ -109,36 +109,48 @@ window.sendMessage = function() {
 // 4. REPORT SYSTEM (Realtime Database Version)
 window.showReportModal = function() {
     const modal = document.getElementById("reportModal");
-    if (modal) modal.style.display = "block";
+    if (modal) modal.style.display = "block";  // Show the report modal
 }
 
 window.closeModal = function() {
     const modal = document.getElementById("reportModal");
-    if (modal) modal.style.display = "none";
+    if (modal) modal.style.display = "none";  // Close the report modal
 }
 
 window.submitReport = function() {
-    const reason = document.getElementById("reportReason")?.value;
-    const reportData = { adId: adId, reason, timestamp: new Date().toISOString() };
+    const reason = document.getElementById("reportReason")?.value;  // Get the selected reason
+    if (!reason) {
+        alert("Please select a reason for reporting.");
+        return;
+    }
 
-    const reportRef = ref(db, "flaggedAds");
-    push(reportRef, reportData)
+    const reportData = { 
+        adId: adId, 
+        reason, 
+        timestamp: new Date().toISOString()  // Record the time the report was made
+    };
+
+    const reportRef = ref(db, "flaggedAds");  // Reference to the flaggedAds in Realtime Database
+    push(reportRef, reportData)  // Push the report to the database
         .then(() => {
-            alert(getText("report_sent") || "Report submitted to cloud.");
-            closeModal();
+            alert(getText("report_sent") || "Report submitted to cloud.");  // Show success message
+            closeModal();  // Close the modal after submission
+        })
+        .catch(err => {
+            console.error("Error submitting report:", err);
+            alert("There was an error submitting your report. Please try again.");
         });
 }
 
 // 5. HELPERS
 function setText(id, value) {
     const el = document.getElementById(id);
-    if (el) el.innerText = value;
+    if (el) el.innerText = value;  // Set text content for the element
 }
 
 function getText(key) {
-    return (window.translations && window.translations[key]) ? window.translations[key] : key;
+    return (window.translations && window.translations[key]) ? window.translations[key] : key;  // Get translated text
 }
 
 // Run init
-initDetailsPage();
-
+initDetailsPage();  // Initialize the page and load ad details
