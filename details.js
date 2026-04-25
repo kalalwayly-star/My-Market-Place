@@ -1,6 +1,6 @@
-import { db, doc, getDoc } from "./firebase-config.js";  // Correct import of Firestore functions
-const params = new URLSearchParams(window.location.search);
-const adId = params.get("id");  // This is now the Firebase unique key
+import { auth } from "./firebase-config.js"; // Firebase Authentication
+import { db, doc, getDoc } from "./firebase-config.js"; // Firestore functions
+import { rtdb, ref, onValue } from "./firebase-config.js"; // Realtime Database functions
 
 let ad;
 const currentUser = JSON.parse(localStorage.getItem("currentUser")) || { email: "Guest" };
