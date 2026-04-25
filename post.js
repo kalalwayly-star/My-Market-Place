@@ -1,7 +1,12 @@
-import { auth } from "./firebase-config.js";  // For Firebase Authentication
-import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js"; // Authentication functions
-import { db, ref, onValue } from "./firebase-config.js";  // For Firebase Realtime Database functions
-import { addDoc, collection } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js"; // Firestore functions
+// Import Firebase Authentication functions from firebase-auth.js
+import { auth } from "./firebase-config.js";  // Firebase Authentication (from your own config)
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";  // Firebase Authentication from the CDN
+
+// Import Firestore functions for adding documents
+import { addDoc, collection } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";  // Firestore functions from CDN
+
+// Import Realtime Database functions from your custom firebase-config.js
+import { db, ref, onValue } from "./firebase-config.js";  // Realtime Database functions (from your own config)
 
 /* =======================
    GLOBAL
