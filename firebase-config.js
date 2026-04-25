@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js"; // Firebase Authentication
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js"; // Realtime Database
+import { getAuth } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";  // Add getDoc for fetching documents
 
 // Firebase configuration
 const firebaseConfig = {
@@ -16,10 +16,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 // Initialize Firebase Authentication
-export const auth = getAuth(app);  // Export Firebase Authentication
+export const auth = getAuth(app);
 
-// Initialize Firebase Realtime Database
-export const db = getDatabase(app);  // Export Firebase Realtime Database
-
-// Export Realtime Database functions for reading data
-export { ref, onValue };  // Export `ref` and `onValue` functions for Realtime Database
+// Initialize Firestore and export needed functions
+export const db = getFirestore(app);  // Export Firestore
+export { doc, getDoc };  // Export Firestore document functions
