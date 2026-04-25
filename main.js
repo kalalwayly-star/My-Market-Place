@@ -1,16 +1,15 @@
-// 1. CLEAN IMPORTS (All at the top with FULL URLs)
-import { auth, db } from "./firebase-config.js";/firebasejs/12.12.1/firebase-firestore.js 
+// Firebase Initialization
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+import { getFirestore, collection, onSnapshot, query, where, deleteDoc, doc as firestoreDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+import { firebaseConfig } from './firebase-config.js';
 
-// Full URLs to prevent CORS errors
-import { onAuthStateChanged, signOut } from "https://gstatic.com";/firebasejs/12.12.1/firebase-firestore.js 
-import { collection, onSnapshot, deleteDoc, doc as firestoreDoc } from "https://gstatic.com";/firebasejs/12.12.1/firebase-firestore.js 
+const db = getFirestore(firebaseConfig);
+const auth = getAuth(firebaseConfig);
 
 // Global variable to store ads
 let globalAds = [];
 
-/* =========================
-   INITIALIZATION
-========================= */
+// DOMContentLoaded initialization
 document.addEventListener("DOMContentLoaded", () => {
     const userInfoDiv = document.getElementById("user-info-header");
     const emailSpan = document.getElementById("header-user-email");
@@ -20,38 +19,31 @@ document.addEventListener("DOMContentLoaded", () => {
     // Firebase authentication state listener
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            if (userInfoDiv) userInfoDiv.style.display = "block";
-            if (emailSpan) emailSpan.innerText = user.email;
-            if (loginLink) loginLink.style.display = "none";
-            if (logoutBtn) logoutBtn.style.display = "inline-block";
+            userInfoDiv.style.display = "block";
+            emailSpan.innerText = user.email;
+            loginLink.style.display = "none";
+            logoutBtn.style.display = "inline-block";
         } else {
-            if (userInfoDiv) userInfoDiv.style.display = "none";
-            if (loginLink) loginLink.style.display = "inline-block";
-            if (logoutBtn) logoutBtn.style.display = "none";
+            userInfoDiv.style.display = "none";
+            loginLink.style.display = "inline-block";
+            logoutBtn.style.display = "none";
         }
     });
 
-    // Logout button event listener
-    if (logoutBtn) {
-        logoutBtn.addEventListener("click", () => {
-            signOut(auth).then(() => {
-                window.location.href = "index.html";
-            });
-        });
-    }
+    // Logout functionality
+    logoutBtn.addEventListener("click", () => {
+        signOut(auth).then(() => window.location.href = "index.html");
+    });
 
-    // Load Ads
+    // Load ads
     initMain();
 });
 
-/* =========================
-   ADS LOAD FROM FIREBASE
-========================= */
+// Initialize ads loading from Firestore
 function initMain() {
     const listingsContainer = document.getElementById("listings");
     if (!listingsContainer) return;
 
-    // Listen to Firestore
     const adsCollection = collection(db, "marketplace_ads");
 
     onSnapshot(adsCollection, (snapshot) => {
@@ -59,96 +51,19 @@ function initMain() {
         snapshot.forEach((doc) => {
             globalAds.push({ ...doc.data(), firebaseId: doc.id });
         });
-        renderAds(globalAds, "listings");
+        renderAds(globalAds);
     });
 }
 
-/* =========================
-   GLOBAL HELPERS
-========================= */
-window.goToDetails = function(id) {
-    window.location.href = `details.html?id=${id}`;
-};
-
-window.deleteAd = async function(firebaseId) {
-    if (confirm("Are you sure you want to delete this ad?")) {
-        try {
-            await deleteDoc(firestoreDoc(db, "marketplace_ads", firebaseId));
-            alert("Ad deleted successfully");
-        } catch (error) {
-            console.error("Error deleting document: ", error);
-            alert("Error deleting ad. Check console.");
-        }
-    }
-};
-
-/* =========================
-   FILTERS
-========================= */
-window.filterByCategory = function(category) {
-    let filteredAds = (category === 'All') 
-        ? globalAds 
-        : globalAds.filter(ad => ad.category === category);
-
-    renderAds(filteredAds, "listings");
-
-    const noItemsMessage = document.getElementById('no-items-message');
-    if (noItemsMessage) {
-        noItemsMessage.style.display = (filteredAds.length === 0) ? 'block' : 'none';
-    }
-};
-
-window.resetFilters = function() {
-    const searchInput = document.getElementById('searchInput');
-    if (searchInput) searchInput.value = '';
-    renderAds(globalAds, "listings");
-    const noItemsMessage = document.getElementById('no-items-message');
-    if (noItemsMessage) noItemsMessage.style.display = 'none';
-};
-
-window.applyFilters = function() {
-    const searchInput = document.getElementById('searchInput');
-    const query = searchInput?.value.toLowerCase().trim();
-
-    if (!query) {
-        renderAds(globalAds, "listings");
-        return;
-    }
-
-    const filteredAds = globalAds.filter(ad =>
-        (ad.title || "").toLowerCase().includes(query) || 
-        (ad.category || "").toLowerCase().includes(query)
-    );
-
-    renderAds(filteredAds, "listings");
-
-    const noItemsMessage = document.getElementById('no-items-message');
-    if (noItemsMessage) {
-        noItemsMessage.style.display = (filteredAds.length === 0) ? 'block' : 'none';
-    }
-};
-
-/* =========================
-   RENDER ADS
-========================= */
-window.renderAds = function(adsArray, containerId = "listings") {
-    const container = document.getElementById(containerId);
-    if (!container) return;
-
-    container.innerHTML = "";
-
-    if (!adsArray || adsArray.length === 0) {
-        container.innerHTML = `<p style="text-align:center;">No items found.</p>`;
-        return;
-    }
-
+// Render ads to the DOM
+function renderAds(adsArray) {
+    const container = document.getElementById("listings");
     container.innerHTML = adsArray.map(ad => {
         const uniqueId = ad.firebaseId;
         const image = Array.isArray(ad.image) ? ad.image[0] : (ad.image || 'https://via.placeholder.com/300');
-
         return `
         <div class="card">
-            <div onclick="goToDetails('${uniqueId}')" style="cursor:pointer;">
+            <div onclick="goToDetails('${uniqueId}')">
                 <img src="${image}" style="width:100%; height:200px; object-fit:cover;">
             </div>
             <div class="card-content">
@@ -157,7 +72,65 @@ window.renderAds = function(adsArray, containerId = "listings") {
                 <p><b>$${ad.price}</b></p>
                 <button onclick="deleteAd('${uniqueId}')">Delete</button>
             </div>
-        </div>
-        `;
+        </div>`;
     }).join("");
+}
+
+// Go to ad details
+window.goToDetails = function(id) {
+    window.location.href = `details.html?id=${id}`;
 };
+
+// Delete ad functionality
+window.deleteAd = async function(firebaseId) {
+    if (confirm("Are you sure you want to delete this ad?")) {
+        try {
+            await deleteDoc(firestoreDoc(db, "marketplace_ads", firebaseId));
+            alert("Ad deleted successfully");
+        } catch (error) {
+            console.error("Error deleting ad:", error);
+            alert("Error deleting ad. Check console.");
+        }
+    }
+};
+
+// Filter ads by category
+window.filterByCategory = function(category) {
+    const filteredAds = (category === 'All') ? globalAds : globalAds.filter(ad => ad.category === category);
+    renderAds(filteredAds);
+    toggleNoItemsMessage(filteredAds);
+};
+
+// Reset filters and show all ads
+window.resetFilters = function() {
+    renderAds(globalAds);
+    toggleNoItemsMessage(globalAds);
+};
+
+// Apply filters for search
+window.applyFilters = function() {
+    const queryText = document.getElementById('searchInput')?.value.toLowerCase().trim();
+
+    let adsQuery = collection(db, "marketplace_ads");
+
+    if (queryText) {
+        adsQuery = query(adsQuery, where("title", "array-contains", queryText));
+    }
+
+    onSnapshot(adsQuery, (snapshot) => {
+        globalAds = [];
+        snapshot.forEach((doc) => {
+            globalAds.push({ ...doc.data(), firebaseId: doc.id });
+        });
+        renderAds(globalAds);
+        toggleNoItemsMessage(globalAds);
+    });
+};
+
+// Toggle no items message
+function toggleNoItemsMessage(ads) {
+    const noItemsMessage = document.getElementById('no-items-message');
+    if (noItemsMessage) {
+        noItemsMessage.style.display = ads.length === 0 ? 'block' : 'none';
+    }
+}
