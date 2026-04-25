@@ -1,9 +1,11 @@
 
+// 1. Your custom config imports
 import { auth, db, rtdb, ref, onValue } from "./firebase-config.js";
 
-// Then keep your CDN imports below that:
+// 2. Corrected CDN imports (added full paths)
 import { onAuthStateChanged, signOut } from "https://gstatic.com";
 import { addDoc, collection } from "https://gstatic.com";
+
 
 /* =======================
    GLOBAL
