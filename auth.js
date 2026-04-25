@@ -1,4 +1,4 @@
-import { auth } from "./firebase-config.js";  // For Firebase Authentication
+import { auth } from "./firebase-config.js"; /firebasejs/12.12.1/firebase-firestore.js  // For Firebase Authentication
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js"; // Firebase Authentication functions
 
 /* --- LOGIN FUNCTION --- */
