@@ -1,6 +1,12 @@
-// 1. CLEAN IMPORTS - No double declarations
+// 1. CLEAN IMPORTS from your config
 import { auth, rtdb } from "./firebase-config.js"; 
+
+// 2. Full CDN paths for Realtime Database (to see and delete messages)
 import { ref, onValue, push, remove } from "https://gstatic.com";
+
+// 3. Full CDN path for Auth State (needed to check if user is logged in)
+import { onAuthStateChanged } from "https://gstatic.com";
+
 
 const params = new URLSearchParams(window.location.search);
 const adId = params.get("id");
