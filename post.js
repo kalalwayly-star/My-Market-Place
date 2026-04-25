@@ -1,8 +1,9 @@
-import { db, ref, onValue } from "./firebase-config.js";  // Realtime Database functions (from your own config)
-import { auth, db } from "./firebase-config.js"; // db is your Firestore instance
-import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
-import { addDoc, collection } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
+import { auth, db, rtdb, ref, onValue } from "./firebase-config.js";
+
+// Then keep your CDN imports below that:
+import { onAuthStateChanged, signOut } from "https://gstatic.com";
+import { addDoc, collection } from "https://gstatic.com";
 
 /* =======================
    GLOBAL
