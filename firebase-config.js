@@ -1,6 +1,8 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";  // Add getDoc for fetching documents
+// Firebase imports
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js"; // Firebase App
+import { getAuth } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js"; // Firebase Authentication
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js"; // Firestore
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js"; // Realtime Database
 
 // Firebase configuration
 const firebaseConfig = {
@@ -18,6 +20,14 @@ const app = initializeApp(firebaseConfig);
 // Initialize Firebase Authentication
 export const auth = getAuth(app);
 
-// Initialize Firestore and export needed functions
-export const db = getFirestore(app);  // Export Firestore
-export { doc, getDoc };  // Export Firestore document functions
+// Initialize Firestore
+export const db = getFirestore(app); // Firestore for adding and querying ads
+
+// Initialize Realtime Database
+export const rtdb = getDatabase(app);  // Realtime Database
+
+// Export Firestore document functions
+export { doc, getDoc };  // Functions to interact with Firestore documents
+
+// Export Realtime Database functions
+export { ref, onValue };  // Functions to interact with Realtime Database
