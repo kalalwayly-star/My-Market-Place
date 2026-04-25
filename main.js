@@ -1,9 +1,9 @@
 // 1. CLEAN IMPORTS (All at the top with FULL URLs)
-import { auth, db } from "./firebase-config.js";
+import { auth, db } from "./firebase-config.js";/firebasejs/12.12.1/firebase-firestore.js 
 
 // Full URLs to prevent CORS errors
-import { onAuthStateChanged, signOut } from "https://gstatic.com";
-import { collection, onSnapshot, deleteDoc, doc as firestoreDoc } from "https://gstatic.com";
+import { onAuthStateChanged, signOut } from "https://gstatic.com";/firebasejs/12.12.1/firebase-firestore.js 
+import { collection, onSnapshot, deleteDoc, doc as firestoreDoc } from "https://gstatic.com";/firebasejs/12.12.1/firebase-firestore.js 
 
 // Global variable to store ads
 let globalAds = [];
