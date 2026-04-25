@@ -50,26 +50,17 @@ function initMain() {
     const listingsContainer = document.getElementById("listings");
     if (!listingsContainer) return;
 
-    // Use Firestore onSnapshot to get real-time updates
-    const q = collection(db, "marketplace_ads");
-    
-    onSnapshot(q, (snapshot) => {
+    // Correct way to get ads from Firestore (where post.js sends them)
+    const adsCollection = collection(db, "marketplace_ads");
+
+    onSnapshot(adsCollection, (snapshot) => {
         globalAds = [];
         snapshot.forEach((doc) => {
+            // Firestore uses doc.id for the key and doc.data() for the info
             globalAds.push({ ...doc.data(), firebaseId: doc.id });
         });
 
-        console.log("Ads loaded from Firestore:", globalAds);
         renderAds(globalAds, "listings");
-    });
-
-    // My Ads Logic
-    onAuthStateChanged(auth, (user) => {
-        const isMyAdsPage = document.getElementById("myAds");
-        if (isMyAdsPage && user) {
-            const myAds = globalAds.filter(ad => ad.userId === user.uid);
-            renderAds(myAds, "myAds");
-        }
     });
 }
 
