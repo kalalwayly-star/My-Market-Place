@@ -1,8 +1,12 @@
-// 1. CLEAN IMPORTS (No double declarations)
-import { auth, db, rtdb, doc, getDoc, ref, onValue, push } from "./firebase-config.js";
+// 1. CLEAN IMPORTS from your local config
+import { auth, db, rtdb } from "./firebase-config.js";
 
-// CDN Imports with FULL URLs
-import { get } from "https://gstatic.com";
+// 2. Full CDN paths for Firestore (to read the ad)
+import { doc, getDoc } from "https://gstatic.com";
+
+// 3. Full CDN paths for Realtime Database (for messages/get)
+import { ref, onValue, push, get } from "https://gstatic.com";
+
 
 let ad;
 const adId = new URLSearchParams(window.location.search).get("id");
