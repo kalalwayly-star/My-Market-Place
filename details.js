@@ -6,16 +6,20 @@ import { ref, onValue, get, push, child } from "https://gstatic.com";
 let ad;
 const currentUser = JSON.parse(localStorage.getItem("currentUser")) || { email: "Guest" };
 
-// 1. INITIALIZATION (Load from Cloud)
+
 async function initDetailsPage() {
+    const params = new URLSearchParams(window.location.search);
+    const adId = params.get("id"); // Make sure you are getting the ID from the URL
+
     if (!adId) {
         window.location.href = "index.html";
         return;
     }
 
     try {
-        const adRef = ref(db, "marketplace_ads/" + adId);  // Using Realtime Database reference
-        const snapshot = await get(adRef);  // Fetch the ad details
+        // Use Firestore 'doc' and 'getDoc' instead of rtdb 'ref' and 'get'
+        const adRef = doc(db, "marketplace_ads", adId);
+        const snapshot = await getDoc(adRef);
 
         if (!snapshot.exists()) {
             alert("Ad not found!");
@@ -23,14 +27,14 @@ async function initDetailsPage() {
             return;
         }
 
-        ad = snapshot.val();  // Extract ad data from the snapshot
-        renderAdDetails();  // Render the ad details
+        ad = snapshot.data(); // Firestore uses .data() instead of .val()
+        renderAdDetails(); 
 
     } catch (error) {
         console.error("Error loading ad:", error);
-        alert("Failed to load ad.");
     }
 }
+
 
 // 2. RENDER AD DATA
 function renderAdDetails() {
