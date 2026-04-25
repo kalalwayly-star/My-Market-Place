@@ -1,12 +1,32 @@
+// ALWAYS FIRST: Local config
+import { auth, db, rtdb } from "./firebase-config.js";
 
-// 1. Your custom config imports
-import { auth, db } from "./firebase-config.js";
-
-// 2. Full CDN paths for Auth
+// ALWAYS SECOND: Full CDN URLs
 import { onAuthStateChanged, signOut } from "https://gstatic.com";
+import { collection, onSnapshot } from "https://gstatic.com";
 
-// 3. Full CDN paths for Firestore
-import { addDoc, collection } from "https://gstatic.com";
+// ALWAYS THIRD: Your page logic
+document.addEventListener("DOMContentLoaded", () => {
+    const loginLink = document.getElementById("userAuth");
+    const logoutBtn = document.getElementById("logout-btn");
+    const emailSpan = document.getElementById("header-user-email");
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            // User is logged in
+            if (loginLink) loginLink.style.display = "none";
+            if (logoutBtn) logoutBtn.style.display = "inline-block";
+            if (emailSpan) emailSpan.innerText = user.email;
+        } else {
+            // User is logged out
+            if (loginLink) loginLink.style.display = "inline-block";
+            if (logoutBtn) logoutBtn.style.display = "none";
+            if (emailSpan) emailSpan.innerText = "";
+        }
+    });
+});
+
+
 
 
 
