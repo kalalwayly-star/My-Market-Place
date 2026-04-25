@@ -1,9 +1,9 @@
-// ALWAYS FIRST: Local config
-import { auth, db, rtdb } from "./firebase-config.js";
+// 1. Local config
+import { auth, db } from "./firebase-config.js";/firebasejs/12.12.1/firebase-firestore.js 
 
-// ALWAYS SECOND: Full CDN URLs
-import { onAuthStateChanged, signOut } from "https://gstatic.com";
-import { collection, onSnapshot } from "https://gstatic.com";
+// 2. FULL CDN PATHS (This fixes the CORS error)
+import { onAuthStateChanged } from "https://gstatic.com";/firebasejs/12.12.1/firebase-firestore.js 
+import { addDoc, collection } from "https://gstatic.com";/firebasejs/12.12.1/firebase-firestore.js 
 
 // ALWAYS THIRD: Your page logic
 document.addEventListener("DOMContentLoaded", () => {
@@ -87,45 +87,57 @@ window.handleCategoryChange = function () {
     const commonFields = document.getElementById("commonFields");
     const conditionBox = document.getElementById("globalCondition");
 
+    // Safety: If the select isn't found, stop here
     if (!categorySelect) return;
 
     const selectedValue = categorySelect.value;
+    console.log("Category selected:", selectedValue); // Debug check
 
-    // 1. Hide all specific category sections first
+    // 1. Hide ALL extra category sections first
     document.querySelectorAll(".category-details").forEach(sec => {
         sec.style.display = "none";
     });
 
-    // 2. If nothing is selected, hide everything and stop
+    // 2. If nothing is selected, hide main fields and condition box
     if (!selectedValue) {
         if (commonFields) commonFields.style.display = "none";
         if (conditionBox) conditionBox.style.display = "none";
         return;
     }
 
-    // 3. SHOW the main fields (This makes the Title/Price reappear)
+    // 3. SHOW the main fields (Title, Price, Description)
     if (commonFields) {
         commonFields.style.display = "block";
     }
 
-    // 4. Show specific sections (Cars, Real Estate, etc.)
-    if (selectedValue === "Cars & Trucks") {
-        const carSec = document.getElementById("section-Cars");
-        if (carSec) carSec.style.display = "block";
+    // 4. Show specific sections (Update these IDs to match your HTML exactly)
+    const categoryMap = {
+        "Cars & Trucks": "section-Cars",
+        "Real Estate": "section-RealEstate",
+        "Electronics": "section-Electronics",
+        "Furniture": "section-Furniture"
+    };
+
+    const sectionId = categoryMap[selectedValue];
+    if (sectionId) {
+        const el = document.getElementById(sectionId);
+        if (el) el.style.display = "block";
     }
 
-    // 5. Hide/Show Condition based on category
-    const noCondition = ["Pets", "Jobs", "Real Estate"];
+    // 5. Condition Box Logic (Hide for specific categories)
+    const hideConditionFor = ["Pets", "Jobs", "Real Estate", "Services"];
     if (conditionBox) {
-        conditionBox.style.display = noCondition.includes(selectedValue) ? "none" : "block";
+        conditionBox.style.display = hideConditionFor.includes(selectedValue) ? "none" : "block";
     }
 
-    // Run translations so the new fields are in the right language
-    if (typeof loadLanguage === "function") {
+    // 6. Refresh Translations
+    // Note: We use window.loadLanguage to ensure it's accessible from this module
+    if (typeof window.loadLanguage === "function") {
         const savedLang = localStorage.getItem("language") || "en";
-        loadLanguage(savedLang);
+        window.loadLanguage(savedLang);
     }
 };
+
 
 
 
