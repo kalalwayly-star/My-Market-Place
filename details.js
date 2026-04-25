@@ -1,19 +1,18 @@
-// 1. CLEAN IMPORTS from your local config
+// 1. All imports go at the VERY TOP
 import { auth, db, rtdb } from "./firebase-config.js";
 
-// 2. Full CDN paths for Firestore (to read the ad)
+// Full URLs for every Firebase tool you need
+import { onAuthStateChanged } from "https://gstatic.com";
 import { doc, getDoc } from "https://gstatic.com";
+import { ref, onValue, push, get } from "https://gstatic.com";
 
 // 3. Full CDN paths for Realtime Database (for messages/get)
 import { ref, onValue, push, get } from "https://gstatic.com";
 
-
-let ad;
-const adId = new URLSearchParams(window.location.search).get("id");
-
 // Use Firebase Auth to get the current user reliably
 let currentUserEmail = "Guest";
-import { onAuthStateChanged } from "https://gstatic.com";
+let ad;
+const adId = new URLSearchParams(window.location.search).get("id");
 onAuthStateChanged(auth, (user) => {
     if (user) currentUserEmail = user.email;
 });
