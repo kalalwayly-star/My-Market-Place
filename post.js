@@ -1,14 +1,15 @@
 import { auth } from "./firebase-config.js";  // For Firebase Authentication
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js"; // Authentication functions
 import { db, ref, onValue } from "./firebase-config.js";  // For Firebase Realtime Database functions
+import { addDoc, collection } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js"; // Firestore functions
 
 /* =======================
    GLOBAL
 ======================= */
-let uploadedImages = [];
+let uploadedImages = [];  // Stores uploaded images
 
 /* =======================
-   PHOTO UPLOAD
+   PHOTO UPLOAD HANDLER
 ======================= */
 window.handlePhotoUpload = function (event) {
     const files = Array.from(event.target.files || []);
@@ -16,12 +17,12 @@ window.handlePhotoUpload = function (event) {
 
     if (!preview || !files.length) return;
 
-    // limit total to 10
+    // Limit total to 10
     const remainingSlots = 10 - uploadedImages.length;
     const filesToAdd = files.slice(0, remainingSlots);
 
     filesToAdd.forEach(file => {
-        // preview
+        // Preview image
         const img = document.createElement("img");
         img.src = URL.createObjectURL(file);
         img.style.width = "100px";
@@ -29,7 +30,7 @@ window.handlePhotoUpload = function (event) {
         img.style.objectFit = "cover";
         preview.appendChild(img);
 
-        // convert to base64
+        // Convert to base64
         const reader = new FileReader();
         reader.onload = (e) => {
             uploadedImages.push(e.target.result);
@@ -37,12 +38,12 @@ window.handlePhotoUpload = function (event) {
         reader.readAsDataURL(file);
     });
 
-    // reset input so same file can be selected again
+    // Reset input so same file can be selected again
     event.target.value = "";
 };
 
 /* =======================
-   TRANSLATION
+   TRANSLATION HANDLER
 ======================= */
 function runTranslation() {
     if (typeof window.loadLanguage === "function") {
@@ -63,11 +64,12 @@ window.handleCategoryChange = function () {
 
     const val = category.value;
 
-    // hide everything first
+    // Hide everything first
     document.querySelectorAll(".category-details").forEach(sec => {
         sec.style.display = "none";
     });
 
+    // Show common fields and specific sections based on category
     if (!val) {
         if (common) common.style.display = "none";
         if (conditionBox) conditionBox.style.display = "none";
@@ -76,7 +78,7 @@ window.handleCategoryChange = function () {
 
     if (common) common.style.display = "block";
 
-    // FIXED IDs (was wrong before)
+    // Fixed IDs (was wrong before)
     if (val === "Cars & Trucks") {
         const el = document.getElementById("section-Cars");
         if (el) el.style.display = "block";
@@ -96,7 +98,7 @@ window.handleCategoryChange = function () {
 };
 
 /* =======================
-   SAVE AD
+   POST AD HANDLER
 ======================= */
 function saveNewAd(event) {
     event.preventDefault();
@@ -113,13 +115,14 @@ function saveNewAd(event) {
         btn.disabled = true;
         btn.innerText = "Posting...";
     }
-   // Add this line to find which radio button is checked
-const conditionElement = document.querySelector('input[name="itemCondition"]:checked');
-const condition = conditionElement ? conditionElement.value : "Not Specified";
 
+    // Get selected condition value
+    const conditionElement = document.querySelector('input[name="itemCondition"]:checked');
+    const condition = conditionElement ? conditionElement.value : "Not Specified";
 
     const goNext = () => finalizeAd();
 
+    // Get location from Geolocation API
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             pos => {
@@ -136,7 +139,7 @@ const condition = conditionElement ? conditionElement.value : "Not Specified";
 }
 
 /* =======================
-   FINALIZE AD
+   FINALIZE AD HANDLER (POST AD TO FIRESTORE)
 ======================= */
 function finalizeAd() {
     const user = auth.currentUser;
@@ -146,9 +149,8 @@ function finalizeAd() {
         return;
     }
 
-    // ✅ correct condition selector
+    // Get condition (corrected selector)
     const condition = document.querySelector('input[name="condition"]:checked')?.value || "N/A";
-
 
     const newAd = {
         userId: user.uid,
@@ -159,10 +161,7 @@ function finalizeAd() {
         location: document.getElementById("adLocation")?.value || "",
         description: document.getElementById("adDesc")?.value || "",
         condition: condition,
-
-        // ⚠️ keep this for now (but may cause size issues)
-        image: uploadedImages.length ? uploadedImages : ["https://via.placeholder.com/300"],
-
+        image: uploadedImages.length ? uploadedImages : ["https://via.placeholder.com/300"],  // Default image if none
         date: new Date().toLocaleDateString(),
         lat: window.currentAdLat || null,
         lng: window.currentAdLng || null
@@ -173,7 +172,7 @@ function finalizeAd() {
     addDoc(collection(db, "marketplace_ads"), newAd)
         .then(() => {
             alert("Ad posted successfully!");
-            window.location.href = "index.html";
+            window.location.href = "index.html";  // Redirect after posting
         })
         .catch(err => {
             console.error("Firestore error:", err);
@@ -182,22 +181,25 @@ function finalizeAd() {
 }
 
 /* =======================
-   INIT
+   INITIALIZATION HANDLER
 ======================= */
 document.addEventListener("DOMContentLoaded", () => {
-    runTranslation();
-    handleCategoryChange();
+    runTranslation();  // Load translations
+    handleCategoryChange();  // Set category change handler
 
+    // Event listener for category change
     document.getElementById("postCategory")
         ?.addEventListener("change", handleCategoryChange);
 
+    // Event listener for photo upload
     document.getElementById("photoInput")
         ?.addEventListener("change", handlePhotoUpload);
 
+    // Event listener for form submission
     document.getElementById("postForm")
         ?.addEventListener("submit", saveNewAd);
 
-    // PayPal
+    // PayPal integration for featured ad
     const featured = document.getElementById("isFeatured");
     const btn = document.getElementById("postBtn");
 
@@ -213,7 +215,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /* =======================
-   PAYPAL
+   PAYPAL INTEGRATION
 ======================= */
 function initPayPal() {
     const container = document.getElementById("paypal-button-container");
