@@ -1,13 +1,31 @@
-// 1. All imports go at the VERY TOP
+// ALWAYS FIRST: Local config
 import { auth, db, rtdb } from "./firebase-config.js";
 
-// Full URLs for every Firebase tool you need
-import { onAuthStateChanged } from "https://gstatic.com";
-import { doc, getDoc } from "https://gstatic.com";
-import { ref, onValue, push, get } from "https://gstatic.com";
+// ALWAYS SECOND: Full CDN URLs
+import { onAuthStateChanged, signOut } from "https://gstatic.com";
+import { collection, onSnapshot } from "https://gstatic.com";
 
-// 3. Full CDN paths for Realtime Database (for messages/get)
-import { ref, onValue, push, get } from "https://gstatic.com";
+// ALWAYS THIRD: Your page logic
+document.addEventListener("DOMContentLoaded", () => {
+    const loginLink = document.getElementById("userAuth");
+    const logoutBtn = document.getElementById("logout-btn");
+    const emailSpan = document.getElementById("header-user-email");
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            // User is logged in
+            if (loginLink) loginLink.style.display = "none";
+            if (logoutBtn) logoutBtn.style.display = "inline-block";
+            if (emailSpan) emailSpan.innerText = user.email;
+        } else {
+            // User is logged out
+            if (loginLink) loginLink.style.display = "inline-block";
+            if (logoutBtn) logoutBtn.style.display = "none";
+            if (emailSpan) emailSpan.innerText = "";
+        }
+    });
+});
+
 
 // Use Firebase Auth to get the current user reliably
 let currentUserEmail = "Guest";
