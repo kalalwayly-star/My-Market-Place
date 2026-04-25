@@ -83,44 +83,50 @@ function runTranslation() {
    CATEGORY HANDLER
 ======================= */
 window.handleCategoryChange = function () {
-    const val = document.getElementById("postCategory")?.value;
-    const common = document.getElementById("commonFields");
+    const categorySelect = document.getElementById("postCategory");
+    const commonFields = document.getElementById("commonFields");
     const conditionBox = document.getElementById("globalCondition");
 
-    // Hide all category-specific sections
+    if (!categorySelect) return;
+
+    const selectedValue = categorySelect.value;
+
+    // 1. Hide all specific category sections first
     document.querySelectorAll(".category-details").forEach(sec => {
         sec.style.display = "none";
     });
 
-    if (!val) {
-        if (common) common.style.display = "none";
+    // 2. If nothing is selected, hide everything and stop
+    if (!selectedValue) {
+        if (commonFields) commonFields.style.display = "none";
         if (conditionBox) conditionBox.style.display = "none";
         return;
     }
 
-    // Always show common fields if a category is picked
-    if (common) common.style.display = "block";
-
-    // Show specific category sections
-    if (val === "Cars & Trucks") {
-        document.getElementById("section-Cars")?.setAttribute("style", "display:block !important");
-    } else if (val === "Real Estate") {
-        document.getElementById("section-RealEstate")?.setAttribute("style", "display:block !important");
+    // 3. SHOW the main fields (This makes the Title/Price reappear)
+    if (commonFields) {
+        commonFields.style.display = "block";
     }
 
-    // Condition visibility logic
+    // 4. Show specific sections (Cars, Real Estate, etc.)
+    if (selectedValue === "Cars & Trucks") {
+        const carSec = document.getElementById("section-Cars");
+        if (carSec) carSec.style.display = "block";
+    }
+
+    // 5. Hide/Show Condition based on category
     const noCondition = ["Pets", "Jobs", "Real Estate"];
     if (conditionBox) {
-        conditionBox.style.display = noCondition.includes(val) ? "none" : "block";
+        conditionBox.style.display = noCondition.includes(selectedValue) ? "none" : "block";
     }
 
-    // Wrap translation in a try-catch so it doesn't break the form
-    try {
-        runTranslation();
-    } catch (e) {
-        console.warn("Translation failed, but form should still show.", e);
+    // Run translations so the new fields are in the right language
+    if (typeof loadLanguage === "function") {
+        const savedLang = localStorage.getItem("language") || "en";
+        loadLanguage(savedLang);
     }
 };
+
 
 
 /* =======================
