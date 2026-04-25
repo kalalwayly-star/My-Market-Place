@@ -39,4 +39,53 @@
                     <h3 data-i18n="photo_header">Photos (Max 10)</h3>
                     <div class="upload-container">
                         <label for="photoInput" class="upload-box">
-                            <div class="icon">📸
+                            <div class="icon">📸</div>
+                            <span data-i18n="click_to_add">Click to add photos</span>
+                            <input type="file" id="photoInput" accept="image/*" multiple hidden>
+                        </label>
+                        <div id="galleryPreview" class="gallery-grid"></div>
+                    </div>
+                </div>
+
+                <!-- COMMON FIELDS -->
+                <div id="commonFields" style="display:none;">
+                    <div class="input-group">
+                        <label data-i18n="label_location">City/Location</label>
+                        <input type="text" id="adLocation">
+                    </div>
+
+                    <div class="input-group">
+                        <label data-i18n="label_title">Ad Title</label>
+                        <input type="text" id="adTitle">
+                    </div>
+
+                    <div class="input-group">
+                        <label data-i18n="label_price">Price ($)</label>
+                        <input type="number" id="adPrice">
+                    </div>
+
+                    <div class="input-group">
+                        <label data-i18n="label_description">Description</label>
+                        <textarea id="adDesc" rows="4"></textarea>
+                    </div>
+
+                    <div class="form-group feature-box">
+                        <label>
+                            <input type="checkbox" id="isFeatured">
+                            <span data-i18n="label_featured">✨ Feature this ad for $4.99 to stay at top (5 days)</span>
+                        </label>
+                    </div>
+
+                    <div id="paypal-button-container" style="display:none;"></div>
+                </div>
+
+                <button type="submit" id="postBtn" class="btn primary" data-i18n="post_btn">Post Ad Now</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- CORE SCRIPTS -->
+    <script src="languages.js"></script>
+    <script type="module" src="post.js"></script>
+</body>
+</html>
