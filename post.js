@@ -57,53 +57,51 @@ function runTranslation() {
    CATEGORY HANDLER
 ======================= */
 window.handleCategoryChange = function () {
-    const category = document.getElementById("postCategory");
+    const val = document.getElementById("postCategory")?.value;
     const common = document.getElementById("commonFields");
     const conditionBox = document.getElementById("globalCondition");
 
-    if (!category) return;
-
-    const val = category.value;
-
-    // Hide everything first
+    // Hide all category-specific sections
     document.querySelectorAll(".category-details").forEach(sec => {
         sec.style.display = "none";
     });
 
-    // Show common fields and specific sections based on category
     if (!val) {
         if (common) common.style.display = "none";
         if (conditionBox) conditionBox.style.display = "none";
         return;
     }
 
+    // Always show common fields if a category is picked
     if (common) common.style.display = "block";
 
-    // Fixed IDs (was wrong before)
+    // Show specific category sections
     if (val === "Cars & Trucks") {
-        const el = document.getElementById("section-Cars");
-        if (el) el.style.display = "block";
+        document.getElementById("section-Cars")?.setAttribute("style", "display:block !important");
+    } else if (val === "Real Estate") {
+        document.getElementById("section-RealEstate")?.setAttribute("style", "display:block !important");
     }
 
-    if (val === "Real Estate") {
-        const el = document.getElementById("section-RealEstate");
-        if (el) el.style.display = "block";
-    }
-
+    // Condition visibility logic
     const noCondition = ["Pets", "Jobs", "Real Estate"];
     if (conditionBox) {
         conditionBox.style.display = noCondition.includes(val) ? "none" : "block";
     }
 
-    runTranslation();
+    // Wrap translation in a try-catch so it doesn't break the form
+    try {
+        runTranslation();
+    } catch (e) {
+        console.warn("Translation failed, but form should still show.", e);
+    }
 };
+
 
 /* =======================
    POST AD HANDLER
 ======================= */
 function saveNewAd(event) {
     event.preventDefault();
-
     const user = auth.currentUser;
 
     if (!user) {
@@ -117,25 +115,29 @@ function saveNewAd(event) {
         btn.innerText = "Posting...";
     }
 
-    // Get selected condition value
-    const conditionElement = document.querySelector('input[name="itemCondition"]:checked');
-    const condition = conditionElement ? conditionElement.value : "Not Specified";
+    // Set a timeout: if location takes more than 2 seconds, just post without it
+    let locationTimeout = setTimeout(() => {
+        console.log("Location timed out, posting anyway...");
+        finalizeAd();
+    }, 2000);
 
-    const goNext = () => finalizeAd();
-
-    // Get location from Geolocation API
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             pos => {
+                clearTimeout(locationTimeout); // Got location, cancel the timeout
                 window.currentAdLat = pos.coords.latitude;
                 window.currentAdLng = pos.coords.longitude;
-                goNext();
+                finalizeAd();
             },
-            () => goNext(),
-            { timeout: 5000 }
+            () => {
+                clearTimeout(locationTimeout);
+                finalizeAd();
+            },
+            { timeout: 1500 } // Don't wait too long
         );
     } else {
-        goNext();
+        clearTimeout(locationTimeout);
+        finalizeAd();
     }
 }
 
