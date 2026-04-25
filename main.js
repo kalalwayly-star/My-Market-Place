@@ -1,6 +1,6 @@
-import { auth } from "./firebase-config.js";  // For Firebase Authentication
-import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js"; // Authentication functions
-import { db, ref, onValue } from "./firebase-config.js";  // For Firebase Realtime Database functions
+import { auth } from "./firebase-config.js"; // Firebase Authentication
+import { db, doc, getDoc } from "./firebase-config.js"; // Firestore functions
+import { rtdb, ref, onValue } from "./firebase-config.js"; // Realtime Database functions
 
 // Global variable to store ads
 let globalAds = [];
