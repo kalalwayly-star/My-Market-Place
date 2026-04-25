@@ -1,16 +1,16 @@
-// 1. Local config
-import { auth, db } from "./firebase-config.js";/firebasejs/12.12.1/firebase-firestore.js 
+// Firebase initialization
+import { auth, db } from './firebase-config.js'; // Correct import path for Firebase
 
-// 2. FULL CDN PATHS (This fixes the CORS error)
-import { onAuthStateChanged } from "https://gstatic.com";/firebasejs/12.12.1/firebase-firestore.js 
-import { addDoc, collection } from "https://gstatic.com";/firebasejs/12.12.1/firebase-firestore.js 
+import { addDoc, collection } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
 
-// ALWAYS THIRD: Your page logic
+// Handles user authentication state
 document.addEventListener("DOMContentLoaded", () => {
     const loginLink = document.getElementById("userAuth");
     const logoutBtn = document.getElementById("logout-btn");
     const emailSpan = document.getElementById("header-user-email");
 
+    // Firebase Auth state listener
     onAuthStateChanged(auth, (user) => {
         if (user) {
             // User is logged in
@@ -26,18 +26,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+// Global variables for uploaded images
+let uploadedImages = [];
 
-
-
-
-/* =======================
-   GLOBAL
-======================= */
-let uploadedImages = [];  // Stores uploaded images
-
-/* =======================
-   PHOTO UPLOAD HANDLER
-======================= */
+// Handles photo upload and preview
 window.handlePhotoUpload = function (event) {
     const files = Array.from(event.target.files || []);
     const preview = document.getElementById("galleryPreview");
@@ -69,19 +61,7 @@ window.handlePhotoUpload = function (event) {
     event.target.value = "";
 };
 
-/* =======================
-   TRANSLATION HANDLER
-======================= */
-function runTranslation() {
-    if (typeof window.loadLanguage === "function") {
-        const savedLang = localStorage.getItem("language") || "en";
-        window.loadLanguage(savedLang);
-    }
-}
-
-/* =======================
-   CATEGORY HANDLER
-======================= */
+// Handles category change and form display
 window.handleCategoryChange = function () {
     const categorySelect = document.getElementById("postCategory");
     const commonFields = document.getElementById("commonFields");
@@ -91,26 +71,14 @@ window.handleCategoryChange = function () {
     if (!categorySelect) return;
 
     const selectedValue = categorySelect.value;
-    console.log("Category selected:", selectedValue); // Debug check
 
-    // 1. Hide ALL extra category sections first
-    document.querySelectorAll(".category-details").forEach(sec => {
-        sec.style.display = "none";
-    });
+    // Hide all extra category sections
+    document.querySelectorAll(".category-details").forEach(sec => sec.style.display = "none");
 
-    // 2. If nothing is selected, hide main fields and condition box
-    if (!selectedValue) {
-        if (commonFields) commonFields.style.display = "none";
-        if (conditionBox) conditionBox.style.display = "none";
-        return;
-    }
+    // Show main fields (Title, Price, Description)
+    if (commonFields) commonFields.style.display = "block";
 
-    // 3. SHOW the main fields (Title, Price, Description)
-    if (commonFields) {
-        commonFields.style.display = "block";
-    }
-
-    // 4. Show specific sections (Update these IDs to match your HTML exactly)
+    // Display category-specific sections
     const categoryMap = {
         "Cars & Trucks": "section-Cars",
         "Real Estate": "section-RealEstate",
@@ -124,26 +92,14 @@ window.handleCategoryChange = function () {
         if (el) el.style.display = "block";
     }
 
-    // 5. Condition Box Logic (Hide for specific categories)
+    // Show/hide condition box based on category
     const hideConditionFor = ["Pets", "Jobs", "Real Estate", "Services"];
     if (conditionBox) {
         conditionBox.style.display = hideConditionFor.includes(selectedValue) ? "none" : "block";
     }
-
-    // 6. Refresh Translations
-    // Note: We use window.loadLanguage to ensure it's accessible from this module
-    if (typeof window.loadLanguage === "function") {
-        const savedLang = localStorage.getItem("language") || "en";
-        window.loadLanguage(savedLang);
-    }
 };
 
-
-
-
-/* =======================
-   POST AD HANDLER
-======================= */
+// Handles ad posting
 function saveNewAd(event) {
     event.preventDefault();
     const user = auth.currentUser;
@@ -159,7 +115,7 @@ function saveNewAd(event) {
         btn.innerText = "Posting...";
     }
 
-    // Set a timeout: if location takes more than 2 seconds, just post without it
+    // Set a timeout for location retrieval
     let locationTimeout = setTimeout(() => {
         console.log("Location timed out, posting anyway...");
         finalizeAd();
@@ -185,10 +141,7 @@ function saveNewAd(event) {
     }
 }
 
-/* =======================
-   FINALIZE AD HANDLER (POST AD TO FIRESTORE)
-======================= */
-// FINALIZE AD HANDLER (POST AD TO FIRESTORE)
+// Finalize ad and post it to Firestore
 function finalizeAd() {
     const user = auth.currentUser;
 
@@ -197,7 +150,7 @@ function finalizeAd() {
         return;
     }
 
-    // ✅ correct condition selector
+    // Get the form data
     const condition = document.querySelector('input[name="condition"]:checked')?.value || "N/A";
 
     const newAd = {
@@ -209,8 +162,6 @@ function finalizeAd() {
         location: document.getElementById("adLocation")?.value || "",
         description: document.getElementById("adDesc")?.value || "",
         condition: condition,
-
-        // ⚠️ keep this for now (but may cause size issues)
         image: uploadedImages.length ? uploadedImages : ["https://via.placeholder.com/300"],
 
         date: new Date().toLocaleDateString(),
@@ -218,10 +169,9 @@ function finalizeAd() {
         lng: window.currentAdLng || null
     };
 
-
-    // Corrected: Get a reference to the collection and add the document
-    const adsCollectionRef = collection(db, "marketplace_ads");  // Correct reference
-    addDoc(adsCollectionRef, newAd)  // Correct use of addDoc with collection reference
+    // Save the ad to Firestore
+    const adsCollectionRef = collection(db, "marketplace_ads");
+    addDoc(adsCollectionRef, newAd)
         .then(() => {
             alert("Ad posted successfully!");
             window.location.href = "index.html";  // Redirect after posting
@@ -232,12 +182,9 @@ function finalizeAd() {
         });
 }
 
-/* =======================
-   INITIALIZATION HANDLER
-======================= */
+// Initialize form events
 document.addEventListener("DOMContentLoaded", () => {
-    runTranslation();  // Load translations
-    handleCategoryChange();  // Set category change handler
+    handleCategoryChange(); // Set category change handler
 
     // Event listener for category change
     document.getElementById("postCategory")
@@ -250,43 +197,4 @@ document.addEventListener("DOMContentLoaded", () => {
     // Event listener for form submission
     document.getElementById("postForm")
         ?.addEventListener("submit", saveNewAd);
-
-    // PayPal integration for featured ad
-    const featured = document.getElementById("isFeatured");
-    const btn = document.getElementById("postBtn");
-
-    featured?.addEventListener("change", () => {
-        if (featured.checked) {
-            initPayPal();
-            if (btn) btn.disabled = true;
-        } else {
-            document.getElementById("paypal-button-container").style.display = "none";
-            if (btn) btn.disabled = false;
-        }
-    });
 });
-
-/* =======================
-   PAYPAL INTEGRATION
-======================= */
-function initPayPal() {
-    const container = document.getElementById("paypal-button-container");
-    if (!container || !window.paypal) return;
-
-    container.innerHTML = "";
-    container.style.display = "block";
-
-    paypal.Buttons({
-        createOrder: (data, actions) => {
-            return actions.order.create({
-                purchase_units: [{ amount: { value: "4.99" } }]
-            });
-        },
-        onApprove: (data, actions) => {
-            return actions.order.capture().then(() => {
-                alert("Payment success");
-                document.getElementById("postBtn").disabled = false;
-            });
-        }
-    }).render("#paypal-button-container");
-}
