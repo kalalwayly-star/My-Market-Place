@@ -1,5 +1,4 @@
-import { db, ref, get, push } from "./firebase-config.js";  // Using Realtime Database functions
-
+import { db, doc, getDoc } from "./firebase-config.js";  // Correct import of Firestore functions
 const params = new URLSearchParams(window.location.search);
 const adId = params.get("id");  // This is now the Firebase unique key
 
