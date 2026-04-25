@@ -1,29 +1,46 @@
-// Firebase imports
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
-// Added 'collection' and 'addDoc' here
-import { getFirestore, doc, getDoc, collection, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
-// Added 'get', 'set', and 'push' for Realtime Database
-import { getDatabase, ref, onValue, get, set, push } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js";
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-analytics.js";
+  import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDBT8jv057_JQL6pIUYk-U_LQ8uJHlFi-o",
-  authDomain: "kal-marketplace.firebaseapp.com",
-  projectId: "kal-marketplace",
-  storageBucket: "kal-marketplace.firebasestorage.app",
-  messagingSenderId: "745728416819",
-  appId: "1:745728416819:web:da2dfb86cc5b79fb0d1746"
-};
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyDBT8jv057_JQL6pIUYk-U_LQ8uJHlFi-o",
+    authDomain: "kal-marketplace.firebaseapp.com",
+    databaseURL: "https://kal-marketplace-default-rtdb.firebaseio.com",
+    projectId: "kal-marketplace",
+    storageBucket: "kal-marketplace.firebasestorage.app",
+    messagingSenderId: "745728416819",
+    appId: "1:745728416819:web:da2dfb86cc5b79fb0d1746",
+    measurementId: "G-FFHYQC4YJV"
+  };
 
-const app = initializeApp(firebaseConfig);
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
 
-export const auth = getAuth(app);
-export const db = getFirestore(app); 
-export const rtdb = getDatabase(app);
+  // Initialize Realtime Database
+  const database = getDatabase(app);
 
-// Exporting everything so your other files can use them easily
-export { 
-    doc, getDoc, collection, addDoc, deleteDoc, 
-    ref, onValue, get, set, push 
-};
+  // Example: Write data to Firebase Realtime Database
+  const userId = "user1";
+  const reference = ref(database, 'users/' + userId);
+  set(reference, {
+    username: "john_doe",
+    email: "john@example.com",
+    profile_picture: "http://example.com/profile.jpg"
+  });
 
+  // Example: Read data from Firebase Realtime Database
+  const dbRef = ref(database);
+  get(child(dbRef, `users/${userId}`)).then((snapshot) => {
+    if (snapshot.exists()) {
+      console.log(snapshot.val()); // This will log the data of user1
+    } else {
+      console.log("No data available");
+    }
+  }).catch((error) => {
+    console.error(error);
+  });
+</script>
