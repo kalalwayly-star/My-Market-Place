@@ -1,6 +1,7 @@
-import { auth } from "./firebase-config.js"; // Firebase Authentication
-import { db, doc, getDoc } from "./firebase-config.js"; // Firestore functions
-import { rtdb, ref, onValue } from "./firebase-config.js"; // Realtime Database functions
+import { auth, db, rtdb } from "./firebase-config.js";
+import { onAuthStateChanged, signOut } from "https://gstatic.com";
+import { ref, onValue, remove } from "https://gstatic.com";
+import { collection, onSnapshot, query } from "https://gstatic.com";
 
 // Global variable to store ads
 let globalAds = [];
@@ -40,33 +41,32 @@ document.addEventListener("DOMContentLoaded", () => {
    ADS LOAD FROM FIREBASE
 ========================= */
 function initMain() {
-    const adsRef = ref(db, "marketplace_ads");
+    const listingsContainer = document.getElementById("listings");
+    if (!listingsContainer) return;
 
-    // Listen for changes to marketplace_ads data in Firebase Realtime Database
-    onValue(adsRef, (snapshot) => {
-        const data = snapshot.val();
+    // Use Firestore onSnapshot to get real-time updates
+    const q = collection(db, "marketplace_ads");
+    
+    onSnapshot(q, (snapshot) => {
         globalAds = [];
+        snapshot.forEach((doc) => {
+            globalAds.push({ ...doc.data(), firebaseId: doc.id });
+        });
 
-        if (data) {
-            Object.keys(data).forEach(key => {
-                globalAds.push({ ...data[key], firebaseId: key });
-            });
-        }
-
+        console.log("Ads loaded from Firestore:", globalAds);
         renderAds(globalAds, "listings");
     });
 
-    // If on "My Ads" page, display only the logged-in user's ads
+    // My Ads Logic
     onAuthStateChanged(auth, (user) => {
         const isMyAdsPage = document.getElementById("myAds");
         if (isMyAdsPage && user) {
             const myAds = globalAds.filter(ad => ad.userId === user.uid);
             renderAds(myAds, "myAds");
-        } else if (isMyAdsPage) {
-            document.getElementById("myAds").innerHTML = "Please login to see your ads.";
         }
     });
 }
+
 
 document.addEventListener("DOMContentLoaded", initMain);
 
@@ -82,12 +82,19 @@ window.goToDetails = function(id) {
     window.location.href = `details.html?id=${id}`;
 };
 
-window.deleteAd = function(firebaseId) {
+import { deleteDoc, doc as firestoreDoc } from "https://gstatic.com";
+
+window.deleteAd = async function(firebaseId) {
     if (confirm("Are you sure you want to delete this ad?")) {
-        const adRef = ref(db, `marketplace_ads/${firebaseId}`);
-        remove(adRef);  // Remove ad from Firebase
+        try {
+            await deleteDoc(firestoreDoc(db, "marketplace_ads", firebaseId));
+            alert("Ad deleted successfully");
+        } catch (error) {
+            console.error("Error deleting document: ", error);
+        }
     }
 };
+
 
 
 /* =========================
