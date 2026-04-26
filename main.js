@@ -1,6 +1,4 @@
 // main.js
-
-// Import initialized services from firebase-config.js
 import { auth, db, rtdb } from "./firebase-config.js";  // Use the initialized rtdb here
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-analytics.js";
 import { collection, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";  // Import onSnapshot
@@ -9,10 +7,15 @@ const analytics = getAnalytics();
 
 // Use rtdb directly since it's already initialized in firebase-config.js
 const database = rtdb;
+// Import necessary functions from Firebase SDK
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
 
-// Firebase Auth state listener
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js"; 
+// Import Firebase Realtime Database methods from the correct URL (if needed)
+import { getDatabase } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js";
 
+// Initialize Firebase Auth and Database (Ensure you've initialized Firebase in firebase-config.js)
+const auth = getAuth();
+const db = getDatabase();
 onAuthStateChanged(auth, (user) => {
     if (user) {
         // User is logged in
@@ -27,35 +30,43 @@ onAuthStateChanged(auth, (user) => {
 let globalAds = [];
 
 // DOMContentLoaded initialization
+// DOMContentLoaded initialization
 document.addEventListener("DOMContentLoaded", () => {
     const userInfoDiv = document.getElementById("user-info-header");
     const emailSpan = document.getElementById("header-user-email");
     const loginLink = document.getElementById("userAuth");
     const logoutBtn = document.getElementById("logout-btn");
 
-    // Firebase authentication state listener
+    // Firebase Auth state listener
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            userInfoDiv.style.display = "block";
-            emailSpan.innerText = user.email;
-            loginLink.style.display = "none";
-            logoutBtn.style.display = "inline-block";
+            // User is logged in
+            if (userInfoDiv) userInfoDiv.style.display = "block";
+            if (emailSpan) emailSpan.innerText = user.email;
+            if (loginLink) loginLink.style.display = "none"; // Hide login link
+            if (logoutBtn) logoutBtn.style.display = "inline-block"; // Show logout button
         } else {
-            userInfoDiv.style.display = "none";
-            loginLink.style.display = "inline-block";
-            logoutBtn.style.display = "none";
+            // User is logged out
+            if (userInfoDiv) userInfoDiv.style.display = "none";
+            if (loginLink) loginLink.style.display = "inline-block"; // Show login link
+            if (logoutBtn) logoutBtn.style.display = "none"; // Hide logout button
         }
     });
 
-    // Logout functionality
-    logoutBtn.addEventListener("click", () => {
-        signOut(auth).then(() => window.location.href = "index.html");
-    });
-
-    // Load ads
-    initMain();
+    // Logout button click event handler
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", () => {
+            signOut(auth).then(() => {
+                // Successfully logged out
+                window.location.href = "index.html"; // Redirect to the home page after logging out
+            }).catch((error) => {
+                // Error during logout
+                console.error("Logout error: ", error);
+                alert("There was an error logging out. Please try again.");
+            });
+        });
+    }
 });
-
 // Initialize ads loading from Firestore
 function initMain() {
     const listingsContainer = document.getElementById("listings");
