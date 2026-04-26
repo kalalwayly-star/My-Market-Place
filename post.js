@@ -1,11 +1,7 @@
-// Firebase initialization
 
-// Import auth from firebase-config.js
 import { auth, db } from './firebase-config.js';  // Correct import from firebase-config.js
 
-// Import Firebase Authentication method
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
-// Assuming db is already initialized and firestore is set up
 import { collection, addDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 // Your function to finalize an ad
