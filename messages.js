@@ -1,11 +1,31 @@
-// Import Firebase services from your firebase-config.js
-import { auth, rtdb } from "./firebase-config.js";
+// Import Firebase Authentication and Realtime Database from firebase-config.js
+import { auth } from './firebase-config.js';  // Import initialized Firebase auth
 
-// Import Firebase Realtime Database methods from the correct URL
-import { ref, onValue, push, remove } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js";
+// Firebase Authentication state listener for checking login status
+onAuthStateChanged(auth, (user) => {
+  const loginMessage = document.getElementById('loginMessage');
+  const messagesContainer = document.getElementById('messagesContainer');
 
-// Import Firebase Authentication method (onAuthStateChanged) from the correct URL
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+  if (user) {
+    // User is logged in, show the messages page
+    console.log("User is logged in:", user.email);
+    loginMessage.style.display = 'none';  // Hide the login message
+    messagesContainer.style.display = 'block';  // Show messages container
+
+    // Optionally, you can now retrieve and display user-specific messages using Firebase Realtime Database if needed
+    // For example, using `onValue` to listen for messages:
+    // const messagesRef = ref(rtdb, 'messages/' + user.uid);
+    // onValue(messagesRef, (snapshot) => {
+    //   const messages = snapshot.val();
+    //   // Handle displaying messages...
+    // });
+  } else {
+    // User is logged out, show the login prompt
+    console.log("User is not logged in");
+    loginMessage.style.display = 'block';  // Show the login prompt
+    messagesContainer.style.display = 'none';  // Hide messages container
+  }
+});
 
 // Globals
 const params = new URLSearchParams(window.location.search);
