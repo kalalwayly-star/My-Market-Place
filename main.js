@@ -1,16 +1,23 @@
-// main.js
+// Import Firebase SDKs
 import { auth, db, rtdb } from "./firebase-config.js";  // Import initialized services
 import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js"; 
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-analytics.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js"; // Ensure this is imported
 
 // Firebase has already been initialized in firebase-config.js, no need to initialize it again.
 const analytics = getAnalytics();
-const database = getDatabase();  // Uses the initialized database from firebase-config.js
+const database = getDatabase(rtdb);  // Uses the initialized Realtime Database from firebase-config.js
 
-// Now you can use `auth`, `db`, `rtdb`, `analytics` as needed.
-
-// Your code logic continues here...
-
+// Firebase Auth state listener
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        // User is logged in
+        console.log("User logged in:", user.email);
+    } else {
+        // User is logged out
+        console.log("User logged out");
+    }
+});
 
 // Global variable to store ads
 let globalAds = [];
