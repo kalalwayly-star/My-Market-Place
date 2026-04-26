@@ -1,12 +1,12 @@
 // firebase-config.js
 
-// Import the necessary functions from the Firebase SDK
+// Import Firebase SDKs
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
-import { getDatabase } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-// Your web app's Firebase configuration
-export const firebaseConfig = {
+// Your Firebase config (you'll get this from Firebase console)
+const firebaseConfig = {
   apiKey: "AIzaSyDBT8jv057_JQL6pIUYk-U_LQ8uJHlFi-o",
   authDomain: "kal-marketplace.firebaseapp.com",
   databaseURL: "https://kal-marketplace-default-rtdb.firebaseio.com",
@@ -20,9 +20,10 @@ export const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Initialize other Firebase services you need
-const auth = getAuth(app); // Authentication
-const database = getDatabase(app); // Realtime Database
+// Initialize Auth and Firestore
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-// Export the Firebase services you want to use
-export { app, auth, database };
+// Export the initialized services to use in other files
+export { app, auth, db };
+
