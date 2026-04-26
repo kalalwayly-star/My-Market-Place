@@ -1,5 +1,4 @@
 // Firebase initialization
-import { auth, db } from './firebase-config.js'; // Correct import path for Firebase
 
 import { addDoc, collection } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
