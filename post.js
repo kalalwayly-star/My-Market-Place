@@ -106,12 +106,13 @@ window.handleCategoryChange = function () {
 };
 
 // Handles ad posting when the submit button is clicked
+// Handles ad posting
 function saveNewAd(event) {
     event.preventDefault();
     const user = auth.currentUser;
 
     if (!user) {
-        alert("You need to log in to post an ad.");
+        alert("Login required");
         return;
     }
 
@@ -125,12 +126,12 @@ function saveNewAd(event) {
     let locationTimeout = setTimeout(() => {
         console.log("Location timed out, posting anyway...");
         finalizeAd();
-    }, 2000);
+    }, 5000);  // Increased timeout to 5 seconds
 
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             pos => {
-                clearTimeout(locationTimeout); // Got location, cancel timeout
+                clearTimeout(locationTimeout); // Got location, cancel the timeout
                 window.currentAdLat = pos.coords.latitude;
                 window.currentAdLng = pos.coords.longitude;
                 finalizeAd();
@@ -139,7 +140,7 @@ function saveNewAd(event) {
                 clearTimeout(locationTimeout);
                 finalizeAd();
             },
-            { timeout: 1500 }
+            { timeout: 5000 } // Set timeout for getting location as well
         );
     } else {
         clearTimeout(locationTimeout);
@@ -147,16 +148,16 @@ function saveNewAd(event) {
     }
 }
 
-// Function to finalize and post the ad to Firestore
-async function finalizeAd() {
+// Finalize ad and post it to Firestore
+function finalizeAd() {
     const user = auth.currentUser;
 
     if (!user) {
-        alert("You are not logged in.");
+        alert("You are not logged in");
         return;
     }
 
-    // Get form data
+    // Get the form data
     const condition = document.querySelector('input[name="condition"]:checked')?.value || "N/A";
 
     const newAd = {
@@ -169,21 +170,23 @@ async function finalizeAd() {
         description: document.getElementById("adDesc")?.value || "",
         condition: condition,
         image: uploadedImages.length ? uploadedImages : ["https://via.placeholder.com/300"],
+
         date: new Date().toLocaleDateString(),
         lat: window.currentAdLat || null,
         lng: window.currentAdLng || null
     };
 
-    // Post the ad to Firestore
+    // Save the ad to Firestore
     const adsCollectionRef = collection(db, "marketplace_ads");
-    try {
-        const docRef = await addDoc(adsCollectionRef, newAd);
-        alert("Ad posted successfully!");
-        window.location.href = "index.html"; // Redirect to home after posting
-    } catch (err) {
-        console.error("Firestore error:", err);
-        alert("Error posting ad: " + err.message);
-    }
+    addDoc(adsCollectionRef, newAd)
+        .then(() => {
+            alert("Ad posted successfully!");
+            window.location.href = "index.html";  // Redirect after posting
+        })
+        .catch(err => {
+            console.error("Firestore error:", err);
+            alert("Error: " + err.message);
+        });
 }
 
 // Initialize form events on DOMContentLoaded
