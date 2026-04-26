@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +7,6 @@
     <link rel="stylesheet" href="https://cloudflare.com">
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
     <!-- Header Section -->
@@ -110,8 +108,7 @@
                             <i class="fas fa-trash-alt"></i> Delete
                         </button>
                         ${(currentTab || 'received') === 'received' ? `
-                        <button onclick="toggleReply('${m.id}')"
-                            style="color: #007bff; cursor: pointer; background: none; border: none; font-weight: bold; display: flex; align-items: center; gap: 4px;">
+                        <button onclick="toggleReply('${m.id}')" style="color: #007bff; cursor: pointer; background: none; border: none; font-weight: bold; display: flex; align-items: center; gap: 4px;">
                             <i class="fas fa-reply"></i> Reply
                         </button>` : ''}
                     </div>
@@ -190,7 +187,10 @@
         // Initial load of messages on page load
         window.onload = renderMessages;
     </script>
-<script type="module" src="messages.js"></script>
+
+    <script type="module" src="messages.js"></script>
 
 </body>
 </html>
+
+
