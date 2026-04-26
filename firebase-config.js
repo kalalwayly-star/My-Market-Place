@@ -25,4 +25,4 @@ const db = getFirestore(app);
 const rtdb = getDatabase(app);  // Realtime Database
 
 // Export the initialized services to use in other files
-export { app, auth, db, rtdb };
+export { firebaseConfig, auth, db, rtdb };
