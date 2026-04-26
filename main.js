@@ -1,16 +1,13 @@
-import { auth, db, rtdb } from "./firebase-config.js";  // Now includes Realtime Database
-
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+// main.js
+import { auth, db, rtdb } from "./firebase-config.js";  // Import initialized services
+import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js"; 
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-analytics.js";
-import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js";
 
-// Initialize Firebase with the correct config
-const app = initializeApp(firebaseConfig);  // <-- This should now work!
-const analytics = getAnalytics(app);
+// Firebase has already been initialized in firebase-config.js, no need to initialize it again.
+const analytics = getAnalytics();
+const database = getDatabase();  // Uses the initialized database from firebase-config.js
 
-// Initialize Database
-const database = getDatabase(app);
+// Now you can use `auth`, `db`, `rtdb`, `analytics` as needed.
 
 // Your code logic continues here...
 
