@@ -15,11 +15,8 @@
     measurementId: "G-FFHYQC4YJV"
   };
 
-  // Initialize Firebase
   const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
+const auth = getAuth(app);
+const database = getDatabase(app);
 
-  // Initialize Realtime Database
-  const database = getDatabase(app);
-
- 
+export { app, auth, database };
