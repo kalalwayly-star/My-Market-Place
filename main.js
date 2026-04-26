@@ -1,14 +1,18 @@
-// Import Firebase SDKs
-import { auth, db, rtdb } from "./firebase-config.js";  // Import initialized services
-import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js"; 
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-analytics.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js"; // Ensure this is imported
+// main.js
 
-// Firebase has already been initialized in firebase-config.js, no need to initialize it again.
+// Import initialized services from firebase-config.js
+import { auth, db, rtdb } from "./firebase-config.js";  // Use the initialized rtdb here
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-analytics.js";
+
+// Firebase has already been initialized in firebase-config.js, no need to initialize again.
 const analytics = getAnalytics();
-const database = getDatabase(rtdb);  // Uses the initialized Realtime Database from firebase-config.js
+
+// Use rtdb directly since it's already initialized in firebase-config.js
+const database = rtdb;
 
 // Firebase Auth state listener
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js"; 
+
 onAuthStateChanged(auth, (user) => {
     if (user) {
         // User is logged in
