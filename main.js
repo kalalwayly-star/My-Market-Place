@@ -38,35 +38,41 @@ document.addEventListener("DOMContentLoaded", () => {
     const logoutBtn = document.getElementById("logout-btn");
 
     // Firebase Auth state listener
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            // User is logged in
-            if (userInfoDiv) userInfoDiv.style.display = "block";
-            if (emailSpan) emailSpan.innerText = user.email;
-            if (loginLink) loginLink.style.display = "none"; // Hide login link
-            if (logoutBtn) logoutBtn.style.display = "inline-block"; // Show logout button
-        } else {
-            // User is logged out
-            if (userInfoDiv) userInfoDiv.style.display = "none";
-            if (loginLink) loginLink.style.display = "inline-block"; // Show login link
-            if (logoutBtn) logoutBtn.style.display = "none"; // Hide logout button
-        }
-    });
+// Firebase Auth state listener
+onAuthStateChanged(auth, (user) => {
+    const loginLink = document.getElementById("userAuth");
+    const logoutBtn = document.getElementById("logout-btn");
+    const emailSpan = document.getElementById("header-user-email");
+    const userInfoDiv = document.getElementById("user-info-header");
 
-    // Logout button click event handler
-    if (logoutBtn) {
-        logoutBtn.addEventListener("click", () => {
-            signOut(auth).then(() => {
-                // Successfully logged out
-                window.location.href = "index.html"; // Redirect to the home page after logging out
-            }).catch((error) => {
-                // Error during logout
-                console.error("Logout error: ", error);
-                alert("There was an error logging out. Please try again.");
-            });
-        });
+    if (user) {
+        // User is logged in
+        if (userInfoDiv) userInfoDiv.style.display = "block";
+        if (emailSpan) emailSpan.innerText = user.email;
+        if (loginLink) loginLink.style.display = "none";  // Hide login link
+        if (logoutBtn) logoutBtn.style.display = "inline-block";  // Show logout button
+    } else {
+        // User is logged out
+        if (userInfoDiv) userInfoDiv.style.display = "none";
+        if (loginLink) loginLink.style.display = "inline-block";  // Show login link
+        if (logoutBtn) logoutBtn.style.display = "none";  // Hide logout button
     }
 });
+
+// Logout button click event handler
+const logoutBtn = document.getElementById("logout-btn");
+if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+        signOut(auth).then(() => {
+            // Successfully logged out
+            window.location.href = "index.html";  // Redirect to the home page after logging out
+        }).catch((error) => {
+            // Error during logout
+            console.error("Logout error: ", error);
+            alert("There was an error logging out. Please try again.");
+        });
+    });
+}
 // Initialize ads loading from Firestore
 function initMain() {
     const listingsContainer = document.getElementById("listings");
