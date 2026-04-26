@@ -3,6 +3,7 @@ import { auth, db } from './firebase-config.js'; // Correct import path for Fire
 
 import { addDoc, collection } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+import { auth, db, rtdb } from "./firebase-config.js";  // Now includes Realtime Database
 
 // Handles user authentication state
 document.addEventListener("DOMContentLoaded", () => {
