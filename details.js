@@ -1,8 +1,11 @@
-// Import Firebase and other utilities
-import { auth, db, rtdb } from "./firebase-config.js";
-import { onAuthStateChanged, signOut } from "https://gstatic.com";
-import { doc, getDoc } from "https://gstatic.com";
+// Import Firebase and other utilities from correct sources
+import { auth, db, rtdb } from "./firebase-config.js";  // Firebase services from your config
 
+// Import Firebase Authentication methods
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+
+// Import Firestore methods
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 // Initialize variables
 let currentUserEmail = "Guest";
 let ad;
