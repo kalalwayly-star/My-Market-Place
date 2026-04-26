@@ -6,8 +6,6 @@ onAuthStateChanged(auth, (user) => {
     const loginMessage = document.getElementById('loginMessage'); // Message when not logged in
     const messagesContainer = document.getElementById('messagesContainer'); // Where messages are shown
 
-    console.log("User logged in status:", user);  // Debugging line to check user object
-
     if (user) {
         // User is logged in, show the messages page
         loginMessage.style.display = 'none';  // Hide the login message
@@ -36,7 +34,6 @@ onAuthStateChanged(auth, (user) => {
 
     } else {
         // User is not logged in, show the login message
-        console.log("User is not logged in");
         loginMessage.style.display = 'block';  // Show login prompt
         messagesContainer.style.display = 'none';  // Hide messages container
     }
@@ -196,3 +193,17 @@ window.deleteMsg = function(id) {
 document.addEventListener('DOMContentLoaded', () => {
     loadLanguage(currentLanguage);
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
