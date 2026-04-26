@@ -1,22 +1,10 @@
+// Import necessary Firebase SDKs and services
+import { auth, db } from './firebase-config.js'; // Importing Firestore and Auth
+import { collection, addDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js"; // Firestore functions
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js"; // Auth state listener
 
-import { auth, db } from './firebase-config.js';  // Correct import from firebase-config.js
-
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
-import { collection, addDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
-
-// Your function to finalize an ad
-async function finalizeAd(adData) {
-    try {
-        // Reference to Firestore collection
-        const adsCollection = collection(db, "marketplace_ads");
-
-        // Add the ad data to Firestore
-        const docRef = await addDoc(adsCollection, adData);
-        console.log("Ad added with ID:", docRef.id);
-    } catch (error) {
-        console.error("Error adding ad:", error);
-    }
-}
+// Global variable for uploaded images
+let uploadedImages = [];
 
 // Firebase Auth state listener
 onAuthStateChanged(auth, (user) => {
@@ -37,9 +25,6 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-// Global variables for uploaded images
-let uploadedImages = [];
-
 // Handles photo upload and preview
 window.handlePhotoUpload = function (event) {
     const files = Array.from(event.target.files || []);
@@ -47,7 +32,7 @@ window.handlePhotoUpload = function (event) {
 
     if (!preview || !files.length) return;
 
-    // Limit total to 10
+    // Limit to 10 images
     const remainingSlots = 10 - uploadedImages.length;
     const filesToAdd = files.slice(0, remainingSlots);
 
@@ -60,7 +45,7 @@ window.handlePhotoUpload = function (event) {
         img.style.objectFit = "cover";
         preview.appendChild(img);
 
-        // Convert to base64
+        // Convert image to base64 and store it
         const reader = new FileReader();
         reader.onload = (e) => {
             uploadedImages.push(e.target.result);
@@ -68,17 +53,16 @@ window.handlePhotoUpload = function (event) {
         reader.readAsDataURL(file);
     });
 
-    // Reset input so same file can be selected again
+    // Reset input so the same file can be selected again
     event.target.value = "";
 };
 
-// Handles category change and form display
+// Handles category change and form section display
 window.handleCategoryChange = function () {
     const categorySelect = document.getElementById("postCategory");
     const commonFields = document.getElementById("commonFields");
     const conditionBox = document.getElementById("globalCondition");
 
-    // Safety: If the select isn't found, stop here
     if (!categorySelect) return;
 
     const selectedValue = categorySelect.value;
@@ -89,7 +73,7 @@ window.handleCategoryChange = function () {
     // Show main fields (Title, Price, Description)
     if (commonFields) commonFields.style.display = "block";
 
-    // Display category-specific sections
+    // Show specific section based on selected category
     const categoryMap = {
         "Cars & Trucks": "section-Cars",
         "Real Estate": "section-RealEstate",
@@ -103,20 +87,20 @@ window.handleCategoryChange = function () {
         if (el) el.style.display = "block";
     }
 
-    // Show/hide condition box based on category
+    // Hide/show condition box based on category
     const hideConditionFor = ["Pets", "Jobs", "Real Estate", "Services"];
     if (conditionBox) {
         conditionBox.style.display = hideConditionFor.includes(selectedValue) ? "none" : "block";
     }
 };
 
-// Handles ad posting
+// Handles ad posting when the submit button is clicked
 function saveNewAd(event) {
     event.preventDefault();
     const user = auth.currentUser;
 
     if (!user) {
-        alert("Login required");
+        alert("You need to log in to post an ad.");
         return;
     }
 
@@ -135,7 +119,7 @@ function saveNewAd(event) {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             pos => {
-                clearTimeout(locationTimeout); // Got location, cancel the timeout
+                clearTimeout(locationTimeout); // Got location, cancel timeout
                 window.currentAdLat = pos.coords.latitude;
                 window.currentAdLng = pos.coords.longitude;
                 finalizeAd();
@@ -144,7 +128,7 @@ function saveNewAd(event) {
                 clearTimeout(locationTimeout);
                 finalizeAd();
             },
-            { timeout: 1500 } // Don't wait too long
+            { timeout: 1500 }
         );
     } else {
         clearTimeout(locationTimeout);
@@ -152,16 +136,16 @@ function saveNewAd(event) {
     }
 }
 
-// Finalize ad and post it to Firestore
-function finalizeAdupdate() {
+// Function to finalize and post the ad to Firestore
+async function finalizeAd() {
     const user = auth.currentUser;
 
     if (!user) {
-        alert("You are not logged in");
+        alert("You are not logged in.");
         return;
     }
 
-    // Get the form data
+    // Get form data
     const condition = document.querySelector('input[name="condition"]:checked')?.value || "N/A";
 
     const newAd = {
@@ -174,38 +158,30 @@ function finalizeAdupdate() {
         description: document.getElementById("adDesc")?.value || "",
         condition: condition,
         image: uploadedImages.length ? uploadedImages : ["https://via.placeholder.com/300"],
-
         date: new Date().toLocaleDateString(),
         lat: window.currentAdLat || null,
         lng: window.currentAdLng || null
     };
 
-    // Save the ad to Firestore
+    // Post the ad to Firestore
     const adsCollectionRef = collection(db, "marketplace_ads");
-    addDoc(adsCollectionRef, newAd)
-        .then(() => {
-            alert("Ad posted successfully!");
-            window.location.href = "index.html";  // Redirect after posting
-        })
-        .catch(err => {
-            console.error("Firestore error:", err);
-            alert("Error: " + err.message);
-        });
+    try {
+        const docRef = await addDoc(adsCollectionRef, newAd);
+        alert("Ad posted successfully!");
+        window.location.href = "index.html"; // Redirect to home after posting
+    } catch (err) {
+        console.error("Firestore error:", err);
+        alert("Error posting ad: " + err.message);
+    }
 }
 
-// Initialize form events
+// Initialize form events on DOMContentLoaded
 document.addEventListener("DOMContentLoaded", () => {
     handleCategoryChange(); // Set category change handler
 
-    // Event listener for category change
-    document.getElementById("postCategory")
-        ?.addEventListener("change", handleCategoryChange);
-
-    // Event listener for photo upload
-    document.getElementById("photoInput")
-        ?.addEventListener("change", handlePhotoUpload);
-
-    // Event listener for form submission
-    document.getElementById("postForm")
-        ?.addEventListener("submit", saveNewAd);
+    // Event listeners for form submission and category changes
+    document.getElementById("postCategory")?.addEventListener("change", handleCategoryChange);
+    document.getElementById("photoInput")?.addEventListener("change", handlePhotoUpload);
+    document.getElementById("postForm")?.addEventListener("submit", saveNewAd);
 });
+
