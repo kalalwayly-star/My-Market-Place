@@ -1,4 +1,3 @@
-<script type="module"
   // Import the functions you need from the SDKs you need
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-analytics.js";
@@ -23,24 +22,4 @@
   // Initialize Realtime Database
   const database = getDatabase(app);
 
-  // Example: Write data to Firebase Realtime Database
-  const userId = "user1";
-  const reference = ref(database, 'users/' + userId);
-  set(reference, {
-    username: "john_doe",
-    email: "john@example.com",
-    profile_picture: "http://example.com/profile.jpg"
-  });
-
-  // Example: Read data from Firebase Realtime Database
-  const dbRef = ref(database);
-  get(child(dbRef, `users/${userId}`)).then((snapshot) => {
-    if (snapshot.exists()) {
-      console.log(snapshot.val()); // This will log the data of user1
-    } else {
-      console.log("No data available");
-    }
-  }).catch((error) => {
-    console.error(error);
-  });
-</script>
+ 
