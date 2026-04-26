@@ -16,29 +16,8 @@ import { getDatabase } from "https://www.gstatic.com/firebasejs/12.12.1/firebase
 // Initialize Firebase Auth and Database (Ensure you've initialized Firebase in firebase-config.js)
 const auth = getAuth();
 const db = getDatabase();
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        // User is logged in
-        console.log("User logged in:", user.email);
-    } else {
-        // User is logged out
-        console.log("User logged out");
-    }
-});
-
-// Global variable to store ads
-let globalAds = [];
-
-// DOMContentLoaded initialization
-// DOMContentLoaded initialization
-document.addEventListener("DOMContentLoaded", () => {
-    const userInfoDiv = document.getElementById("user-info-header");
-    const emailSpan = document.getElementById("header-user-email");
-    const loginLink = document.getElementById("userAuth");
-    const logoutBtn = document.getElementById("logout-btn");
-
-    // Firebase Auth state listener
 // Firebase Auth state listener
+
 onAuthStateChanged(auth, (user) => {
     const loginLink = document.getElementById("userAuth");
     const logoutBtn = document.getElementById("logout-btn");
@@ -47,17 +26,32 @@ onAuthStateChanged(auth, (user) => {
 
     if (user) {
         // User is logged in
-        if (userInfoDiv) userInfoDiv.style.display = "block";
-        if (emailSpan) emailSpan.innerText = user.email;
+        if (userInfoDiv) userInfoDiv.style.display = "block";  // Show user info div
+        if (emailSpan) emailSpan.innerText = user.email;  // Display user email
         if (loginLink) loginLink.style.display = "none";  // Hide login link
         if (logoutBtn) logoutBtn.style.display = "inline-block";  // Show logout button
     } else {
         // User is logged out
-        if (userInfoDiv) userInfoDiv.style.display = "none";
+        if (userInfoDiv) userInfoDiv.style.display = "none";  // Hide user info div
         if (loginLink) loginLink.style.display = "inline-block";  // Show login link
         if (logoutBtn) logoutBtn.style.display = "none";  // Hide logout button
     }
 });
+
+// Logout button click event handler
+const logoutBtn = document.getElementById("logout-btn");
+if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+        signOut(auth).then(() => {
+            // Successfully logged out
+            window.location.href = "index.html";  // Redirect to the home page after logging out
+        }).catch((error) => {
+            // Error during logout
+            console.error("Logout error: ", error);
+            alert("There was an error logging out. Please try again.");
+        });
+    });
+}
 
 // Logout button click event handler
 const logoutBtn = document.getElementById("logout-btn");
