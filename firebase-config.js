@@ -3,7 +3,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/fireba
 import { getAuth } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 import { getDatabase } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js";
-import { firebaseConfig, auth, db, rtdb } from './firebase-config.js';.
+import { firebaseConfig, auth, db, rtdb } from './firebase-config.js';
 
 // Your Firebase config (you'll get this from Firebase console)
 const firebaseConfig = {
