@@ -1,30 +1,45 @@
-// Import Firebase Authentication and Realtime Database from firebase-config.js
-import { auth } from './firebase-config.js';  // Import initialized Firebase auth
+import { auth, rtdb } from "./firebase-config.js";  // Import Firebase services
+import { ref, onValue } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js";  // Import Realtime DB methods
 
 // Firebase Authentication state listener for checking login status
 onAuthStateChanged(auth, (user) => {
-  const loginMessage = document.getElementById('loginMessage');
-  const messagesContainer = document.getElementById('messagesContainer');
+    const loginMessage = document.getElementById('loginMessage'); // Message when not logged in
+    const messagesContainer = document.getElementById('messagesContainer'); // Where messages are shown
 
-  if (user) {
-    // User is logged in, show the messages page
-    console.log("User is logged in:", user.email);
-    loginMessage.style.display = 'none';  // Hide the login message
-    messagesContainer.style.display = 'block';  // Show messages container
+    console.log("User logged in status:", user);  // Debugging line to check user object
 
-    // Optionally, you can now retrieve and display user-specific messages using Firebase Realtime Database if needed
-    // For example, using `onValue` to listen for messages:
-    // const messagesRef = ref(rtdb, 'messages/' + user.uid);
-    // onValue(messagesRef, (snapshot) => {
-    //   const messages = snapshot.val();
-    //   // Handle displaying messages...
-    // });
-  } else {
-    // User is logged out, show the login prompt
-    console.log("User is not logged in");
-    loginMessage.style.display = 'block';  // Show the login prompt
-    messagesContainer.style.display = 'none';  // Hide messages container
-  }
+    if (user) {
+        // User is logged in, show the messages page
+        loginMessage.style.display = 'none';  // Hide the login message
+        messagesContainer.style.display = 'block';  // Show messages container
+
+        // Fetch and display user-specific messages
+        const messagesRef = ref(rtdb, 'messages/' + user.uid); // Get messages from the database
+        onValue(messagesRef, (snapshot) => {
+            const messages = snapshot.val();
+            if (messages) {
+                messagesContainer.innerHTML = "";  // Clear existing messages
+
+                // Loop through the messages and display them
+                Object.keys(messages).forEach(msgId => {
+                    const message = messages[msgId];
+                    const messageElement = document.createElement('div');
+                    messageElement.classList.add('message');
+                    messageElement.innerHTML = `
+                        <p>${message.text}</p>
+                        <small>Sent at ${new Date(message.timestamp).toLocaleString()}</small>
+                    `;
+                    messagesContainer.appendChild(messageElement);
+                });
+            }
+        });
+
+    } else {
+        // User is not logged in, show the login message
+        console.log("User is not logged in");
+        loginMessage.style.display = 'block';  // Show login prompt
+        messagesContainer.style.display = 'none';  // Hide messages container
+    }
 });
 
 // Globals
