@@ -78,7 +78,18 @@ window.handleCategoryChange = function () {
         "Cars & Trucks": "section-Cars",
         "Real Estate": "section-RealEstate",
         "Electronics": "section-Electronics",
-        "Furniture": "section-Furniture"
+        "Furniture": "section-Furniture",
+        "Job": "section-Jobs",                
+        "Fashion": "section-Fashion",          
+        "Pets": "section-Pets",               
+        "Sports": "section-Sports",            
+        "Books": "section-Books",              
+        "Appliances": "section-Appliances",    
+        "Toys": "section-Toys",               
+        "Services": "section-Services",        
+        "Garden": "section-Garden",            
+        "Health": "section-Health",            
+        "Baby": "section-Baby" 
     };
 
     const sectionId = categoryMap[selectedValue];
