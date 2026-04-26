@@ -1,6 +1,4 @@
-// main.js
 
-// main.js
 
 import { firebaseConfig } from './firebase-config.js';  // <-- This imports firebaseConfig
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
