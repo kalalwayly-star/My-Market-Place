@@ -3,6 +3,7 @@
 // Import initialized services from firebase-config.js
 import { auth, db, rtdb } from "./firebase-config.js";  // Use the initialized rtdb here
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-analytics.js";
+import { collection, getDocs } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 // Firebase has already been initialized in firebase-config.js, no need to initialize again.
 const analytics = getAnalytics();
