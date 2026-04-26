@@ -1,6 +1,11 @@
-import { auth, rtdb } from "./firebase-config.js"; 
-import { ref, onValue, push, remove } from "https://gstatic.com";
-import { onAuthStateChanged } from "https://gstatic.com";
+// Import Firebase services from your firebase-config.js
+import { auth, rtdb } from "./firebase-config.js";
+
+// Import Firebase Realtime Database methods from the correct URL
+import { ref, onValue, push, remove } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js";
+
+// Import Firebase Authentication method (onAuthStateChanged) from the correct URL
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
 
 // Globals
 const params = new URLSearchParams(window.location.search);
