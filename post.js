@@ -157,7 +157,7 @@ function saveNewAd(event) {
 }
 
 // Finalize ad and post it to Firestore
-let finalizeAd() {
+function finalizeAdupdate() {
     const user = auth.currentUser;
 
     if (!user) {
