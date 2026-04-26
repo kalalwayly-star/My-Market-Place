@@ -6,7 +6,7 @@ import { getDatabase } from "https://www.gstatic.com/firebasejs/12.12.1/firebase
 import { firebaseConfig, auth, db, rtdb } from './firebase-config.js';
 
 // Your Firebase config (you'll get this from Firebase console)
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: "AIzaSyDBT8jv057_JQL6pIUYk-U_LQ8uJHlFi-o",
   authDomain: "kal-marketplace.firebaseapp.com",
   databaseURL: "https://kal-marketplace-default-rtdb.firebaseio.com",
