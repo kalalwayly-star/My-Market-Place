@@ -1,9 +1,9 @@
+import { auth, db, rtdb } from "./firebase-config.js";  // Now includes Realtime Database
 
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-analytics.js";
 import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js";
-import { auth, db, rtdb } from "./firebase-config.js";  // Now includes Realtime Database
 
 // Initialize Firebase with the correct config
 const app = initializeApp(firebaseConfig);  // <-- This should now work!
