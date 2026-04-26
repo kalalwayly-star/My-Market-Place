@@ -119,26 +119,26 @@ window.applyFilters = function() {
 
     let adsQuery = collection(db, "marketplace_ads");
 
+    // Apply query if there's search text
     if (queryText) {
         adsQuery = query(adsQuery, where("title", "array-contains", queryText));
     }
 
+    // Fetch the results with onSnapshot
     onSnapshot(adsQuery, (snapshot) => {
         globalAds = [];
         snapshot.forEach((doc) => {
             globalAds.push({ ...doc.data(), firebaseId: doc.id });
         });
-        renderAds(globalAds);
-        toggleNoItemsMessage(globalAds);
+        renderAds(globalAds);  // Render the filtered ads
+        toggleNoItemsMessage(globalAds);  // Toggle "No items" message based on the results
     });
 };
 
-// Toggle no items message
+// Toggle the "No Items" message if no ads are found
 function toggleNoItemsMessage(ads) {
     const noItemsMessage = document.getElementById('no-items-message');
     if (noItemsMessage) {
         noItemsMessage.style.display = ads.length === 0 ? 'block' : 'none';
     }
 }
-
-});
