@@ -1,5 +1,5 @@
 // Import necessary Firebase SDKs and services
-import { auth, db } from './firebase-config.js'; // Importing Firestore and Auth
+import { auth, db, rtdb } from './firebase-config.js'; // Importing Firestore and Auth
 import { collection, addDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js"; // Firestore functions
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js"; // Auth state listener
 
