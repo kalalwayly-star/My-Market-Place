@@ -1,4 +1,4 @@
-import { auth, rtdb } from "./firebase-config.js";  // Import Firebase services
+import { auth, rtdb, db } from "./firebase-config.js";  // Import Firebase services
 import { ref, onValue } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js";  // Import Realtime DB methods
 
 // Firebase Authentication state listener for checking login status
