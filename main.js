@@ -1,10 +1,19 @@
-// Firebase Initialization
+// main.js
+
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
 import { getFirestore, collection, onSnapshot, query, where, deleteDoc, doc as firestoreDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
-import { firebaseConfig } from './firebase-config.js';
+import { firebaseConfig } from './firebase-config.js'; // Import firebaseConfig from firebase-config.js
 
-const db = getFirestore(firebaseConfig);
-const auth = getAuth(firebaseConfig);
+// Now you can initialize Firebase using the imported configuration
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+const app = initializeApp(firebaseConfig); // Initialize app with the imported configuration
+
+// Now you can use other Firebase services like Firestore or Auth
+const auth = getAuth(app);
+const firestore = getFirestore(app);
+
+// Your code logic continues here...
+
 
 // Global variable to store ads
 let globalAds = [];
