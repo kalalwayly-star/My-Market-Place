@@ -1,23 +1,16 @@
-// main.js
-import { auth, db, rtdb } from "./firebase-config.js";  // Use the initialized rtdb here
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-analytics.js";
-import { collection, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";  // Import onSnapshot
-// Firebase has already been initialized in firebase-config.js, no need to initialize again.
+// Import the Firebase services that have already been initialized in firebase-config.js
+import { auth, rtdb } from "./firebase-config.js";  // We import auth from firebase-config.js, as it’s already initialized.
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-analytics.js";  // Analytics import
+import { collection, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";  // Firestore imports
+import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";  // Firebase Auth imports
+
+// Firebase Analytics - Initialize once
 const analytics = getAnalytics();
 
-// Use rtdb directly since it's already initialized in firebase-config.js
-const database = rtdb;
-// Import necessary functions from Firebase SDK
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+// Firebase Realtime Database - Using already initialized `rtdb` from firebase-config.js
+const database = rtdb;  // We don't need to initialize getDatabase() again because it's already done in firebase-config.js
 
-// Import Firebase Realtime Database methods from the correct URL (if needed)
-import { getDatabase } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js";
-
-// Initialize Firebase Auth and Database (Ensure you've initialized Firebase in firebase-config.js)
-const auth = getAuth();
-const db = getDatabase();
-// Firebase Auth state listener
-
+// Firebase Auth state listener to manage user login status
 onAuthStateChanged(auth, (user) => {
     const loginLink = document.getElementById("userAuth");
     const logoutBtn = document.getElementById("logout-btn");
@@ -44,22 +37,7 @@ if (logoutBtn) {
     logoutBtn.addEventListener("click", () => {
         signOut(auth).then(() => {
             // Successfully logged out
-            window.location.href = "index.html";  // Redirect to the home page after logging out
-        }).catch((error) => {
-            // Error during logout
-            console.error("Logout error: ", error);
-            alert("There was an error logging out. Please try again.");
-        });
-    });
-}
-
-// Logout button click event handler
-const logoutBtn = document.getElementById("logout-btn");
-if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => {
-        signOut(auth).then(() => {
-            // Successfully logged out
-            window.location.href = "index.html";  // Redirect to the home page after logging out
+            window.location.href = "index.html";  // Redirect to home page after logging out
         }).catch((error) => {
             // Error during logout
             console.error("Logout error: ", error);
@@ -163,14 +141,4 @@ function toggleNoItemsMessage(ads) {
     }
 }
 
-// Handle the logout functionality
-document.getElementById("logoutBtn").addEventListener("click", function() {
-    signOut(auth)
-        .then(() => {
-            // Successfully signed out, redirect to login page
-            window.location.href = "login.html";  // Or wherever you want the user to go after logout
-        })
-        .catch((error) => {
-            console.error("Error signing out:", error);
-        });
 });
