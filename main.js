@@ -1,16 +1,18 @@
 // main.js
 
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
-import { getFirestore, collection, onSnapshot, query, where, deleteDoc, doc as firestoreDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
-import { firebaseConfig } from './firebase-config.js'; // Import firebaseConfig from firebase-config.js
+// main.js
 
-// Now you can initialize Firebase using the imported configuration
+import { firebaseConfig } from './firebase-config.js';  // <-- This imports firebaseConfig
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-const app = initializeApp(firebaseConfig); // Initialize app with the imported configuration
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-analytics.js";
+import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js";
 
-// Now you can use other Firebase services like Firestore or Auth
-const auth = getAuth(app);
-const firestore = getFirestore(app);
+// Initialize Firebase with the correct config
+const app = initializeApp(firebaseConfig);  // <-- This should now work!
+const analytics = getAnalytics(app);
+
+// Initialize Database
+const database = getDatabase(app);
 
 // Your code logic continues here...
 
