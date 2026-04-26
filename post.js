@@ -1,29 +1,28 @@
 // Firebase initialization
 
-import { addDoc, collection } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+// Import auth from firebase-config.js
+import { auth } from './firebase-config.js';  // Correct import from firebase-config.js
+
+// Import Firebase Authentication method
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
-import { auth, db, rtdb } from "./firebase-config.js";  // Now includes Realtime Database
 
-// Handles user authentication state
-document.addEventListener("DOMContentLoaded", () => {
-    const loginLink = document.getElementById("userAuth");
-    const logoutBtn = document.getElementById("logout-btn");
-    const emailSpan = document.getElementById("header-user-email");
+// Firebase Auth state listener
+onAuthStateChanged(auth, (user) => {
+    const loginLink = document.getElementById("loginLink");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const emailSpan = document.getElementById("emailSpan");
 
-    // Firebase Auth state listener
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            // User is logged in
-            if (loginLink) loginLink.style.display = "none";
-            if (logoutBtn) logoutBtn.style.display = "inline-block";
-            if (emailSpan) emailSpan.innerText = user.email;
-        } else {
-            // User is logged out
-            if (loginLink) loginLink.style.display = "inline-block";
-            if (logoutBtn) logoutBtn.style.display = "none";
-            if (emailSpan) emailSpan.innerText = "";
-        }
-    });
+    if (user) {
+        // User is logged in
+        if (loginLink) loginLink.style.display = "none";
+        if (logoutBtn) logoutBtn.style.display = "inline-block";
+        if (emailSpan) emailSpan.innerText = user.email;
+    } else {
+        // User is logged out
+        if (loginLink) loginLink.style.display = "inline-block";
+        if (logoutBtn) logoutBtn.style.display = "none";
+        if (emailSpan) emailSpan.innerText = "";
+    }
 });
 
 // Global variables for uploaded images
