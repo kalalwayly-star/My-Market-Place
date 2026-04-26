@@ -1,6 +1,71 @@
-import { auth } from "./firebase-config.js";
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+// auth.js
 
+// Import Firebase Auth methods from the Firebase SDK
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, updateProfile } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+
+// Import the Firebase configuration (if you haven't already initialized it elsewhere)
+import { auth } from './firebase-config.js'; // Import auth from firebase-config.js
+
+// Function to create a new user
+export const registerUser = async (email, password) => {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    console.log('User registered:', userCredential.user);
+  } catch (error) {
+    console.error('Error registering user:', error);
+  }
+};
+
+// Function to sign in a user
+export const loginUser = async (email, password) => {
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    console.log('User logged in:', userCredential.user);
+  } catch (error) {
+    console.error('Error logging in user:', error);
+  }
+};
+
+// Function to sign out a user
+export const logoutUser = async () => {
+  try {
+    await signOut(auth);
+    console.log('User logged out');
+  } catch (error) {
+    console.error('Error signing out user:', error);
+  }
+};
+
+// Listener to monitor the authentication state (e.g., if user logs in or out)
+export const authStateListener = () => {
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log('User is logged in:', user);
+    } else {
+      console.log('No user logged in');
+    }
+  });
+};
+
+// Function to send password reset email
+export const resetPassword = async (email) => {
+  try {
+    await sendPasswordResetEmail(auth, email);
+    console.log('Password reset email sent');
+  } catch (error) {
+    console.error('Error sending password reset email:', error);
+  }
+};
+
+// Function to update user profile (e.g., display name)
+export const updateUserProfile = async (displayName) => {
+  try {
+    await updateProfile(auth.currentUser, { displayName: displayName });
+    console.log('User profile updated');
+  } catch (error) {
+    console.error('Error updating user profile:', error);
+  }
+};
 /* --- LOGIN FUNCTION --- */
 window.login = function () {
     const email = document.getElementById('loginEmail').value.trim();
