@@ -1,9 +1,8 @@
-// firebase-config.js
-
 // Import Firebase SDKs
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+import { getDatabase } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js";  // Add this line
 
 // Your Firebase config (you'll get this from Firebase console)
 const firebaseConfig = {
@@ -20,10 +19,10 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Initialize Auth and Firestore
+// Initialize Auth, Firestore, and Realtime Database
 const auth = getAuth(app);
 const db = getFirestore(app);
+const rtdb = getDatabase(app);  // Add this for Realtime Database
 
 // Export the initialized services to use in other files
-export { app, auth, db };
-
+export { app, auth, db, rtdb };
