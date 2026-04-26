@@ -162,3 +162,15 @@ function toggleNoItemsMessage(ads) {
         noItemsMessage.style.display = ads.length === 0 ? 'block' : 'none';
     }
 }
+
+// Handle the logout functionality
+document.getElementById("logoutBtn").addEventListener("click", function() {
+    signOut(auth)
+        .then(() => {
+            // Successfully signed out, redirect to login page
+            window.location.href = "login.html";  // Or wherever you want the user to go after logout
+        })
+        .catch((error) => {
+            console.error("Error signing out:", error);
+        });
+});
