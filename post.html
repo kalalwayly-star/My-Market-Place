@@ -48,27 +48,50 @@
                 </div>
 
                 <!-- COMMON FIELDS -->
-                <div id="commonFields" style="display:none;">
-                    <div class="input-group">
-                        <label data-i18n="label_location">City/Location</label>
-                        <input type="text" id="adLocation">
-                    </div>
+               <!-- Common Fields: Title, Price, Description -->
+<div id="commonFields">
+    <label for="adTitle">Title:</label>
+    <input type="text" id="adTitle" required />
 
-                    <div class="input-group">
-                        <label data-i18n="label_title">Ad Title</label>
-                        <input type="text" id="adTitle">
-                    </div>
+    <label for="adPrice">Price:</label>
+    <input type="number" id="adPrice" required />
 
-                    <div class="input-group">
-                        <label data-i18n="label_price">Price ($)</label>
-                        <input type="number" id="adPrice">
-                    </div>
+    <label for="adLocation">Location:</label>
+    <input type="text" id="adLocation" required />
 
-                    <div class="input-group">
-                        <label data-i18n="label_description">Description</label>
-                        <textarea id="adDesc" rows="4"></textarea>
-                    </div>
+    <label for="adDesc">Description:</label>
+    <textarea id="adDesc" required></textarea>
+</div>
 
+<!-- Car Specific Fields (Only shown for "Cars & Trucks" category) -->
+<div id="carFields" style="display: none;">
+    <label for="carMake">Car Make:</label>
+    <input type="text" id="carMake" />
+
+    <label for="carModel">Car Model:</label>
+    <input type="text" id="carModel" />
+
+    <label for="carYear">Car Year:</label>
+    <input type="number" id="carYear" />
+
+    <label for="carMileage">Mileage (km):</label>
+    <input type="number" id="carMileage" />
+
+    <label for="carFuelType">Fuel Type:</label>
+    <select id="carFuelType">
+        <option value="Gasoline">Gasoline</option>
+        <option value="Hybrid">Hybrid</option>
+        <option value="Electric">Electric</option>
+    </select>
+</div>
+
+<!-- Condition Fields (For applicable categories) -->
+<div id="conditionFields">
+    <label for="condition">Condition:</label>
+    <input type="radio" name="condition" value="New"> New
+    <input type="radio" name="condition" value="Used"> Used
+    <input type="radio" name="condition" value="Refurbished"> Refurbished
+</div>
                     <div class="form-group feature-box">
                         <label>
                             <input type="checkbox" id="isFeatured">
