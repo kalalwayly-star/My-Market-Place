@@ -597,6 +597,66 @@ img {
     cursor: pointer;
     font-size: 14px;
 }
+    .upload-container {
+        position: relative;
+        width: 100%;
+        border: 2px dashed #007bff;
+        padding: 20px;
+        text-align: center;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+    }
+    
+    .upload-box {
+        display: inline-block;
+        cursor: pointer;
+        font-size: 18px;
+        color: #007bff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        border: 1px solid #007bff;
+    }
+    
+    .upload-box:hover {
+        background-color: #007bff;
+        color: #fff;
+    }
+    
+    .icon {
+        font-size: 40px;
+        margin-bottom: 10px;
+    }
+
+    .drop-zone {
+        border: 2px dashed #007bff;
+        padding: 50px;
+        background-color: #f2f2f2;
+        margin-top: 20px;
+        font-size: 18px;
+        color: #888;
+        display: none;
+        text-align: center;
+        border-radius: 8px;
+    }
+
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .gallery-grid img {
+        max-width: 100%;
+        max-height: 100px;
+        object-fit: cover;
+        border-radius: 5px;
+    }
+    
+    #uploadProgress {
+        margin-top: 20px;
+        text-align: center;
+    }
 
 /* radio reset */
 .condition-option input[type="radio"] {
