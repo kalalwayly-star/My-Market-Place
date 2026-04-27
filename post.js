@@ -1,4 +1,3 @@
-/ Import necessary Firebase SDKs and services
 import { auth, db, storage } from './firebase-config.js'; // Import Firestore and Firebase Storage
 import { collection, addDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js"; // Firestore functions
 import { uploadBytesResumable, getDownloadURL, ref } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js"; // Firebase Storage functions
@@ -82,7 +81,8 @@ function uploadImageToStorage(file, progressBar, uploadProgress, callback) {
 }
 
 // Handles category change and form section display
-window.handleCategoryChange = function () {
+// Ensure handleCategoryChange is declared before we try to use it
+function handleCategoryChange() {
     // Get elements
     const categorySelect = document.getElementById("postCategory");
     const commonFields = document.getElementById("commonFields");
@@ -90,10 +90,8 @@ window.handleCategoryChange = function () {
     const carFields = document.getElementById("carFields"); // Div that wraps car fields
     const conditionRadio = document.getElementById("conditionFields"); // Div that wraps condition radio buttons
 
-    // If categorySelect is not found, return early
     if (!categorySelect) return;
 
-    // Get selected category value
     const selectedValue = categorySelect.value;
 
     // Hide all extra category sections (i.e. other than common fields)
@@ -121,14 +119,12 @@ window.handleCategoryChange = function () {
         "Baby": "section-Baby"
     };
 
-    // Display the corresponding section for the selected category
     const sectionId = categoryMap[selectedValue];
     if (sectionId) {
         const el = document.getElementById(sectionId);
         if (el) el.style.display = "block";
     }
 
-    // Show/hide the car-related fields based on category
     if (carFields) {
         if (selectedValue === "Cars & Trucks") {
             carFields.style.display = "block"; // Show car-related fields
@@ -137,12 +133,26 @@ window.handleCategoryChange = function () {
         }
     }
 
+    const hideConditionFor = ["Pets", "Jobs", "Real Estate", "Services"];
+    if (conditionBox) {
+        conditionBox.style.display = hideConditionFor.includes(selectedValue) ? "none" : "block"; // Hide condition for specified categories
+    }
+}
+
+// Now, use `DOMContentLoaded` to make sure the DOM is ready before binding event listeners
+document.addEventListener("DOMContentLoaded", () => {
+    const categorySelect = document.getElementById("postCategory");
+    if (categorySelect) {
+        categorySelect.addEventListener("change", handleCategoryChange); // Add event listener after the DOM is ready
+    }
+});
+
     // Show/hide condition fields based on category
     const hideConditionFor = ["Pets", "Jobs", "Real Estate", "Services"];
     if (conditionBox) {
         conditionBox.style.display = hideConditionFor.includes(selectedValue) ? "none" : "block"; // Hide condition for specified categories
     }
-};
+
 
     // Show/hide condition box based on category
     const hideConditionFor = ["Pets", "Jobs", "Real Estate", "Services"];
@@ -230,10 +240,3 @@ function finalizeAd() {
         });
 }
 
-// Event listeners for category changes and form submission
-document.addEventListener("DOMContentLoaded", () => {
-    handleCategoryChange();
-    document.getElementById("postCategory")?.addEventListener("change", handleCategoryChange);
-    document.getElementById("photoInput")?.addEventListener("change", handlePhotoUpload);
-    document.getElementById("postForm")?.addEventListener("submit", saveNewAd);
-});
