@@ -154,12 +154,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-    // Show/hide condition fields based on category
-    const hideConditionFor = ["Pets", "Jobs", "Real Estate", "Services"];
-    if (conditionBox) {
-        conditionBox.style.display = hideConditionFor.includes(selectedValue) ? "none" : "block"; // Hide condition for specified categories
-    }
-
 
 
 // Handles ad posting
