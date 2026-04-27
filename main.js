@@ -3,7 +3,6 @@ import { auth, db, storage } from './firebase-config.js';  // Import Firestore, 
 import { collection, getDocs, onSnapshot, query, where, deleteDoc, doc as firestoreDoc, addDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";  // Firestore imports
 import { uploadBytesResumable, getDownloadURL, ref } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js"; // Firebase Storage functions
 import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";  // Firebase Auth imports
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-analytics.js";
 import { app } from "./firebase-config.js";
 
 const analytics = getAnalytics(app);
@@ -91,7 +90,7 @@ function renderAds(adsArray) {
     }
 
     container.innerHTML = adsArray.map(ad => {
-        const uniqueId = ad.firebaseId;
+        const uniqueId = ad.id;
         const image = Array.isArray(ad.image) ? ad.image[0] : (ad.image || 'https://via.placeholder.com/300');
         return `
         <div class="card">
