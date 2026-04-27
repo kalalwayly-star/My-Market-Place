@@ -3,12 +3,13 @@ import { auth, db, storage } from './firebase-config.js';  // Import Firestore, 
 import { collection, getDocs, onSnapshot, query, where, deleteDoc, doc as firestoreDoc, addDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";  // Firestore imports
 import { uploadBytesResumable, getDownloadURL, ref } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js"; // Firebase Storage functions
 import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";  // Firebase Auth imports
-import { getAnalytics, initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-analytics.js";
+import { app } from "./firebase-config.js";
 
+const analytics = getAnalytics(app);
 let globalAds = []; // Declare globalAds at the top of the file to avoid the ReferenceError
 
-// Firebase Analytics - Initialize once
-const analytics = getAnalytics();
+
 
 onAuthStateChanged(auth, (user) => {
     console.log("Auth state changed:", user); // Debugging line
