@@ -1,17 +1,13 @@
-// Import the Firebase services that have already been initialized in firebase-config.js
-import { auth, rtdb } from "./firebase-config.js";  // We import auth from firebase-config.js, as it’s already initialized.
+// Import necessary Firebase services that have already been initialized in firebase-config.js
+import { auth, db } from "./firebase-config.js";  // We import auth and db from firebase-config.js
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-analytics.js";  // Analytics import
-import { collection, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";  // Firestore imports
+import { collection, getDocs, onSnapshot, query, where, deleteDoc, doc as firestoreDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";  // Firestore imports
 import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";  // Firebase Auth imports
-
 
 let globalAds = []; // Declare globalAds at the top of the file to avoid the ReferenceError
 
 // Firebase Analytics - Initialize once
 const analytics = getAnalytics();
-
-// Firebase Realtime Database - Using already initialized `rtdb` from firebase-config.js
-const database = rtdb;  // We don't need to initialize getDatabase() again because it's already done in firebase-config.js
 
 // Firebase Auth state listener to manage user login status
 onAuthStateChanged(auth, (user) => {
@@ -48,23 +44,8 @@ if (logoutBtn) {
         });
     });
 }
+
 // Initialize ads loading from Firestore
-function initMain() {
-    const listingsContainer = document.getElementById("listings");
-    if (!listingsContainer) return;
-
-    const adsCollection = collection(db, "marketplace_ads");
-
-    onSnapshot(adsCollection, (snapshot) => {
-        globalAds = [];
-        snapshot.forEach((doc) => {
-            globalAds.push({ ...doc.data(), firebaseId: doc.id });
-        });
-        renderAds(globalAds);
-    });
-}
-
-
 function fetchAds() {
     // Reference the Firestore collection "marketplace_ads"
     const adsCollectionRef = collection(db, "marketplace_ads");
@@ -75,7 +56,7 @@ function fetchAds() {
             // Populate globalAds with the ad data from Firestore
             globalAds = snapshot.docs.map(doc => ({
                 ...doc.data(),
-                id: doc.id, // You can optionally store the Firestore doc ID
+                id: doc.id, // Store Firestore doc ID
             }));
 
             // Call renderAds to display the fetched ads
@@ -86,12 +67,11 @@ function fetchAds() {
         });
 }
 
-
 // Render ads to the DOM
 function renderAds(adsArray) {
     const container = document.getElementById("listings");
     container.innerHTML = adsArray.map(ad => {
-        const uniqueId = ad.firebaseId;
+        const uniqueId = ad.id; // Use `id` for Firestore document ID
         const image = Array.isArray(ad.image) ? ad.image[0] : (ad.image || 'https://via.placeholder.com/300');
         return `
         <div class="card">
@@ -117,6 +97,7 @@ window.goToDetails = function(id) {
 window.deleteAd = async function(firebaseId) {
     if (confirm("Are you sure you want to delete this ad?")) {
         try {
+            // Correct Firestore delete doc call
             await deleteDoc(firestoreDoc(db, "marketplace_ads", firebaseId));
             alert("Ad deleted successfully");
         } catch (error) {
@@ -154,7 +135,7 @@ window.applyFilters = function() {
     onSnapshot(adsQuery, (snapshot) => {
         globalAds = [];
         snapshot.forEach((doc) => {
-            globalAds.push({ ...doc.data(), firebaseId: doc.id });
+            globalAds.push({ ...doc.data(), id: doc.id });
         });
         renderAds(globalAds);  // Render the filtered ads
         toggleNoItemsMessage(globalAds);  // Toggle "No items" message based on the results
@@ -168,3 +149,8 @@ function toggleNoItemsMessage(ads) {
         noItemsMessage.style.display = ads.length === 0 ? 'block' : 'none';
     }
 }
+
+// Fetch and display ads when the page loads
+document.addEventListener("DOMContentLoaded", () => {
+    fetchAds();  // Fetch ads and render them
+});
