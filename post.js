@@ -146,6 +146,13 @@ document.addEventListener("DOMContentLoaded", () => {
         categorySelect.addEventListener("change", handleCategoryChange); // Add event listener after the DOM is ready
     }
 });
+document.addEventListener("DOMContentLoaded", () => {
+    handleCategoryChange();
+    document.getElementById("postCategory")?.addEventListener("change", handleCategoryChange);
+    document.getElementById("photoInput")?.addEventListener("change", handlePhotoUpload);
+    document.getElementById("postForm")?.addEventListener("submit", saveNewAd);
+});
+
 
     // Show/hide condition fields based on category
     const hideConditionFor = ["Pets", "Jobs", "Real Estate", "Services"];
