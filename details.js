@@ -10,7 +10,7 @@ import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase
 let currentUserEmail = "Guest";
 let ad;
 const adId = new URLSearchParams(window.location.search).get("id");
-
+console.log("Ad ID from URL:", adId);
 // Check auth state
 onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -31,6 +31,7 @@ async function initDetailsPage() {
 
         if (!snapshot.exists()) {
             alert("Ad not found!");
+            console.log("Ad not found in Firestore:", adId);
             window.location.href = "index.html";
             return;
         }
