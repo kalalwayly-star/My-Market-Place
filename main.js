@@ -9,24 +9,25 @@ let globalAds = []; // Declare globalAds at the top of the file to avoid the Ref
 // Firebase Analytics - Initialize once
 const analytics = getAnalytics();
 
-// Firebase Auth state listener to manage user login status
 onAuthStateChanged(auth, (user) => {
+    console.log("Auth state changed:", user); // Debugging line
+
     const loginLink = document.getElementById("userAuth");
     const logoutBtn = document.getElementById("logout-btn");
     const emailSpan = document.getElementById("header-user-email");
     const userInfoDiv = document.getElementById("user-info-header");
 
     if (user) {
-        // User is logged in
-        if (userInfoDiv) userInfoDiv.style.display = "block";  // Show user info div
-        if (emailSpan) emailSpan.innerText = user.email;  // Display user email
-        if (loginLink) loginLink.style.display = "none";  // Hide login link
-        if (logoutBtn) logoutBtn.style.display = "inline-block";  // Show logout button
+        console.log("User logged in:", user); // Debugging line
+        if (userInfoDiv) userInfoDiv.style.display = "block";
+        if (emailSpan) emailSpan.innerText = user.email;
+        if (loginLink) loginLink.style.display = "none";
+        if (logoutBtn) logoutBtn.style.display = "inline-block";
     } else {
-        // User is logged out
-        if (userInfoDiv) userInfoDiv.style.display = "none";  // Hide user info div
-        if (loginLink) loginLink.style.display = "inline-block";  // Show login link
-        if (logoutBtn) logoutBtn.style.display = "none";  // Hide logout button
+        console.log("User logged out"); // Debugging line
+        if (userInfoDiv) userInfoDiv.style.display = "none";
+        if (loginLink) loginLink.style.display = "inline-block";
+        if (logoutBtn) logoutBtn.style.display = "none";
     }
 });
 
@@ -45,36 +46,48 @@ if (logoutBtn) {
     });
 }
 
-// Fetch the ads from Firestore and populate globalAds
+window.goToDetails = function(id) {
+    console.log("Navigating to details for ad:", id); // Debugging line
+    if (!id) {
+        alert("Ad ID is missing");
+        return;
+    }
+    window.location.href = `details.html?id=${id}`;
+};
 function fetchAds() {
-    // Reference the Firestore collection "marketplace_ads"
     const adsCollectionRef = collection(db, "marketplace_ads");
 
-    // Fetch the ads from Firestore
     getDocs(adsCollectionRef)
         .then(snapshot => {
-            // Populate globalAds with the ad data from Firestore
+            if (snapshot.empty) {
+                console.log("No ads found"); // Debugging line
+            } else {
+                console.log("Ads fetched:", snapshot.docs.length); // Debugging line
+            }
+
             globalAds = snapshot.docs.map(doc => ({
                 ...doc.data(),
-                id: doc.id, // You can optionally store the Firestore doc ID
+                id: doc.id,
             }));
 
-            // Call renderAds to display the fetched ads
             renderAds(globalAds);
         })
         .catch(error => {
             console.error("Error fetching ads:", error);
+            alert("Error fetching ads.");
         });
 }
 
-// Define the function goToDetails before calling it
-window.goToDetails = function(id) {
-    window.location.href = `details.html?id=${id}`;
-};
 
-// Render ads to the DOM
 function renderAds(adsArray) {
     const container = document.getElementById("listings");
+
+    if (!adsArray || adsArray.length === 0) {
+        console.log("No ads to render"); // Debugging line
+        container.innerHTML = "<p>No ads available</p>";
+        return;
+    }
+
     container.innerHTML = adsArray.map(ad => {
         const uniqueId = ad.firebaseId;
         const image = Array.isArray(ad.image) ? ad.image[0] : (ad.image || 'https://via.placeholder.com/300');
