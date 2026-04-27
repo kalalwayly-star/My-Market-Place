@@ -4,6 +4,7 @@ import { getAuth } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-aut
 import { getFirestore } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 import { getDatabase } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js";
 import { getStorage } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js"; // Import Firebase Storage
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-analytics.js"; // Import Firebase Analytics
 
 // Firebase config (replace with your Firebase credentials)
 const firebaseConfig = {
@@ -20,11 +21,14 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Initialize Auth, Firestore, Realtime Database, and Storage
+// Initialize Firebase services
 const auth = getAuth(app);
 const db = getFirestore(app);
 const rtdb = getDatabase(app);  // Realtime Database
-const storage = getStorage(app); // Initialize Firebase Storage
+const storage = getStorage(app); // Firebase Storage
+
+// Initialize Firebase Analytics
+const analytics = getAnalytics(app); // Firebase Analytics initialization
 
 // Export services for use in other files
-export { auth, db, rtdb, storage };  // Now exporting storage as well
+export { auth, db, rtdb, storage, analytics }; // Now exporting analytics as well
