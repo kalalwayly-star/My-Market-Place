@@ -82,7 +82,6 @@ function renderAds(adsArray) {
                 <h3>${ad.title}</h3>
                 <p>📍 ${ad.location || "No location"}</p>
                 <p><b>$${ad.price}</b></p>
-                <button onclick="deleteAd('${uniqueId}')">Delete</button>
             </div>
         </div>`;
     }).join("");
