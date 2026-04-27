@@ -24,33 +24,26 @@ onAuthStateChanged(auth, (user) => {
 });
 
 // Upload image to Firebase Storage and get the download URL
-function uploadImageToStorage(file) {
-    const storageRef = ref(storage, 'ads_images/' + file.name);
-    const uploadTask = uploadBytesResumable(storageRef, file);
+// Initialize an array to store uploaded image URLs
+let uploadedImages = [];
 
-    uploadTask.on('state_changed', (snapshot) => {
-        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log('Upload is ' + progress + '% done');
-    }, (error) => {
-        console.error("Error uploading image:", error);
-    }, () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            uploadedImages.push(downloadURL);  // Add image URL to uploadedImages array
-        });
-    });
-}
-
-// Handle photo upload and preview
-window.handlePhotoUpload = function(event) {
+// Handles file upload and preview
+window.handlePhotoUpload = function (event) {
     const files = Array.from(event.target.files || []);
     const preview = document.getElementById("galleryPreview");
 
     if (!preview || !files.length) return;
 
-    const remainingSlots = 10 - uploadedImages.length;
-    const filesToAdd = files.slice(0, remainingSlots);
+    // Show progress bar
+    const progressBar = document.getElementById("progressBar");
+    const uploadProgress = document.getElementById("uploadProgress");
+    uploadProgress.style.display = "block";
 
-    filesToAdd.forEach(file => {
+    let uploadedCount = 0;
+    const totalFiles = files.length;
+
+    files.forEach((file) => {
+        // Show image preview
         const img = document.createElement("img");
         img.src = URL.createObjectURL(file);
         img.style.width = "100px";
@@ -59,11 +52,35 @@ window.handlePhotoUpload = function(event) {
         preview.appendChild(img);
 
         // Upload image to Firebase Storage
-        uploadImageToStorage(file);
+        uploadImageToStorage(file, progressBar, uploadProgress, () => {
+            uploadedCount++;
+            if (uploadedCount === totalFiles) {
+                uploadProgress.style.display = "none";
+            }
+        });
     });
 
-    event.target.value = ""; // Reset input
+    // Reset input so the same file can be selected again
+    event.target.value = "";
 };
+
+// Upload image to Firebase Storage and get the download URL
+function uploadImageToStorage(file, progressBar, uploadProgress, callback) {
+    const storageRef = ref(storage, 'ads_images/' + file.name);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    uploadTask.on('state_changed', (snapshot) => {
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        progressBar.value = progress;  // Update the progress bar
+    }, (error) => {
+        console.error("Error uploading image:", error);
+    }, () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            uploadedImages.push(downloadURL);  // Add image URL to uploadedImages array
+            callback(); // Call the callback function once the upload is finished
+        });
+    });
+}
 
 // Handles category change and form section display
 window.handleCategoryChange = function () {
