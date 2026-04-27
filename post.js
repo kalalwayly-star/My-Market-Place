@@ -83,18 +83,20 @@ function uploadImageToStorage(file, progressBar, uploadProgress, callback) {
 
 // Handles category change and form section display
 window.handleCategoryChange = function () {
+    // Get elements
     const categorySelect = document.getElementById("postCategory");
     const commonFields = document.getElementById("commonFields");
     const conditionBox = document.getElementById("globalCondition");
-
     const carFields = document.getElementById("carFields"); // Div that wraps car fields
     const conditionRadio = document.getElementById("conditionFields"); // Div that wraps condition radio buttons
 
+    // If categorySelect is not found, return early
     if (!categorySelect) return;
 
+    // Get selected category value
     const selectedValue = categorySelect.value;
 
-    // Hide all extra category sections
+    // Hide all extra category sections (i.e. other than common fields)
     document.querySelectorAll(".category-details").forEach(sec => sec.style.display = "none");
 
     // Show main fields (Title, Price, Description)
@@ -119,6 +121,7 @@ window.handleCategoryChange = function () {
         "Baby": "section-Baby"
     };
 
+    // Display the corresponding section for the selected category
     const sectionId = categoryMap[selectedValue];
     if (sectionId) {
         const el = document.getElementById(sectionId);
@@ -130,9 +133,16 @@ window.handleCategoryChange = function () {
         if (selectedValue === "Cars & Trucks") {
             carFields.style.display = "block"; // Show car-related fields
         } else {
-            carFields.style.display = "none"; // Hide car-related fields
+            carFields.style.display = "none"; // Hide car-related fields for other categories
         }
     }
+
+    // Show/hide condition fields based on category
+    const hideConditionFor = ["Pets", "Jobs", "Real Estate", "Services"];
+    if (conditionBox) {
+        conditionBox.style.display = hideConditionFor.includes(selectedValue) ? "none" : "block"; // Hide condition for specified categories
+    }
+};
 
     // Show/hide condition box based on category
     const hideConditionFor = ["Pets", "Jobs", "Real Estate", "Services"];
