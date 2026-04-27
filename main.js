@@ -1,7 +1,7 @@
 // Import necessary Firebase services that have already been initialized in firebase-config.js
-import { auth, db } from "./firebase-config.js";  // We import auth and db from firebase-config.js
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-analytics.js";  // Analytics import
-import { collection, getDocs, onSnapshot, query, where, deleteDoc, doc as firestoreDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";  // Firestore imports
+import { auth, db, storage } from './firebase-config.js';  // Import Firestore, Firebase Storage, and Auth
+import { collection, getDocs, onSnapshot, query, where, deleteDoc, doc as firestoreDoc, addDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";  // Firestore imports
+import { uploadBytesResumable, getDownloadURL, ref } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js"; // Firebase Storage functions
 import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";  // Firebase Auth imports
 
 let globalAds = []; // Declare globalAds at the top of the file to avoid the ReferenceError
@@ -66,10 +66,12 @@ function fetchAds() {
             console.error("Error fetching ads:", error);
         });
 }
+
 // Define the function goToDetails before calling it
 window.goToDetails = function(id) {
     window.location.href = `details.html?id=${id}`;
 };
+
 // Render ads to the DOM
 function renderAds(adsArray) {
     const container = document.getElementById("listings");
@@ -92,6 +94,7 @@ function renderAds(adsArray) {
 
 // Call fetchAds when the page loads to display ads
 window.onload = fetchAds;  // <-- This will call fetchAds on page load
+
 // Delete ad functionality
 window.deleteAd = async function(firebaseId) {
     if (confirm("Are you sure you want to delete this ad?")) {
@@ -125,9 +128,15 @@ window.applyFilters = function() {
 
     let adsQuery = collection(db, "marketplace_ads");
 
+    // Sanitize query text to prevent regex issues
+    function sanitizeQuery(queryText) {
+        return queryText.replace(/[.*+?^=!:${}()|\[\]\/\\]/g, '\\$&'); // Escape special regex characters
+    }
+
     // Apply query if there's search text
     if (queryText) {
-        adsQuery = query(adsQuery, where("title", "array-contains", queryText));
+        const sanitizedQueryText = sanitizeQuery(queryText);
+        adsQuery = query(adsQuery, where("title", "array-contains", sanitizedQueryText));
     }
 
     // Fetch the results with onSnapshot
@@ -149,7 +158,64 @@ function toggleNoItemsMessage(ads) {
     }
 }
 
-// Fetch and display ads when the page loads
+// Handle category change and show/hide relevant fields
+function handleCategoryChange() {
+    const categorySelect = document.getElementById("postCategory");
+    const commonFields = document.getElementById("commonFields");
+    const conditionBox = document.getElementById("globalCondition");
+    const carFields = document.getElementById("carFields");
+
+    if (!categorySelect) return;
+
+    const selectedValue = categorySelect.value;
+
+    // Hide all extra category sections
+    document.querySelectorAll(".category-details").forEach(sec => sec.style.display = "none");
+
+    if (commonFields) commonFields.style.display = "block"; // Always show common fields
+
+    const categoryMap = {
+        "Cars & Trucks": "section-Cars",
+        "Real Estate": "section-RealEstate",
+        "Electronics": "section-Electronics",
+        "Furniture": "section-Furniture",
+        "Job": "section-Jobs",
+        "Fashion": "section-Fashion",
+        "Pets": "section-Pets",
+        "Sports": "section-Sports",
+        "Books": "section-Books",
+        "Appliances": "section-Appliances",
+        "Toys": "section-Toys",
+        "Services": "section-Services",
+        "Garden": "section-Garden",
+        "Health": "section-Health",
+        "Baby": "section-Baby"
+    };
+
+    const sectionId = categoryMap[selectedValue];
+    if (sectionId) {
+        const el = document.getElementById(sectionId);
+        if (el) el.style.display = "block";
+    }
+
+    // Show/hide car-related fields based on category
+    if (carFields) {
+        if (selectedValue === "Cars & Trucks") {
+            carFields.style.display = "block";  // Show car-related fields
+        } else {
+            carFields.style.display = "none";  // Hide car-related fields for other categories
+        }
+    }
+
+    // Show/hide condition fields based on category
+    const hideConditionFor = ["Pets", "Jobs", "Real Estate", "Services"];
+    if (conditionBox) {
+        conditionBox.style.display = hideConditionFor.includes(selectedValue) ? "none" : "block"; // Hide condition for specified categories
+    }
+}
+
+// Event listener for category change
 document.addEventListener("DOMContentLoaded", () => {
-    fetchAds();  // Fetch ads and render them
+    document.getElementById("postCategory")?.addEventListener("change", handleCategoryChange);
+    handleCategoryChange(); // Initial call
 });
