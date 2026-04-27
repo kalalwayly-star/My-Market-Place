@@ -53,7 +53,7 @@
         <!-- Photo Upload Section -->
         <label for="photoInput" class="upload-box">
             <div class="icon">
-                <img src="https://img.icons8.com/ios/452/camera.png" alt="Upload Icon" width="50">
+                <img src="https://img.icons8.com/ios/452/camera.png" alt="Upload Icon" width="30">
             </div>
             <span data-i18n="click_to_add">Click to add photos or drag them here</span>
             <input type="file" id="photoInput" accept="image/*" multiple hidden>
@@ -113,26 +113,34 @@
 </div>
 
 <!-- Condition Fields (For applicable categories) -->
-<div id="conditionFields">
+<div id="conditionFields" class="form-section">
     <label for="condition">Condition:</label>
-    <input type="radio" name="condition" value="New"> New
-    <input type="radio" name="condition" value="Used"> Used
-    <input type="radio" name="condition" value="Refurbished"> Refurbished
-</div>
-                    <div class="form-group feature-box">
-                        <label>
-                            <input type="checkbox" id="isFeatured">
-                            <span data-i18n="label_featured">✨ Feature this ad for $4.99 to stay at top (5 days)</span>
-                        </label>
-                    </div>
-
-                    <div id="paypal-button-container" style="display:none;"></div>
-                </div>
-
-                <button type="submit" id="postBtn" class="btn primary" data-i18n="post_btn">Post Ad Now</button>
-            </form>
-        </div>
+    <div class="condition-options">
+        <label class="condition-label">
+            <input type="radio" name="condition" value="New"> New
+        </label>
+        <label class="condition-label">
+            <input type="radio" name="condition" value="Used"> Used
+        </label>
+        <label class="condition-label">
+            <input type="radio" name="condition" value="Refurbished"> Refurbished
+        </label>
     </div>
+</div>
+
+<!-- Featured Ad Checkbox -->
+<div class="form-group feature-box">
+    <label class="featured-label">
+        <input type="checkbox" id="isFeatured">
+        <span data-i18n="label_featured">✨ Feature this ad for $4.99 to stay at top (5 days)</span>
+    </label>
+</div>
+
+<!-- PayPal Button Container (Hidden initially) -->
+<div id="paypal-button-container" style="display:none;"></div>
+
+<!-- Post Ad Now Button -->
+<button type="submit" id="postBtn" class="btn primary" data-i18n="post_btn">Post Ad Now</button>
 
     <!-- CORE SCRIPTS -->
     <script src="languages.js"></script>
