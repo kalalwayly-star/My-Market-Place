@@ -1,4 +1,3 @@
-// Import Firebase and other utilities from correct sources
 import { auth, db, rtdb } from "./firebase-config.js";  // Firebase services from your config
 
 // Import Firebase Authentication methods
@@ -6,6 +5,7 @@ import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/
 
 // Import Firestore methods
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
 // Initialize variables
 let currentUserEmail = "Guest";
 let ad;
@@ -58,7 +58,7 @@ function renderImages() {
     const imgContainer = document.getElementById("adImageContainer");
     if (!imgContainer) return;
 
-    let photoList = Array.isArray(ad.image) ? ad.image : (ad.image ? [ad.image] : ["https://via.placeholder.com/300"]);
+    let photoList = Array.isArray(ad.image) && ad.image.length > 0 ? ad.image : [ad.image || "https://via.placeholder.com/300"];
 
     imgContainer.innerHTML = `
         <div style="width:100%; text-align:center; background:#f4f4f4; border-radius:10px; overflow:hidden; margin-bottom:15px; border:1px solid #ddd;">
@@ -89,7 +89,7 @@ window.sendMessage = function() {
     const newMessage = {
         adTitle: ad.title,
         senderEmail: currentUserEmail,
-        receiverEmail: ad.userEmail,
+        receiverEmail: ad.userEmail, // Make sure ad.userEmail is correctly set in Firestore
         text: text,
         date: new Date().toLocaleString()
     };
@@ -127,4 +127,5 @@ function getText(key) {
 }
 
 initDetailsPage();
+
 
