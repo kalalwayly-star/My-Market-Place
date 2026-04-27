@@ -4,6 +4,9 @@ import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.12.1/firebas
 import { collection, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";  // Firestore imports
 import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";  // Firebase Auth imports
 
+
+let globalAds = []; // Declare globalAds at the top of the file to avoid the ReferenceError
+
 // Firebase Analytics - Initialize once
 const analytics = getAnalytics();
 
@@ -61,18 +64,22 @@ function initMain() {
     });
 }
 
-let globalAds = []; // Declare globalAds at the top of the file to avoid the ReferenceError
 
-// Sample function where globalAds is being populated
 function fetchAds() {
-    // Fetch ads from Firestore or any other data source
-    // Example: populate globalAds with ad data from Firestore
-    // Assuming you have a Firestore collection 'marketplace_ads'
+    // Reference the Firestore collection "marketplace_ads"
     const adsCollectionRef = collection(db, "marketplace_ads");
+
+    // Fetch the ads from Firestore
     getDocs(adsCollectionRef)
         .then(snapshot => {
-            globalAds = snapshot.docs.map(doc => doc.data());
-            renderAds(globalAds); // Call renderAds to display fetched ads
+            // Populate globalAds with the ad data from Firestore
+            globalAds = snapshot.docs.map(doc => ({
+                ...doc.data(),
+                id: doc.id, // You can optionally store the Firestore doc ID
+            }));
+
+            // Call renderAds to display the fetched ads
+            renderAds(globalAds);
         })
         .catch(error => {
             console.error("Error fetching ads:", error);
