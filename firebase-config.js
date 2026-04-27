@@ -31,4 +31,4 @@ const storage = getStorage(app); // Firebase Storage
 const analytics = getAnalytics(app); // Firebase Analytics initialization
 
 // Export services for use in other files
-export { auth, db, rtdb, storage, analytics }; // Now exporting analytics as well
+export { auth, db, rtdb, storage, analytics, app }; // Now exporting analytics as well
