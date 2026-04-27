@@ -61,6 +61,25 @@ function initMain() {
     });
 }
 
+let globalAds = []; // Declare globalAds at the top of the file to avoid the ReferenceError
+
+// Sample function where globalAds is being populated
+function fetchAds() {
+    // Fetch ads from Firestore or any other data source
+    // Example: populate globalAds with ad data from Firestore
+    // Assuming you have a Firestore collection 'marketplace_ads'
+    const adsCollectionRef = collection(db, "marketplace_ads");
+    getDocs(adsCollectionRef)
+        .then(snapshot => {
+            globalAds = snapshot.docs.map(doc => doc.data());
+            renderAds(globalAds); // Call renderAds to display fetched ads
+        })
+        .catch(error => {
+            console.error("Error fetching ads:", error);
+        });
+}
+
+
 // Render ads to the DOM
 function renderAds(adsArray) {
     const container = document.getElementById("listings");
