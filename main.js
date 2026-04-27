@@ -45,24 +45,21 @@ if (logoutBtn) {
     });
 }
 
-// Fetch the ads for the current logged-in user only
-function fetchUserAds() {
-    const currentUser = auth.currentUser;
-
-    if (!currentUser) return;
-
+// Fetch the ads from Firestore and populate globalAds
+function fetchAds() {
+    // Reference the Firestore collection "marketplace_ads"
     const adsCollectionRef = collection(db, "marketplace_ads");
 
+    // Fetch the ads from Firestore
     getDocs(adsCollectionRef)
         .then(snapshot => {
-            // Filter ads based on the current user's ID
-            globalAds = snapshot.docs
-                .filter(doc => doc.data().userId === currentUser.uid) // Only show the ads posted by the current user
-                .map(doc => ({
-                    ...doc.data(),
-                    id: doc.id, // Store the Firestore doc ID as well
-                }));
+            // Populate globalAds with the ad data from Firestore
+            globalAds = snapshot.docs.map(doc => ({
+                ...doc.data(),
+                id: doc.id, // You can optionally store the Firestore doc ID
+            }));
 
+            // Call renderAds to display the fetched ads
             renderAds(globalAds);
         })
         .catch(error => {
@@ -70,15 +67,11 @@ function fetchUserAds() {
         });
 }
 
-// Call this function when you are on the My Ads page
-window.onload = function() {
-    fetchUserAds();  // Fetch and display the logged-in user's ads
-};
 // Render ads to the DOM
 function renderAds(adsArray) {
     const container = document.getElementById("listings");
     container.innerHTML = adsArray.map(ad => {
-        const uniqueId = ad.id; // Use `id` for Firestore document ID
+        const uniqueId = ad.firebaseId;
         const image = Array.isArray(ad.image) ? ad.image[0] : (ad.image || 'https://via.placeholder.com/300');
         return `
         <div class="card">
@@ -95,11 +88,8 @@ function renderAds(adsArray) {
     }).join("");
 }
 
-// Go to ad details
-window.goToDetails = function(id) {
-    window.location.href = `details.html?id=${id}`;
-};
-
+// Call fetchAds when the page loads to display ads
+window.onload = fetchAds;  // <-- This will call fetchAds on page load
 // Delete ad functionality
 window.deleteAd = async function(firebaseId) {
     if (confirm("Are you sure you want to delete this ad?")) {
