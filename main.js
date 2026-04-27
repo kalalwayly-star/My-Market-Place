@@ -66,7 +66,10 @@ function fetchAds() {
             console.error("Error fetching ads:", error);
         });
 }
-
+// Define the function goToDetails before calling it
+window.goToDetails = function(id) {
+    window.location.href = `details.html?id=${id}`;
+};
 // Render ads to the DOM
 function renderAds(adsArray) {
     const container = document.getElementById("listings");
