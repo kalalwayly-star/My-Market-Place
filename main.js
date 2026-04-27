@@ -45,21 +45,24 @@ if (logoutBtn) {
     });
 }
 
-// Initialize ads loading from Firestore
-function fetchAds() {
-    // Reference the Firestore collection "marketplace_ads"
+// Fetch the ads for the current logged-in user only
+function fetchUserAds() {
+    const currentUser = auth.currentUser;
+
+    if (!currentUser) return;
+
     const adsCollectionRef = collection(db, "marketplace_ads");
 
-    // Fetch the ads from Firestore
     getDocs(adsCollectionRef)
         .then(snapshot => {
-            // Populate globalAds with the ad data from Firestore
-            globalAds = snapshot.docs.map(doc => ({
-                ...doc.data(),
-                id: doc.id, // Store Firestore doc ID
-            }));
+            // Filter ads based on the current user's ID
+            globalAds = snapshot.docs
+                .filter(doc => doc.data().userId === currentUser.uid) // Only show the ads posted by the current user
+                .map(doc => ({
+                    ...doc.data(),
+                    id: doc.id, // Store the Firestore doc ID as well
+                }));
 
-            // Call renderAds to display the fetched ads
             renderAds(globalAds);
         })
         .catch(error => {
@@ -67,6 +70,10 @@ function fetchAds() {
         });
 }
 
+// Call this function when you are on the My Ads page
+window.onload = function() {
+    fetchUserAds();  // Fetch and display the logged-in user's ads
+};
 // Render ads to the DOM
 function renderAds(adsArray) {
     const container = document.getElementById("listings");
