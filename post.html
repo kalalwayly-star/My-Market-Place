@@ -22,17 +22,26 @@
             <h2 data-i18n="post_ad_header">Post a New Listing</h2>
             <form id="postForm" enctype="multipart/form-data">
 
-                <!-- CATEGORY -->
-                <div class="input-group">
-                    <label data-i18n="label_category">Category</label>
-                    <select id="postCategory" required>
-                        <option value="" data-i18n="select_category">Choose Category</option>
-                        <option value="Real Estate" data-i18n="cat_realestate">Real Estate</option>
-                        <option value="Cars & Trucks" data-i18n="cat_cars_trucks">Cars and Trucks</option>
-                        <option value="Furniture" data-i18n="cat_furniture">Furniture</option>
-                        <!-- More options as needed -->
-                    </select>
-                </div>
+               <div class="form-section">
+    <label for="postCategory" data-i18n="category_label">Category</label>
+    <select id="postCategory" name="category" onchange="handleCategoryChange()">
+        <option value="" data-i18n="select_category">Choose Category</option>
+        <option value="Real Estate" data-i18n="cat_realestate">Real Estate</option>
+        <option value="Cars & Trucks" data-i18n="cat_cars_trucks">Cars and Trucks</option>
+        <option value="Furniture" data-i18n="cat_furniture">Furniture</option>
+        <option value="Job" data-i18n="cat_job">Job</option>
+        <option value="Fashion" data-i18n="cat_fashion">Fashion</option>
+        <option value="Pets" data-i18n="cat_pets">Pets</option>
+        <option value="Sports" data-i18n="cat_sports">Sports</option>
+        <option value="Books" data-i18n="cat_books">Books</option>
+        <option value="Appliances" data-i18n="cat_appliances">Appliances</option>
+        <option value="Toys" data-i18n="cat_toys">Toys</option>
+        <option value="Services" data-i18n="cat_services">Services</option>
+        <option value="Garden" data-i18n="cat_garden">Garden</option>
+        <option value="Health" data-i18n="cat_health">Health</option>
+        <option value="Baby" data-i18n="cat_baby">Baby</option>
+    </select>
+</div>
 
                 <!-- PHOTO -->
               <div class="form-section">
