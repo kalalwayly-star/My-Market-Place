@@ -162,7 +162,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     // Show/hide condition box based on category
-    const hideConditionFor = ["Pets", "Jobs", "Real Estate", "Services"];
+    hideConditionFor = ["Pets", "Jobs", "Real Estate", "Services"];
     if (conditionBox) {
         conditionBox.style.display = hideConditionFor.includes(selectedValue) ? "none" : "block";
     }
