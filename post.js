@@ -4,7 +4,6 @@ import { collection, addDoc } from "https://www.gstatic.com/firebasejs/12.12.1/f
 import { uploadBytesResumable, getDownloadURL, ref } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js"; // Firebase Storage functions
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js"; // Firebase Auth state listener
 
-let uploadedImages = [];
 
 // Firebase Auth state listener
 onAuthStateChanged(auth, (user) => {
