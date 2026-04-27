@@ -1,4 +1,4 @@
-// Import necessary Firebase SDKs and services
+/ Import necessary Firebase SDKs and services
 import { auth, db, storage } from './firebase-config.js'; // Import Firestore and Firebase Storage
 import { collection, addDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js"; // Firestore functions
 import { uploadBytesResumable, getDownloadURL, ref } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js"; // Firebase Storage functions
@@ -149,7 +149,6 @@ window.handleCategoryChange = function () {
     if (conditionBox) {
         conditionBox.style.display = hideConditionFor.includes(selectedValue) ? "none" : "block";
     }
-};
 
 // Handles ad posting
 function saveNewAd(event) {
