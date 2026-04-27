@@ -1,10 +1,10 @@
 // Import necessary Firebase SDKs and services
-import { auth, db, storage } from './firebase-config.js'; // Importing Firestore and Firebase Storage
+import { auth, db, storage } from './firebase-config.js'; // Import Firestore and Firebase Storage
 import { collection, addDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js"; // Firestore functions
 import { uploadBytesResumable, getDownloadURL, ref } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js"; // Firebase Storage functions
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js"; // Firebase Auth state listener
 
-let uploadedImages = []; // Global variable for storing image URLs
+let uploadedImages = [];
 
 // Firebase Auth state listener
 onAuthStateChanged(auth, (user) => {
@@ -13,43 +13,15 @@ onAuthStateChanged(auth, (user) => {
     const emailSpan = document.getElementById("emailSpan");
 
     if (user) {
-        // User is logged in
         if (loginLink) loginLink.style.display = "none";
         if (logoutBtn) logoutBtn.style.display = "inline-block";
         if (emailSpan) emailSpan.innerText = user.email;
     } else {
-        // User is logged out
         if (loginLink) loginLink.style.display = "inline-block";
         if (logoutBtn) logoutBtn.style.display = "none";
         if (emailSpan) emailSpan.innerText = "";
     }
 });
-
-// Handles photo upload and preview
-window.handlePhotoUpload = function (event) {
-    const files = Array.from(event.target.files || []);
-    const preview = document.getElementById("galleryPreview");
-
-    if (!preview || !files.length) return;
-
-    // Limit to 10 images
-    const remainingSlots = 10 - uploadedImages.length;
-    const filesToAdd = files.slice(0, remainingSlots);
-
-    filesToAdd.forEach(file => {
-        const img = document.createElement("img");
-        img.src = URL.createObjectURL(file);
-        img.style.width = "100px";
-        img.style.height = "100px";
-        img.style.objectFit = "cover";
-        preview.appendChild(img);
-
-        // Upload image to Firebase Storage
-        uploadImageToStorage(file);
-    });
-
-    event.target.value = ""; // Reset input
-};
 
 // Upload image to Firebase Storage and get the download URL
 function uploadImageToStorage(file) {
@@ -67,6 +39,31 @@ function uploadImageToStorage(file) {
         });
     });
 }
+
+// Handle photo upload and preview
+window.handlePhotoUpload = function(event) {
+    const files = Array.from(event.target.files || []);
+    const preview = document.getElementById("galleryPreview");
+
+    if (!preview || !files.length) return;
+
+    const remainingSlots = 10 - uploadedImages.length;
+    const filesToAdd = files.slice(0, remainingSlots);
+
+    filesToAdd.forEach(file => {
+        const img = document.createElement("img");
+        img.src = URL.createObjectURL(file);
+        img.style.width = "100px";
+        img.style.height = "100px";
+        img.style.objectFit = "cover";
+        preview.appendChild(img);
+
+        // Upload image to Firebase Storage
+        uploadImageToStorage(file);
+    });
+
+    event.target.value = ""; // Reset input
+};
 
 // Handles category change and form section display
 window.handleCategoryChange = function () {
@@ -112,12 +109,11 @@ window.handleCategoryChange = function () {
     }
 };
 
-// Handles ad posting when the submit button is clicked
+// Handles ad posting
 function saveNewAd(event) {
     event.preventDefault();
 
     const user = auth.currentUser;
-
     if (!user) {
         alert("Login required");
         return;
@@ -181,7 +177,6 @@ function finalizeAd() {
         lng: window.currentAdLng || null
     };
 
-    // Save the ad to Firestore
     const adsCollectionRef = collection(db, "marketplace_ads");
     addDoc(adsCollectionRef, newAd)
         .then(() => {
