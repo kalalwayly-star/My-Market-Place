@@ -71,14 +71,20 @@ window.handleCategoryChange = function () {
     const commonFields = document.getElementById("commonFields");
     const conditionBox = document.getElementById("globalCondition");
 
+    const carFields = document.getElementById("carFields"); // Div that wraps car fields
+    const conditionRadio = document.getElementById("conditionFields"); // Div that wraps condition radio buttons
+
     if (!categorySelect) return;
 
     const selectedValue = categorySelect.value;
 
+    // Hide all extra category sections
     document.querySelectorAll(".category-details").forEach(sec => sec.style.display = "none");
 
+    // Show main fields (Title, Price, Description)
     if (commonFields) commonFields.style.display = "block";
 
+    // Show specific section based on selected category
     const categoryMap = {
         "Cars & Trucks": "section-Cars",
         "Real Estate": "section-RealEstate",
@@ -103,6 +109,16 @@ window.handleCategoryChange = function () {
         if (el) el.style.display = "block";
     }
 
+    // Show/hide the car-related fields based on category
+    if (carFields) {
+        if (selectedValue === "Cars & Trucks") {
+            carFields.style.display = "block"; // Show car-related fields
+        } else {
+            carFields.style.display = "none"; // Hide car-related fields
+        }
+    }
+
+    // Show/hide condition box based on category
     const hideConditionFor = ["Pets", "Jobs", "Real Estate", "Services"];
     if (conditionBox) {
         conditionBox.style.display = hideConditionFor.includes(selectedValue) ? "none" : "block";
