@@ -255,25 +255,24 @@ function finalizeAd() {
             alert("Error: " + err.message);
         });
 }
-// Ensure to use Firebase and PayPal SDKs
+// Ensure to import Firebase (if not already done)
+import { db } from './firebase-config.js'; // Assuming you already have the Firebase setup
 
 // Select the checkbox and PayPal button container
 const isFeaturedCheckbox = document.getElementById("isFeatured");
 const paypalButtonContainer = document.getElementById("paypal-button-container");
 
-// Add event listener to checkbox to show/hide PayPal button
+// Add event listener to the checkbox to show/hide PayPal button
 isFeaturedCheckbox.addEventListener("change", function() {
     if (this.checked) {
-        // If checkbox is checked, show PayPal button
-        paypalButtonContainer.style.display = "block";
-        renderPaypalButton();  // Render the PayPal button when checkbox is checked
+        paypalButtonContainer.style.display = "block";  // Show PayPal button
+        renderPaypalButton();  // Render PayPal button when checkbox is checked
     } else {
-        // If checkbox is unchecked, hide PayPal button
-        paypalButtonContainer.style.display = "none";
+        paypalButtonContainer.style.display = "none";  // Hide PayPal button when checkbox is unchecked
     }
 });
 
-// Function to render the PayPal button
+// Function to render PayPal button
 function renderPaypalButton() {
     // Render the PayPal button only once to prevent duplication
     if (paypalButtonContainer.innerHTML === "") {
@@ -282,7 +281,7 @@ function renderPaypalButton() {
                 return actions.order.create({
                     purchase_units: [{
                         amount: {
-                            value: "4.99" // Price for featuring the ad
+                            value: "4.99"  // Payment for the featured ad
                         }
                     }]
                 });
@@ -290,14 +289,14 @@ function renderPaypalButton() {
             onApprove: function(data, actions) {
                 return actions.order.capture().then(function(details) {
                     alert("Payment successful! Thank you for featuring your ad.");
-
-                    // Optionally, store payment and feature ad data here
+                    
+                    // Get the current time for the start date and calculate end date (5 days later)
                     const featureStartDate = new Date().toISOString();
                     const featureEndDate = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(); // 5 days later
 
-                    // Save to Firestore (or your database)
+                    // Save the ad with feature start and end dates to Firestore
                     const adData = {
-                        title: "Featured Ad", // Example ad title
+                        title: "Featured Ad",  // Example ad title
                         price: "$4.99",
                         isFeatured: true,
                         featureStartDate: featureStartDate,
@@ -318,6 +317,6 @@ function renderPaypalButton() {
                 console.error("PayPal Payment Error", err);
                 alert("There was an error processing your payment. Please try again.");
             }
-        }).render(paypalButtonContainer); // Render PayPal button inside the container
+        }).render(paypalButtonContainer);  // Render the PayPal button inside the container
     }
 }
