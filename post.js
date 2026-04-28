@@ -2,6 +2,8 @@ import { auth, db, storage } from './firebase-config.js'; // Import Firestore an
 import { collection, addDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js"; // Firestore functions
 import { uploadBytesResumable, getDownloadURL, ref } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js"; // Firebase Storage functions
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js"; // Firebase Auth state listener
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
 
 
 // Firebase Auth state listener
@@ -253,4 +255,67 @@ function finalizeAd() {
             alert("Error: " + err.message);
         });
 }
+// Ensure to use Firebase and PayPal SDKs
 
+// Get the PayPal button container and checkbox element
+const isFeaturedCheckbox = document.getElementById("isFeatured");
+const paypalButtonContainer = document.getElementById("paypal-button-container");
+
+// Add event listener to the checkbox to show/hide PayPal button
+isFeaturedCheckbox.addEventListener("change", function() {
+    if (this.checked) {
+        paypalButtonContainer.style.display = "block"; // Show PayPal button
+        renderPaypalButton(); // Render the PayPal button
+    } else {
+        paypalButtonContainer.style.display = "none"; // Hide PayPal button
+    }
+});
+
+// Function to render the PayPal button
+function renderPaypalButton() {
+    if (paypalButtonContainer.innerHTML === "") {
+        paypal.Buttons({
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: "4.99" // Feature ad price
+                        }
+                    }]
+                });
+            },
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(details) {
+                    alert("Payment successful! Thank you for featuring your ad.");
+                    
+                    // Get current time for start date and calculate end date (5 days later)
+                    const featureStartDate = new Date().toISOString();
+                    const featureEndDate = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(); // 5 days later
+
+                    // Save the ad with feature start and end dates to Firestore
+                    const adData = {
+                        title: "Featured Ad",
+                        price: "$4.99",
+                        isFeatured: true,
+                        featureStartDate: featureStartDate,
+                        featureEndDate: featureEndDate
+                    };
+
+                    // Save to Firestore (replace `db` with your Firebase Firestore reference)
+                    const db = getFirestore();
+                    addDoc(collection(db, "marketplace_ads"), adData)
+                        .then(() => {
+                            console.log("Ad has been featured and stored successfully!");
+                        })
+                        .catch((error) => {
+                            console.error("Error adding ad:", error);
+                        });
+                });
+            },
+            onError: function(err) {
+                console.error("PayPal Payment Error", err);
+                alert("There was an error processing your payment. Please try again.");
+            }
+        }).render(paypalButtonContainer); // Render PayPal button inside the container
+    }
+}
