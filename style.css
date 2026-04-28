@@ -455,9 +455,9 @@ img {
 #dropZone:hover {
     background-color: #e6f7ff;
 }
-/* Center align the "Condition" label */
+/* Center align the "Condition" labelht */
 .condition-label {
-    text-align: left; /* Center the text */
+    text-align: right; /* Right the text */
     font-weight: bold;
     display: block;
     margin-bottom: 10px; /* Add space below the label */
