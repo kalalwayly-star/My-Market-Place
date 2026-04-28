@@ -21,7 +21,6 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-// Upload image to Firebase Storage and get the download URL
 // Initialize an array to store uploaded image URLs
 let uploadedImages = [];
 
@@ -41,13 +40,32 @@ window.handlePhotoUpload = function (event) {
     const totalFiles = files.length;
 
     files.forEach((file) => {
-        // Show image preview
+        // Create preview image
+        const imgContainer = document.createElement("div");
+        imgContainer.classList.add("image-container"); // Styling for individual images
+
         const img = document.createElement("img");
         img.src = URL.createObjectURL(file);
         img.style.width = "100px";
         img.style.height = "100px";
         img.style.objectFit = "cover";
-        preview.appendChild(img);
+        imgContainer.appendChild(img);
+
+        // Create delete icon for each image
+        const deleteIcon = document.createElement("span");
+        deleteIcon.classList.add("delete-icon");
+        deleteIcon.innerHTML = "X";
+        deleteIcon.onclick = function () {
+            imgContainer.remove(); // Remove image on click
+            const index = uploadedImages.indexOf(file);
+            if (index > -1) {
+                uploadedImages.splice(index, 1); // Remove the deleted image from array
+            }
+        };
+        imgContainer.appendChild(deleteIcon);
+
+        // Append preview to the gallery
+        preview.appendChild(imgContainer);
 
         // Upload image to Firebase Storage
         uploadImageToStorage(file, progressBar, uploadProgress, () => {
