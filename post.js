@@ -320,22 +320,21 @@ function renderPaypalButton(price) {
     }
 }
 
-// Feature Ad checkbox change listener
 document.getElementById("isFeatured5Days").addEventListener("change", function() {
     if (this.checked) {
-        document.getElementById("paypal-button-container").style.display = "block";
+        document.getElementById("paypal-button-container").style.display = "block"; // Show PayPal button
         renderPaypalButton(4.99); // Set amount to $4.99 for 5 days
     } else {
-        document.getElementById("paypal-button-container").style.display = "none";
+        document.getElementById("paypal-button-container").style.display = "none"; // Hide PayPal button
     }
 });
 
 document.getElementById("isFeatured10Days").addEventListener("change", function() {
     if (this.checked) {
-        document.getElementById("paypal-button-container").style.display = "block";
-        renderPaypalButton(9.99); // Set amount to $8.99 for 10 days
+        document.getElementById("paypal-button-container").style.display = "block"; // Show PayPal button
+        renderPaypalButton(9.99); // Set amount to $9.99 for 10 days
     } else {
-        document.getElementById("paypal-button-container").style.display = "none";
+        document.getElementById("paypal-button-container").style.display = "none"; // Hide PayPal button
     }
 });
 
