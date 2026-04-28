@@ -48,6 +48,7 @@ if (logoutBtn) {
     });
 }
 
+// Navigate to ad details page
 window.goToDetails = function(id) {
     console.log("Navigating to details for ad:", id); // Debugging line
     if (!id) {
@@ -56,6 +57,8 @@ window.goToDetails = function(id) {
     }
     window.location.href = `details.html?id=${id}`;
 };
+
+// Fetch Ads from Firestore
 function fetchAds() {
     const adsCollectionRef = collection(db, "marketplace_ads");
 
@@ -69,9 +72,10 @@ function fetchAds() {
 
             globalAds = snapshot.docs.map(doc => ({
                 ...doc.data(),
-                id: doc.id,
+                id: doc.id,  // Get Firestore document ID
             }));
 
+            console.log("Fetched Ads:", globalAds); // Debugging line to check fetched data
             renderAds(globalAds);
         })
         .catch(error => {
@@ -80,9 +84,14 @@ function fetchAds() {
         });
 }
 
-
+// Render Ads to the page
 function renderAds(adsArray) {
     const container = document.getElementById("listings");
+
+    if (!container) {
+        console.error("Error: 'listings' container not found");
+        return;  // Exit if container is missing
+    }
 
     if (!adsArray || adsArray.length === 0) {
         console.log("No ads to render"); // Debugging line
