@@ -500,3 +500,49 @@ img {
 #dropZone:hover {
     background-color: #007BFF;
 }
+ /* 1. Space between the Condition label and radio buttons */
+.condition-label {
+    margin-bottom: 15px;  /* Add space below the label */
+}
+
+/* Condition Fields Container */
+.condition-options {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/* Each radio label */
+.condition-option {
+    display: flex;
+    flex-direction: row;   /* Align radio button and label horizontally */
+    align-items: center;    /* Center the items vertically */
+    justify-content: flex-start; /* Align items to the left */
+    width: auto;
+    margin-bottom: 10px;   /* Space between radio button options */
+}
+
+/* Style for the radio input */
+.condition-option input[type="radio"] {
+    margin-right: 8px;  /* Space between the radio button and text */
+    width: auto;
+    display: inline-block;
+}
+
+/* 2. Make the "Feature this ad" checkbox bigger and align it in front of the text */
+.featured-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+}
+
+.featured-checkbox {
+    width: 25px;   /* Make the checkbox bigger */
+    height: 25px;  /* Increase the size of the checkbox */
+}
+
+/* 3. Add space between the "Feature this ad" checkbox and the "Post Ad Now" button */
+#postAdBtn {
+    margin-top: 20px;  /* Space between "Feature this ad" and "Post Ad Now" button */
+}
