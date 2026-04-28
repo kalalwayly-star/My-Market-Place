@@ -257,29 +257,32 @@ function finalizeAd() {
 }
 // Ensure to use Firebase and PayPal SDKs
 
-// Get the PayPal button container and checkbox element
+// Select the checkbox and PayPal button container
 const isFeaturedCheckbox = document.getElementById("isFeatured");
 const paypalButtonContainer = document.getElementById("paypal-button-container");
 
-// Add event listener to the checkbox to show/hide PayPal button
+// Add event listener to checkbox to show/hide PayPal button
 isFeaturedCheckbox.addEventListener("change", function() {
     if (this.checked) {
-        paypalButtonContainer.style.display = "block"; // Show PayPal button
-        renderPaypalButton(); // Render the PayPal button
+        // If checkbox is checked, show PayPal button
+        paypalButtonContainer.style.display = "block";
+        renderPaypalButton();  // Render the PayPal button when checkbox is checked
     } else {
-        paypalButtonContainer.style.display = "none"; // Hide PayPal button
+        // If checkbox is unchecked, hide PayPal button
+        paypalButtonContainer.style.display = "none";
     }
 });
 
 // Function to render the PayPal button
 function renderPaypalButton() {
+    // Render the PayPal button only once to prevent duplication
     if (paypalButtonContainer.innerHTML === "") {
         paypal.Buttons({
             createOrder: function(data, actions) {
                 return actions.order.create({
                     purchase_units: [{
                         amount: {
-                            value: "4.99" // Feature ad price
+                            value: "4.99" // Price for featuring the ad
                         }
                     }]
                 });
@@ -287,23 +290,22 @@ function renderPaypalButton() {
             onApprove: function(data, actions) {
                 return actions.order.capture().then(function(details) {
                     alert("Payment successful! Thank you for featuring your ad.");
-                    
-                    // Get current time for start date and calculate end date (5 days later)
+
+                    // Optionally, store payment and feature ad data here
                     const featureStartDate = new Date().toISOString();
                     const featureEndDate = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(); // 5 days later
 
-                    // Save the ad with feature start and end dates to Firestore
+                    // Save to Firestore (or your database)
                     const adData = {
-                        title: "Featured Ad",
+                        title: "Featured Ad", // Example ad title
                         price: "$4.99",
                         isFeatured: true,
                         featureStartDate: featureStartDate,
                         featureEndDate: featureEndDate
                     };
 
-                    // Save to Firestore (replace `db` with your Firebase Firestore reference)
-                    const db = getFirestore();
-                    addDoc(collection(db, "marketplace_ads"), adData)
+                    // Replace `db` with your actual Firebase Firestore reference
+                    db.collection("marketplace_ads").add(adData)
                         .then(() => {
                             console.log("Ad has been featured and stored successfully!");
                         })
