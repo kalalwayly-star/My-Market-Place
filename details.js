@@ -5,6 +5,11 @@ import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/
 
 // Import Firestore methods
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js"; // Import necessary functions for Realtime Database
+
+// Initialize Realtime Database (not necessary if you're importing db from firebase-config.js)
+const database = getDatabase(db); // db is already initialized in firebase-config.js
+
 
 // Initialize variables
 let currentUserEmail = "Guest";
