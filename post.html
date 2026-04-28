@@ -46,36 +46,34 @@
     </select>
 </div>
 
-                <!-- PHOTO -->
-              <div class="form-section">
+                <div class="form-section">
     <h3 data-i18n="photo_header">Photos (Max 10)</h3>
-    
+
     <div class="upload-container">
         <!-- Photo Upload Section -->
         <label for="photoInput" class="upload-box">
             <div class="icon">
-                <img src="https://img.icons8.com/ios/452/camera.png" alt="Upload Icon" width="30">
+                <img src="https://img.icons8.com/ios/452/camera.png" alt="Upload Icon" width="24">
             </div>
             <span data-i18n="click_to_add">Click to add photos or drag them here</span>
             <input type="file" id="photoInput" accept="image/*" multiple hidden>
         </label>
-        
+
         <!-- Drop Area for Drag-and-Drop -->
         <div id="dropZone" class="drop-zone">
             <span>Drag and drop your photos here</span>
         </div>
-        
+
         <!-- Gallery Preview -->
         <div id="galleryPreview" class="gallery-grid"></div>
-        
+
         <!-- Progress Bar -->
         <div id="uploadProgress" style="display:none;">
             <span>Uploading...</span>
             <progress id="progressBar" value="0" max="100" style="width:100%;"></progress>
         </div>
     </div>
-</div>
-                <!-- COMMON FIELDS -->
+</div>                <!-- COMMON FIELDS -->
                <!-- Common Fields: Title, Price, Description -->
 <div id="commonFields">
     <label for="adTitle">Title:</label>
