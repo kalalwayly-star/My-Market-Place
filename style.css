@@ -6,7 +6,6 @@ body {
   color: #333;
 }
 
-/* Stacks Header, Content, and Footer vertically */
 .auth-page-body, .details-page {
     display: flex;
     flex-direction: column;
@@ -22,7 +21,6 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-sizing: border-box;
   width: 100%;
 }
 
@@ -32,7 +30,6 @@ body {
     text-decoration: none;
     padding: 5px 12px;
     font-size: 14px;
-    border: none !important;
 }
 
 .language-nav a:hover {
@@ -52,8 +49,6 @@ body {
 }
 
 #hero_title {
-    text-align: center;
-    width: 100%;
     margin-bottom: 20px;
 }
 
@@ -63,7 +58,6 @@ body {
     gap: 10px;
     margin: 40px auto;
     max-width: 800px;
-    width: 100%;
 }
 
 .search-container input, .search-container select {
@@ -79,7 +73,7 @@ body {
     border-radius: 8px;
 }
 
-/* --- 4. LAYOUTS (Category Sidebar) --- */
+/* --- 4. LAYOUTS --- */
 .main-content-wrapper {
     display: flex;
     gap: 30px;
@@ -103,7 +97,7 @@ body {
     padding: 20px 50px;
 }
 
-/* --- 5. MY ADS PAGE (Rows) --- */
+/* --- 5. MY ADS PAGE --- */
 .ads-grid {
     display: flex;
     flex-direction: column;
@@ -149,8 +143,6 @@ body {
     gap: 40px;
     max-width: 1200px;
     margin: 20px auto;
-    padding: 0 20px;
-    align-items: start;
 }
 
 .main-image {
@@ -173,12 +165,6 @@ body {
     padding: 25px;
     border-radius: 8px;
     margin-top: 20px;
-    text-align: left;
-}
-
-.content-sidebar {
-    position: sticky;
-    top: 20px;
 }
 
 /* --- 7. FORMS --- */
@@ -189,14 +175,6 @@ body {
     padding: 35px;
     max-width: 600px;
     margin: 40px auto;
-}
-.form-card {
-    background: white;
-    padding: 40px;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    max-width: 500px;
-    margin: 40px auto; /* Centers the login box */
 }
 
 .form-card input, .form-card select, .form-card textarea {
@@ -221,7 +199,7 @@ footer {
     color: white !important;
     padding: 40px 20px;
     text-align: center;
-    margin-top: auto; /* Pushes to bottom */
+    margin-top: auto;
 }
 
 footer a {
@@ -253,7 +231,7 @@ img {
     display: block;
 }
 
-/* Image wrapper */
+/* IMAGE WRAPPER */
 .myad-img-wrapper {
     width: 100%;
     height: 200px;
@@ -261,23 +239,12 @@ img {
     border-radius: 8px;
 }
 
-/* Image inside card */
 .myad-img-wrapper img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* keeps it nicely cropped */
-}
-  .ad-card img {
-    width: 100%;
-    height: 200px;
     object-fit: cover;
-    border-radius: 8px;
-}  
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
 }
+
 /* GRID LAYOUT */
 .ads-grid {
     display: grid;
@@ -286,42 +253,16 @@ img {
     padding: 20px;
 }
 
-/* CARD */
-.ad-card {
-    background: white;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-/* IMAGE WRAPPER (KEY FIX) */
-.ad-img-wrapper {
-    width: 100%;
-    height: 180px;   /* controls size */
-    overflow: hidden;
-}
-
 /* IMAGE */
 .ad-img-wrapper img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* THIS fixes stretching */
-}
-
-/* CONTENT */
-.ad-content {
-    padding: 10px;
-}
-img {
-    width: 100%;
-    max-height: 200px;
     object-fit: cover;
 }
-.grid {
-    display: grid;
-}
+
+/* CARD */
 .ad-card {
-    background: #fff;
+    background: white;
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -338,41 +279,18 @@ img {
     height: 100%;
     object-fit: cover;
 }
-/* Make container position reference */
-.password-group {
-    position: relative;
-}
 
-/* Style input so icon doesn't overlap text */
-.password-group input {
-    width: 100%;
-    padding-right: 40px; /* space for icon */
-}
-
-/* Position the eye icon inside input */
-.toggle-password {
-    position: absolute;
-    right: 12px;
-    top: 70%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    color: #333;
-    font-size: 16px;
-}
-/* Makes categories look clickable */
+/* BUTTON STYLING */
 .cat-card, .btn-search, .btn-link {
     cursor: pointer;
     transition: transform 0.2s ease;
 }
 
-/* Optional: Slight lift effect on hover */
 .cat-card:hover {
     transform: translateY(-3px);
     opacity: 0.8;
 }
-.cat-card, .btn-search, .btn-link, .card {
-    cursor: pointer !important;
-}
+
 .input-group {
     margin-bottom: 20px;
     display: flex;
@@ -383,6 +301,7 @@ img {
     background-color: #fcfcfc;
     margin-top: 10px;
 }
+
 @media (max-width: 600px) {
     .grid {
         grid-template-columns: repeat(2, 1fr);
@@ -397,48 +316,7 @@ img {
         height: 120px;
         object-fit: cover;
     }
-}
-@media (max-width: 600px) {
-    .card {
-        padding: 8px;
-    }
-}
-/* 📱 MOBILE FIX */
-@media (max-width: 600px) {
 
-    /* HEADER FIX */
-    .nav {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-        justify-content: center;
-    }
-
-    .nav a, .nav button {
-        font-size: 12px;
-        padding: 6px 8px;
-    }
-
-    .lang-buttons {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 5px;
-        justify-content: center;
-        margin-bottom: 10px;
-    }
-
-    .lang-buttons button {
-        font-size: 12px;
-        padding: 5px 8px;
-    }
-
-    /* HERO TEXT */
-    .hero h2 {
-        font-size: 20px;
-        text-align: center;
-    }
-
-    /* SEARCH FIX (IMPORTANT) */
     .search-container {
         display: flex;
         flex-direction: column;
@@ -457,344 +335,123 @@ img {
         font-size: 14px;
     }
 
-    /* CATEGORY GRID */
     .category-grid {
         grid-template-columns: repeat(2, 1fr);
     }
+}
 
-   
-
-/* CLEAN MOBILE FIX */
 @media (max-width: 768px) {
-    /* Moves photo LEFT and text RIGHT */
     .card {
         display: flex !important;
-        flex-direction: row !important; 
-        background-color: #ffffff !important; /* Turns grey to white */
+        flex-direction: row !important;
+        background-color: #ffffff !important;
         align-items: flex-start;
         gap: 15px;
         padding: 12px !important;
-        height: auto !important; /* Fixes the massive height gap */
-        border-bottom: 1px solid #eee; /* Adds a clean separator line */
+        height: auto !important;
+        border-bottom: 1px solid #eee;
     }
 
-    /* Makes the photo a perfect square on the left */
     .card img {
-        width: 110px !important; 
+        width: 110px !important;
         height: 110px !important;
         aspect-ratio: 1 / 1 !important;
         object-fit: cover;
         border-radius: 8px;
-        flex-shrink: 0; /* Ensures the image doesn't get squashed */
     }
 
-    /* Fixes text overlapping and spacing */
     .card-content {
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
         width: 100%;
-        line-height: 1.5 !important; /* Stops text from overlapping */
+        line-height: 1.5 !important;
         padding: 0 !important;
     }
 
-    /* Ensures price and title are legible */
     .card-title, .price, .category-label {
-        position: static !important; /* Prevents text from floating over image */
+        position: static !important;
         margin: 2px 0 !important;
         display: block !important;
     }
 }
-#user-info-header {
-    background-color: #f8f9fa;
-    border-bottom: 1px solid #ddd;
-    color: #333;
-}
-  .input-group {
-    margin-bottom: 12px;
-}
 
-.input-group input,
-.input-group select,
-.input-group textarea {
-    width: 100%;
-    max-width: 420px;   /* 👈 controls size */
-    padding: 8px;
-    font-size: 14px;
-}
-
-.form-section {
-    margin-bottom: 20px;
-}
-
-.upload-box {
-    border: 2px dashed #ccc;
-    padding: 15px;
-    text-align: center;
-    cursor: pointer;
-}
-
-.radio-row {
-    display: flex;
-    gap: 20px;
-}
-
-.feature-box {
-    background: #fff8e1;
-    padding: 10px;
-    border-radius: 5px;
-}
-
-/* For Arabic (RTL) users */
-[lang="ar"] #user-info-header {
-    text-align: left !important;
-    direction: rtl;
-}
-.radio-row {
-    display: flex;
-    align-items: center;
-    gap: 25px;
-}
-
-.radio-row label {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 14px;
-    cursor: pointer;
-}
-
-.radio-row input[type="radio"] {
-    margin: 0;
-}
-/* container */
-.condition-box {
-    margin-bottom: 20px;
-    background: #f0f7ff;
-    padding: 10px;
-    border-radius: 5px;
-}
-
-/* label */
-.condition-label {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 8px;
-}
-
-/* row layout */
-.condition-row {
-    display: flex;
-    align-items: center;   /* 🔥 KEY FIX */
-    gap: 25px;
-}
-
-/* each option */
-.condition-option {
-    display: flex;
-    align-items: center;   /* 🔥 aligns radio + text */
-    gap: 6px;
-    cursor: pointer;
-    font-size: 14px;
-}
-    .upload-container {
-        position: relative;
-        width: 100%;
-        border: 2px dashed #007bff;
-        padding: 20px;
-        text-align: center;
-        border-radius: 8px;
-        background-color: #f9f9f9;
-    }
-    
-    .upload-box {
-        display: inline-block;
-        cursor: pointer;
-        font-size: 18px;
-        color: #007bff;
-        padding: 10px 20px;
-        border-radius: 5px;
-        border: 1px solid #007bff;
-    }
-    
-    .upload-box:hover {
-        background-color: #007bff;
-        color: #fff;
-    }
-    
-    .icon {
-        font-size: 40px;
-        margin-bottom: 10px;
-    }
-
-    .drop-zone {
-        border: 2px dashed #007bff;
-        padding: 50px;
-        background-color: #f2f2f2;
-        margin-top: 20px;
-        font-size: 18px;
-        color: #888;
-        display: none;
-        text-align: center;
-        border-radius: 8px;
-    }
-  .gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* Adjust grid layout */
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.gallery-grid img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 5px;
-}
-  
-    .upload-container {
-  border: 2px dashed #007bff;
-  padding: 20px;
-  border-radius: 10px;
-  text-align: center;
-  background-color: #f9f9f9;
-  cursor: pointer;
-}
-
-.upload-container:hover {
-  background-color: #e6f7ff; /* Highlight on hover */
-}
-    #uploadProgress {
-        margin-top: 20px;
-        text-align: center;
-    }
-#dropZone {
-  border: 2px dashed #007bff;
-  padding: 20px;
-  border-radius: 10px;
-  margin-top: 20px;
-  background-color: #f4f4f4;
-  text-align: center;
-  font-size: 16px;
-}
-
-#dropZone:hover {
-  background-color: #e6f7ff;
-}
-/* radio reset */
-.condition-option input[type="radio"] {
-    margin: 0;             /* 🔥 removes browser weird spacing */
-}
-/* General Styling for Upload Section */
+/* Specific styles for upload section */
 .upload-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 20px;
-    font-family: sans-serif;
+    position: relative;
+    width: 100%;
+    border: 2px dashed #007bff;
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px;
+    background-color: #f9f9f9;
 }
 
 .upload-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 16px;
-    border: 2px dashed #ccc;
-    border-radius: 10px;
-    background-color: #fafafa;
+    display: inline-block;
     cursor: pointer;
-    transition: all 0.2s ease;
-    text-align: center;
-    width: 100%;
-    max-width: 300px;
-    margin-bottom: 20px;
+    font-size: 18px;
+    color: #007bff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: 1px solid #007bff;
 }
 
 .upload-box:hover {
-    background-color: #f0f0f0;
+    background-color: #007bff;
+    color: #fff;
 }
 
-.upload-box .icon img {
-    width: 24px; /* Icon size */
-    height: 24px;
-    opacity: 0.7;
-    margin-bottom: 8px;
+.icon {
+    font-size: 40px;
+    margin-bottom: 10px;
 }
 
-/* Styling for Drop Zone Text */
-#dropZone {
-    margin-top: 10px;
-    font-size: 14px;
-    color: #777;
+.drop-zone {
+    border: 2px dashed #007bff;
+    padding: 50px;
+    background-color: #f2f2f2;
+    margin-top: 20px;
+    font-size: 18px;
+    color: #888;
+    display: none;
     text-align: center;
+    border-radius: 8px;
 }
 
-/* Gallery Styling for Image Preview */
-#galleryPreview {
-    display: flex;
-    flex-wrap: wrap;
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     gap: 10px;
     margin-top: 20px;
 }
 
-.image-container {
-    position: relative;
-    width: 100px;
-    height: 100px;
-    border-radius: 10px;
-    overflow: hidden;
-    margin-bottom: 10px;
-    display: inline-block;
-}
-
-.image-container img {
+.gallery-grid img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 10px;
+    border-radius: 5px;
 }
 
-/* Styling for the Delete Icon on Image */
-.delete-icon {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    background-color: rgba(0, 0, 0, 0.6);
-    color: white;
-    border-radius: 50%;
-    padding: 2px 5px;
-    cursor: pointer;
-    font-size: 12px;
+.upload-container:hover {
+    background-color: #e6f7ff;
 }
 
-.delete-icon:hover {
-    background-color: rgba(0, 0, 0, 0.8);
-}
-
-/* Progress Bar Styling */
 #uploadProgress {
-    display: flex;
-    align-items: center;
-    margin-top: 10px;
+    margin-top: 20px;
+    text-align: center;
 }
 
-#progressBar {
-    width: 100%;
-    height: 10px;
-    margin-top: 5px;
+#dropZone {
+    border: 2px dashed #007bff;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+    background-color: #f4f4f4;
+    text-align: center;
+    font-size: 16px;
 }
 
-/* Styling for the file input button */
-.upload-box span {
-    font-size: 14px;
-    color: #4b5563;
-    font-weight: bold;
-    margin-top: 10px;
-    cursor: pointer;
-}
-
-/* Optional: Add some extra hover effects for interactivity */
-.upload-box:hover span {
-    color: #007bff;
+#dropZone:hover {
+    background-color: #e6f7ff;
 }
