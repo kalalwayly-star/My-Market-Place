@@ -7,7 +7,34 @@ import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js"; // Import necessary functions for Realtime Database
 
+// Firebase Firestore reference (import Firestore SDK if not already imported)
+import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
+// Fetch and display featured ads (only show those still within the 5-day period)
+function fetchFeaturedAds() {
+    const db = getFirestore();
+    const now = new Date().toISOString(); // Get the current time
+    
+    const adsCollectionRef = collection(db, "marketplace_ads");
+    const q = query(adsCollectionRef, where("isFeatured", "==", true)); // Get only featured ads
+
+    getDocs(q)
+        .then(snapshot => {
+            const featuredAds = snapshot.docs.filter(doc => {
+                const adData = doc.data();
+                return adData.featureEndDate >= now; // Check if the ad is still within the 5-day window
+            });
+
+            // Render the featured ads (pass the filtered ads to your render function)
+            renderFeaturedAds(featuredAds);
+        })
+        .catch(error => {
+            console.error("Error fetching featured ads:", error);
+        });
+}
+
+// Call fetchFeaturedAds when the page loads
+window.onload = fetchFeaturedAds;
 // Initialize variables
 let currentUserEmail = "Guest";
 let ad;
