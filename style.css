@@ -453,7 +453,7 @@ img {
 }
 /* 1. Add space between the Condition label and radio buttons */
 .condition-label {
-    margin-bottom: 10px;  /* Add space below the label */
+    margin-bottom: 20px;  /* Add space below the label */
 }
 
 /* Condition Fields Container */
@@ -485,7 +485,7 @@ img {
     display: flex;
     align-items: left;
     gap: 0px;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .featured-checkbox {
@@ -498,5 +498,5 @@ img {
     margin-top: 20px;  /* Space between "Feature this ad" and "Post Ad Now" button */
 }
 #dropZone:hover {
-    background-color: #e6f7ff;
+    background-color: #007BFF;
 }
