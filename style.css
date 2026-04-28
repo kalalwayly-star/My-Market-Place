@@ -467,17 +467,17 @@ img {
 .condition-options {
     display: flex;
     flex-direction: column; /* Stack the radio buttons vertically */
-    align-items: right; /* Center the radio buttons horizontally */
+    align-items: left; /* Center the radio buttons horizontally */
     gap: 10px; /* Add space between radio options */
 }
 
 /* Style for each radio button option */
 .condition-option {
     display: flex;
-    align-items: right;
+    align-items: left;
     gap: 8px; /* Space between the radio button and the text */
     font-size: 14px;
-    justify-content: right; /* Center the content inside the label */
+    justify-content: left; /* Center the content inside the label */
 }
 
 /* Optional: Styling for the radio button input itself (to make it consistent) */
