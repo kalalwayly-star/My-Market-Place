@@ -451,49 +451,29 @@ img {
     text-align: center;
     font-size: 16px;
 }
+/* Condition Fields Container */
+.condition-options {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
 
+/* Each radio label */
+.condition-option {
+  display: flex;
+  flex-direction: row;   /* Align radio button and label horizontally */
+  align-items: center;    /* Center the items vertically */
+  justify-content: flex-start; /* Align items to the left */
+  width: auto;
+  margin-bottom: 10px;   /* Space between radio button options */
+}
+
+/* Style for the radio input */
+.condition-option input[type="radio"] {
+  margin-right: 8px;  /* Space between the radio button and text */
+  width: auto;
+  display: inline-block;
+}
 #dropZone:hover {
     background-color: #e6f7ff;
-}
-/* Center the "Condition" label */
-.condition-label {
-    text-align: center; /* Center the text */
-    font-weight: bold;
-    display: block;
-    margin-bottom: 10px; /* Add space below the label */
-}
-
-/* Flexbox layout for radio buttons */
-.condition-options {
-    display: flex;
-    flex-direction: column; /* Stack the radio buttons vertically */
-    align-items: left; /* Center the radio buttons horizontally */
-    gap: 10px; /* Add space between radio options */
-}
-
-/* Style for each radio button option */
-.condition-option {
-    display: flex;
-    align-items: left;
-    gap: 8px; /* Space between the radio button and the text */
-    font-size: 14px;
-    justify-content: left; /* Center the content inside the label */
-}
-
-/* Optional: Styling for the radio button input itself (to make it consistent) */
-.condition-option input[type="radio"] {
-    margin: 0; /* Remove default margin */
-    cursor: pointer; /* Make the cursor pointer to show interactiveness */
-}
-
-/* Optional: Add a little hover effect on radio options */
-.condition-option:hover {
-    background-color: #f0f0f0;
-    border-radius: 5px;
-    padding: 5px;
-}
-
-/* Adjust container layout for form-section */
-.form-section {
-    margin-bottom: 20px;
 }
