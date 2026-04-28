@@ -455,9 +455,9 @@ img {
 #dropZone:hover {
     background-color: #e6f7ff;
 }
-/* Center align the "Condition" labelht */
+/* Center the "Condition" label */
 .condition-label {
-    text-align: right; /* Right the text */
+    text-align: center; /* Center the text */
     font-weight: bold;
     display: block;
     margin-bottom: 10px; /* Add space below the label */
@@ -467,8 +467,8 @@ img {
 .condition-options {
     display: flex;
     flex-direction: column; /* Stack the radio buttons vertically */
-    align-items: flex-start; /* Align items to the left */
-    gap: 8px; /* Add space between radio options */
+    align-items: center; /* Center the radio buttons horizontally */
+    gap: 10px; /* Add space between radio options */
 }
 
 /* Style for each radio button option */
@@ -477,6 +477,7 @@ img {
     align-items: center;
     gap: 8px; /* Space between the radio button and the text */
     font-size: 14px;
+    justify-content: center; /* Center the content inside the label */
 }
 
 /* Optional: Styling for the radio button input itself (to make it consistent) */
