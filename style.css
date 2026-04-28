@@ -455,3 +455,44 @@ img {
 #dropZone:hover {
     background-color: #e6f7ff;
 }
+/* Center align the "Condition" label */
+.condition-label {
+    text-align: center; /* Center the text */
+    font-weight: bold;
+    display: block;
+    margin-bottom: 10px; /* Add space below the label */
+}
+
+/* Flexbox layout for radio buttons */
+.condition-options {
+    display: flex;
+    flex-direction: column; /* Stack the radio buttons vertically */
+    align-items: flex-start; /* Align items to the left */
+    gap: 8px; /* Add space between radio options */
+}
+
+/* Style for each radio button option */
+.condition-option {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Space between the radio button and the text */
+    font-size: 14px;
+}
+
+/* Optional: Styling for the radio button input itself (to make it consistent) */
+.condition-option input[type="radio"] {
+    margin: 0; /* Remove default margin */
+    cursor: pointer; /* Make the cursor pointer to show interactiveness */
+}
+
+/* Optional: Add a little hover effect on radio options */
+.condition-option:hover {
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+/* Adjust container layout for form-section */
+.form-section {
+    margin-bottom: 20px;
+}
