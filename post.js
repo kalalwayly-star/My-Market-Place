@@ -318,3 +318,43 @@ function renderPaypalButton() {
         }).render(paypalButtonContainer);  // Render the PayPal button inside the container
     }
 }
+// Add the fixAlignment function in post.js
+async function fixAlignment() {
+  const container = document.querySelector('.condition-options');
+  if (!container) return;
+
+  // Set container to align children to the start
+  await setElementStyles(container, {
+    'display': 'flex',
+    'flex-direction': 'column',
+    'align-items': 'flex-start'
+  });
+
+  const labels = container.querySelectorAll('label.condition-option');
+  labels.forEach(async (label) => {
+    // Set label to align radio and text horizontally
+    await setElementStyles(label, {
+      'display': 'flex',
+      'flex-direction': 'row',
+      'align-items': 'center',
+      'justify-content': 'flex-start',
+      'width': 'auto',
+      'margin-bottom': '10px' // Add space between radio buttons
+    });
+
+    const input = label.querySelector('input');
+    if (input) {
+      // Reset input width and display
+      await setElementStyles(input, {
+        'width': 'auto',
+        'display': 'inline-block',
+        'margin-right': '8px' // Space between radio button and text
+      });
+    }
+  });
+}
+
+// Call fixAlignment after DOM content is loaded
+document.addEventListener('DOMContentLoaded', function() {
+  fixAlignment();
+});
