@@ -269,11 +269,13 @@ isFeaturedCheckbox.addEventListener("change", function() {
         paypalButtonContainer.style.display = "none";  // Hide PayPal button when checkbox is unchecked
     }
 });
-// Function to render PayPal button
+
+
+// Function to render PayPal button dynamically based on price
 function renderPaypalButton(price) {
     const paypalButtonContainer = document.getElementById("paypal-button-container");
-    
-    // Render the PayPal button only once to prevent duplication
+
+    // Make sure the PayPal button is only rendered once
     if (paypalButtonContainer.innerHTML === "") {
         paypal.Buttons({
             createOrder: function(data, actions) {
@@ -288,7 +290,7 @@ function renderPaypalButton(price) {
             onApprove: function(data, actions) {
                 return actions.order.capture().then(function(details) {
                     alert("Payment successful! Thank you for featuring your ad.");
-                    
+
                     // Get the current time for the start date and calculate end date (5 or 10 days later)
                     const featureStartDate = new Date().toISOString();
                     const featureEndDate = new Date(Date.now() + (price === 4.99 ? 5 : 10) * 24 * 60 * 60 * 1000).toISOString(); // Based on price
