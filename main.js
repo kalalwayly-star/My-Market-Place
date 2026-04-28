@@ -57,7 +57,11 @@ window.goToDetails = function(id) {
     }
     window.location.href = `details.html?id=${id}`;
 };
-
+// Event listener for category change
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("postCategory")?.addEventListener("change", handleCategoryChange);
+    handleCategoryChange(); // Initial call
+});
 // Fetch Ads from Firestore
 function fetchAds() {
     const adsCollectionRef = collection(db, "marketplace_ads");
@@ -238,8 +242,4 @@ function handleCategoryChange() {
     }
 }
 
-// Event listener for category change
-document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById("postCategory")?.addEventListener("change", handleCategoryChange);
-    handleCategoryChange(); // Initial call
-});
+
