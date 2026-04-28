@@ -256,7 +256,6 @@ function finalizeAd() {
         });
 }
 // Ensure to import Firebase (if not already done)
-import { db } from './firebase-config.js'; // Assuming you already have the Firebase setup
 
 // Select the checkbox and PayPal button container
 const isFeaturedCheckbox = document.getElementById("isFeatured");
