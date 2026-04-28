@@ -113,7 +113,7 @@
 
 <!-- Condition Fields (For applicable categories) -->
 <div id="conditionFields" class="form-section">
-    <label for="condition">Condition:</label>
+    <label for="condition" class="condition-label">Condition:</label>
     <div class="condition-options">
         <label class="condition-option" for="new-condition">
             <input type="radio" id="new-condition" name="condition" value="New"> New
@@ -126,13 +126,17 @@
         </label>
     </div>
 </div>
-<!-- Featured Ad Checkbox -->
+
+<!-- Featured Ad Checkbox Section -->
 <div class="form-group feature-box">
     <label class="featured-label">
-        <input type="checkbox" id="isFeatured">
+        <input type="checkbox" id="isFeatured" class="featured-checkbox">
         <span data-i18n="label_featured">✨ Feature this ad for $4.99 to stay at top (5 days)</span>
     </label>
 </div>
+
+<!-- Post Ad Button -->
+<button id="postAdBtn" class="btn-primary">Post Ad Now</button>
         <div class="card" onclick="goToDetails('ad-id-123')">
 <!-- PayPal Button Container (Hidden initially) -->
 <div id="paypal-button-container" style="display:none;"></div>
