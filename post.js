@@ -255,7 +255,6 @@ function finalizeAd() {
             alert("Error: " + err.message);
         });
 }
-// Ensure to import Firebase (if not already done)
 
 // Select the checkbox and PayPal button container
 const isFeaturedCheckbox = document.getElementById("isFeatured");
