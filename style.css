@@ -457,7 +457,7 @@ img {
 }
 /* Center align the "Condition" label */
 .condition-label {
-    text-align: center; /* Center the text */
+    text-align: left; /* Center the text */
     font-weight: bold;
     display: block;
     margin-bottom: 10px; /* Add space below the label */
