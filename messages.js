@@ -1,259 +1,112 @@
 import { auth, rtdb, db } from "./firebase-config.js";  // Import Firebase services
-import { ref, onValue } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js";  // Import Realtime DB methods
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.x.x/firebase-auth.js";
+import { ref, onValue, push, remove } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js";  // Realtime DB methods
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js"; // Firebase Auth methods
 
-const auth = getAuth();
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    // User is signed in
-  } else {
-    // User is signed out
-  }
-});
-
-// Firebase Authentication state listener for checking login status
-onAuthStateChanged(auth, (user) => {
+const authInstance = getAuth();
+onAuthStateChanged(authInstance, (user) => {
     const loginMessage = document.getElementById('loginMessage'); // Message when not logged in
     const messagesContainer = document.getElementById('messagesContainer'); // Where messages are shown
 
     if (user) {
-        // User is logged in, show the messages page
+        // User is logged in
         loginMessage.style.display = 'none';  // Hide the login message
         messagesContainer.style.display = 'block';  // Show messages container
-
-        // Fetch and display user-specific messages
-        const messagesRef = ref(rtdb, 'messages/' + user.uid); // Get messages from the database
-        onValue(messagesRef, (snapshot) => {
-            const messages = snapshot.val();
-            if (messages) {
-                messagesContainer.innerHTML = "";  // Clear existing messages
-
-                // Loop through the messages and display them
-                Object.keys(messages).forEach(msgId => {
-                    const message = messages[msgId];
-                    const messageElement = document.createElement('div');
-                    messageElement.classList.add('message');
-                    messageElement.innerHTML = `
-                        <p>${message.text}</p>
-                        <small>Sent at ${new Date(message.timestamp).toLocaleString()}</small>
-                    `;
-                    messagesContainer.appendChild(messageElement);
-                });
-            }
-        });
-
+        loadMessages(user.uid);  // Load messages for the logged-in user
     } else {
-        // User is not logged in, show the login message
+        // User is not logged in
         loginMessage.style.display = 'block';  // Show login prompt
         messagesContainer.style.display = 'none';  // Hide messages container
     }
 });
 
-// Globals
-const params = new URLSearchParams(window.location.search);
-const adId = params.get("id");
-let currentLanguage = localStorage.getItem("language") || "en";
-let currentUser = JSON.parse(localStorage.getItem("currentUser")) || { email: "Guest" };
-let currentTab = 'received';
-let globalMessages = [];
-
-/* --- LANGUAGE --- */
-async function loadLanguage(lang) {
-    try {
-        const response = await fetch(`languages/${lang}.json`);
-        const translations = await response.json();
-        localStorage.setItem("language", lang);
-        window.translations = translations;
-        updatePageContent(translations, lang);
-        initMessages();
-    } catch (err) {
-        console.error("Language Load Error:", err);
-        initMessages();
-    }
-}
-
-function updatePageContent(translations, lang) {
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (translations[key]) el.innerText = translations[key];
-    });
-    document.documentElement.lang = lang;
-    document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
-}
-
-/* --- TABS --- */
-window.changeTab = function(tab) {
-    currentTab = tab;
-    document.getElementById('btnReceived')?.classList.toggle('active', tab === 'received');
-    document.getElementById('btnSent')?.classList.toggle('active', tab === 'sent');
-    renderTab();
-}
-
-/* --- INIT --- */
-function initMessages() {
-    const container = document.getElementById('messageList');
-
-    if (!currentUser || currentUser.email === "Guest") {
-        if (container) {
-            container.innerHTML = "<p style='text-align:center;'>Please login to see messages.</p>";
-        }
-        return;
-    }
-
-    // Using 'rtdb' to fetch marketplace messages
-    const msgRef = ref(rtdb, "marketplace_messages");
-
-    onValue(msgRef, (snapshot) => {
-        const data = snapshot.val();
-        globalMessages = data ? Object.keys(data).map(id => ({ firebaseId: id, ...data[id] })) : [];
-        renderTab();
-    });
-}
-
-/* --- RENDER --- */
-window.renderTab = function() {
-    const container = document.getElementById('messageList');
-    if (!container) return;
-
-    const filterText = document.getElementById('msgSearch')?.value.trim().toLowerCase() || '';
-    const filtered = globalMessages.filter(m => {
-        const matchesText = m.text.toLowerCase().includes(filterText);
-        if (currentTab === 'received') {
-            return m.receiverEmail === currentUser.email && matchesText;
-        } else {
-            return m.senderEmail === currentUser.email && matchesText;
-        }
-    });
-
-    if (filtered.length === 0) {
-        container.innerHTML = "<p style='text-align:center;'>No messages found.</p>";
-        return;
-    }
-
-    container.innerHTML = filtered.map(m => createMessageCard(m)).join('');
-}
-
-function createMessageCard(m) {
-    const person = (currentTab === 'received' ? m.senderEmail : m.receiverEmail) || "User";
-    const id = m.firebaseId;
-    return `
-        <div class="message-card" style="border:1px solid #ddd; padding:15px; margin-bottom:12px; border-radius:8px; background:white;">
-            <p style="font-size:0.85rem; color:#007bff; font-weight:bold;">
-                ${currentTab === 'received' ? 'From' : 'To'}: ${person}
-            </p>
-            <p>${m.text}</p>
-            <p style="font-size:0.7rem; color:#999;">${m.date || ""}</p>
-            <div style="display:flex; gap:10px; margin-top:10px; align-items:center;">
-                <button onclick="deleteMsg('${id}')" style="background:#ff4d4d; color:white; border:none; padding:5px 8px; cursor:pointer; border-radius:4px;">Delete</button>
-                ${currentTab === 'received' ? `
-                    <button onclick="toggleReply('${id}')" style="background:none; border:none; color:#007bff; font-weight:bold; cursor:pointer;">
-                        Reply
-                    </button>
-                ` : ''}
-            </div>
-            <div id="reply-box-${id}" style="display:none; margin-top:10px;">
-                <textarea id="reply-text-${id}" style="width:100%; height:60px; padding:8px; border:1px solid #ccc; border-radius:4px;"></textarea>
-                <button onclick="sendReply('${id}')" style="margin-top:5px; background:#28a745; color:white; border:none; padding:6px 10px; cursor:pointer; border-radius:4px;">Send</button>
-            </div>
-        </div>
-    `;
-}
-
-/* --- REPLY FUNCTIONS --- */
-window.toggleReply = function(id) {
-    const box = document.getElementById(`reply-box-${id}`);
-    if (box) box.style.display = box.style.display === "none" ? "block" : "none";
-}
-
-window.sendReply = function(id) {
-    const textInput = document.getElementById(`reply-text-${id}`);
-    const text = textInput.value.trim();
-
-    if (!text) {
-        alert("Reply cannot be empty");
-        return;
-    }
-
-    const original = globalMessages.find(m => m.firebaseId === id);
-    const msgRef = ref(rtdb, "marketplace_messages");
-
-    push(msgRef, {
-        text: text,
-        senderEmail: currentUser.email,
-        receiverEmail: original?.senderEmail,
-        adId: adId || "General",
-        date: new Date().toLocaleString()
-    }).then(() => {
-        alert("Reply sent!");
-        textInput.value = "";
-        window.toggleReply(id);
-    });
-}
-
-/* --- DELETE --- */
-window.deleteMsg = function(id) {
-    if (!confirm("Delete this message?")) return;
-    const msgRef = ref(rtdb, `marketplace_messages/${id}`);
-    remove(msgRef).then(() => {
-        alert("Message deleted.");
-    });
-}
-
-// Send message to seller
-const messageData = {
-    sender: currentUser.email,
-    receiver: ad.userEmail,
-    text: messageText,
-    timestamp: new Date().toISOString()
-};
-
-const messagesRef = ref(rtdb, "messages/" + ad.id); 
-push(messagesRef, messageData)
-    .then(() => {
-        alert("Message sent successfully!");
-        displayMessages(ad.id);  // Refresh the messages after sending
-    })
-    .catch(err => {
-        console.error("Error sending message:", err);
-    });
-
-// Display messages for a particular ad
-function displayMessages(adId) {
-    const messagesRef = ref(rtdb, "messages/" + adId);
+// Fetch and render messages for the logged-in user
+function loadMessages(userId) {
+    const messagesRef = ref(rtdb, 'marketplace_messages/' + userId);
     onValue(messagesRef, (snapshot) => {
         const messages = snapshot.val();
-        const messageContainer = document.getElementById("messageContainer");
-        
+        const messagesContainer = document.getElementById('messagesContainer');
         if (messages) {
-            messageContainer.innerHTML = Object.values(messages).map(msg => `
-                <div class="message">
-                    <p><strong>${msg.sender}</strong>: ${msg.text}</p>
-                    <small>${msg.timestamp}</small>
-                </div>
-            `).join('');
+            messagesContainer.innerHTML = "";  // Clear existing messages
+            Object.keys(messages).forEach(msgId => {
+                const message = messages[msgId];
+                renderMessage(message, msgId);
+            });
         } else {
-            messageContainer.innerHTML = "<p>No messages yet.</p>";
+            messagesContainer.innerHTML = "<p>No messages found.</p>";
         }
     });
 }
 
+// Render a single message
+function renderMessage(message, msgId) {
+    const messagesContainer = document.getElementById('messagesContainer');
+    const messageElement = document.createElement('div');
+    messageElement.classList.add('message');
+    messageElement.innerHTML = `
+        <p>${message.text}</p>
+        <small>Sent at ${new Date(message.timestamp).toLocaleString()}</small>
+        <button onclick="deleteMessage('${msgId}')">Delete</button>
+    `;
+    messagesContainer.appendChild(messageElement);
+}
 
+// Function to delete a message
+window.deleteMessage = function(msgId) {
+    if (confirm("Are you sure you want to delete this message?")) {
+        const msgRef = ref(rtdb, `marketplace_messages/${msgId}`);
+        remove(msgRef).then(() => {
+            alert("Message deleted successfully.");
+        }).catch(err => {
+            console.error("Error deleting message:", err);
+            alert("Failed to delete message.");
+        });
+    }
+};
 
-/* --- START --- */
+// Sending a message to the seller
+window.sendMessage = function(adId, messageText, senderEmail) {
+    if (!messageText.trim()) {
+        alert("Message cannot be empty.");
+        return;
+    }
+
+    const messageData = {
+        sender: senderEmail,
+        receiver: adId.userEmail,  // Assuming adId has userEmail
+        text: messageText,
+        timestamp: new Date().toISOString()
+    };
+
+    const messagesRef = ref(rtdb, `messages/${adId}`);
+    push(messagesRef, messageData)
+        .then(() => {
+            alert("Message sent successfully!");
+            loadMessages(adId);  // Reload messages after sending
+        })
+        .catch(err => {
+            console.error("Error sending message:", err);
+            alert("Failed to send message.");
+        });
+};
+
+// Function to switch between tabs (Received/Sent messages)
+window.changeTab = function(tab) {
+    const tabReceived = document.getElementById('btnReceived');
+    const tabSent = document.getElementById('btnSent');
+    const currentTab = tab === 'received' ? 'sent' : 'received';
+
+    if (tab === 'received') {
+        tabReceived.classList.add('active');
+        tabSent.classList.remove('active');
+        // Render received messages
+    } else {
+        tabSent.classList.add('active');
+        tabReceived.classList.remove('active');
+        // Render sent messages
+    }
+};
+
+// Initialize messages on page load
 document.addEventListener('DOMContentLoaded', () => {
-    loadLanguage(currentLanguage);
+    loadMessages();
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
