@@ -382,7 +382,13 @@ async function fixAlignment() {
     });
 }
 
-// Call fixAlignment after DOM content is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    fixAlignment();
+   // Your event listener code here
+   document.getElementById("isFeatured5Days").addEventListener("change", function() {
+       // Handle the checkbox logic
+   });
+
+   document.getElementById("isFeatured10Days").addEventListener("change", function() {
+       // Handle the checkbox logic
+   });
 });
