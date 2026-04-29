@@ -20,15 +20,14 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-// Handle image upload and preview
 let uploadedImages = [];
+
 window.handlePhotoUpload = function (event) {
     const files = Array.from(event.target.files || []);
     const preview = document.getElementById("galleryPreview");
 
     if (!preview || !files.length) return;
 
-    // Show progress bar
     const progressBar = document.getElementById("progressBar");
     const uploadProgress = document.getElementById("uploadProgress");
     uploadProgress.style.display = "block";
@@ -38,7 +37,7 @@ window.handlePhotoUpload = function (event) {
 
     files.forEach((file) => {
         const imgContainer = document.createElement("div");
-        imgContainer.classList.add("image-container");
+        imgContainer.classList.add("image-container"); // Styling for individual images
 
         const img = document.createElement("img");
         img.src = URL.createObjectURL(file);
@@ -47,7 +46,6 @@ window.handlePhotoUpload = function (event) {
         img.style.objectFit = "cover";
         imgContainer.appendChild(img);
 
-        // Add delete icon for each image
         const deleteIcon = document.createElement("span");
         deleteIcon.classList.add("delete-icon");
         deleteIcon.innerHTML = "X";
@@ -60,10 +58,8 @@ window.handlePhotoUpload = function (event) {
         };
         imgContainer.appendChild(deleteIcon);
 
-        // Append to gallery
         preview.appendChild(imgContainer);
 
-        // Upload image to Firebase Storage
         uploadImageToStorage(file, progressBar, uploadProgress, () => {
             uploadedCount++;
             if (uploadedCount === totalFiles) {
@@ -71,6 +67,9 @@ window.handlePhotoUpload = function (event) {
             }
         });
     });
+
+    event.target.value = "";
+};
 
     // Reset input so the same file can be selected again
     event.target.value = "";
