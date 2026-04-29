@@ -229,16 +229,15 @@ function finalizeAd() {
         });
 }
 
-// PayPal button display logic
-document.addEventListener('DOMContentLoaded', function () {
-    const featured5DaysCheckbox = document.getElementById("isFeatured5Days");
-    const featured10DaysCheckbox = document.getElementById("isFeatured10Days");
+document.addEventListener("DOMContentLoaded", function () {
     const paypalButtonContainer = document.getElementById("paypal-button-container");
 
     function renderPaypalButton(price) {
+        // Prevent rendering multiple buttons
         if (paypalButtonContainer.innerHTML === "") {
+            console.log("Rendering PayPal Button for price:", price);
             paypal.Buttons({
-                createOrder: function (data, actions) {
+                createOrder: function(data, actions) {
                     return actions.order.create({
                         purchase_units: [{
                             amount: {
@@ -247,36 +246,37 @@ document.addEventListener('DOMContentLoaded', function () {
                         }]
                     });
                 },
-                onApprove: function (data, actions) {
-                    return actions.order.capture().then(function (details) {
+                onApprove: function(data, actions) {
+                    return actions.order.capture().then(function(details) {
                         alert("Payment successful! Thank you for featuring your ad.");
-                        const featureStartDate = new Date().toISOString();
-                        const featureEndDate = new Date(Date.now() + (price === 4.99 ? 5 : 10) * 24 * 60 * 60 * 1000).toISOString();
-                        console.log("Feature Start:", featureStartDate, "Feature End:", featureEndDate);
                     });
                 },
-                onError: function (err) {
+                onError: function(err) {
                     console.error("PayPal Payment Error", err);
-                    alert("There was an error processing your payment. Please try again.");
+                    alert("There was an error processing your payment.");
                 }
-            }).render(paypalButtonContainer);  // Render PayPal button inside the container
+            }).render(paypalButtonContainer);
         }
     }
 
-    function togglePaypalButton() {
-        if (featured5DaysCheckbox.checked) {
-            renderPaypalButton(4.99);
-            paypalButtonContainer.style.display = "block";
-        } else if (featured10DaysCheckbox.checked) {
-            renderPaypalButton(9.99);
-            paypalButtonContainer.style.display = "block";
+    // Checkboxes event listeners
+    const featured5DaysCheckbox = document.getElementById("isFeatured5Days");
+    const featured10DaysCheckbox = document.getElementById("isFeatured10Days");
+
+    // Check if the PayPal button should be shown or hidden based on checkbox selection
+    featured5DaysCheckbox.addEventListener("change", function () {
+        if (this.checked) {
+            renderPaypalButton(4.99);  // 5 days price
         } else {
             paypalButtonContainer.style.display = "none";
         }
-    }
+    });
 
-    featured5DaysCheckbox.addEventListener("change", togglePaypalButton);
-    featured10DaysCheckbox.addEventListener("change", togglePaypalButton);
-
-    togglePaypalButton();
+    featured10DaysCheckbox.addEventListener("change", function () {
+        if (this.checked) {
+            renderPaypalButton(9.99);  // 10 days price
+        } else {
+            paypalButtonContainer.style.display = "none";
+        }
+    });
 });
