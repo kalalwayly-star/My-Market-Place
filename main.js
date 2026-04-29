@@ -109,7 +109,7 @@ function renderAds(adsArray) {
         return `
         <div class="card">
             <div onclick="goToDetails('${uniqueId}')">
-                <img src="${image}" style="width:100%; height:200px; object-fit:cover;">
+                <img src="${image}" style="width:50%; height:200px; object-fit:cover;">
             </div>
             <div class="card-content">
                 <h3>${ad.title}</h3>
