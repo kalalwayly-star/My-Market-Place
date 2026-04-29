@@ -242,25 +242,18 @@ function handleCategoryChange() {
     }
 }
 
-// Function to delete an image
-function deleteImage(imageId) {
-    const imageContainer = document.getElementById(imageId);
-    if (imageContainer) {
-        // Remove the image container (image and delete button)
-        imageContainer.remove();
+document.querySelectorAll('.delete-btn').forEach((button) => {
+    button.addEventListener('click', function() {
+        const adId = button.dataset.adId;
+        deleteAd(adId);
+    });
+});
 
-        // Optionally, you can also remove the image from the `uploadedImages` array
-        const imageIndex = uploadedImages.findIndex(image => image.id === imageId);
-        if (imageIndex > -1) {
-            uploadedImages.splice(imageIndex, 1); // Remove image from the array
-        }
-
-        // If you are using Firebase or another backend, you should also remove the image from your database (Firestore or Realtime Database)
-        // Example for Firestore
-        // db.collection("your_collection").doc(imageId).delete()
-        //     .then(() => console.log("Image deleted from Firestore"))
-        //     .catch(err => console.error("Error deleting image:", err));
-    }
+async function deleteAd(adId) {
+    const adRef = doc(db, "marketplace_ads", adId);
+    await deleteDoc(adRef);
+    alert('Ad deleted successfully!');
+    fetchAds(); // Reload the ads after deletion
 }
 
 // This function will be used to populate the gallery preview
