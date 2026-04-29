@@ -71,10 +71,6 @@ window.handlePhotoUpload = function (event) {
     event.target.value = "";
 };
 
-    // Reset input so the same file can be selected again
-    event.target.value = "";
-};
-
 // Upload image to Firebase Storage and get the download URL
 function uploadImageToStorage(file, progressBar, uploadProgress, callback) {
     const storageRef = ref(storage, 'ads_images/' + file.name);
