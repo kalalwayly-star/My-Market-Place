@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <title data-i18n="post_page_title">Post Ad | Marketplace</title>
     <link rel="stylesheet" href="style.css">
-        <!-- PayPal SDK -->
-
-     <script src="https://www.paypal.com/sdk/js?client-id=AR_Wf3aXLq7GxACeo57SjDfghIrCso96DnHoZiMpLnKUsAaePgUoQyVKMbVt8B-RNMiVoPLCSXctDk6ID&components=buttons"></script>
-
+    
+    <!-- PayPal SDK -->
+    <script src="https://www.paypal.com/sdk/js?client-id=AR_Wf3aXLq7GxACeo57SjDfghIrCso96DnHoZiMpLnKUsAaePgUoQyVKMbVt8B-RNMiVoPLCSXctDk6ID&components=buttons"></script>
 </head>
 <body>
     <header class="header">
@@ -24,133 +23,121 @@
             <h2 data-i18n="post_ad_header">Post a New Listing</h2>
             <form id="postForm" enctype="multipart/form-data">
 
-               <div class="form-section">
-    <label for="postCategory" data-i18n="category_label">Category</label>
-    <select id="postCategory" name="category" onchange="handleCategoryChange()">
-        <option value="" data-i18n="select_category">Choose Category</option>
-        <option value="Real Estate" data-i18n="cat_realestate">Real Estate</option>
-        <option value="Cars & Trucks" data-i18n="cat_cars_trucks">Cars and Trucks</option>
-        <option value="Electronics" data-i18n="cat_electronics">Electronics</option>
-        <option value="Furniture" data-i18n="cat_furniture">Furniture</option>
-        <option value="Job" data-i18n="cat_job">Job</option>
-        <option value="Fashion" data-i18n="cat_fashion">Fashion</option>
-        <option value="Pets" data-i18n="cat_pets">Pets</option>
-        <option value="Sports" data-i18n="cat_sports">Sports</option>
-        <option value="Books" data-i18n="cat_books">Books</option>
-        <option value="Appliances" data-i18n="cat_appliances">Appliances</option>
-        <option value="Toys" data-i18n="cat_toys">Toys</option>
-        <option value="Services" data-i18n="cat_services">Services</option>
-        <option value="Garden" data-i18n="cat_garden">Garden</option>
-        <option value="Health" data-i18n="cat_health">Health</option>
-        <option value="Baby" data-i18n="cat_baby">Baby</option>
-    </select>
-</div>
-
+                <!-- Category Selection -->
                 <div class="form-section">
-    <h3 data-i18n="photo_header">Photos (Max 10)</h3>
+                    <label for="postCategory" data-i18n="category_label">Category</label>
+                    <select id="postCategory" name="category" onchange="handleCategoryChange()">
+                        <option value="" data-i18n="select_category">Choose Category</option>
+                        <option value="Real Estate" data-i18n="cat_realestate">Real Estate</option>
+                        <option value="Cars & Trucks" data-i18n="cat_cars_trucks">Cars and Trucks</option>
+                        <option value="Electronics" data-i18n="cat_electronics">Electronics</option>
+                        <option value="Furniture" data-i18n="cat_furniture">Furniture</option>
+                        <option value="Job" data-i18n="cat_job">Job</option>
+                        <option value="Fashion" data-i18n="cat_fashion">Fashion</option>
+                        <option value="Pets" data-i18n="cat_pets">Pets</option>
+                        <option value="Sports" data-i18n="cat_sports">Sports</option>
+                        <option value="Books" data-i18n="cat_books">Books</option>
+                        <option value="Appliances" data-i18n="cat_appliances">Appliances</option>
+                        <option value="Toys" data-i18n="cat_toys">Toys</option>
+                        <option value="Services" data-i18n="cat_services">Services</option>
+                        <option value="Garden" data-i18n="cat_garden">Garden</option>
+                        <option value="Health" data-i18n="cat_health">Health</option>
+                        <option value="Baby" data-i18n="cat_baby">Baby</option>
+                    </select>
+                </div>
 
-    <div class="upload-container">
-        <!-- Photo Upload Section -->
-        <label for="photoInput" class="upload-box">
-            <div class="icon">
-                <img src="https://img.icons8.com/ios/452/camera.png" alt="Upload Icon" width="24">
-            </div>
-            <span data-i18n="click_to_add">Click to add photos or drag them here</span>
-            <input type="file" id="photoInput" accept="image/*" multiple hidden>
-        </label>
+                <!-- Photo Upload Section -->
+                <div class="form-section">
+                    <h3 data-i18n="photo_header">Photos (Max 10)</h3>
+                    <div class="upload-container">
+                        <label for="photoInput" class="upload-box">
+                            <div class="icon">
+                                <img src="https://img.icons8.com/ios/452/camera.png" alt="Upload Icon" width="24">
+                            </div>
+                            <span data-i18n="click_to_add">Click to add photos or drag them here</span>
+                            <input type="file" id="photoInput" accept="image/*" multiple hidden>
+                        </label>
+                        <div id="dropZone" class="drop-zone">
+                            <span>Drag and drop your photos here</span>
+                        </div>
+                        <div id="galleryPreview" class="gallery-grid"></div>
+                        <div id="uploadProgress" style="display:none;">
+                            <span>Uploading...</span>
+                            <progress id="progressBar" value="0" max="100" style="width:100%;"></progress>
+                        </div>
+                    </div>
+                </div>
 
-        <!-- Drop Area for Drag-and-Drop -->
-        <div id="dropZone" class="drop-zone">
-            <span>Drag and drop your photos here</span>
-        </div>
+                <!-- Common Fields (Title, Price, Location, Description) -->
+                <div id="commonFields">
+                    <label for="adTitle">Title:</label>
+                    <input type="text" id="adTitle" required />
+                    <label for="adPrice">Price:</label>
+                    <input type="number" id="adPrice" required />
+                    <label for="adLocation">Location:</label>
+                    <input type="text" id="adLocation" required />
+                    <label for="adDesc">Description:</label>
+                    <textarea id="adDesc" required></textarea>
+                </div>
 
-        <!-- Gallery Preview -->
-        <div id="galleryPreview" class="gallery-grid"></div>
+                <!-- Car Specific Fields (Visible for Cars & Trucks) -->
+                <div id="carFields" style="display: none;">
+                    <label for="carMake">Car Make:</label>
+                    <input type="text" id="carMake" />
+                    <label for="carModel">Car Model:</label>
+                    <input type="text" id="carModel" />
+                    <label for="carYear">Car Year:</label>
+                    <input type="number" id="carYear" />
+                    <label for="carMileage">Mileage (km):</label>
+                    <input type="number" id="carMileage" />
+                    <label for="carFuelType">Fuel Type:</label>
+                    <select id="carFuelType">
+                        <option value="Gasoline">Gasoline</option>
+                        <option value="Hybrid">Hybrid</option>
+                        <option value="Electric">Electric</option>
+                    </select>
+                </div>
 
-        <!-- Progress Bar -->
-        <div id="uploadProgress" style="display:none;">
-            <span>Uploading...</span>
-            <progress id="progressBar" value="0" max="100" style="width:100%;"></progress>
+                <!-- Condition Fields (For applicable categories) -->
+                <div id="conditionFields" class="form-section">
+                    <label for="condition" class="condition-label">Condition:</label>
+                    <div class="condition-options">
+                        <label class="condition-option" for="new-condition">
+                            <input type="radio" id="new-condition" name="condition" value="New"> New
+                        </label>
+                        <label class="condition-option" for="used-condition">
+                            <input type="radio" id="used-condition" name="condition" value="Used"> Used
+                        </label>
+                        <label class="condition-option" for="refurbished-condition">
+                            <input type="radio" id="refurbished-condition" name="condition" value="Refurbished"> Refurbished
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Featured Ad Checkboxes (5 or 10 days) -->
+                <div class="form-group feature-box">
+                    <label class="featured-label">
+                        <input type="checkbox" id="isFeatured5Days" class="featured-checkbox">
+                        <span data-i18n="label_featured">✨ Feature this ad for</span>
+                        <span class="price-option" id="price-5-days">$4.99 for 5 days</span>
+                    </label>
+                    <label class="featured-label">
+                        <input type="checkbox" id="isFeatured10Days" class="featured-checkbox">
+                        <span data-i18n="label_featured">✨ Feature this ad for</span>
+                        <span class="price-option" id="price-10-days">$8.99 for 10 days</span>
+                    </label>
+                </div>
+
+                <!-- PayPal Button Container (Hidden initially) -->
+                <div id="paypal-button-container" style="display:none;"></div>
+
+                <!-- Post Ad Now Button -->
+                <button type="submit" id="postBtn" class="btn primary" data-i18n="post_btn">Post Ad Now</button>
+            </form>
         </div>
     </div>
-</div>                <!-- COMMON FIELDS -->
-               <!-- Common Fields: Title, Price, Description -->
-<div id="commonFields">
-    <label for="adTitle">Title:</label>
-    <input type="text" id="adTitle" required />
 
-    <label for="adPrice">Price:</label>
-    <input type="number" id="adPrice" required />
-
-    <label for="adLocation">Location:</label>
-    <input type="text" id="adLocation" required />
-
-    <label for="adDesc">Description:</label>
-    <textarea id="adDesc" required></textarea>
-</div>
-
-<!-- Car Specific Fields (Only shown for "Cars & Trucks" category) -->
-<div id="carFields" style="display: none;">
-    <label for="carMake">Car Make:</label>
-    <input type="text" id="carMake" />
-
-    <label for="carModel">Car Model:</label>
-    <input type="text" id="carModel" />
-
-    <label for="carYear">Car Year:</label>
-    <input type="number" id="carYear" />
-
-    <label for="carMileage">Mileage (km):</label>
-    <input type="number" id="carMileage" />
-
-    <label for="carFuelType">Fuel Type:</label>
-    <select id="carFuelType">
-        <option value="Gasoline">Gasoline</option>
-        <option value="Hybrid">Hybrid</option>
-        <option value="Electric">Electric</option>
-    </select>
-</div>
-
-<!-- Condition Fields (For applicable categories) -->
-<div id="conditionFields" class="form-section">
-    <label for="condition" class="condition-label">Condition:</label>
-    <div class="condition-options">
-        <label class="condition-option" for="new-condition">
-            <input type="radio" id="new-condition" name="condition" value="New"> New
-        </label>
-        <label class="condition-option" for="used-condition">
-            <input type="radio" id="used-condition" name="condition" value="Used"> Used
-        </label>
-        <label class="condition-option" for="refurbished-condition">
-            <input type="radio" id="refurbished-condition" name="condition" value="Refurbished"> Refurbished
-        </label>
-    </div>
-</div>
-
-<!-- Featured Ad Checkbox Section with Two Checkboxes -->
-<div class="form-group feature-box">
-    <label class="featured-label">
-        <input type="checkbox" id="isFeatured5Days" class="featured-checkbox">
-        <span data-i18n="label_featured">✨ Feature this ad for</span>
-        <span class="price-option" id="price-5-days">$4.99 for 5 days</span>
-    </label>
-    <label class="featured-label">
-        <input type="checkbox" id="isFeatured10Days" class="featured-checkbox">
-        <span data-i18n="label_featured">✨ Feature this ad for</span>
-        <span class="price-option" id="price-10-days">$8.99 for 10 days</span>
-    </label>
-</div>
-
-
-<!-- PayPal Button Container (Hidden initially) -->
-<div id="paypal-button-container" style="display:none;"></div>
-
-<!-- Post Ad Now Button -->
-<button type="submit" id="postBtn" class="btn primary" data-i18n="post_btn">Post Ad Now</button>
-                        <div class="card" onclick="goToDetails('ad-id-123')">
-
-
-    <!-- CORE SCRIPTS -->
+    <!-- Core Scripts -->
     <script src="languages.js"></script>
     <script type="module" src="post.js"></script>
 </body>
