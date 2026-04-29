@@ -199,6 +199,46 @@ window.deleteMsg = function(id) {
     });
 }
 
+// Send message to seller
+const messageData = {
+    sender: currentUser.email,
+    receiver: ad.userEmail,
+    text: messageText,
+    timestamp: new Date().toISOString()
+};
+
+const messagesRef = ref(rtdb, "messages/" + ad.id); 
+push(messagesRef, messageData)
+    .then(() => {
+        alert("Message sent successfully!");
+        displayMessages(ad.id);  // Refresh the messages after sending
+    })
+    .catch(err => {
+        console.error("Error sending message:", err);
+    });
+
+// Display messages for a particular ad
+function displayMessages(adId) {
+    const messagesRef = ref(rtdb, "messages/" + adId);
+    onValue(messagesRef, (snapshot) => {
+        const messages = snapshot.val();
+        const messageContainer = document.getElementById("messageContainer");
+        
+        if (messages) {
+            messageContainer.innerHTML = Object.values(messages).map(msg => `
+                <div class="message">
+                    <p><strong>${msg.sender}</strong>: ${msg.text}</p>
+                    <small>${msg.timestamp}</small>
+                </div>
+            `).join('');
+        } else {
+            messageContainer.innerHTML = "<p>No messages yet.</p>";
+        }
+    });
+}
+
+
+
 /* --- START --- */
 document.addEventListener('DOMContentLoaded', () => {
     loadLanguage(currentLanguage);
