@@ -270,19 +270,17 @@ isFeaturedCheckbox.addEventListener("change", function() {
     }
 });
 
-
-// Function to render PayPal button dynamically based on price
-function renderPaypalButton(price) {
-    const paypalButtonContainer = document.getElementById("paypal-button-container");
-
-    // Make sure the PayPal button is only rendered once
+// Function to render PayPal button
+function renderPaypalButton() {
+    // Render the PayPal button only once to prevent duplication
     if (paypalButtonContainer.innerHTML === "") {
         paypal.Buttons({
             createOrder: function(data, actions) {
                 return actions.order.create({
                     purchase_units: [{
                         amount: {
-                            value: price  // Payment for the featured ad
+                            value: "4.99"  // Payment for the featured ad
+                             value: "8.99"  // Payment for the featured ad
                         }
                     }]
                 });
@@ -290,21 +288,38 @@ function renderPaypalButton(price) {
             onApprove: function(data, actions) {
                 return actions.order.capture().then(function(details) {
                     alert("Payment successful! Thank you for featuring your ad.");
-
-                    // Get the current time for the start date and calculate end date (5 or 10 days later)
+                    
+                    // Get the current time for the start date and calculate end date (5 days later)
                     const featureStartDate = new Date().toISOString();
-                    const featureEndDate = new Date(Date.now() + (price === 4.99 ? 5 : 10) * 24 * 60 * 60 * 1000).toISOString(); // Based on price
+                    const featureEndDate = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(); // 5 days later
 
                     // Save the ad with feature start and end dates to Firestore
                     const adData = {
                         title: "Featured Ad",  // Example ad title
-                        price: `$${price}`,
+                        price: "$4.99",
                         isFeatured: true,
                         featureStartDate: featureStartDate,
                         featureEndDate: featureEndDate
                     };
 
-                    // Replace `db` with your actual Firebase Firestore reference
+                     onApprove: function(data, actions) {
+                return actions.order.capture().then(function(details) {
+                    alert("Payment successful! Thank you for featuring your ad.");
+                    
+                    // Get the current time for the start date and calculate end date (5 days later)
+                    const featureStartDate = new Date().toISOString();
+                    const featureEndDate = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(); // 5 days later
+
+                    // Save the ad with feature start and end dates to Firestore
+                    const adData = {
+                        title: "Featured Ad",  // Example ad title
+                        price: "$8.99",
+                        isFeatured: true,
+                        featureStartDate: featureStartDate,
+                        featureEndDate: featureEndDate
+                    };
+
+                    // Replace db with your actual Firebase Firestore reference
                     db.collection("marketplace_ads").add(adData)
                         .then(() => {
                             console.log("Ad has been featured and stored successfully!");
@@ -321,62 +336,43 @@ function renderPaypalButton(price) {
         }).render(paypalButtonContainer);  // Render the PayPal button inside the container
     }
 }
-
-document.getElementById("isFeatured5Days").addEventListener("change", function() {
-    if (this.checked) {
-        document.getElementById("paypal-button-container").style.display = "block"; // Show PayPal button
-        renderPaypalButton(4.99); // Set amount to $4.99 for 5 days
-    } else {
-        document.getElementById("paypal-button-container").style.display = "none"; // Hide PayPal button
-    }
-});
-
-document.getElementById("isFeatured10Days").addEventListener("change", function() {
-    if (this.checked) {
-        document.getElementById("paypal-button-container").style.display = "block"; // Show PayPal button
-        renderPaypalButton(9.99); // Set amount to $9.99 for 10 days
-    } else {
-        document.getElementById("paypal-button-container").style.display = "none"; // Hide PayPal button
-    }
-});
-
-// Fix radio button alignment for Condition options
+// Add the fixAlignment function in post.js
 async function fixAlignment() {
-    const container = document.querySelector('.condition-options');
-    if (!container) return;
+  const container = document.querySelector('.condition-options');
+  if (!container) return;
 
-    // Set container to align children to the start
-    await setElementStyles(container, {
-        'display': 'flex',
-        'flex-direction': 'column',
-        'align-items': 'flex-start'
+  // Set container to align children to the start
+  await setElementStyles(container, {
+    'display': 'flex',
+    'flex-direction': 'column',
+    'align-items': 'flex-start'
+  });
+
+  const labels = container.querySelectorAll('label.condition-option');
+  labels.forEach(async (label) => {
+    // Set label to align radio and text horizontally
+    await setElementStyles(label, {
+      'display': 'flex',
+      'flex-direction': 'row',
+      'align-items': 'center',
+      'justify-content': 'flex-start',
+      'width': 'auto',
+      'margin-bottom': '10px' // Add space between radio buttons
     });
 
-    const labels = container.querySelectorAll('label.condition-option');
-    labels.forEach(async (label) => {
-        // Set label to align radio and text horizontally
-        await setElementStyles(label, {
-            'display': 'flex',
-            'flex-direction': 'row',
-            'align-items': 'center',
-            'justify-content': 'flex-start',
-            'width': 'auto',
-            'margin-bottom': '10px' // Add space between radio buttons
-        });
-
-        const input = label.querySelector('input');
-        if (input) {
-            // Reset input width and display
-            await setElementStyles(input, {
-                'width': 'auto',
-                'display': 'inline-block',
-                'margin-right': '8px' // Space between radio button and text
-            });
-        }
-    });
+    const input = label.querySelector('input');
+    if (input) {
+      // Reset input width and display
+      await setElementStyles(input, {
+        'width': 'auto',
+        'display': 'inline-block',
+        'margin-right': '8px' // Space between radio button and text
+      });
+    }
+  });
 }
 
 // Call fixAlignment after DOM content is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    fixAlignment();
+  fixAlignment();
 });
