@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="style.css">
     
     <!-- PayPal SDK -->
-    <script src="https://www.paypal.com/sdk/js?client-id=AR_Wf3aXLq7GxACeo57SjDfghIrCso96DnHoZiMpLnKUsAaePgUoQyVKMbVt8B-RNMiVoPLCSXctDk6&components=buttons"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=AR_Wf3aXLq7GxACeo57SjDfghIrCso96DnHoZiMpLnKUsAaePgUoQyVKMbVt8B-RNMiVoPLCSXctDk6ID&components=buttons"></script>
 </head>
 <body>
     <header class="header">
@@ -117,17 +117,19 @@
                 <!-- Featured Ad Checkboxes (5 or 10 days) -->
                 <div class="form-group feature-box">
                     <label class="featured-label">
-                        <input type="checkbox" id="isFeatured5Days" class="featured-checkbox">
+                        <input type="radio" id="isFeatured5Days" name="isFeatured" class="featured-checkbox">
                         <span data-i18n="label_featured">✨ Feature this ad for</span>
                         <span class="price-option" id="price-5-days">$4.99 for 5 days</span>
                     </label>
                     <label class="featured-label">
-                        <input type="checkbox" id="isFeatured10Days" class="featured-checkbox">
+                        <input type="radio" id="isFeatured10Days" name="isFeatured" class="featured-checkbox">
                         <span data-i18n="label_featured">✨ Feature this ad for</span>
                         <span class="price-option" id="price-10-days">$8.99 for 10 days</span>
                     </label>
                 </div>
 
+                <!-- PayPal Button Container (Hidden initially) -->
+                <div id="paypal-button-container" style="display:none;"></div>
                 <!-- PayPal Button Container (Hidden initially) -->
                 <div id="paypal-button-container" style="display:none;"></div>
 
@@ -142,3 +144,8 @@
     <script type="module" src="post.js"></script>
 </body>
 </html>
+
+
+
+
+
