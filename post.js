@@ -258,7 +258,6 @@ function finalizeAd() {
 
 // Select the checkbox and PayPal button container
 const isFeaturedCheckbox = document.getElementById("isFeatured");
-const paypalButtonContainer = document.getElementById("paypal-button-container");
 
 // Add event listener to the checkbox to show/hide PayPal button
 isFeaturedCheckbox.addEventListener("change", function() {
