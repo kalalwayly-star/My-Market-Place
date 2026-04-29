@@ -2,9 +2,6 @@ import { auth, db, storage } from './firebase-config.js'; // Import Firestore an
 import { collection, addDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js"; // Firestore functions
 import { uploadBytesResumable, getDownloadURL, ref } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js"; // Firebase Storage functions
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js"; // Firebase Auth state listener
-import { getFirestore } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
-
-
 
 // Firebase Auth state listener
 onAuthStateChanged(auth, (user) => {
@@ -23,10 +20,8 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-// Initialize an array to store uploaded image URLs
+// Handle image upload and preview
 let uploadedImages = [];
-
-// Handles file upload and preview
 window.handlePhotoUpload = function (event) {
     const files = Array.from(event.target.files || []);
     const preview = document.getElementById("galleryPreview");
@@ -42,9 +37,8 @@ window.handlePhotoUpload = function (event) {
     const totalFiles = files.length;
 
     files.forEach((file) => {
-        // Create preview image
         const imgContainer = document.createElement("div");
-        imgContainer.classList.add("image-container"); // Styling for individual images
+        imgContainer.classList.add("image-container");
 
         const img = document.createElement("img");
         img.src = URL.createObjectURL(file);
@@ -53,20 +47,20 @@ window.handlePhotoUpload = function (event) {
         img.style.objectFit = "cover";
         imgContainer.appendChild(img);
 
-        // Create delete icon for each image
+        // Add delete icon for each image
         const deleteIcon = document.createElement("span");
         deleteIcon.classList.add("delete-icon");
         deleteIcon.innerHTML = "X";
         deleteIcon.onclick = function () {
-            imgContainer.remove(); // Remove image on click
+            imgContainer.remove();
             const index = uploadedImages.indexOf(file);
             if (index > -1) {
-                uploadedImages.splice(index, 1); // Remove the deleted image from array
+                uploadedImages.splice(index, 1);
             }
         };
         imgContainer.appendChild(deleteIcon);
 
-        // Append preview to the gallery
+        // Append to gallery
         preview.appendChild(imgContainer);
 
         // Upload image to Firebase Storage
@@ -89,38 +83,31 @@ function uploadImageToStorage(file, progressBar, uploadProgress, callback) {
 
     uploadTask.on('state_changed', (snapshot) => {
         const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        progressBar.value = progress;  // Update the progress bar
+        progressBar.value = progress;
     }, (error) => {
         console.error("Error uploading image:", error);
     }, () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             uploadedImages.push(downloadURL);  // Add image URL to uploadedImages array
-            callback(); // Call the callback function once the upload is finished
+            callback();  // Call the callback function once the upload is finished
         });
     });
 }
 
 // Handles category change and form section display
-// Ensure handleCategoryChange is declared before we try to use it
 function handleCategoryChange() {
-    // Get elements
     const categorySelect = document.getElementById("postCategory");
     const commonFields = document.getElementById("commonFields");
     const conditionBox = document.getElementById("globalCondition");
-    const carFields = document.getElementById("carFields"); // Div that wraps car fields
-    const conditionRadio = document.getElementById("conditionFields"); // Div that wraps condition radio buttons
+    const carFields = document.getElementById("carFields");
 
     if (!categorySelect) return;
 
     const selectedValue = categorySelect.value;
-
-    // Hide all extra category sections (i.e. other than common fields)
     document.querySelectorAll(".category-details").forEach(sec => sec.style.display = "none");
 
-    // Show main fields (Title, Price, Description)
     if (commonFields) commonFields.style.display = "block";
 
-    // Show specific section based on selected category
     const categoryMap = {
         "Cars & Trucks": "section-Cars",
         "Real Estate": "section-RealEstate",
@@ -146,35 +133,22 @@ function handleCategoryChange() {
     }
 
     if (carFields) {
-        if (selectedValue === "Cars & Trucks") {
-            carFields.style.display = "block"; // Show car-related fields
-        } else {
-            carFields.style.display = "none"; // Hide car-related fields for other categories
-        }
+        carFields.style.display = selectedValue === "Cars & Trucks" ? "block" : "none";
     }
 
     const hideConditionFor = ["Pets", "Jobs", "Real Estate", "Services"];
     if (conditionBox) {
-        conditionBox.style.display = hideConditionFor.includes(selectedValue) ? "none" : "block"; // Hide condition for specified categories
+        conditionBox.style.display = hideConditionFor.includes(selectedValue) ? "none" : "block";
     }
 }
 
-// Now, use `DOMContentLoaded` to make sure the DOM is ready before binding event listeners
-document.addEventListener("DOMContentLoaded", () => {
-    const categorySelect = document.getElementById("postCategory");
-    if (categorySelect) {
-        categorySelect.addEventListener("change", handleCategoryChange); // Add event listener after the DOM is ready
-    }
-});
+// Initialize category change listener
 document.addEventListener("DOMContentLoaded", () => {
     handleCategoryChange();
     document.getElementById("postCategory")?.addEventListener("change", handleCategoryChange);
     document.getElementById("photoInput")?.addEventListener("change", handlePhotoUpload);
     document.getElementById("postForm")?.addEventListener("submit", saveNewAd);
 });
-
-
-
 
 // Handles ad posting
 function saveNewAd(event) {
@@ -195,7 +169,7 @@ function saveNewAd(event) {
     let locationTimeout = setTimeout(() => {
         console.log("Location timed out, posting anyway...");
         finalizeAd();
-    }, 5000);  // Increased timeout to 5 seconds
+    }, 5000); // Increased timeout to 5 seconds
 
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -238,7 +212,6 @@ function finalizeAd() {
         description: document.getElementById("adDesc")?.value || "",
         condition: condition,
         image: uploadedImages.length ? uploadedImages : ["https://via.placeholder.com/300"],
-
         date: new Date().toLocaleDateString(),
         lat: window.currentAdLat || null,
         lng: window.currentAdLng || null
@@ -256,35 +229,20 @@ function finalizeAd() {
         });
 }
 
-// Select the checkbox and PayPal button container
-const isFeaturedCheckbox = document.getElementById("isFeatured");
-
-// Add event listener to the checkbox to show/hide PayPal button
-isFeaturedCheckbox.addEventListener("change", function() {
-    if (this.checked) {
-        paypalButtonContainer.style.display = "block";  // Show PayPal button
-        renderPaypalButton();  // Render PayPal button when checkbox is checked
-    } else {
-        paypalButtonContainer.style.display = "none";  // Hide PayPal button when checkbox is unchecked
-    }
-});
-
+// PayPal button display logic
 document.addEventListener('DOMContentLoaded', function () {
-    // Get the checkbox elements and PayPal container
     const featured5DaysCheckbox = document.getElementById("isFeatured5Days");
     const featured10DaysCheckbox = document.getElementById("isFeatured10Days");
     const paypalButtonContainer = document.getElementById("paypal-button-container");
 
-    // Function to render PayPal button dynamically based on price
     function renderPaypalButton(price) {
-        // Only render the PayPal button if it's not already rendered
         if (paypalButtonContainer.innerHTML === "") {
             paypal.Buttons({
                 createOrder: function (data, actions) {
                     return actions.order.create({
                         purchase_units: [{
                             amount: {
-                                value: price  // Payment for the featured ad (either $4.99 or $9.99)
+                                value: price
                             }
                         }]
                     });
@@ -292,22 +250,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 onApprove: function (data, actions) {
                     return actions.order.capture().then(function (details) {
                         alert("Payment successful! Thank you for featuring your ad.");
-
-                        // Get the current time for the start date and calculate end date based on the price
                         const featureStartDate = new Date().toISOString();
-                        const featureEndDate = new Date(Date.now() + (price === 4.99 ? 5 : 10) * 24 * 60 * 60 * 1000).toISOString(); // Based on price
-
-                        // Save the ad with feature start and end dates to Firestore (example log)
-                        const adData = {
-                            title: "Featured Ad",
-                            price: `$${price}`,
-                            isFeatured: true,
-                            featureStartDate: featureStartDate,
-                            featureEndDate: featureEndDate
-                        };
-
-                        console.log("Ad data to save:", adData);  // Replace with actual Firestore logic
-                        // db.collection("marketplace_ads").add(adData);  // Uncomment to save to Firestore
+                        const featureEndDate = new Date(Date.now() + (price === 4.99 ? 5 : 10) * 24 * 60 * 60 * 1000).toISOString();
+                        console.log("Feature Start:", featureStartDate, "Feature End:", featureEndDate);
                     });
                 },
                 onError: function (err) {
@@ -318,90 +263,20 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Function to toggle PayPal button based on checkbox
     function togglePaypalButton() {
         if (featured5DaysCheckbox.checked) {
-            renderPaypalButton(4.99);  // Set price to $4.99 for 5 days
+            renderPaypalButton(4.99);
             paypalButtonContainer.style.display = "block";
         } else if (featured10DaysCheckbox.checked) {
-            renderPaypalButton(9.99);  // Set price to $9.99 for 10 days
+            renderPaypalButton(9.99);
             paypalButtonContainer.style.display = "block";
         } else {
-            paypalButtonContainer.style.display = "none";  // Hide PayPal button if neither is checked
+            paypalButtonContainer.style.display = "none";
         }
     }
 
-    // Function to ensure mutual exclusivity of the checkboxes
-    function handleCheckboxSelection() {
-        // If 5 days checkbox is checked, uncheck the 10 days checkbox
-        if (featured5DaysCheckbox.checked) {
-            featured10DaysCheckbox.checked = false;
-        }
-        // If 10 days checkbox is checked, uncheck the 5 days checkbox
-        if (featured10DaysCheckbox.checked) {
-            featured5DaysCheckbox.checked = false;
-        }
-
-        // Recheck the PayPal button visibility after each selection
-        togglePaypalButton();
-    }
-
-    // Event listeners for checkboxes
-    featured5DaysCheckbox.addEventListener("change", handleCheckboxSelection);
-    featured10DaysCheckbox.addEventListener("change", handleCheckboxSelection);
-
-    // Initial check when page loads to hide PayPal button if no checkbox is checked
-    togglePaypalButton();
-});                            
-                        }]
-                    });
-                },
-                onApprove: function (data, actions) {
-                    return actions.order.capture().then(function (details) {
-                        alert("Payment successful! Thank you for featuring your ad.");
-
-                        // Get the current time for the start date and calculate end date based on the price
-                        const featureStartDate = new Date().toISOString();
-                        const featureEndDate = new Date(Date.now() + (price === 4.99 ? 5 : 10) * 24 * 60 * 60 * 1000).toISOString(); // Based on price
-
-                        // Example ad data, this should be saved to Firestore
-                        const adData = {
-                            title: "Featured Ad",
-                            price: `$${price}`,
-                            isFeatured: true,
-                            featureStartDate: featureStartDate,
-                            featureEndDate: featureEndDate
-                        };
-
-                        console.log("Ad data to save:", adData);  // Replace with actual Firestore logic
-                        // db.collection("marketplace_ads").add(adData);  // Uncomment to save to Firestore
-                    });
-                },
-                onError: function (err) {
-                    console.error("PayPal Payment Error", err);
-                    alert("There was an error processing your payment. Please try again.");
-                }
-            }).render(paypalButtonContainer);  // Render PayPal button inside the container
-        }
-    }
-
-    // Function to toggle PayPal button based on checkbox
-    function togglePaypalButton() {
-        if (featured5DaysCheckbox.checked) {
-            renderPaypalButton(4.99);  // Set price to $4.99 for 5 days
-            paypalButtonContainer.style.display = "block";
-        } else if (featured10DaysCheckbox.checked) {
-            renderPaypalButton(9.99);  // Set price to $9.99 for 10 days
-            paypalButtonContainer.style.display = "block";
-        } else {
-            paypalButtonContainer.style.display = "none";  // Hide PayPal button if neither is checked
-        }
-    }
-
-    // Event listeners for checkboxes
     featured5DaysCheckbox.addEventListener("change", togglePaypalButton);
     featured10DaysCheckbox.addEventListener("change", togglePaypalButton);
 
-    // Initial check when page loads to hide PayPal button if no checkbox is checked
     togglePaypalButton();
 });
