@@ -1,5 +1,15 @@
 import { auth, rtdb, db } from "./firebase-config.js";  // Import Firebase services
 import { ref, onValue } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js";  // Import Realtime DB methods
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.x.x/firebase-auth.js";
+
+const auth = getAuth();
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // User is signed in
+  } else {
+    // User is signed out
+  }
+});
 
 // Firebase Authentication state listener for checking login status
 onAuthStateChanged(auth, (user) => {
