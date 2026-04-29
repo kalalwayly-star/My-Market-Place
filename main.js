@@ -242,4 +242,61 @@ function handleCategoryChange() {
     }
 }
 
+// Function to delete an image
+function deleteImage(imageId) {
+    const imageContainer = document.getElementById(imageId);
+    if (imageContainer) {
+        // Remove the image container (image and delete button)
+        imageContainer.remove();
 
+        // Optionally, you can also remove the image from the `uploadedImages` array
+        const imageIndex = uploadedImages.findIndex(image => image.id === imageId);
+        if (imageIndex > -1) {
+            uploadedImages.splice(imageIndex, 1); // Remove image from the array
+        }
+
+        // If you are using Firebase or another backend, you should also remove the image from your database (Firestore or Realtime Database)
+        // Example for Firestore
+        // db.collection("your_collection").doc(imageId).delete()
+        //     .then(() => console.log("Image deleted from Firestore"))
+        //     .catch(err => console.error("Error deleting image:", err));
+    }
+}
+
+// This function will be used to populate the gallery preview
+function renderUploadedImages(images) {
+    const previewContainer = document.getElementById("galleryPreview");
+
+    // Clear the existing images before re-rendering
+    previewContainer.innerHTML = "";
+
+    images.forEach(image => {
+        const imageContainer = document.createElement("div");
+        imageContainer.classList.add("image-container");
+        imageContainer.id = image.id;
+
+        const img = document.createElement("img");
+        img.src = image.url;
+        imageContainer.appendChild(img);
+
+        // Add delete button
+        const deleteBtn = document.createElement("button");
+        deleteBtn.classList.add("delete-btn");
+        deleteBtn.textContent = "Delete";
+        deleteBtn.onclick = function () {
+            deleteImage(image.id);
+        };
+        imageContainer.appendChild(deleteBtn);
+
+        previewContainer.appendChild(imageContainer);
+    });
+}
+
+// Example usage of rendering uploaded images
+const uploadedImages = [
+    { id: "image-1", url: "https://example.com/image1.jpg" },
+    { id: "image-2", url: "https://example.com/image2.jpg" },
+    // Add other images
+];
+
+renderUploadedImages(uploadedImages);
