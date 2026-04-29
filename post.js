@@ -270,125 +270,72 @@ isFeaturedCheckbox.addEventListener("change", function() {
     }
 });
 
-// Function to render PayPal button
-function renderPaypalButton(price) {
+document.addEventListener('DOMContentLoaded', function () {
+    // Get the checkbox elements and PayPal container
+    const featured5DaysCheckbox = document.getElementById("isFeatured5Days");
+    const featured10DaysCheckbox = document.getElementById("isFeatured10Days");
     const paypalButtonContainer = document.getElementById("paypal-button-container");
 
-    // Render the PayPal button only once to prevent duplication
-    if (paypalButtonContainer.innerHTML === "") {
-        paypal.Buttons({
-            createOrder: function(data, actions) {
-                return actions.order.create({
-                    purchase_units: [{
-                        amount: {
-                            value: price  // Payment for the featured ad (either $4.99 or $8.99)
-                        }
-                    }]
-                });
-            },
-            onApprove: function(data, actions) {
-                return actions.order.capture().then(function(details) {
-                    alert("Payment successful! Thank you for featuring your ad.");
+    // Function to render PayPal button dynamically based on price
+    function renderPaypalButton(price) {
+        // Only render the PayPal button if it's not already rendered
+        if (paypalButtonContainer.innerHTML === "") {
+            paypal.Buttons({
+                createOrder: function (data, actions) {
+                    return actions.order.create({
+                        purchase_units: [{
+                            amount: {
+                                value: price  // Payment for the featured ad (either $4.99 or $9.99)
+                            }
+                        }]
+                    });
+                },
+                onApprove: function (data, actions) {
+                    return actions.order.capture().then(function (details) {
+                        alert("Payment successful! Thank you for featuring your ad.");
 
-                    // Get the current time for the start date and calculate end date based on the price
-                    const featureStartDate = new Date().toISOString();
-                    const featureEndDate = new Date(Date.now() + (price === 4.99 ? 5 : 10) * 24 * 60 * 60 * 1000).toISOString(); // Based on price
+                        // Get the current time for the start date and calculate end date based on the price
+                        const featureStartDate = new Date().toISOString();
+                        const featureEndDate = new Date(Date.now() + (price === 4.99 ? 5 : 10) * 24 * 60 * 60 * 1000).toISOString(); // Based on price
 
-                    // Save the ad with feature start and end dates to Firestore
-                    const adData = {
-                        title: "Featured Ad", 
-                        price: `$${price}`,
-                        isFeatured: true,
-                        featureStartDate: featureStartDate,
-                        featureEndDate: featureEndDate
-                    };
+                        // Example ad data, this should be saved to Firestore
+                        const adData = {
+                            title: "Featured Ad",
+                            price: `$${price}`,
+                            isFeatured: true,
+                            featureStartDate: featureStartDate,
+                            featureEndDate: featureEndDate
+                        };
 
-                    // Replace `db` with your actual Firebase Firestore reference
-                    db.collection("marketplace_ads").add(adData)
-                        .then(() => {
-                            console.log("Ad has been featured and stored successfully!");
-                        })
-                        .catch((error) => {
-                            console.error("Error adding ad:", error);
-                        });
-                });
-            },
-            onError: function(err) {
-                console.error("PayPal Payment Error", err);
-                alert("There was an error processing your payment. Please try again.");
-            }
-        }).render(paypalButtonContainer);  // Render the PayPal button inside the container
-    }
-}
-
-// Feature Ad checkbox change listener
-document.getElementById("isFeatured5Days").addEventListener("change", function() {
-    const paypalButtonContainer = document.getElementById("paypal-button-container");
-    if (this.checked) {
-        // Show PayPal button for $4.99
-        paypalButtonContainer.style.display = "block";
-        renderPaypalButton(4.99); // Set price to $4.99 for 5 days
-    } else {
-        // Hide PayPal button when checkbox is unchecked
-        paypalButtonContainer.style.display = "none";
-    }
-});
-
-document.getElementById("isFeatured10Days").addEventListener("change", function() {
-    const paypalButtonContainer = document.getElementById("paypal-button-container");
-    if (this.checked) {
-        // Show PayPal button for $8.99
-        paypalButtonContainer.style.display = "block";
-        renderPaypalButton(8.99); // Set price to $8.99 for 10 days
-    } else {
-        // Hide PayPal button when checkbox is unchecked
-        paypalButtonContainer.style.display = "none";
-    }
-});
-
-// Fix radio button alignment for Condition options
-async function fixAlignment() {
-    const container = document.querySelector('.condition-options');
-    if (!container) return;
-
-    // Set container to align children to the start
-    await setElementStyles(container, {
-        'display': 'flex',
-        'flex-direction': 'column',
-        'align-items': 'flex-start'
-    });
-
-    const labels = container.querySelectorAll('label.condition-option');
-    labels.forEach(async (label) => {
-        // Set label to align radio and text horizontally
-        await setElementStyles(label, {
-            'display': 'flex',
-            'flex-direction': 'row',
-            'align-items': 'center',
-            'justify-content': 'flex-start',
-            'width': 'auto',
-            'margin-bottom': '10px' // Add space between radio buttons
-        });
-
-        const input = label.querySelector('input');
-        if (input) {
-            // Reset input width and display
-            await setElementStyles(input, {
-                'width': 'auto',
-                'display': 'inline-block',
-                'margin-right': '8px' // Space between radio button and text
-            });
+                        console.log("Ad data to save:", adData);  // Replace with actual Firestore logic
+                        // db.collection("marketplace_ads").add(adData);  // Uncomment to save to Firestore
+                    });
+                },
+                onError: function (err) {
+                    console.error("PayPal Payment Error", err);
+                    alert("There was an error processing your payment. Please try again.");
+                }
+            }).render(paypalButtonContainer);  // Render PayPal button inside the container
         }
-    });
-}
+    }
 
-document.addEventListener('DOMContentLoaded', function() {
-   // Your event listener code here
-   document.getElementById("isFeatured5Days").addEventListener("change", function() {
-       // Handle the checkbox logic
-   });
+    // Function to toggle PayPal button based on checkbox
+    function togglePaypalButton() {
+        if (featured5DaysCheckbox.checked) {
+            renderPaypalButton(4.99);  // Set price to $4.99 for 5 days
+            paypalButtonContainer.style.display = "block";
+        } else if (featured10DaysCheckbox.checked) {
+            renderPaypalButton(9.99);  // Set price to $9.99 for 10 days
+            paypalButtonContainer.style.display = "block";
+        } else {
+            paypalButtonContainer.style.display = "none";  // Hide PayPal button if neither is checked
+        }
+    }
 
-   document.getElementById("isFeatured10Days").addEventListener("change", function() {
-       // Handle the checkbox logic
-   });
+    // Event listeners for checkboxes
+    featured5DaysCheckbox.addEventListener("change", togglePaypalButton);
+    featured10DaysCheckbox.addEventListener("change", togglePaypalButton);
+
+    // Initial check when page loads to hide PayPal button if no checkbox is checked
+    togglePaypalButton();
 });
