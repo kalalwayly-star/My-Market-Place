@@ -287,23 +287,6 @@ document.addEventListener('DOMContentLoaded', function () {
                             amount: {
                                 value: price  // Payment for the featured ad (either $4.99 or $9.99)
                             }
-document.addEventListener('DOMContentLoaded', function () {
-    // Get the checkbox elements and PayPal container
-    const featured5DaysCheckbox = document.getElementById("isFeatured5Days");
-    const featured10DaysCheckbox = document.getElementById("isFeatured10Days");
-    const paypalButtonContainer = document.getElementById("paypal-button-container");
-
-    // Function to render PayPal button dynamically based on price
-    function renderPaypalButton(price) {
-        // Only render the PayPal button if it's not already rendered
-        if (paypalButtonContainer.innerHTML === "") {
-            paypal.Buttons({
-                createOrder: function (data, actions) {
-                    return actions.order.create({
-                        purchase_units: [{
-                            amount: {
-                                value: price  // Payment for the featured ad (either $4.99 or $9.99)
-                            }
                         }]
                     });
                 },
