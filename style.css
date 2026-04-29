@@ -601,3 +601,33 @@ img {
     color: #FF5722;  /* Red color for the 10-day price */
     font-size: 18px;
 }
+/* Style the image containers */
+.image-container {
+    position: relative;
+    display: inline-block;
+    margin: 10px;
+}
+
+.image-container img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Style for delete button */
+.delete-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    border: none;
+    padding: 5px 8px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.delete-btn:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
