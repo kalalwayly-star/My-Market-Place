@@ -221,7 +221,7 @@ function finalizeAd() {
         location: document.getElementById("adLocation")?.value || "",
         description: document.getElementById("adDesc")?.value || "",
         condition: condition,
-        image: uploadedImages.length ? uploadedImages : ["https://via.placeholder.com/300"],
+        image: [imageUrl], 
         date: new Date().toLocaleDateString(),
         lat: window.currentAdLat || null,
         lng: window.currentAdLng || null
