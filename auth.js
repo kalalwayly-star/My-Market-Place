@@ -113,12 +113,13 @@ export const updateUserProfile = (displayName) => {
 };
 
 /* --- LOGIN FUNCTION --- */
+// Login Function
 window.login = function () {
     const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value;
     const errorMsg = document.getElementById('error-message');
 
-    // Clear any previous error message
+    // Clear previous error message
     errorMsg.innerText = '';
 
     // Input validation
@@ -127,8 +128,19 @@ window.login = function () {
         return;
     }
 
-    // Attempt to log in with localStorage-based method
-    loginUser(email, password);
+    // Retrieve users from localStorage
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+
+    // Find matching user
+    const user = users.find(u => u.email === email && u.password === password);
+
+    if (user) {
+        // User found, redirect to main page
+        localStorage.setItem('loggedInUser', JSON.stringify(user)); // Optionally store logged-in user
+        window.location.href = "index.html"; // Redirect after successful login
+    } else {
+        errorMsg.innerText = "Invalid credentials. Please try again.";
+    }
 };
 
 /* --- REGISTER FUNCTION --- */
