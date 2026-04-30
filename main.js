@@ -268,19 +268,20 @@ async function deleteAd(adId) {
 function renderUploadedImages(images) {
     const previewContainer = document.getElementById("galleryPreview");
 
-    // Clear the existing images before re-rendering
-    previewContainer.innerHTML = "";
+    previewContainer.innerHTML = "";  // Clear existing images
 
-    images.forEach(image => {
+    images.forEach(async (image) => {
         const imageContainer = document.createElement("div");
         imageContainer.classList.add("image-container");
         imageContainer.id = image.id;
 
+        // Fetch image URL from Firebase Storage
+        const imageUrl = await getDownloadURL(ref(storage, image.url));
+
         const img = document.createElement("img");
-        img.src = image.url;
+        img.src = imageUrl;  // Set the dynamic image URL
         imageContainer.appendChild(img);
 
-        // Add delete button
         const deleteBtn = document.createElement("button");
         deleteBtn.classList.add("delete-btn");
         deleteBtn.textContent = "Delete";
