@@ -132,6 +132,7 @@ window.login = function () {
 };
 
 /* --- REGISTER FUNCTION --- */
+// Register Function
 window.register = function () {
     const email = document.getElementById('registerEmail').value.trim();
     const password = document.getElementById('registerPassword').value;
@@ -148,8 +149,14 @@ window.register = function () {
         return;
     }
 
-    // Register user with localStorage-based method
-    registerUser(email, password);
+    // Save user to localStorage (this is just a simple example, and it's not encrypted; you should use encryption for real apps)
+    const existingUsers = JSON.parse(localStorage.getItem('users')) || [];
+    const newUser = { email, password }; // Ideally, you would hash the password before saving it
+    existingUsers.push(newUser);
+    localStorage.setItem('users', JSON.stringify(existingUsers));
+
+    // Redirect after successful registration
+    window.location.href = "myads.html";
 };
 
 /* --- ADMIN CHECK --- */
