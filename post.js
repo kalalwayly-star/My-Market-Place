@@ -88,6 +88,19 @@ function uploadImageToStorage(file, progressBar, uploadProgress, callback) {
         });
     });
 }
+function saveImageUrlToFirestore(downloadURL) {
+    const adsCollectionRef = collection(db, "marketplace_ads");
+    addDoc(adsCollectionRef, {
+        userId: auth.currentUser.uid,
+        imageUrl: downloadURL,  // Save the image URL to Firestore
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()  // Add a timestamp
+    }).then(() => {
+        console.log('Image URL saved to Firestore!');
+    }).catch((error) => {
+        console.error('Error saving image URL:', error);
+    });
+}
+
 
 // Handles category change and form section display
 function handleCategoryChange() {
