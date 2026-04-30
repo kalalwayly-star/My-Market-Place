@@ -1,50 +1,12 @@
-import { auth, db, rtdb } from "./firebase-config.js";  // Firebase services from your config
-
-// Import Firebase Authentication methods
-import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
-
-// Import Firestore methods
-import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
-import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js"; // Import necessary functions for Realtime Database
-
-// Firebase Firestore reference (import Firestore SDK if not already imported)
-import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
-
-// Fetch and display featured ads (only show those still within the 5-day period)
-function fetchFeaturedAds() {
-    const db = getFirestore();
-    const now = new Date().toISOString(); // Get the current time
-    
-    const adsCollectionRef = collection(db, "marketplace_ads");
-    const q = query(adsCollectionRef, where("isFeatured", "==", true)); // Get only featured ads
-
-    getDocs(q)
-        .then(snapshot => {
-            const featuredAds = snapshot.docs.filter(doc => {
-                const adData = doc.data();
-                return adData.featureEndDate >= now; // Check if the ad is still within the 5-day window
-            });
-
-            // Render the featured ads (pass the filtered ads to your render function)
-            renderFeaturedAds(featuredAds);
-        })
-        .catch(error => {
-            console.error("Error fetching featured ads:", error);
-        });
-}
-
-// Call fetchFeaturedAds when the page loads
-window.onload = fetchFeaturedAds;
-// Initialize variables
 let currentUserEmail = "Guest";
 let ad;
 const adId = new URLSearchParams(window.location.search).get("id");
 console.log("Ad ID from URL:", adId);
+
 // Check auth state
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        currentUserEmail = user.email;
-    }
+document.addEventListener("DOMContentLoaded", () => {
+    currentUserEmail = localStorage.getItem("currentUserEmail") || "Guest"; // Assuming the user's email is stored in local storage
+    initDetailsPage();
 });
 
 // Initialize the details page
@@ -54,23 +16,19 @@ async function initDetailsPage() {
         return;
     }
 
-    try {
-        const adRef = doc(db, "marketplace_ads", adId);
-        const snapshot = await getDoc(adRef);
+    // Fetch ad details from localStorage (for simplicity, we're assuming ads are stored as an array in localStorage)
+    const ads = JSON.parse(localStorage.getItem("marketplace_ads")) || [];
 
-        if (!snapshot.exists()) {
-            alert("Ad not found!");
-            console.log("Ad not found in Firestore:", adId);
-            window.location.href = "index.html";
-            return;
-        }
+    ad = ads.find(ad => ad.id === adId);
 
-        ad = snapshot.data();
-        renderAdDetails();
-    } catch (error) {
-        console.error("Error loading ad:", error);
-        alert("Failed to load ad details.");
+    if (!ad) {
+        alert(getText("ad_not_found")); // Using localization key
+        console.log("Ad not found in localStorage:", adId);
+        window.location.href = "index.html";
+        return;
     }
+
+    renderAdDetails();
 }
 
 // Render the ad details
@@ -78,24 +36,10 @@ function renderAdDetails() {
     setText("adTitle", ad.title);
     setText("adPrice", `$${ad.price}`);
     setText("adCategory", ad.category);
-    setText("adLocation", ad.location || "Local");
-    setText("adDesc", ad.description || getText("no_description"));
+    setText("adLocation", ad.location || getText("local")); // Using localization key
+    setText("adDesc", ad.description || getText("no_description")); // Using localization key
     renderImages();
 }
-
-// Add the missing function definition
-function renderFeaturedAds(ads) {
-    const container = document.getElementById('featured-ads-container'); // Ensure this ID exists in your HTML
-    if (!container) return;
-
-    container.innerHTML = ads.map(doc => {
-        const ad = doc.data();
-        return `<div class="ad-card">${ad.title}</div>`; // Adjust this template to match your UI
-    }).join('');
-}
-
-// Your existing fetch code
-// .then(snapshot => { ... renderFeaturedAds(featuredAds); ... })
 
 // Render images
 function renderImages() {
@@ -120,7 +64,7 @@ function renderImages() {
 // Send a message to the seller
 window.sendMessage = function() {
     if (currentUserEmail === "Guest") {
-        alert("Please login first.");
+        alert(getText("please_login")); // Using localization key
         window.location.href = "login.html";
         return;
     }
@@ -133,31 +77,32 @@ window.sendMessage = function() {
     const newMessage = {
         adTitle: ad.title,
         senderEmail: currentUserEmail,
-        receiverEmail: ad.userEmail, // Make sure ad.userEmail is correctly set in Firestore
+        receiverEmail: ad.userEmail, // Make sure ad.userEmail is correctly set in localStorage
         text: text,
         date: new Date().toLocaleString()
     };
 
-    const messagesRef = ref(rtdb, "marketplace_messages");
-    push(messagesRef, newMessage)
-        .then(() => {
-            alert("Message sent!");
-            if (messageInput) messageInput.value = "";
-        })
-        .catch(err => alert("Error: " + err.message));
+    // Store the message in localStorage
+    const messages = JSON.parse(localStorage.getItem("marketplace_messages")) || [];
+    messages.push(newMessage);
+    localStorage.setItem("marketplace_messages", JSON.stringify(messages));
+
+    alert(getText("message_sent")); // Using localization key
+    if (messageInput) messageInput.value = "";
 }
 
 // Report an ad
 window.submitReport = function() {
     const reason = document.getElementById("reportReason")?.value;
-    if (!reason) return alert("Please select a reason.");
+    if (!reason) return alert(getText("please_select_reason")); // Using localization key
 
-    const reportRef = ref(rtdb, "flaggedAds");
-    push(reportRef, { adId, reason, timestamp: new Date().toISOString() })
-        .then(() => {
-            alert("Report submitted.");
-            closeModal();
-        });
+    // Store the report in localStorage
+    const reports = JSON.parse(localStorage.getItem("flaggedAds")) || [];
+    reports.push({ adId, reason, timestamp: new Date().toISOString() });
+    localStorage.setItem("flaggedAds", JSON.stringify(reports));
+
+    alert(getText("report_submitted")); // Using localization key
+    closeModal();
 }
 
 // Helper functions
@@ -169,7 +114,5 @@ function setText(id, value) {
 function getText(key) {
     return (window.translations && window.translations[key]) ? window.translations[key] : key;
 }
-
-initDetailsPage();
 
 
