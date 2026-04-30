@@ -83,6 +83,20 @@ function renderAdDetails() {
     renderImages();
 }
 
+// Add the missing function definition
+function renderFeaturedAds(ads) {
+    const container = document.getElementById('featured-ads-container'); // Ensure this ID exists in your HTML
+    if (!container) return;
+
+    container.innerHTML = ads.map(doc => {
+        const ad = doc.data();
+        return `<div class="ad-card">${ad.title}</div>`; // Adjust this template to match your UI
+    }).join('');
+}
+
+// Your existing fetch code
+// .then(snapshot => { ... renderFeaturedAds(featuredAds); ... })
+
 // Render images
 function renderImages() {
     const imgContainer = document.getElementById("adImageContainer");
