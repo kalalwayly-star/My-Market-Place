@@ -587,6 +587,7 @@ img {
     width: 25px;
     height: 25px;
 }
+form.reset();
 
 /* 3. Styling for the price options to appear next to each other */
 .price-option {
