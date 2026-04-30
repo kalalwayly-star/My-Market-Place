@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Account - Classified Site</title>
     <!-- FIX: Corrected Font Awesome Link -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">    <!-- FIX: Updated versioning to v=1.2 to match your latest CSS save -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- FIX: Updated versioning to v=1.2 to match your latest CSS save -->
     <link rel="stylesheet" href="style.css?v=1.2">
 </head>
 <body class="auth-page-body">
@@ -21,38 +22,46 @@
         <!-- Step 1: Basic Info -->
         <div class="input-group">
             <label>Email Address</label>
-<input 
-  type="email" 
-  id="registerEmail" 
-  data-i18n-placeholder="enter_email"
-  placeholder="Enter your email">
+            <input 
+              type="email" 
+              id="registerEmail" 
+              data-i18n-placeholder="enter_email"
+              placeholder="Enter your email">
         </div>
 
         <div class="input-group">
             <label>Password</label>
             <input 
-  type="password" 
-  id="registerPassword" 
-  data-i18n-placeholder="enter_password"
-  placeholder="Enter your password">
+              type="password" 
+              id="registerPassword" 
+              data-i18n-placeholder="enter_password"
+              placeholder="Enter your password">
             <!-- Icon will now show up because of the Font Awesome fix -->
             <i class="fas fa-eye" id="toggleRegPassword"></i>
         </div>
 
         <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
-
+        
+        <!-- Terms of Use and Privacy Policy Agreement -->
+        <div class="input-group">
+            <label>
+                <input type="checkbox" id="termsOfUse" style="margin-right: 10px;">
+                I agree to the <a href="terms.html" target="_blank" style="color: #007bff;">Terms of Use</a> and
+                <a href="privacy-policy.html" target="_blank" style="color: #007bff;">Privacy Policy</a>
+            </label>
+        </div>
 
         <!-- Action Button -->
-        <button type="button" class="btn-primary" onclick="register()">Create Account</button>
+        <button type="button" class="btn-primary" onclick="register()" id="registerBtn" disabled>Create Account</button>
         
         <div class="divider"><span>OR</span></div>
 
-       <div style="text-align: center;">
-    <p style="font-size: 14px; color: #666;">
-        <span data-i18n="already_have_account">Already have an account?</span> 
-        <a href="login.html" data-i18n="login_here" style="color: #007bff; text-decoration: none; font-weight: bold;">Login here</a>
-    </p>
-</div>
+        <div style="text-align: center;">
+            <p style="font-size: 14px; color: #666;">
+                <span data-i18n="already_have_account">Already have an account?</span> 
+                <a href="login.html" data-i18n="login_here" style="color: #007bff; text-decoration: none; font-weight: bold;">Login here</a>
+            </p>
+        </div>
 
     </div>
 </div>
@@ -62,7 +71,7 @@
 <script>
     // Eye toggle for registration page
     const toggleBtn = document.getElementById('toggleRegPassword');
-    const passInput = document.getElementById('loginPassword');
+    const passInput = document.getElementById('registerPassword');
 
     if (toggleBtn) {
         toggleBtn.addEventListener('click', function() {
@@ -71,6 +80,17 @@
             this.classList.toggle('fa-eye-slash');
         });
     }
+
+    // Enable the "Create Account" button when both checkboxes are checked
+    const termsOfUseCheckbox = document.getElementById('termsOfUse');
+    const registerBtn = document.getElementById('registerBtn');
+
+    termsOfUseCheckbox.addEventListener('change', function() {
+        // Check if the Terms checkbox is checked
+        registerBtn.disabled = !this.checked;
+    });
+    
+    // Optional: Add similar logic if you have another checkbox for Privacy Policy or need validation
 </script>
 
 </body>
