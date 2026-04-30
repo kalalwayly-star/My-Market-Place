@@ -124,18 +124,25 @@ function renderAds(adsArray) {
 window.onload = fetchAds;  // <-- This will call fetchAds on page load
 
 // Delete ad functionality
-window.deleteAd = async function(firebaseId) {
+async function deleteAd(adId, imageUrls) {
     if (confirm("Are you sure you want to delete this ad?")) {
         try {
-            // Correct Firestore delete doc call
-            await deleteDoc(firestoreDoc(db, "marketplace_ads", firebaseId));
-            alert("Ad deleted successfully");
+            // Deleting associated images from Firebase Storage
+            imageUrls.forEach(async (url) => {
+                const imageRef = ref(storage, url);  // Get reference to the image in Firebase Storage
+                await deleteObject(imageRef);  // Delete the image from Firebase Storage
+            });
+            
+            // Deleting the ad from Firestore
+            await deleteDoc(firestoreDoc(db, "marketplace_ads", adId));
+            alert("Ad and its images deleted successfully!");
+            fetchAds(); // Reload the ads after deletion
         } catch (error) {
             console.error("Error deleting ad:", error);
             alert("Error deleting ad. Check console.");
         }
     }
-};
+}
 
 // Filter ads by category
 window.filterByCategory = function(category) {
