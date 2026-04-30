@@ -1,9 +1,9 @@
 /* --- 1. GLOBAL & RESET --- */
 body {
-  font-family: 'Segoe UI', Arial, sans-serif;
-  margin: 0;
-  background: #f6f6f6;
-  color: #333;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    background: #f6f6f6;
+    color: #333;
 }
 
 .auth-page-body, .details-page {
@@ -15,13 +15,13 @@ body {
 
 /* --- 2. HEADER & LANGUAGES --- */
 .header {
-  background: #4b2aad;
-  color: white !important;
-  padding: 15px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
+    background: #4b2aad;
+    color: white !important;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
 }
 
 .language-nav a, .nav a.text, .nav a {
@@ -451,85 +451,29 @@ img {
     text-align: center;
     font-size: 16px;
 }
-/* 1. Add space between the Condition label and radio buttons */
+
+/* Additional adjustments for specific form fields */
 .condition-label {
-    margin-bottom: 20px;  /* Add space below the label */
+    margin-bottom: 15px;
 }
 
-/* Condition Fields Container */
 .condition-options {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
 }
 
-/* Each radio label */
 .condition-option {
     display: flex;
-    flex-direction: row;   /* Align radio button and label horizontally */
-    align-items: center;    /* Center the items vertically */
-    justify-content: flex-start; /* Align items to the left */
-    width: auto;
-    margin-bottom: 10px;   /* Space between radio button options */
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 10px;
 }
 
-/* Style for the radio input */
 .condition-option input[type="radio"] {
-    margin-right: 8px;  /* Space between the radio button and text */
-    width: auto;
-    display: inline-block;
+    margin-right: 8px;
 }
 
-/* 2. Make the "Feature this ad" checkbox bigger and align it in front of the text */
-.featured-label {
-    display: flex;
-    align-items: left;
-    gap: 0px;
-    font-size: 14px;
-}
-
-.featured-checkbox {
-    width: 25px;   /* Make the checkbox bigger */
-    height: 25px;  /* Increase the size of the checkbox */
-}
-
-/* 3. Add space between the "Feature this ad" checkbox and the "Post Ad Now" button */
-#postAdBtn {
-    margin-top: 20px;  /* Space between "Feature this ad" and "Post Ad Now" button */
-}
-#dropZone:hover {
-    background-color: #007BFF;
-}
- /* 1. Space between the Condition label and radio buttons */
-.condition-label {
-    margin-bottom: 15px;  /* Add space below the label */
-}
-
-/* Condition Fields Container */
-.condition-options {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-/* Each radio label */
-.condition-option {
-    display: flex;
-    flex-direction: row;   /* Align radio button and label horizontally */
-    align-items: center;    /* Center the items vertically */
-    justify-content: flex-start; /* Align items to the left */
-    width: auto;
-    margin-bottom: 10px;   /* Space between radio button options */
-}
-
-/* Style for the radio input */
-.condition-option input[type="radio"] {
-    margin-right: 8px;  /* Space between the radio button and text */
-    width: auto;
-    display: inline-block;
-}
-
-/* 2. Make the "Feature this ad" checkbox bigger and align it in front of the text */
 .featured-label {
     display: flex;
     align-items: center;
@@ -538,71 +482,28 @@ img {
 }
 
 .featured-checkbox {
-    width: 25px;   /* Make the checkbox bigger */
-    height: 25px;  /* Increase the size of the checkbox */
+    width: 25px;
+    height: 25px;
 }
 
-/* 3. Add space between the "Feature this ad" checkbox and the "Post Ad Now" button */
 #postAdBtn {
-    margin-top: 20px;  /* Space between "Feature this ad" and "Post Ad Now" button */
-}
-/* 1. Style for the "Feature This Ad" Section */
-.featured-label {
-    display: flex;
-    align-items: center;
-    gap: 10px;  /* Space between checkbox and text */
-    font-size: 16px;
+    margin-top: 20px;
 }
 
-/* 2. Style for the checkbox */
-.featured-checkbox {
-    width: 25px;
-    height: 25px;
-}
-
-/* 3. Styling for the price options to appear next to each other */
+/* Price options */
 .price-option {
-    margin-right: 15px;  /* Add space between price options */
+    margin-right: 15px;
     font-weight: bold;
     font-size: 16px;
-    color: #4CAF50;  /* Green color for pricing */
+    color: #4CAF50;
 }
 
-/* Optional: Make the second price option (for 10 days) slightly larger or with a different color */
 #price-10-days {
-    color: #FF5722;  /* Red color for the 10-day price */
+    color: #FF5722;
     font-size: 18px;
 }
-/* 1. Style for the "Feature This Ad" Section */
-.featured-label {
-    display: flex;
-    align-items: center;
-    gap: 10px;  /* Space between checkbox and text */
-    font-size: 16px;
-    margin-bottom: 10px;  /* Space between the checkboxes */
-}
 
-/* 2. Style for the checkbox */
-.featured-checkbox {
-    width: 25px;
-    height: 25px;
-}
-form.reset();
-
-/* 3. Styling for the price options to appear next to each other */
-.price-option {
-    margin-right: 15px;  /* Add space between price options */
-    font-weight: bold;
-    font-size: 16px;
-    color: #4CAF50;  /* Green color for pricing */
-}
-
-/* Optional: Make the second price option (for 10 days) slightly larger or with a different color */
-#price-10-days {
-    color: #FF5722;  /* Red color for the 10-day price */
-    font-size: 18px;
-}
-/* Style the image containers */
+/* Image delete button styling */
 .image-container {
     position: relative;
     display: inline-block;
@@ -616,7 +517,6 @@ form.reset();
     border-radius: 8px;
 }
 
-/* Style for delete button */
 .delete-btn {
     position: absolute;
     top: 5px;
