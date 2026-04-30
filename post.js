@@ -2,6 +2,7 @@ import { auth, db, storage } from './firebase-config.js'; // Import Firestore an
 import { collection, addDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js"; // Firestore functions
 import { uploadBytesResumable, getDownloadURL, ref } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js"; // Firebase Storage functions
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js"; // Firebase Auth state listener
+import { serverTimestamp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 // Firebase Auth state listener
 onAuthStateChanged(auth, (user) => {
@@ -73,7 +74,7 @@ window.handlePhotoUpload = function (event) {
 
 // Upload image to Firebase Storage and get the download URL
 function uploadImageToStorage(file, progressBar, uploadProgress, callback) {
-    const storageRef = ref(storage, 'ads_images/' + file.name);
+    const storageRef = ref(storage, 'ads_images/' + Date.now() + "_" + file.name);
     const uploadTask = uploadBytesResumable(storageRef, file);
 
     uploadTask.on('state_changed', (snapshot) => {
@@ -84,6 +85,7 @@ function uploadImageToStorage(file, progressBar, uploadProgress, callback) {
     }, () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             uploadedImages.push(downloadURL);  // Add image URL to uploadedImages array
+                saveImageUrlToFirestore(downloadURL); // Save to Firestore
             callback();  // Call the callback function once the upload is finished
         });
     });
@@ -116,7 +118,7 @@ function handleCategoryChange() {
 
     if (commonFields) commonFields.style.display = "block";
 
-    const categoryMap = {
+    const categorySections = {
         "Cars & Trucks": "section-Cars",
         "Real Estate": "section-RealEstate",
         "Electronics": "section-Electronics",
@@ -134,10 +136,10 @@ function handleCategoryChange() {
         "Baby": "section-Baby"
     };
 
-    const sectionId = categoryMap[selectedValue];
+    const sectionId = categorySections[selectedValue];
     if (sectionId) {
-        const el = document.getElementById(sectionId);
-        if (el) el.style.display = "block";
+        const section = document.getElementById(sectionId);
+        if (section) section.style.display = "block";
     }
 
     if (carFields) {
@@ -240,32 +242,29 @@ function finalizeAd() {
 document.addEventListener("DOMContentLoaded", function () {
     const paypalButtonContainer = document.getElementById("paypal-button-container");
 
-    function renderPaypalButton(price) {
-        // Prevent rendering multiple buttons
-        if (paypalButtonContainer.innerHTML === "") {
-            console.log("Rendering PayPal Button for price:", price);
-            paypal.Buttons({
-                createOrder: function(data, actions) {
-                    return actions.order.create({
-                        purchase_units: [{
-                            amount: {
-                                value: price
-                            }
-                        }]
-                    });
-                },
-                onApprove: function(data, actions) {
-                    return actions.order.capture().then(function(details) {
-                        alert("Payment successful! Thank you for featuring your ad.");
-                    });
-                },
-                onError: function(err) {
-                    console.error("PayPal Payment Error", err);
-                    alert("There was an error processing your payment.");
-                }
-            }).render(paypalButtonContainer);
-        }
+   let paypalButtonRendered = false;
+
+function renderPaypalButton(price) {
+    if (!paypalButtonRendered) {
+        paypal.Buttons({
+            createOrder: function (data, actions) {
+                return actions.order.create({
+                    purchase_units: [{ amount: { value: price } }]
+                });
+            },
+            onApprove: function (data, actions) {
+                return actions.order.capture().then(function (details) {
+                    alert("Payment successful! Thank you for featuring your ad.");
+                });
+            },
+            onError: function (err) {
+                console.error("PayPal Payment Error", err);
+                alert("There was an error processing your payment.");
+            }
+        }).render("#paypal-button-container");
+        paypalButtonRendered = true;
     }
+}
 
     // Checkboxes event listeners
     const featured5DaysCheckbox = document.getElementById("isFeatured5Days");
