@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,20 +12,16 @@
 <!-- HEADER -->
 <header class="header">
     <div class="container" style="display:flex; justify-content:space-between; align-items:center; max-width:1200px; margin:0 auto;">
-
         <h1 data-i18n="app_name">My Marketplace</h1>
-
         <div class="nav" id="userAuth">
             <a href="index.html" class="btn text" data-i18n="home">Home</a>
             <a href="post.html" class="btn" data-i18n="postAd">Post Ad</a>
         </div>
-
     </div>
 </header>
 
 <!-- MAIN CONTENT -->
 <main class="myads-container" style="max-width:1200px; margin:20px auto; padding:0 15px;">
-
     <div class="section-header">
         <h2 data-i18n="your_active_listings">Your Active Listings</h2>
         <p id="userGreeting" style="color:gray; margin-top:5px;"></p>
@@ -34,45 +31,60 @@
     <div id="myAds" class="ads-grid">
         <p class="loading" data-i18n="loading_ads">Loading your ads...</p>
     </div>
-<!-- Gallery Preview -->
-<div id="galleryPreview" class="gallery-grid">
-    <!-- Example image container -->
-    <div class="image-container" id="image-1">
-        <img src="assets/my-real-image.png" alt="My Ad">
-        <button class="delete-btn" onclick="deleteImage('image-1')">Delete</button>
-    </div>
-    <!-- Add more image containers as required -->
-</div>
-    <!-- FOOTER -->
-    <div class="footer-actions" style="margin-top:20px;">
-        <a href="index.html" class="btn text" data-i18n="back_home">← Back to Home</a>
-    </div>
-
 </main>
-   <div id="listings"></div>
 
+<!-- FOOTER -->
+<div class="footer-actions" style="margin-top:20px;">
+    <a href="index.html" class="btn text" data-i18n="back_home">← Back to Home</a>
+</div>
 
+<!-- Gallery Preview (dynamic) -->
+<div id="galleryPreview" class="gallery-grid"></div>
 
 <!-- ✅ FIXED USER GREETING (FIREBASE ONLY - SAFE) -->
 <script type="module">
-import { auth } from "./firebase-config.js";
+import { auth, db } from "./firebase-config.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
+document.addEventListener("DOMContentLoaded", async () => {
+    const userGreetingEl = document.getElementById("userGreeting");
+    const myAdsContainer = document.getElementById("myAds");
 
-document.addEventListener("DOMContentLoaded", () => {
-
-    const el = document.getElementById("userGreeting");
-
+    // User Greeting
     onAuthStateChanged(auth, (user) => {
-        if (user && el) {
-            el.innerText = user.email;
-        } else if (el) {
-            el.innerText = "Not logged in";
+        if (user && userGreetingEl) {
+            userGreetingEl.innerText = user.email;
+        } else if (userGreetingEl) {
+            userGreetingEl.innerText = "Not logged in";
         }
     });
 
+    // Fetch Ads from Firestore
+    const user = auth.currentUser;
+    if (user) {
+        const adsQuery = query(collection(db, "marketplace_ads"), where("userId", "==", user.uid));
+        const querySnapshot = await getDocs(adsQuery);
+
+        if (querySnapshot.empty) {
+            myAdsContainer.innerHTML = "<p>No ads found.</p>";
+        } else {
+            querySnapshot.forEach((doc) => {
+                const ad = doc.data();
+                const adElement = document.createElement("div");
+                adElement.classList.add("ad-item");
+                adElement.innerHTML = `
+                    <h3>${ad.title}</h3>
+                    <p>${ad.description}</p>
+                    <img src="${ad.image[0]}" alt="${ad.title}" />
+                `;
+                myAdsContainer.appendChild(adElement);
+            });
+        }
+    }
 });
 </script>
+
 <!-- SCRIPTS -->
 <script src="storage.js"></script>
 <script src="languages.js"></script>
@@ -80,5 +92,3 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </body>
 </html>
-
-
