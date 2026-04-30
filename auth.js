@@ -183,7 +183,13 @@ window.checkAdminAccess = function () {
     }
 };
 
-// Handle the logout functionality
-document.getElementById("logoutBtn").addEventListener("click", function() {
+// Logout Function
+document.getElementById("logoutBtn").addEventListener("click", function () {
     logoutUser();
+});
+    // Clear logged-in user from localStorage
+    localStorage.removeItem('loggedInUser');
+    
+    // Redirect to login page after logout
+    window.location.href = "login.html"; // Or wherever you want the user to go after logout
 });
