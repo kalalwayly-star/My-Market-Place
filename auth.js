@@ -1,71 +1,117 @@
 // auth.js
 
-// Import Firebase Auth methods from the Firebase SDK
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, updateProfile } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+// Replace Firebase Auth methods with localStorage-based solutions
 
-// Import the Firebase configuration (if you haven't already initialized it elsewhere)
-import { auth } from './firebase-config.js'; // Import auth from firebase-config.js
-
-// Function to create a new user
+// Function to register a new user
 export const registerUser = async (email, password) => {
   try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    console.log('User registered:', userCredential.user);
+    // Simulate user registration by storing user data in localStorage
+    const users = JSON.parse(localStorage.getItem("users") || "[]");
+    
+    // Check if the user already exists
+    const userExists = users.some(user => user.email === email);
+    if (userExists) {
+      console.error('User already exists');
+      alert('User already exists');
+      return;
+    }
+
+    // Create new user and add it to localStorage
+    const newUser = {
+      email: email,
+      password: password,
+      displayName: "", // Default to empty displayName
+    };
+
+    users.push(newUser);
+    localStorage.setItem("users", JSON.stringify(users));
+    console.log('User registered:', newUser);
+
+    // Store the logged-in user in localStorage
+    localStorage.setItem("currentUser", JSON.stringify(newUser));
+
+    // Redirect after successful registration
+    window.location.href = "myads.html";
   } catch (error) {
     console.error('Error registering user:', error);
   }
 };
 
-// Function to sign in a user
+// Function to log in a user
 export const loginUser = async (email, password) => {
   try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    console.log('User logged in:', userCredential.user);
+    const users = JSON.parse(localStorage.getItem("users") || "[]");
+
+    // Check if the user exists
+    const user = users.find(user => user.email === email && user.password === password);
+
+    if (user) {
+      console.log('User logged in:', user);
+      localStorage.setItem("currentUser", JSON.stringify(user)); // Store logged-in user
+      window.location.href = "index.html"; // Redirect to the homepage after login
+    } else {
+      console.error('Invalid credentials');
+      alert('Invalid email or password');
+    }
   } catch (error) {
     console.error('Error logging in user:', error);
   }
 };
 
-// Function to sign out a user
-export const logoutUser = async () => {
+// Function to log out the user
+export const logoutUser = () => {
   try {
-    await signOut(auth);
+    // Remove the user from localStorage (logout)
+    localStorage.removeItem("currentUser");
     console.log('User logged out');
+    window.location.href = "login.html"; // Redirect to login page after logout
   } catch (error) {
     console.error('Error signing out user:', error);
   }
 };
 
-// Listener to monitor the authentication state (e.g., if user logs in or out)
+// Check for the authentication state (whether user is logged in or not)
 export const authStateListener = () => {
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      console.log('User is logged in:', user);
-    } else {
-      console.log('No user logged in');
-    }
-  });
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  if (currentUser) {
+    console.log('User is logged in:', currentUser);
+  } else {
+    console.log('No user logged in');
+  }
 };
 
-// Function to send password reset email
-export const resetPassword = async (email) => {
+// Function to reset the password (simulate with localStorage)
+export const resetPassword = (email) => {
   try {
-    await sendPasswordResetEmail(auth, email);
-    console.log('Password reset email sent');
+    const users = JSON.parse(localStorage.getItem("users") || "[]");
+
+    const user = users.find(user => user.email === email);
+    if (user) {
+      alert('Password reset email sent (simulated)');
+    } else {
+      alert('No user found with this email');
+    }
   } catch (error) {
     console.error('Error sending password reset email:', error);
   }
 };
 
-// Function to update user profile (e.g., display name)
-export const updateUserProfile = async (displayName) => {
+// Function to update user profile (simulated with localStorage)
+export const updateUserProfile = (displayName) => {
   try {
-    await updateProfile(auth.currentUser, { displayName: displayName });
-    console.log('User profile updated');
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    if (currentUser) {
+      currentUser.displayName = displayName;
+      localStorage.setItem("currentUser", JSON.stringify(currentUser));
+      console.log('User profile updated');
+    } else {
+      alert('No user logged in');
+    }
   } catch (error) {
     console.error('Error updating user profile:', error);
   }
 };
+
 /* --- LOGIN FUNCTION --- */
 window.login = function () {
     const email = document.getElementById('loginEmail').value.trim();
@@ -81,27 +127,8 @@ window.login = function () {
         return;
     }
 
-    // Attempt to log in with Firebase Authentication
-    signInWithEmailAndPassword(auth, email, password)
-        .then(() => {
-            window.location.href = "index.html"; // Redirect after successful login
-        })
-        .catch((error) => {
-            console.error("LOGIN ERROR:", error);
-
-            let errorMessage = error.message;
-
-            // Custom error messages for specific Firebase errors
-            if (error.code === 'auth/user-not-found') {
-                errorMessage = "No user found with this email.";
-            } else if (error.code === 'auth/wrong-password') {
-                errorMessage = "Incorrect password. Please try again.";
-            } else if (error.code === 'auth/invalid-email') {
-                errorMessage = "Invalid email format.";
-            }
-
-            errorMsg.innerText = errorMessage; // Display the error message to the user
-        });
+    // Attempt to log in with localStorage-based method
+    loginUser(email, password);
 };
 
 /* --- REGISTER FUNCTION --- */
@@ -121,17 +148,11 @@ window.register = function () {
         return;
     }
 
-    // Create a new user with email and password using Firebase Authentication
-    createUserWithEmailAndPassword(auth, email, password)
-        .then(() => {
-            window.location.href = "myads.html"; // Redirect after successful registration
-        })
-        .catch((error) => {
-            errorMsg.innerText = error.message; // Display the error message to the user
-        });
+    // Register user with localStorage-based method
+    registerUser(email, password);
 };
 
-/* --- ADMIN CHECK (UNCHANGED) --- */
+/* --- ADMIN CHECK --- */
 window.checkAdminAccess = function () {
     const pass = prompt("Enter Admin Password:");
 
@@ -142,14 +163,8 @@ window.checkAdminAccess = function () {
         alert("Access Denied");
     }
 };
+
 // Handle the logout functionality
 document.getElementById("logoutBtn").addEventListener("click", function() {
-    signOut(auth)
-        .then(() => {
-            // Successfully signed out, redirect to login page
-            window.location.href = "login.html";  // Or wherever you want the user to go after logout
-        })
-        .catch((error) => {
-            console.error("Error signing out:", error);
-        });
+    logoutUser();
 });
