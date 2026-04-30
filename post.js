@@ -41,7 +41,7 @@ window.handlePhotoUpload = function (event) {
         imgContainer.classList.add("image-container"); // Styling for individual images
 
         const img = document.createElement("img");
-        img.src = URL.createObjectURL(file);
+        img.src = URL.createObjectURL(file);  // Preview image before upload
         img.style.width = "100px";
         img.style.height = "100px";
         img.style.objectFit = "cover";
@@ -72,9 +72,9 @@ window.handlePhotoUpload = function (event) {
     event.target.value = "";
 };
 
-// Upload image to Firebase Storage and get the download URL
+// Function to upload image and get URL (called inside handlePhotoUpload)
 function uploadImageToStorage(file, progressBar, uploadProgress, callback) {
-    const storageRef = ref(storage, 'ads_images/' + Date.now() + "_" + file.name);
+    const storageRef = ref(storage, 'ads_images/' + file.name);
     const uploadTask = uploadBytesResumable(storageRef, file);
 
     uploadTask.on('state_changed', (snapshot) => {
@@ -84,8 +84,8 @@ function uploadImageToStorage(file, progressBar, uploadProgress, callback) {
         console.error("Error uploading image:", error);
     }, () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            uploadedImages.push(downloadURL);  // Add image URL to uploadedImages array
-                saveImageUrlToFirestore(downloadURL); // Save to Firestore
+            // Call displayImagePreview to show the uploaded image
+            displayImagePreview(downloadURL);
             callback();  // Call the callback function once the upload is finished
         });
     });
