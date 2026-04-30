@@ -21,29 +21,25 @@
     <div class="container">
         <h1 data-i18n="greeting">My Marketplace</h1>
         <div class="lang-buttons">
-            <button id="lang-en">English</button>
-            <button id="lang-fr">Français</button>
-            <button id="lang-es">Español</button>
-            <button id="lang-ar">العربية</button>
+            <button id="lang-en" data-i18n="lang_en">English</button>
+            <button id="lang-fr" data-i18n="lang_fr">Français</button>
+            <button id="lang-es" data-i18n="lang_es">Español</button>
+            <button id="lang-ar" data-i18n="lang_ar">العربية</button>
         </div>
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js"></script>
-<script src="https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js"></script>
-       <div class="nav">
-    <a href="index.html" class="btn text" data-i18n="home">Home</a>
-    <a href="messages.html" class="btn text" data-i18n="nav_messages">Messages</a>
-    <a href="myads.html" class="btn secondary" data-i18n="myAds">My Ads</a>
-    <a href="post.html" class="btn primary" data-i18n="postAd">Post Ad</a>
-    <a id="userAuth" href="login.html" class="btn" data-i18n="nav_login">Login</a>
-    <button id="logout-btn" class="btn logout-btn" style="display:none;" data-i18n="nav_logout">Logout</button>            
-</div>
+        <div class="nav">
+            <a href="index.html" class="btn text" data-i18n="home">Home</a>
+            <a href="messages.html" class="btn text" data-i18n="nav_messages">Messages</a>
+            <a href="myads.html" class="btn secondary" data-i18n="myAds">My Ads</a>
+            <a href="post.html" class="btn primary" data-i18n="postAd">Post Ad</a>
+            <a id="userAuth" href="login.html" class="btn" data-i18n="nav_login">Login</a>
+            <button id="logout-btn" class="btn logout-btn" style="display:none;" data-i18n="nav_logout">Logout</button>            
+        </div>
 
-<div id="user-info-header" style="display:none; padding:10px; text-align:right;">
-    <span data-i18n="logged_in_as">Logged in as:</span>
-    <span id="header-user-email" style="font-weight:bold; color:#007bff;"></span>
-</div>
+        <div id="user-info-header" style="display:none; padding:10px; text-align:right;">
+            <span data-i18n="logged_in_as">Logged in as:</span>
+            <span id="header-user-email" style="font-weight:bold; color:#007bff;"></span>
+        </div>
+    </div>
 </header>
 
 <section class="hero">
@@ -60,63 +56,63 @@
 <section class="categories-section container">
    <h3 data-i18n="cat_header">Browse Categories</h3>
    <div class="category-grid">
-       <div class="cat-card" onclick="filterByCategory('Real Estate')">
+       <div class="cat-card" onclick="filterByCategory('Real Estate')" data-i18n="cat_realestate">
            <span class="icon" style="font-size: 2rem;">🏠</span>
            <p data-i18n="cat_realestate">Real Estate</p>
        </div>
-       <div class="cat-card" onclick="filterByCategory('Cars & Trucks')">
+       <div class="cat-card" onclick="filterByCategory('Cars & Trucks')" data-i18n="cat_cars_trucks">
            <span class="icon" style="font-size: 2rem;">🚗</span>
            <p data-i18n="cat_cars_trucks">Cars</p>
        </div>
-       <div class="cat-card" onclick="filterByCategory('Furniture')">
+       <div class="cat-card" onclick="filterByCategory('Furniture')" data-i18n="cat_furniture">
            <span class="icon" style="font-size: 2rem;">🛋️</span>
            <p data-i18n="cat_furniture">Furniture</p>
        </div>
-       <div class="cat-card" onclick="filterByCategory('Jobs')">
+       <div class="cat-card" onclick="filterByCategory('Jobs')" data-i18n="cat_jobs">
            <span class="icon" style="font-size: 2rem;">💼</span>
            <p data-i18n="cat_jobs">Jobs</p>
        </div>
-       <div class="cat-card" onclick="filterByCategory('Fashion')">
+       <div class="cat-card" onclick="filterByCategory('Fashion')" data-i18n="cat_fashion">
            <span class="icon" style="font-size: 2rem;">👕</span>
            <p data-i18n="cat_fashion">Fashion</p>
        </div>
-       <div class="cat-card" onclick="filterByCategory('Pets')">
+       <div class="cat-card" onclick="filterByCategory('Pets')" data-i18n="cat_pets">
            <span class="icon" style="font-size: 2rem;">🐾</span>
            <p data-i18n="cat_pets">Pets</p>
        </div>
-       <div class="cat-card" onclick="filterByCategory('Sports')">
+       <div class="cat-card" onclick="filterByCategory('Sports')" data-i18n="cat_sports">
            <span class="icon" style="font-size: 2rem;">🏀</span>
            <p data-i18n="cat_sports">Sports</p>
        </div>
-       <div class="cat-card" onclick="filterByCategory('Books')">
+       <div class="cat-card" onclick="filterByCategory('Books')" data-i18n="cat_books">
            <span class="icon" style="font-size: 2rem;">📚</span>
            <p data-i18n="cat_books">Books</p>
        </div>
-       <div class="cat-card" onclick="filterByCategory('Appliances')">
+       <div class="cat-card" onclick="filterByCategory('Appliances')" data-i18n="cat_appliances">
            <span class="icon" style="font-size: 2rem;">🍳</span>
            <p data-i18n="cat_appliances">Appliances</p>
        </div>
-       <div class="cat-card" onclick="filterByCategory('Toys')">
+       <div class="cat-card" onclick="filterByCategory('Toys')" data-i18n="cat_toys">
            <span class="icon" style="font-size: 2rem;">🧸</span>
            <p data-i18n="cat_toys">Toys</p>
        </div>
-       <div class="cat-card" onclick="filterByCategory('Electronics')">
+       <div class="cat-card" onclick="filterByCategory('Electronics')" data-i18n="cat_electronics">
            <span class="icon" style="font-size: 2rem;">📱</span>
            <p data-i18n="cat_electronics">Electronics</p>
        </div>
-       <div class="cat-card" onclick="filterByCategory('Services')">
+       <div class="cat-card" onclick="filterByCategory('Services')" data-i18n="cat_services">
            <span class="icon" style="font-size: 2rem;">🛠️</span>
            <p data-i18n="cat_services">Services</p>
        </div>
-       <div class="cat-card" onclick="filterByCategory('Garden')">
+       <div class="cat-card" onclick="filterByCategory('Garden')" data-i18n="cat_garden">
            <span class="icon" style="font-size: 2rem;">🌻</span>
            <p data-i18n="cat_garden">Garden</p>
        </div>
-       <div class="cat-card" onclick="filterByCategory('Health')">
+       <div class="cat-card" onclick="filterByCategory('Health')" data-i18n="cat_health">
            <span class="icon" style="font-size: 2rem;">💊</span>
            <p data-i18n="cat_health">Health</p>
        </div>
-       <div class="cat-card" onclick="filterByCategory('Baby')">
+       <div class="cat-card" onclick="filterByCategory('Baby')" data-i18n="cat_baby">
            <span class="icon" style="font-size: 2rem;">👶</span>
            <p data-i18n="cat_baby">Baby Items</p>
        </div>
@@ -128,15 +124,11 @@
         <h3 data-i18n="viewTitle">Latest Ads</h3>
         <button onclick="resetFilters()" class="btn-link" data-i18n="btn_view_all" style="background: none; border: none; color: #007bff; text-decoration: underline;">View All</button>
     </div>
-   <div id="listings"></div><div id="galleryPreview" class="gallery-grid">
-      <!-- File upload input -->
-<input type="file" id="photoInput" accept="image/*" multiple>
-</div>
-
-           <div class="card" onclick="goToDetails('ad-id-123')">
-
+    <div id="listings"></div>
+    <div id="galleryPreview" class="gallery-grid">
+        <input type="file" id="photoInput" accept="image/*" multiple>
+    </div>
     <p id="no-items-message" style="display:none; text-align:center;" data-i18n="no_items">No items found.</p>
-    <div id="listings" class="grid"></div>
 </section>
 
 <footer>
@@ -150,6 +142,6 @@
 <script src="storage.js"></script>
 <script src="languages.js"></script>
 <script type="module" src="main.js" defer></script>
-   
+
 </body>
 </html>
