@@ -257,12 +257,7 @@ document.querySelectorAll('.delete-btn').forEach((button) => {
     });
 });
 
-async function deleteAd(adId) {
-    const adRef = doc(db, "marketplace_ads", adId);
-    await deleteDoc(adRef);
-    alert('Ad deleted successfully!');
-    fetchAds(); // Reload the ads after deletion
-}
+
 
 // This function will be used to populate the gallery preview
 function renderUploadedImages(images) {
