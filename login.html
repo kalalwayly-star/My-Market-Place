@@ -51,7 +51,6 @@
     </div>
 </div>
 
-
 <script>
     // Password visibility toggle functionality
     const toggleBtn = document.querySelector('#toggleLoginPassword');
@@ -63,7 +62,44 @@
             this.classList.toggle('fa-eye-slash');
         });
     }
+
+    // Login function using localStorage (from auth.js)
+    function login() {
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+        const errorMsg = document.getElementById('error-message');
+
+        // Clear any previous error message
+        errorMsg.innerText = '';
+
+        // Input validation
+        if (!email || !password) {
+            errorMsg.innerText = "Please fill in all fields.";
+            return;
+        }
+
+        // Attempt to log in with localStorage-based method
+        loginUser(email, password);
+    }
+
+    // Login user from localStorage (modifies auth.js loginUser function)
+    function loginUser(email, password) {
+        const users = JSON.parse(localStorage.getItem("users") || "[]");
+
+        // Check if the user exists
+        const user = users.find(user => user.email === email && user.password === password);
+
+        if (user) {
+            console.log('User logged in:', user);
+            localStorage.setItem("currentUser", JSON.stringify(user)); // Store logged-in user
+            window.location.href = "index.html"; // Redirect to the homepage after login
+        } else {
+            console.error('Invalid credentials');
+            alert('Invalid email or password');
+        }
+    }
 </script>
+
 <script src="languages.js"></script>
 <script type="module" src="auth.js"></script>
 
