@@ -281,7 +281,7 @@ function renderPaypalButton(price) {
 
     featured10DaysCheckbox.addEventListener("change", function () {
         if (this.checked) {
-            renderPaypalButton(9.99);  // 10 days price
+            renderPaypalButton(8.99);  // 10 days price
         } else {
             paypalButtonContainer.style.display = "none";
         }
