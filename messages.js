@@ -1,25 +1,4 @@
-import { auth, rtdb, db } from "./firebase-config.js";  // Import Firebase services
-import { ref, onValue, push, remove } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js";  // Realtime DB methods
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js"; // Firebase Auth methods
-
-const authInstance = getAuth();
-onAuthStateChanged(authInstance, (user) => {
-    const loginMessage = document.getElementById('loginMessage'); // Message when not logged in
-    const messagesContainer = document.getElementById('messagesContainer'); // Where messages are shown
-
-    if (user) {
-        // User is logged in
-        loginMessage.style.display = 'none';  // Hide the login message
-        messagesContainer.style.display = 'block';  // Show messages container
-        loadMessages(user.uid);  // Load messages for the logged-in user
-    } else {
-        // User is not logged in
-        loginMessage.style.display = 'block';  // Show login prompt
-        messagesContainer.style.display = 'none';  // Hide messages container
-    }
-});
-
-// Fetch and render messages for the logged-in user
+// This function will be used to load messages for the logged-in user and render them
 function loadMessages(userId) {
     const messagesRef = ref(rtdb, 'marketplace_messages/' + userId);
     onValue(messagesRef, (snapshot) => {
@@ -29,7 +8,7 @@ function loadMessages(userId) {
             messagesContainer.innerHTML = "";  // Clear existing messages
             Object.keys(messages).forEach(msgId => {
                 const message = messages[msgId];
-                renderMessage(message, msgId);
+                renderMessage(message, msgId);  // Render each message
             });
         } else {
             messagesContainer.innerHTML = "<p>No messages found.</p>";
@@ -37,7 +16,7 @@ function loadMessages(userId) {
     });
 }
 
-// Render a single message
+// Function to render a single message in the DOM
 function renderMessage(message, msgId) {
     const messagesContainer = document.getElementById('messagesContainer');
     const messageElement = document.createElement('div');
@@ -47,10 +26,10 @@ function renderMessage(message, msgId) {
         <small>Sent at ${new Date(message.timestamp).toLocaleString()}</small>
         <button onclick="deleteMessage('${msgId}')">Delete</button>
     `;
-    messagesContainer.appendChild(messageElement);
+    messagesContainer.appendChild(messageElement);  // Append message to container
 }
 
-// Function to delete a message
+// Function to delete a message from Realtime Database
 window.deleteMessage = function(msgId) {
     if (confirm("Are you sure you want to delete this message?")) {
         const msgRef = ref(rtdb, `marketplace_messages/${msgId}`);
@@ -63,7 +42,7 @@ window.deleteMessage = function(msgId) {
     }
 };
 
-// Sending a message to the seller
+// Function to send a message to the seller
 window.sendMessage = function(adId, messageText, senderEmail) {
     if (!messageText.trim()) {
         alert("Message cannot be empty.");
@@ -72,13 +51,13 @@ window.sendMessage = function(adId, messageText, senderEmail) {
 
     const messageData = {
         sender: senderEmail,
-        receiver: adId.userEmail,  // Assuming adId has userEmail
+        receiver: adId.userEmail,  // Assuming adId has the receiver's email
         text: messageText,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString()  // Get timestamp of the message
     };
 
     const messagesRef = ref(rtdb, `messages/${adId}`);
-    push(messagesRef, messageData)
+    push(messagesRef, messageData)  // Push the message to Firebase Realtime Database
         .then(() => {
             alert("Message sent successfully!");
             loadMessages(adId);  // Reload messages after sending
@@ -99,14 +78,37 @@ window.changeTab = function(tab) {
         tabReceived.classList.add('active');
         tabSent.classList.remove('active');
         // Render received messages
+        loadMessages(auth.currentUser.uid);
     } else {
         tabSent.classList.add('active');
         tabReceived.classList.remove('active');
         // Render sent messages
+        loadSentMessages(auth.currentUser.uid);
     }
 };
 
+// Load sent messages for the logged-in user
+function loadSentMessages(userId) {
+    const messagesRef = ref(rtdb, 'marketplace_messages/sent/' + userId);
+    onValue(messagesRef, (snapshot) => {
+        const messages = snapshot.val();
+        const messagesContainer = document.getElementById('messagesContainer');
+        if (messages) {
+            messagesContainer.innerHTML = "";  // Clear existing messages
+            Object.keys(messages).forEach(msgId => {
+                const message = messages[msgId];
+                renderMessage(message, msgId);  // Render each message
+            });
+        } else {
+            messagesContainer.innerHTML = "<p>No sent messages found.</p>";
+        }
+    });
+}
+
 // Initialize messages on page load
 document.addEventListener('DOMContentLoaded', () => {
-    loadMessages();
+    const user = auth.currentUser;
+    if (user) {
+        loadMessages(user.uid);  // Load messages for the logged-in user
+    }
 });
