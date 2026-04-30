@@ -58,11 +58,11 @@
                             <input type="file" id="photoInput" accept="image/*" multiple hidden>
                         </label>
                         <div id="dropZone" class="drop-zone">
-                            <span>Drag and drop your photos here</span>
+                            <span data-i18n="drag_drop">Drag and drop your photos here</span>
                         </div>
                         <div id="galleryPreview" class="gallery-grid"></div>
                         <div id="uploadProgress" style="display:none;">
-                            <span>Uploading...</span>
+                            <span data-i18n="uploading">Uploading...</span>
                             <progress id="progressBar" value="0" max="100" style="width:100%;"></progress>
                         </div>
                     </div>
@@ -70,66 +70,64 @@
 
                 <!-- Common Fields (Title, Price, Location, Description) -->
                 <div id="commonFields">
-                    <label for="adTitle">Title:</label>
+                    <label for="adTitle" data-i18n="adTitle">Title:</label>
                     <input type="text" id="adTitle" required />
-                    <label for="adPrice">Price:</label>
+                    <label for="adPrice" data-i18n="adPrice">Price:</label>
                     <input type="number" id="adPrice" required />
-                    <label for="adLocation">Location:</label>
+                    <label for="adLocation" data-i18n="adLocation">Location:</label>
                     <input type="text" id="adLocation" required />
-                    <label for="adDesc">Description:</label>
+                    <label for="adDesc" data-i18n="adDesc">Description:</label>
                     <textarea id="adDesc" required></textarea>
                 </div>
 
                 <!-- Car Specific Fields (Visible for Cars & Trucks) -->
                 <div id="carFields" style="display: none;">
-                    <label for="carMake">Car Make:</label>
+                    <label for="carMake" data-i18n="carMake">Car Make:</label>
                     <input type="text" id="carMake" />
-                    <label for="carModel">Car Model:</label>
+                    <label for="carModel" data-i18n="carModel">Car Model:</label>
                     <input type="text" id="carModel" />
-                    <label for="carYear">Car Year:</label>
+                    <label for="carYear" data-i18n="carYear">Car Year:</label>
                     <input type="number" id="carYear" />
-                    <label for="carMileage">Mileage (km):</label>
+                    <label for="carMileage" data-i18n="carMileage">Mileage (km):</label>
                     <input type="number" id="carMileage" />
-                    <label for="carFuelType">Fuel Type:</label>
+                    <label for="carFuelType" data-i18n="carFuelType">Fuel Type:</label>
                     <select id="carFuelType">
-                        <option value="Gasoline">Gasoline</option>
-                        <option value="Hybrid">Hybrid</option>
-                        <option value="Electric">Electric</option>
+                        <option value="Gasoline" data-i18n="gasoline">Gasoline</option>
+                        <option value="Hybrid" data-i18n="hybrid">Hybrid</option>
+                        <option value="Electric" data-i18n="electric">Electric</option>
                     </select>
                 </div>
 
                 <!-- Condition Fields (For applicable categories) -->
                 <div id="conditionFields" class="form-section">
-                    <label for="condition" class="condition-label">Condition:</label>
+                    <label for="condition" data-i18n="condition">Condition:</label>
                     <div class="condition-options">
                         <label class="condition-option" for="new-condition">
-                            <input type="radio" id="new-condition" name="condition" value="New"> New
+                            <input type="radio" id="new-condition" name="condition" value="New" data-i18n="new-condition"> New
                         </label>
                         <label class="condition-option" for="used-condition">
-                            <input type="radio" id="used-condition" name="condition" value="Used"> Used
+                            <input type="radio" id="used-condition" name="condition" value="Used" data-i18n="used-condition"> Used
                         </label>
                         <label class="condition-option" for="refurbished-condition">
-                            <input type="radio" id="refurbished-condition" name="condition" value="Refurbished"> Refurbished
+                            <input type="radio" id="refurbished-condition" name="condition" value="Refurbished" data-i18n="refurbished-condition"> Refurbished
                         </label>
                     </div>
                 </div>
 
                 <!-- Featured Ad Checkboxes (5 or 10 days) -->
                 <div class="form-group feature-box">
-                    <label class="featured-label">
+                    <label class="featured-label" data-i18n="label_featured">
                         <input type="radio" id="isFeatured5Days" name="isFeatured" class="featured-checkbox">
                         <span data-i18n="label_featured">✨ Feature this ad for</span>
                         <span class="price-option" id="price-5-days">$4.99 for 5 days</span>
                     </label>
-                    <label class="featured-label">
+                    <label class="featured-label" data-i18n="label_featured">
                         <input type="radio" id="isFeatured10Days" name="isFeatured" class="featured-checkbox">
                         <span data-i18n="label_featured">✨ Feature this ad for</span>
                         <span class="price-option" id="price-10-days">$8.99 for 10 days</span>
                     </label>
                 </div>
 
-                <!-- PayPal Button Container (Hidden initially) -->
-                <div id="paypal-button-container" style="display:none;"></div>
                 <!-- PayPal Button Container (Hidden initially) -->
                 <div id="paypal-button-container" style="display:none;"></div>
 
