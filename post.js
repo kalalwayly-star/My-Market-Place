@@ -1,20 +1,38 @@
-// Firebase Auth state listener (No need to import if using CDN)
-onAuthStateChanged(auth, (user) => {
-    const loginLink = document.getElementById("loginLink");
-    const logoutBtn = document.getElementById("logoutBtn");
-    const emailSpan = document.getElementById("emailSpan");
+// Handle the form submission for posting an ad
+function submitAd(event) {
+    event.preventDefault();
 
-    if (user) {
-        if (loginLink) loginLink.style.display = "none";
-        if (logoutBtn) logoutBtn.style.display = "inline-block";
-        if (emailSpan) emailSpan.innerText = user.email;
-    } else {
-        if (loginLink) loginLink.style.display = "inline-block";
-        if (logoutBtn) logoutBtn.style.display = "none";
-        if (emailSpan) emailSpan.innerText = "";
-    }
-});
+    // Get ad details from the form
+    const adTitle = document.getElementById('ad-title').value;
+    const adDescription = document.getElementById('ad-description').value;
+    const adCategory = document.getElementById('ad-category').value;
+    const adPrice = document.getElementById('ad-price').value;
+    const adImage = document.getElementById('ad-image').files[0]; // Handle image upload (optional)
 
+    // Create a unique ID for the ad
+    const adId = new Date().toISOString(); // You can use a better ID generator if needed
+
+    // Create the ad object
+    const ad = {
+        id: adId,
+        title: adTitle,
+        description: adDescription,
+        category: adCategory,
+        price: adPrice,
+        imageUrl: adImage ? URL.createObjectURL(adImage) : '', // Image URL if provided
+    };
+
+    // Save the ad to localStorage
+    let ads = JSON.parse(localStorage.getItem('ads')) || [];
+    ads.push(ad);
+    localStorage.setItem('ads', JSON.stringify(ads));
+
+    // Show success message and reset form
+    alert('Your ad has been posted successfully!');
+    document.getElementById('post-ad-form').reset();
+}
+
+// Handle the photo upload and display preview
 let uploadedImages = [];
 
 window.handlePhotoUpload = function (event) {
@@ -55,184 +73,19 @@ window.handlePhotoUpload = function (event) {
 
         preview.appendChild(imgContainer);
 
-        uploadImageToStorage(file, progressBar, uploadProgress, () => {
-            uploadedCount++;
-            if (uploadedCount === totalFiles) {
-                uploadProgress.style.display = "none";
-            }
-        });
+        // If uploading images to storage was part of your functionality, you can use the code here.
+        // For simplicity, we are skipping this part here.
+        uploadedImages.push(file);
+        uploadedCount++;
+        if (uploadedCount === totalFiles) {
+            uploadProgress.style.display = "none";
+        }
     });
 
     event.target.value = "";
 };
 
-// Function to upload image and get URL (called inside handlePhotoUpload)
-function uploadImageToStorage(file, progressBar, uploadProgress, callback) {
-    const storageRef = firebase.storage().ref('ads_images/' + file.name);  // Using global firebase object from CDN
-    const uploadTask = storageRef.put(file);
-
-    uploadTask.on('state_changed', (snapshot) => {
-        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        progressBar.value = progress;
-    }, (error) => {
-        console.error("Error uploading image:", error);
-    }, () => {
-        uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-            // Call displayImagePreview to show the uploaded image
-            displayImagePreview(downloadURL);
-            callback();  // Call the callback function once the upload is finished
-        });
-    });
-}
-
-function saveImageUrlToFirestore(downloadURL) {
-    const adsCollectionRef = firebase.firestore().collection("marketplace_ads");  // Using global firestore object from CDN
-    adsCollectionRef.add({
-        userId: firebase.auth().currentUser.uid,
-        imageUrl: downloadURL,  // Save the image URL to Firestore
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()  // Add a timestamp
-    }).then(() => {
-        console.log('Image URL saved to Firestore!');
-    }).catch((error) => {
-        console.error('Error saving image URL:', error);
-    });
-}
-
-// Handles category change and form section display
-function handleCategoryChange() {
-    const categorySelect = document.getElementById("postCategory");
-    const commonFields = document.getElementById("commonFields");
-    const conditionBox = document.getElementById("globalCondition");
-    const carFields = document.getElementById("carFields");
-
-    if (!categorySelect) return;
-
-    const selectedValue = categorySelect.value;
-    document.querySelectorAll(".category-details").forEach(sec => sec.style.display = "none");
-
-    if (commonFields) commonFields.style.display = "block";
-
-    const categorySections = {
-        "Cars & Trucks": "section-Cars",
-        "Real Estate": "section-RealEstate",
-        "Electronics": "section-Electronics",
-        "Furniture": "section-Furniture",
-        "Job": "section-Jobs",
-        "Fashion": "section-Fashion",
-        "Pets": "section-Pets",
-        "Sports": "section-Sports",
-        "Books": "section-Books",
-        "Appliances": "section-Appliances",
-        "Toys": "section-Toys",
-        "Services": "section-Services",
-        "Garden": "section-Garden",
-        "Health": "section-Health",
-        "Baby": "section-Baby"
-    };
-
-    const sectionId = categorySections[selectedValue];
-    if (sectionId) {
-        const section = document.getElementById(sectionId);
-        if (section) section.style.display = "block";
-    }
-
-    if (carFields) {
-        carFields.style.display = selectedValue === "Cars & Trucks" ? "block" : "none";
-    }
-
-    const hideConditionFor = ["Pets", "Jobs", "Real Estate", "Services"];
-    if (conditionBox) {
-        conditionBox.style.display = hideConditionFor.includes(selectedValue) ? "none" : "block";
-    }
-}
-
-// Initialize category change listener
-document.addEventListener("DOMContentLoaded", () => {
-    handleCategoryChange();
-    document.getElementById("postCategory")?.addEventListener("change", handleCategoryChange);
-    document.getElementById("photoInput")?.addEventListener("change", handlePhotoUpload);
-    document.getElementById("postForm")?.addEventListener("submit", saveNewAd);
-});
-
-// Handles ad posting
-function saveNewAd(event) {
-    event.preventDefault();
-
-    const user = firebase.auth().currentUser;  // Using global firebase object from CDN
-    if (!user) {
-        alert(getLocalizedText("login_required"));
-        return;
-    }
-
-    const btn = document.getElementById("postBtn");
-    if (btn) {
-        btn.disabled = true;
-        btn.innerText = getLocalizedText("posting");
-    }
-
-    let locationTimeout = setTimeout(() => {
-        console.log("Location timed out, posting anyway...");
-        finalizeAd();
-    }, 5000); // Increased timeout to 5 seconds
-
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            pos => {
-                clearTimeout(locationTimeout);
-                window.currentAdLat = pos.coords.latitude;
-                window.currentAdLng = pos.coords.longitude;
-                finalizeAd();
-            },
-            () => {
-                clearTimeout(locationTimeout);
-                finalizeAd();
-            },
-            { timeout: 5000 }
-        );
-    } else {
-        clearTimeout(locationTimeout);
-        finalizeAd();
-    }
-}
-
-// Finalize ad and post it to Firestore
-function finalizeAd() {
-    const user = firebase.auth().currentUser;  // Using global firebase object from CDN
-
-    if (!user) {
-        alert(getLocalizedText("not_logged_in"));
-        return;
-    }
-
-    const condition = document.querySelector('input[name="condition"]:checked')?.value || "N/A";
-
-    const newAd = {
-        userId: user.uid,
-        userEmail: user.email,
-        category: document.getElementById("postCategory")?.value || "",
-        title: document.getElementById("adTitle")?.value || "",
-        price: document.getElementById("adPrice")?.value || "",
-        location: document.getElementById("adLocation")?.value || "",
-        description: document.getElementById("adDesc")?.value || "",
-        condition: condition,
-        image: uploadedImages, 
-        date: new Date().toLocaleDateString(),
-        lat: window.currentAdLat || null,
-        lng: window.currentAdLng || null
-    };
-
-    const adsCollectionRef = firebase.firestore().collection("marketplace_ads");  // Using global firestore object from CDN
-    adsCollectionRef.add(newAd)
-        .then(() => {
-            alert(getLocalizedText("ad_posted_successfully"));
-            window.location.href = "index.html";  // Redirect after posting
-        })
-        .catch(err => {
-            console.error("Firestore error:", err);
-            alert("Error: " + err.message);
-        });
-}
-
+// Function to render PayPal button for payment
 document.addEventListener("DOMContentLoaded", function () {
     const paypalButtonContainer = document.getElementById("paypal-button-container");
 
@@ -243,24 +96,30 @@ document.addEventListener("DOMContentLoaded", function () {
             paypal.Buttons({
                 createOrder: function (data, actions) {
                     return actions.order.create({
-                        purchase_units: [{ amount: { value: price } }]
+                        purchase_units: [{
+                            amount: {
+                                value: price // Dynamically set price for the ad
+                            }
+                        }]
                     });
                 },
                 onApprove: function (data, actions) {
                     return actions.order.capture().then(function (details) {
-                        alert(getLocalizedText("payment_successful"));
+                        alert("Payment completed for " + details.payer.name.given_name);
+                        // Once payment is successful, proceed with the form submission
+                        submitAd(event);
                     });
                 },
                 onError: function (err) {
                     console.error("PayPal Payment Error", err);
-                    alert(getLocalizedText("payment_error"));
+                    alert("Payment failed. Please try again.");
                 }
             }).render("#paypal-button-container");
             paypalButtonRendered = true;
         }
     }
 
-    // Checkboxes event listeners
+    // Checkboxes event listeners for PayPal button based on user selection
     const featured5DaysCheckbox = document.getElementById("isFeatured5Days");
     const featured10DaysCheckbox = document.getElementById("isFeatured10Days");
 
@@ -281,3 +140,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
+
+
+
+
+
