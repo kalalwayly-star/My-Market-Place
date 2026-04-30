@@ -172,6 +172,7 @@ window.applyFilters = function() {
     if (queryText) {
         const sanitizedQueryText = sanitizeQuery(queryText);
         adsQuery = query(adsQuery, where("title", "array-contains", sanitizedQueryText));
+       
     }
 
     // Fetch the results with onSnapshot
