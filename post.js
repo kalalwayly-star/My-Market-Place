@@ -1,10 +1,4 @@
-import { auth, db, storage } from './firebase-config.js'; // Import Firestore and Firebase Storage
-import { collection, addDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js"; // Firestore functions
-import { uploadBytesResumable, getDownloadURL, ref } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-storage.js"; // Firebase Storage functions
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js"; // Firebase Auth state listener
-import { serverTimestamp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
-
-// Firebase Auth state listener
+// Firebase Auth state listener (No need to import if using CDN)
 onAuthStateChanged(auth, (user) => {
     const loginLink = document.getElementById("loginLink");
     const logoutBtn = document.getElementById("logoutBtn");
@@ -74,8 +68,8 @@ window.handlePhotoUpload = function (event) {
 
 // Function to upload image and get URL (called inside handlePhotoUpload)
 function uploadImageToStorage(file, progressBar, uploadProgress, callback) {
-    const storageRef = ref(storage, 'ads_images/' + file.name);
-    const uploadTask = uploadBytesResumable(storageRef, file);
+    const storageRef = firebase.storage().ref('ads_images/' + file.name);  // Using global firebase object from CDN
+    const uploadTask = storageRef.put(file);
 
     uploadTask.on('state_changed', (snapshot) => {
         const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
@@ -83,17 +77,18 @@ function uploadImageToStorage(file, progressBar, uploadProgress, callback) {
     }, (error) => {
         console.error("Error uploading image:", error);
     }, () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+        uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
             // Call displayImagePreview to show the uploaded image
             displayImagePreview(downloadURL);
             callback();  // Call the callback function once the upload is finished
         });
     });
 }
+
 function saveImageUrlToFirestore(downloadURL) {
-    const adsCollectionRef = collection(db, "marketplace_ads");
-    addDoc(adsCollectionRef, {
-        userId: auth.currentUser.uid,
+    const adsCollectionRef = firebase.firestore().collection("marketplace_ads");  // Using global firestore object from CDN
+    adsCollectionRef.add({
+        userId: firebase.auth().currentUser.uid,
         imageUrl: downloadURL,  // Save the image URL to Firestore
         timestamp: firebase.firestore.FieldValue.serverTimestamp()  // Add a timestamp
     }).then(() => {
@@ -102,7 +97,6 @@ function saveImageUrlToFirestore(downloadURL) {
         console.error('Error saving image URL:', error);
     });
 }
-
 
 // Handles category change and form section display
 function handleCategoryChange() {
@@ -164,16 +158,16 @@ document.addEventListener("DOMContentLoaded", () => {
 function saveNewAd(event) {
     event.preventDefault();
 
-    const user = auth.currentUser;
+    const user = firebase.auth().currentUser;  // Using global firebase object from CDN
     if (!user) {
-        alert("Login required");
+        alert(getLocalizedText("login_required"));
         return;
     }
 
     const btn = document.getElementById("postBtn");
     if (btn) {
         btn.disabled = true;
-        btn.innerText = "Posting...";
+        btn.innerText = getLocalizedText("posting");
     }
 
     let locationTimeout = setTimeout(() => {
@@ -203,10 +197,10 @@ function saveNewAd(event) {
 
 // Finalize ad and post it to Firestore
 function finalizeAd() {
-    const user = auth.currentUser;
+    const user = firebase.auth().currentUser;  // Using global firebase object from CDN
 
     if (!user) {
-        alert("You are not logged in");
+        alert(getLocalizedText("not_logged_in"));
         return;
     }
 
@@ -221,16 +215,16 @@ function finalizeAd() {
         location: document.getElementById("adLocation")?.value || "",
         description: document.getElementById("adDesc")?.value || "",
         condition: condition,
-        image: [imageUrl], 
+        image: uploadedImages, 
         date: new Date().toLocaleDateString(),
         lat: window.currentAdLat || null,
         lng: window.currentAdLng || null
     };
 
-    const adsCollectionRef = collection(db, "marketplace_ads");
-    addDoc(adsCollectionRef, newAd)
+    const adsCollectionRef = firebase.firestore().collection("marketplace_ads");  // Using global firestore object from CDN
+    adsCollectionRef.add(newAd)
         .then(() => {
-            alert("Ad posted successfully!");
+            alert(getLocalizedText("ad_posted_successfully"));
             window.location.href = "index.html";  // Redirect after posting
         })
         .catch(err => {
@@ -242,29 +236,29 @@ function finalizeAd() {
 document.addEventListener("DOMContentLoaded", function () {
     const paypalButtonContainer = document.getElementById("paypal-button-container");
 
-   let paypalButtonRendered = false;
+    let paypalButtonRendered = false;
 
-function renderPaypalButton(price) {
-    if (!paypalButtonRendered) {
-        paypal.Buttons({
-            createOrder: function (data, actions) {
-                return actions.order.create({
-                    purchase_units: [{ amount: { value: price } }]
-                });
-            },
-            onApprove: function (data, actions) {
-                return actions.order.capture().then(function (details) {
-                    alert("Payment successful! Thank you for featuring your ad.");
-                });
-            },
-            onError: function (err) {
-                console.error("PayPal Payment Error", err);
-                alert("There was an error processing your payment.");
-            }
-        }).render("#paypal-button-container");
-        paypalButtonRendered = true;
+    function renderPaypalButton(price) {
+        if (!paypalButtonRendered) {
+            paypal.Buttons({
+                createOrder: function (data, actions) {
+                    return actions.order.create({
+                        purchase_units: [{ amount: { value: price } }]
+                    });
+                },
+                onApprove: function (data, actions) {
+                    return actions.order.capture().then(function (details) {
+                        alert(getLocalizedText("payment_successful"));
+                    });
+                },
+                onError: function (err) {
+                    console.error("PayPal Payment Error", err);
+                    alert(getLocalizedText("payment_error"));
+                }
+            }).render("#paypal-button-container");
+            paypalButtonRendered = true;
+        }
     }
-}
 
     // Checkboxes event listeners
     const featured5DaysCheckbox = document.getElementById("isFeatured5Days");
