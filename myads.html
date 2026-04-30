@@ -1,102 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="my_ads_page_title">My Ads - Classified Site</title>
-    <link rel="stylesheet" href="style.css?v=1.2">
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title data-i18n="myAdsTitle">My Ads</title>
+   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="auth-wrapper">
-    <div class="form-card">
-        <h2 data-i18n="your_ads_title">Your Ads</h2>
-        <p class="subtitle" data-i18n="manage_ads">Manage your ads below.</p>
-
-        <!-- Display Ads here -->
-        <div id="ads-container">
-            <!-- Ads will be dynamically loaded here from localStorage -->
+<header class="header">
+    <div class="container">
+        <h1 data-i18n="your_ads">Your Ads</h1>
+        <div class="nav">
+            <a href="index.html" class="btn text" data-i18n="home">Home</a>
+            <a href="post.html" class="btn primary" data-i18n="postAd">Post Ad</a>
+            <a href="login.html" class="btn" data-i18n="nav_login">Login</a>
+            <button id="logout-btn" class="btn logout-btn" data-i18n="nav_logout">Logout</button>            
         </div>
-
-        <!-- Add New Ad Button -->
-        <button type="button" class="btn-primary" onclick="addNewAd()" data-i18n="add_new_ad_button">Add New Ad</button>
-
-        <!-- Logout Button -->
-        <button type="button" class="btn-secondary" onclick="logout()" data-i18n="logout_button">Logout</button>
     </div>
-</div>
+</header>
 
-<!-- Scripts -->
-<script src="languages.js"></script> <!-- Include the language file -->
+<section class="main-content container">
+    <h3 data-i18n="your_ads_list">Your Advertisements</h3>
+    <div id="ads-container"></div>
+</section>
+
+<footer>
+    <div id="footer" class="container">
+        <p><a href="terms.html" data-i18n="footer_terms">Terms</a></p>
+        <p><a href="privacy.html" data-i18n="footer_privacy_header">Privacy</a></p>
+    </div>
+</footer>
+
 <script>
-// Function to get ads from localStorage
 function getAdsFromLocalStorage() {
-    const ads = JSON.parse(localStorage.getItem('ads')) || [];
-    return ads;
+    return JSON.parse(localStorage.getItem('ads')) || [];
 }
 
-// Function to display ads on the page
 function displayAds() {
     const adsContainer = document.getElementById('ads-container');
-    adsContainer.innerHTML = ''; // Clear previous ads
-
     const ads = getAdsFromLocalStorage();
-
+    
     if (ads.length === 0) {
-        adsContainer.innerHTML = '<p data-i18n="no_ads_message">No ads available. Please add some ads.</p>';
+        adsContainer.innerHTML = '<p data-i18n="no_ads">No ads available. Please add some ads.</p>';
     } else {
-        ads.forEach((ad, index) => {
-            const adCard = document.createElement('div');
-            adCard.classList.add('ad-card');
-            adCard.innerHTML = `
-                <div class="ad-img-wrapper">
-                    <img src="${ad.imageUrl}" alt="Ad Image">
-                </div>
-                <div class="ad-content">
-                    <h3>${ad.title}</h3>
-                    <p>${ad.description}</p>
-                    <button class="btn-secondary" onclick="deleteAd(${index})" data-i18n="delete_ad_button">Delete</button>
-                </div>
+        ads.forEach(ad => {
+            const adDiv = document.createElement('div');
+            adDiv.className = 'ad-card';
+            adDiv.innerHTML = `
+                <h4>${ad.title}</h4>
+                <p>${ad.description}</p>
+                <button class="btn" onclick="deleteAd('${ad.id}')" data-i18n="delete_ad">Delete</button>
             `;
-            adsContainer.appendChild(adCard);
+            adsContainer.appendChild(adDiv);
         });
     }
 }
 
-// Function to add a new ad (dummy data for illustration)
-function addNewAd() {
-    const newAd = {
-        title: 'Sample Ad',
-        description: 'This is a sample ad description.',
-        imageUrl: 'https://via.placeholder.com/150' // You can replace this with actual image URLs
-    };
-
-    const ads = getAdsFromLocalStorage();
-    ads.push(newAd);
+function deleteAd(adId) {
+    let ads = getAdsFromLocalStorage();
+    ads = ads.filter(ad => ad.id !== adId);
     localStorage.setItem('ads', JSON.stringify(ads));
-
-    displayAds(); // Refresh the displayed ads after adding a new one
+    displayAds();
 }
 
-// Function to delete an ad
-function deleteAd(index) {
-    const ads = getAdsFromLocalStorage();
-    ads.splice(index, 1); // Remove the ad at the specified index
-    localStorage.setItem('ads', JSON.stringify(ads));
-
-    displayAds(); // Refresh the displayed ads after deleting
-}
-
-// Function to log out and clear session data
-function logout() {
-    localStorage.removeItem('loggedInUser');
-    window.location.href = "login.html"; // Redirect to login page
-}
-
-// On page load, display the ads
+// On page load, display ads
 window.onload = function() {
     displayAds();
-    loadTranslations(); // Load translations for the page
 };
 </script>
 
