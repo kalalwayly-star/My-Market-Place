@@ -37,8 +37,10 @@
         <!-- Image Upload -->
         <div class="form-field">
             <label for="ad-image" data-i18n="imageUpload">Upload Image</label>
-            <input type="file" id="ad-image" name="image" accept="image/*" required>
+            <input type="file" id="ad-image" name="ad-image" multiple accept="image/*">
+    <div id="image-previews" class="image-previews"></div>  <!-- Container for image previews -->
         </div>
+    </div>
 
         <!-- Title -->
         <div class="form-field">
