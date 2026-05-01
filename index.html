@@ -218,7 +218,13 @@ window.onload = function() {
     fetchAds();  // Call fetchAds on page load
 };
 </script>
-
+<script>
+// Logout functionality
+document.getElementById('logout-btn').addEventListener('click', function () {
+    localStorage.removeItem('loggedInUser'); // Remove the user from localStorage
+    window.location.href = 'login.html';  // Redirect to login page
+});
+</script>
 <footer>
     <div id="footer" class="container" style="text-align: center; padding: 40px 0; border-top: 1px solid #eee;">
         <p style="display: inline; margin: 0 10px;"><a href="terms.html" data-i18n="footer_terms">Terms</a></p>
