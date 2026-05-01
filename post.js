@@ -123,18 +123,21 @@ document.addEventListener("DOMContentLoaded", function () {
     const featured10DaysRadio = document.getElementById("isFeatured10Days");
     const notFeaturedRadio = document.getElementById("isNotFeatured");
 
-    // Function to render the PayPal button
-    function renderPaypalButton(price) {
+ 
+function renderPaypalButton() {
+    // Check if the SDK and the Buttons component are available
+    if (window.paypal && window.paypal.Buttons) {
         paypal.Buttons({
-            createOrder: function (data, actions) {
-                return actions.order.create({
-                    purchase_units: [{
-                        amount: {
-                            value: price // Dynamically set price for the ad
-                        }
-                    }]
-                });
-            },
+            // Your configuration here
+        }).render('#paypal-button-container');
+    } else {
+        console.error("PayPal SDK not loaded yet.");
+        // Optional: Retry after a short delay
+        setTimeout(renderPaypalButton, 100);
+    }
+}
+    
+    
             onApprove: function (data, actions) {
                 return actions.order.capture().then(function (details) {
                     alert("Payment completed for " + details.payer.name.given_name);
