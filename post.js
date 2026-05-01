@@ -3,7 +3,7 @@ let uploadedImages = [];
 
 // Handle the form submission for posting an ad
 function submitAd(event) {
-    event.preventDefault();
+    event.preventDefault();  // Prevent page reload on form submission
 
     // Get ad details from the form
     const adTitle = document.getElementById('ad-title').value;
@@ -51,9 +51,16 @@ function submitAd(event) {
     ads.push(ad);
     localStorage.setItem('ads', JSON.stringify(ads));
 
-    // Show success message and reset form
+    // Show success message
     alert('Your ad has been posted successfully!');
-    document.getElementById('post-ad-form').reset();
+
+    // Redirect to home page (change the URL if needed)
+    window.location.href = "/"; // Redirects to the home page
+}
+
+// Clear the form fields after submission
+function clearForm() {
+    document.getElementById('post-ad-form').reset(); // Reset the form
 }
 
 // Handle the photo upload and display preview
