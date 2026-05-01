@@ -41,6 +41,46 @@
             <span id="header-user-email" style="font-weight:bold; color:#007bff;"></span>
         </div>
     </div>
+   <script>
+// Function to check login status using localStorage
+function checkLoginStatus() {
+    const user = localStorage.getItem('loggedInUser');
+    const userEmail = document.getElementById('header-user-email');
+    const loginBtn = document.getElementById('userAuth');
+    const logoutBtn = document.getElementById('logout-btn');
+    const userInfoDiv = document.getElementById('user-info-header');
+
+    if (user) {
+        // User is logged in
+        if (userEmail) {
+            userEmail.innerText = user; // Display the user's email
+        }
+        if (userInfoDiv) {
+            userInfoDiv.style.display = 'block'; // Show the user info section
+        }
+        if (loginBtn) {
+            loginBtn.style.display = 'none'; // Hide the login button
+        }
+        if (logoutBtn) {
+            logoutBtn.style.display = 'inline-block'; // Show the logout button
+        }
+    } else {
+        // User is logged out
+        if (userInfoDiv) {
+            userInfoDiv.style.display = 'none'; // Hide the user info section
+        }
+        if (loginBtn) {
+            loginBtn.style.display = 'inline-block'; // Show the login button
+        }
+        if (logoutBtn) {
+            logoutBtn.style.display = 'none'; // Hide the logout button
+        }
+    }
+}
+
+// Call this function to update the UI based on login status
+checkLoginStatus();
+</script>
 </header>
 
 <section class="hero">
