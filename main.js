@@ -265,13 +265,3 @@ const uploadedImages = [
 
 renderUploadedImages(uploadedImages);
 
-document.addEventListener("DOMContentLoaded", () => {
-    const previewContainer = document.getElementById("galleryPreview");
-
-    if (!previewContainer) {
-        console.error("Error: galleryPreview container not found");
-        return;
-    }
-
-    previewContainer.innerHTML = ""; 
-});
