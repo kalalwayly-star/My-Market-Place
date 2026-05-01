@@ -1,4 +1,5 @@
 // Initialize the uploadedImages array globally to store uploaded images
+let uploadedImages = [];
 
 // Handle the form submission for posting an ad
 function submitAd(event) {
@@ -60,7 +61,6 @@ window.location.href = "index.html"; // Redirect to home page (index.html)}
 function clearForm() {
     document.getElementById('post-ad-form').reset(); // Reset the form
 }
-let uploadedImages = [];
 
 // Handle the photo upload and display preview
 document.getElementById('ad-image').addEventListener('change', function (event) {
@@ -208,7 +208,4 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 });
-
-
-
 
