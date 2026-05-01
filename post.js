@@ -1,3 +1,6 @@
+// Initialize the uploadedImages array globally to store uploaded images
+let uploadedImages = [];
+
 // Handle the form submission for posting an ad
 function submitAd(event) {
     event.preventDefault();
@@ -54,9 +57,7 @@ function submitAd(event) {
 }
 
 // Handle the photo upload and display preview
-let uploadedImages = [];
-
-document.getElementById('ad-image').addEventListener('change', function(event) {
+document.getElementById('ad-image').addEventListener('change', function (event) {
     const files = Array.from(event.target.files || []);
     const previewContainer = document.getElementById('image-previews');
     
@@ -79,7 +80,7 @@ document.getElementById('ad-image').addEventListener('change', function(event) {
         const deleteBtn = document.createElement('button');
         deleteBtn.classList.add('delete-btn');
         deleteBtn.textContent = 'X';
-        deleteBtn.onclick = function() {
+        deleteBtn.onclick = function () {
             const index = uploadedImages.indexOf(file);
             if (index > -1) {
                 uploadedImages.splice(index, 1);
@@ -201,7 +202,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 });
-
 
 
 
