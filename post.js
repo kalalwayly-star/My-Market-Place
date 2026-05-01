@@ -62,6 +62,12 @@ document.getElementById('ad-image').addEventListener('change', function(event) {
     
     if (!previewContainer || !files.length) return;
 
+    // Limit the number of images to 6
+    if (uploadedImages.length + files.length > 6) {
+        alert('You can upload up to 6 images only.');
+        return;
+    }
+
     files.forEach((file) => {
         const previewDiv = document.createElement('div');
         previewDiv.classList.add('image-preview');
@@ -155,6 +161,54 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+// Populate Car Details Dropdowns (Year, Make, Model)
+document.addEventListener("DOMContentLoaded", function() {
+    const yearSelect = document.getElementById("car-year");
+    const makeSelect = document.getElementById("car-make");
+    const modelSelect = document.getElementById("car-model");
+
+    // Populate Year Dropdown (2001 to current year)
+    const currentYear = new Date().getFullYear();
+    for (let year = 2001; year <= currentYear; year++) {
+        const option = document.createElement("option");
+        option.value = year;
+        option.text = year;
+        yearSelect.appendChild(option);
+    }
+
+    // Add sample Make dropdown options (add your actual makes)
+    const makes = ["Toyota", "Honda", "Ford", "BMW", "Mercedes"];
+    makes.forEach(make => {
+        const option = document.createElement("option");
+        option.value = make;
+        option.text = make;
+        makeSelect.appendChild(option);
+    });
+
+    // Add sample Model dropdown options (add your actual models)
+    makeSelect.addEventListener("change", function() {
+        modelSelect.innerHTML = ''; // Reset model options
+
+        const selectedMake = makeSelect.value;
+        let models = [];
+
+        // Sample logic to update model options based on selected make
+        if (selectedMake === "Toyota") {
+            models = ["Corolla", "Camry", "Hilux"];
+        } else if (selectedMake === "Honda") {
+            models = ["Civic", "Accord", "CR-V"];
+        } else if (selectedMake === "Ford") {
+            models = ["Focus", "Fiesta", "Mustang"];
+        }
+
+        models.forEach(model => {
+            const option = document.createElement("option");
+            option.value = model;
+            option.text = model;
+            modelSelect.appendChild(option);
+        });
+    });
+});
 
 
 
