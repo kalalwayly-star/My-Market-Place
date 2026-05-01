@@ -29,7 +29,9 @@ checkLoginStatus();
 document.getElementById('logout-btn').addEventListener('click', function () {
     localStorage.removeItem('loggedInUser');
     window.location.href = 'login.html';  // Redirect to login page
-});// Logout button click event handler
+});
+
+// Logout button click event handler
 const logoutBtn = document.getElementById("logout-btn");
 if (logoutBtn) {
     logoutBtn.addEventListener("click", () => {
@@ -70,27 +72,27 @@ function renderAds(adsArray) {
         return;
     }
 
-container.innerHTML = adsArray.map(ad => {
-    const uniqueId = ad.id;
-    const image = Array.isArray(ad.image) ? ad.image[0] : (ad.image || 'https://via.placeholder.com/300');
+    container.innerHTML = adsArray.map(ad => {
+        const uniqueId = ad.id;
+        const image = Array.isArray(ad.image) ? ad.image[0] : (ad.image || 'https://via.placeholder.com/300');
 
-    // Use local storage for image if available, fallback to placeholder
-    const imageBase64 = localStorage.getItem(`adImage_${uniqueId}`);
-    const imageSrc = imageBase64 ? imageBase64 : image;
+        // Use local storage for image if available, fallback to placeholder
+        const imageBase64 = localStorage.getItem(`adImage_${uniqueId}`);
+        const imageSrc = imageBase64 ? imageBase64 : image;
 
-    return `
-        <div class="card">
-            <div onclick="goToDetails('${uniqueId}')">
-                <img src="${imageSrc}" style="width:50%; height:200px; object-fit:cover;">
+        return `
+            <div class="card">
+                <div onclick="goToDetails('${uniqueId}')">
+                    <img src="${imageSrc}" style="width:50%; height:200px; object-fit:cover;">
+                </div>
+                <div class="card-content">
+                    <h3>${ad.title}</h3>
+                    <p>📍 ${ad.location || "No location"}</p>
+                    <p><b>$${ad.price}</b></p>
+                </div>
             </div>
-            <div class="card-content">
-                <h3>${ad.title}</h3>
-                <p>📍 ${ad.location || "No location"}</p>
-                <p><b>$${ad.price}</b></p>
-            </div>
-        </div>
-    `;
-}).join("");
+        `;
+    }).join("");
 }
 
 // Call fetchAds when the page loads
@@ -264,4 +266,3 @@ const uploadedImages = [
 ];
 
 renderUploadedImages(uploadedImages);
-
