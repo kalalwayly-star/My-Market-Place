@@ -532,3 +532,166 @@ img {
 .delete-btn:hover {
     background-color: rgba(0, 0, 0, 0.8);
 }
+/* General styling for the form container */
+#post-ad-form {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Title and main heading of the form */
+#post-ad-form h2 {
+    text-align: center;
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Input fields */
+input[type="text"], input[type="number"], input[type="file"], textarea, select {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+/* Styling for the textarea (description field) */
+textarea {
+    height: 150px;
+}
+
+/* Label for inputs */
+label {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: inline-block;
+    color: #555;
+}
+
+/* Make the buttons look nice */
+button, input[type="submit"] {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    width: 100%;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover, input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* PayPal button container styling */
+#paypal-button-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Grid for car-specific fields */
+#car-info {
+    display: none;
+    margin-top: 20px;
+}
+
+#car-info select, #car-info input {
+    width: 48%;
+    margin: 8px 1%;
+    display: inline-block;
+}
+
+/* Show the condition input based on category */
+#condition-field {
+    display: block;
+    margin-top: 20px;
+}
+
+/* File upload preview */
+#galleryPreview {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+#galleryPreview .image-container {
+    position: relative;
+    margin: 5px;
+}
+
+#galleryPreview img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.delete-icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border-radius: 50%;
+    cursor: pointer;
+    padding: 2px 5px;
+    font-size: 16px;
+}
+
+/* Style for featured ad options (checkboxes) */
+#featured-options {
+    margin-top: 20px;
+}
+
+#featured-options input[type="radio"] {
+    margin-right: 10px;
+}
+
+/* Styling for the file input label */
+label[for="ad-image"] {
+    font-size: 16px;
+    font-weight: 600;
+    color: #555;
+}
+
+/* Making the condition selection more accessible */
+#condition-field input {
+    margin-right: 10px;
+}
+
+#condition-field label {
+    display: inline-block;
+    font-size: 16px;
+}
+
+/* Mobile-friendly responsiveness */
+@media (max-width: 768px) {
+    #post-ad-form {
+        padding: 15px;
+        margin: 10px;
+    }
+
+    #car-info select, #car-info input {
+        width: 100%;
+    }
+
+    #galleryPreview .image-container img {
+        width: 80px;
+        height: 80px;
+    }
+
+    button, input[type="submit"] {
+        padding: 12px;
+        width: auto;
+    }
+}
