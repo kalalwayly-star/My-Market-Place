@@ -1,25 +1,35 @@
 let globalAds = []; // Declare globalAds at the top of the file to avoid the ReferenceError
 
-// Handle user authentication state changes
-onAuthStateChanged(auth, (user) => {
-    const loginLink = document.getElementById("userAuth");
-    const logoutBtn = document.getElementById("logout-btn");
-    const emailSpan = document.getElementById("header-user-email");
-    const userInfoDiv = document.getElementById("user-info-header");
+// Function to check login status using localStorage
+function checkLoginStatus() {
+    const user = localStorage.getItem('loggedInUser');
+    const userEmail = document.getElementById('header-user-email');
+    const loginBtn = document.getElementById('userAuth');
+    const logoutBtn = document.getElementById('logout-btn');
+    const userInfoDiv = document.getElementById('user-info-header');
 
     if (user) {
-        if (userInfoDiv) userInfoDiv.style.display = "block";
-        if (emailSpan) emailSpan.innerText = user.email;
-        if (loginLink) loginLink.style.display = "none";
-        if (logoutBtn) logoutBtn.style.display = "inline-block";
+        // User is logged in
+        if (userEmail) userEmail.innerText = user;
+        if (userInfoDiv) userInfoDiv.style.display = 'block';
+        if (loginBtn) loginBtn.style.display = 'none';
+        if (logoutBtn) logoutBtn.style.display = 'inline-block';
     } else {
-        if (userInfoDiv) userInfoDiv.style.display = "none";
-        if (loginLink) loginLink.style.display = "inline-block";
-        if (logoutBtn) logoutBtn.style.display = "none";
+        // User is logged out
+        if (userInfoDiv) userInfoDiv.style.display = 'none';
+        if (loginBtn) loginBtn.style.display = 'inline-block';
+        if (logoutBtn) logoutBtn.style.display = 'none';
     }
-});
+}
 
-// Logout button click event handler
+// Call this function to update the UI based on login status
+checkLoginStatus();
+
+// Logout functionality (using localStorage)
+document.getElementById('logout-btn').addEventListener('click', function () {
+    localStorage.removeItem('loggedInUser');
+    window.location.href = 'login.html';  // Redirect to login page
+});// Logout button click event handler
 const logoutBtn = document.getElementById("logout-btn");
 if (logoutBtn) {
     logoutBtn.addEventListener("click", () => {
