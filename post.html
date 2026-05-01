@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-i18n="postAd">Post Ad</title>
     <link rel="stylesheet" href="style.css">
+    https://www.paypal.com/ncp/payment/242RYD7HYL2MS
 </head>
 <body>
     <header class="header">
@@ -112,8 +113,15 @@
                 <input type="radio" id="feature-10days" name="featured" value="10days" data-i18n="feature10days">
                 <label for="feature-10days">$8.99 for 10 days</label>
             </div>
+             <div>
+        <label for="isNotFeatured">
+            <input type="radio" id="isNotFeatured" name="featuredAd" value="0" checked /> Do not feature this ad
+        </label>
+    </div>
         </div>
-
+<script 
+  src="https://www.paypal.com/sdk/js?client-id=BAALjbSyVpTywXL1shHMGKfQdSGCjgfLPchku1LlvChOCvK1gNTdU8nZrp9ApWOBqKZuIbDXVecCGOSqjE&components=hosted-buttons&disable-funding=venmo&currency=CAD">
+</script>
         <!-- Post Ad Button -->
         <button type="submit" id="post-ad-btn" class="btn-primary" data-i18n="postAdButton">Post Ad Now</button>
     </form>
