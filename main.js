@@ -49,7 +49,7 @@ function fetchAds() {
 // Render Ads to the page (with local storage for images)
 function renderAds(adsArray) {
     const container = document.getElementById("listings");
-
+}
     if (!container) {
         console.error("Error: 'listings' container not found");
         return;
