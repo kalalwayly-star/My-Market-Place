@@ -114,20 +114,20 @@
 
         <!-- PayPal Featured Options -->
         <div class="form-field">
-            <label data-i18n="featuredAd">Feature this ad</label>
-            <div>
-                <input type="radio" id="feature-5days" name="featured" value="5days" data-i18n="feature5days">
-                <label for="feature-5days">$4.99 for 5 days</label>
-            </div>
-            <div>
-                <input type="radio" id="feature-10days" name="featured" value="10days" data-i18n="feature10days">
-                <label for="feature-10days">$8.99 for 10 days</label>
-            </div>
-             <div>
-        <label for="isNotFeatured">
-            <input type="radio" id="isNotFeatured" name="featuredAd" value="0" checked /> Do not feature this ad
-        </label>
-    </div>
+            <!-- Featured Ad Section with Localization -->
+<label for="featured" data-i18n="featured_label">Featured Ad:</label><br>
+
+<input type="radio" id="isFeatured5Days" name="featured" value="5Days" data-i18n="feature_5days">
+<label for="isFeatured5Days" data-i18n="feature_5days_label">$4.99 - Stay at top for 5 days</label><br>
+
+<input type="radio" id="isFeatured10Days" name="featured" value="10Days" data-i18n="feature_10days">
+<label for="isFeatured10Days" data-i18n="feature_10days_label">$8.99 - Stay at top for 10 days</label><br>
+
+<input type="radio" id="isNotFeatured" name="featured" value="none" data-i18n="no_feature">
+<label for="isNotFeatured" data-i18n="no_feature_label">Do not feature</label><br>
+
+<!-- PayPal Button Container (Only visible when feature is selected) -->
+<div id="paypal-button-container" style="display:none;"></div>
         </div>
 
         <!-- Post Ad Button -->
