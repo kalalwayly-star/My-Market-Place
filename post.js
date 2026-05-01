@@ -7,10 +7,27 @@ function submitAd(event) {
     const adDescription = document.getElementById('ad-description').value;
     const adCategory = document.getElementById('ad-category').value;
     const adPrice = document.getElementById('ad-price').value;
+    const adLocation = document.getElementById('ad-location').value;
     const adImage = document.getElementById('ad-image').files[0]; // Handle image upload (optional)
+    const adCondition = document.querySelector('input[name="condition"]:checked')?.value || 'N/A';
 
     // Create a unique ID for the ad
     const adId = new Date().toISOString(); // You can use a better ID generator if needed
+
+    // Handle car details if the category is "Cars & Trucks"
+    let carDetails = {};
+    if (adCategory === "Cars & Trucks") {
+        carDetails = {
+            year: document.getElementById('car-year').value,
+            make: document.getElementById('car-make').value,
+            model: document.getElementById('car-model').value,
+            kms: document.getElementById('car-kms').value,
+            fuel: document.getElementById('car-fuel').value
+        };
+    }
+
+    // Handle PayPal featured ads option
+    const featured = document.querySelector('input[name="featured"]:checked')?.value || 'none';
 
     // Create the ad object
     const ad = {
@@ -19,10 +36,14 @@ function submitAd(event) {
         description: adDescription,
         category: adCategory,
         price: adPrice,
+        location: adLocation,
         imageUrl: adImage ? URL.createObjectURL(adImage) : '', // Image URL if provided
+        condition: adCondition,
+        featured: featured,
+        carDetails: carDetails
     };
 
-    // Save the ad to localStorage
+    // Save the ad to localStorage (or to Firebase/Backend)
     let ads = JSON.parse(localStorage.getItem('ads')) || [];
     ads.push(ad);
     localStorage.setItem('ads', JSON.stringify(ads));
@@ -73,8 +94,6 @@ window.handlePhotoUpload = function (event) {
 
         preview.appendChild(imgContainer);
 
-        // If uploading images to storage was part of your functionality, you can use the code here.
-        // For simplicity, we are skipping this part here.
         uploadedImages.push(file);
         uploadedCount++;
         if (uploadedCount === totalFiles) {
@@ -88,9 +107,9 @@ window.handlePhotoUpload = function (event) {
 // Function to render PayPal button for payment
 document.addEventListener("DOMContentLoaded", function () {
     const paypalButtonContainer = document.getElementById("paypal-button-container");
-
     let paypalButtonRendered = false;
 
+    // Function to render PayPal button
     function renderPaypalButton(price) {
         if (!paypalButtonRendered) {
             paypal.Buttons({
@@ -107,7 +126,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     return actions.order.capture().then(function (details) {
                         alert("Payment completed for " + details.payer.name.given_name);
                         // Once payment is successful, proceed with the form submission
-                        submitAd(event);
+                        submitAd(event); // Call submitAd after PayPal payment is successful
                     });
                 },
                 onError: function (err) {
@@ -139,6 +158,25 @@ document.addEventListener("DOMContentLoaded", function () {
             paypalButtonContainer.style.display = "none";
         }
     });
+});
+
+// Show/hide condition field based on category
+document.getElementById('ad-category').addEventListener('change', function () {
+    const category = this.value;
+    const conditionField = document.getElementById('condition-field');
+    const carFields = document.getElementById('car-info');
+
+    if (["Pets", "Real Estate", "Jobs", "Services"].includes(category)) {
+        conditionField.style.display = "none";
+    } else {
+        conditionField.style.display = "block";
+    }
+
+    if (category === "Cars & Trucks") {
+        carFields.style.display = "block";
+    } else {
+        carFields.style.display = "none";
+    }
 });
 
 
