@@ -56,53 +56,41 @@ function submitAd(event) {
 // Handle the photo upload and display preview
 let uploadedImages = [];
 
-window.handlePhotoUpload = function (event) {
+document.getElementById('ad-image').addEventListener('change', function(event) {
     const files = Array.from(event.target.files || []);
-    const preview = document.getElementById("galleryPreview");
-
-    if (!preview || !files.length) return;
-
-    const progressBar = document.getElementById("progressBar");
-    const uploadProgress = document.getElementById("uploadProgress");
-    uploadProgress.style.display = "block";
-
-    let uploadedCount = 0;
-    const totalFiles = files.length;
+    const previewContainer = document.getElementById('image-previews');
+    
+    if (!previewContainer || !files.length) return;
 
     files.forEach((file) => {
-        const imgContainer = document.createElement("div");
-        imgContainer.classList.add("image-container"); // Styling for individual images
+        const previewDiv = document.createElement('div');
+        previewDiv.classList.add('image-preview');
+        
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(file); // Preview image before upload
+        previewDiv.appendChild(img);
 
-        const img = document.createElement("img");
-        img.src = URL.createObjectURL(file);  // Preview image before upload
-        img.style.width = "100px";
-        img.style.height = "100px";
-        img.style.objectFit = "cover";
-        imgContainer.appendChild(img);
-
-        const deleteIcon = document.createElement("span");
-        deleteIcon.classList.add("delete-icon");
-        deleteIcon.innerHTML = "X";
-        deleteIcon.onclick = function () {
-            imgContainer.remove();
+        const deleteBtn = document.createElement('button');
+        deleteBtn.classList.add('delete-btn');
+        deleteBtn.textContent = 'X';
+        deleteBtn.onclick = function() {
             const index = uploadedImages.indexOf(file);
             if (index > -1) {
                 uploadedImages.splice(index, 1);
             }
+            previewDiv.remove(); // Remove the image preview from the DOM
         };
-        imgContainer.appendChild(deleteIcon);
+        previewDiv.appendChild(deleteBtn);
 
-        preview.appendChild(imgContainer);
+        previewContainer.appendChild(previewDiv);
 
+        // Add to the uploaded images array
         uploadedImages.push(file);
-        uploadedCount++;
-        if (uploadedCount === totalFiles) {
-            uploadProgress.style.display = "none";
-        }
     });
 
-    event.target.value = "";
-};
+    // Clear input value after preview
+    event.target.value = '';
+});
 
 // Handle the PayPal button and its rendering
 document.addEventListener("DOMContentLoaded", function () {
