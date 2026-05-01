@@ -1,7 +1,5 @@
 // auth.js
 
-// Replace Firebase Auth methods with localStorage-based solutions
-
 // Function to register a new user
 export const registerUser = async (email, password) => {
   try {
@@ -186,10 +184,4 @@ window.checkAdminAccess = function () {
 // Logout Function
 document.getElementById("logoutBtn").addEventListener("click", function () {
     logoutUser();
-});
-    // Clear logged-in user from localStorage
-    localStorage.removeItem('loggedInUser');
-    
-    // Redirect to login page after logout
-    window.location.href = "login.html"; // Or wherever you want the user to go after logout
 });
