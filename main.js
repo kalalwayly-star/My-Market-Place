@@ -167,6 +167,7 @@ function handleCategoryChange() {
         "Cars & Trucks": "section-Cars",
         "Real Estate": "section-RealEstate",
         "Electronics": "section-Electronics",
+        "Auto Accessories": "Auto Accessories",
         "Furniture": "section-Furniture",
         "Job": "section-Jobs",
         "Fashion": "section-Fashion",
