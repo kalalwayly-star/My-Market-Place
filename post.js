@@ -53,6 +53,11 @@ function submitAd(event) {
 
     // Show success message
     alert('Your ad has been posted successfully!');
+    // Inside your ad submission code (e.g., postAd function)
+const adImage = document.getElementById('ad-image').files[0];
+if (adImage) {
+    uploadImageAndSave(adImage, adId);  // Save the image to localStorage
+}
 
     // Redirect to home page (change the URL if needed)
     window.location.href = "index.html"; // Redirect to home page (index.html)
