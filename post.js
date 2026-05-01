@@ -55,8 +55,7 @@ function submitAd(event) {
     alert('Your ad has been posted successfully!');
 
     // Redirect to home page (change the URL if needed)
-    window.location.href = "/"; // Redirects to the home page
-}
+window.location.href = "index.html"; // Redirect to home page (index.html)}
 
 // Clear the form fields after submission
 function clearForm() {
