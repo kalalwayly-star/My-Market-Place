@@ -14,7 +14,7 @@
         <h1 data-i18n="postAdHeader">Post your ad</h1>
     </header>
     
-    <form id="post-ad-form" class="post-ad-form">
+<form id="post-ad-form" onsubmit="submitAd(event)">
         <div class="form-field">
             <label for="ad-category" data-i18n="category">Category</label>
             <select id="ad-category" name="category" required>
