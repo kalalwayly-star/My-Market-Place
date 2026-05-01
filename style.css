@@ -712,7 +712,12 @@ label[for="ad-image"] {
     gap: 15px;
     margin-top: 10px;
 }
-
+/* Image preview styling */
+.image-preview {
+    position: relative;
+    display: inline-block;
+    margin: 10px;
+}
 .image-preview {
     position: relative;
     width: 100px;
@@ -733,11 +738,17 @@ label[for="ad-image"] {
     position: absolute;
     top: 0;
     right: 0;
-    background-color: red;
+    background-color: rgba(255, 0, 0, 0.5);
     color: white;
     border: none;
     padding: 5px;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 16px;
     border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.delete-btn:hover {
+    background-color: red;
 }
