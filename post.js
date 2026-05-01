@@ -104,12 +104,12 @@ window.handlePhotoUpload = function (event) {
     event.target.value = "";
 };
 
-// Function to render PayPal button for payment
+// Handle the PayPal button and its rendering
 document.addEventListener("DOMContentLoaded", function () {
     const paypalButtonContainer = document.getElementById("paypal-button-container");
     let paypalButtonRendered = false;
 
-    // Function to render PayPal button
+    // Function to render the PayPal button
     function renderPaypalButton(price) {
         if (!paypalButtonRendered) {
             paypal.Buttons({
@@ -125,58 +125,46 @@ document.addEventListener("DOMContentLoaded", function () {
                 onApprove: function (data, actions) {
                     return actions.order.capture().then(function (details) {
                         alert("Payment completed for " + details.payer.name.given_name);
-                        // Once payment is successful, proceed with the form submission
-                        submitAd(event); // Call submitAd after PayPal payment is successful
+                        // Once payment is successful, submit the form
+                        submitAd(event);
                     });
                 },
                 onError: function (err) {
                     console.error("PayPal Payment Error", err);
                     alert("Payment failed. Please try again.");
                 }
-            }).render("#paypal-button-container");
+            }).render("#paypal-button-container"); // Render PayPal button inside this container
             paypalButtonRendered = true;
         }
     }
 
     // Checkboxes event listeners for PayPal button based on user selection
-    const featured5DaysCheckbox = document.getElementById("isFeatured5Days");
-    const featured10DaysCheckbox = document.getElementById("isFeatured10Days");
+    const featured5DaysRadio = document.getElementById("isFeatured5Days");
+    const featured10DaysRadio = document.getElementById("isFeatured10Days");
+    const notFeaturedRadio = document.getElementById("isNotFeatured");
 
-    // Check if the PayPal button should be shown or hidden based on checkbox selection
-    featured5DaysCheckbox.addEventListener("change", function () {
+    // Show PayPal button when 5-day feature is selected
+    featured5DaysRadio.addEventListener("change", function () {
         if (this.checked) {
-            renderPaypalButton(4.99);  // 5 days price
-        } else {
-            paypalButtonContainer.style.display = "none";
+            paypalButtonContainer.style.display = "block";  // Show the button container
+            renderPaypalButton(4.99);  // Price for 5 days
         }
     });
 
-    featured10DaysCheckbox.addEventListener("change", function () {
+    // Show PayPal button when 10-day feature is selected
+    featured10DaysRadio.addEventListener("change", function () {
         if (this.checked) {
-            renderPaypalButton(8.99);  // 10 days price
-        } else {
-            paypalButtonContainer.style.display = "none";
+            paypalButtonContainer.style.display = "block";  // Show the button container
+            renderPaypalButton(8.99);  // Price for 10 days
         }
     });
-});
 
-// Show/hide condition field based on category
-document.getElementById('ad-category').addEventListener('change', function () {
-    const category = this.value;
-    const conditionField = document.getElementById('condition-field');
-    const carFields = document.getElementById('car-info');
-
-    if (["Pets", "Real Estate", "Jobs", "Services"].includes(category)) {
-        conditionField.style.display = "none";
-    } else {
-        conditionField.style.display = "block";
-    }
-
-    if (category === "Cars & Trucks") {
-        carFields.style.display = "block";
-    } else {
-        carFields.style.display = "none";
-    }
+    // Hide PayPal button when "Do not feature" option is selected
+    notFeaturedRadio.addEventListener("change", function () {
+        if (this.checked) {
+            paypalButtonContainer.style.display = "none";  // Hide the PayPal button container
+        }
+    });
 });
 
 
