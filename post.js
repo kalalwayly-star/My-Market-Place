@@ -55,7 +55,8 @@ function submitAd(event) {
     alert('Your ad has been posted successfully!');
 
     // Redirect to home page (change the URL if needed)
-window.location.href = "index.html"; // Redirect to home page (index.html)}
+    window.location.href = "index.html"; // Redirect to home page (index.html)
+}
 
 // Clear the form fields after submission
 function clearForm() {
@@ -76,6 +77,12 @@ document.getElementById('ad-image').addEventListener('change', function (event) 
     }
 
     files.forEach((file) => {
+        // Prevent duplicate uploads
+        if (uploadedImages.includes(file)) {
+            alert('This image is already uploaded.');
+            return;
+        }
+
         const previewDiv = document.createElement('div');
         previewDiv.classList.add('image-preview');
         
@@ -128,7 +135,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 return actions.order.capture().then(function (details) {
                     alert("Payment completed for " + details.payer.name.given_name);
                     // Once payment is successful, submit the form
-                    submitAd(event);
+                    submitAd(event);  // Make sure submitAd is defined
                 });
             },
             onError: function (err) {
@@ -208,4 +215,3 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 });
-
