@@ -3,93 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="postAd">Post an Ad</title>
+    <title data-i18n="postAd">Post Ad</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://www.paypal.com/sdk/js?client-id=YOUR_CLIENT_ID_HERE&components=buttons"></script> <!-- PayPal SDK -->
 </head>
 <body>
-
-<header class="header">
-    <div class="container">
-        <h1 data-i18n="post_ad_title">Post Your Ad</h1>
-        <div class="nav">
-            <a href="index.html" class="btn text" data-i18n="home">Home</a>
-            <a href="myads.html" class="btn secondary" data-i18n="myAds">My Ads</a>
-            <button id="logout-btn" class="btn logout-btn" data-i18n="nav_logout">Logout</button>
-        </div>
-    </div>
-</header>
-
-<section class="main-content container">
-    <h2 data-i18n="fill_out_ad_form">Fill out the form to post your ad</h2>
-
-    <form id="post-ad-form" onsubmit="submitAd(event)">
-        <div>
-            <label for="ad-title" data-i18n="ad_title">Ad Title:</label>
-            <input type="text" id="ad-title" required placeholder="Enter title here" data-i18n-placeholder="title_placeholder">
-        </div>
-        <div>
-            <label for="ad-description" data-i18n="ad_description">Description:</label>
-            <textarea id="ad-description" required placeholder="Enter description here" data-i18n-placeholder="description_placeholder"></textarea>
-        </div>
-        <div>
-            <label for="ad-category" data-i18n="ad_category">Category:</label>
-            <select id="ad-category" required>
-                <option value="Real Estate" data-i18n="cat_realestate">Real Estate</option>
-                <option value="Cars & Trucks" data-i18n="cat_cars_trucks">Cars</option>
-                <option value="Furniture" data-i18n="cat_furniture">Furniture</option>
-                <option value="Jobs" data-i18n="cat_jobs">Jobs</option>
-                <option value="Fashion" data-i18n="cat_fashion">Fashion</option>
-                <option value="Electronics" data-i18n="cat_electronics">Electronics</option>
-                <!-- Add more categories as needed -->
+    <header class="header">
+        <h1 data-i18n="postAdHeader">Post your ad</h1>
+    </header>
+    
+    <form id="post-ad-form" class="post-ad-form">
+        <div class="form-field">
+            <label for="ad-category" data-i18n="category">Category</label>
+            <select id="ad-category" name="category" required>
+                <option value="">Select a category</option>
+                <option value="Cars & Trucks">Cars & Trucks</option>
+                <option value="Real Estate">Real Estate</option>
+                <option value="Furniture">Furniture</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Fashion">Fashion</option>
+                <option value="Pets">Pets</option>
+                <option value="Sports">Sports</option>
+                <option value="Books">Books</option>
+                <option value="Appliances">Appliances</option>
+                <option value="Toys">Toys</option>
+                <option value="Services">Services</option>
+                <option value="Garden">Garden</option>
+                <option value="Health">Health</option>
+                <option value="Baby">Baby</option>
             </select>
         </div>
-        <div>
-            <label for="ad-price" data-i18n="ad_price">Price:</label>
-            <input type="number" id="ad-price" required placeholder="Enter price here" data-i18n-placeholder="price_placeholder">
+
+        <!-- Image Upload -->
+        <div class="form-field">
+            <label for="ad-image" data-i18n="imageUpload">Upload Image</label>
+            <input type="file" id="ad-image" name="image" accept="image/*" required>
         </div>
-        <div>
-            <label for="ad-image" data-i18n="ad_image">Ad Image:</label>
-            <input type="file" id="ad-image" accept="image/*">
+
+        <!-- Title -->
+        <div class="form-field">
+            <label for="ad-title" data-i18n="title">Title</label>
+            <input type="text" id="ad-title" name="title" required>
         </div>
-        
-        <!-- PayPal button for payment -->
-        <div id="paypal-button-container"></div>
-        
-        <button type="submit" class="btn primary" data-i18n="submit_ad">Submit Ad</button>
+
+        <!-- Location -->
+        <div class="form-field">
+            <label for="ad-location" data-i18n="location">Location</label>
+            <input type="text" id="ad-location" name="location" required>
+        </div>
+
+        <!-- Price -->
+        <div class="form-field">
+            <label for="ad-price" data-i18n="price">Price ($)</label>
+            <input type="number" id="ad-price" name="price" required>
+        </div>
+
+        <!-- Description -->
+        <div class="form-field">
+            <label for="ad-description" data-i18n="description">Description</label>
+            <textarea id="ad-description" name="description" rows="5" required></textarea>
+        </div>
+
+        <!-- Condition (depends on category) -->
+        <div class="form-field" id="condition-field">
+            <label for="ad-condition" data-i18n="condition">Condition</label>
+            <select id="ad-condition" name="condition">
+                <option value="new" data-i18n="new">New</option>
+                <option value="used" data-i18n="used">Used</option>
+            </select>
+        </div>
+
+        <!-- Car-specific Fields (only for "Cars & Trucks") -->
+        <div id="car-info" style="display:none;">
+            <div class="form-field">
+                <label for="car-year" data-i18n="year">Year</label>
+                <input type="text" id="car-year" name="year">
+            </div>
+            <div class="form-field">
+                <label for="car-make" data-i18n="make">Make</label>
+                <input type="text" id="car-make" name="make">
+            </div>
+            <div class="form-field">
+                <label for="car-model" data-i18n="model">Model</label>
+                <input type="text" id="car-model" name="model">
+            </div>
+            <div class="form-field">
+                <label for="car-kms" data-i18n="kms">Kilometers</label>
+                <input type="number" id="car-kms" name="kms">
+            </div>
+            <div class="form-field">
+                <label for="car-fuel" data-i18n="fuel">Fuel Type</label>
+                <select id="car-fuel" name="fuel">
+                    <option value="Petrol" data-i18n="petrol">Petrol</option>
+                    <option value="Diesel" data-i18n="diesel">Diesel</option>
+                    <option value="Electric" data-i18n="electric">Electric</option>
+                    <option value="Hybrid" data-i18n="hybrid">Hybrid</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- PayPal Featured Options -->
+        <div class="form-field">
+            <label data-i18n="featuredAd">Feature this ad</label>
+            <div>
+                <input type="radio" id="feature-5days" name="featured" value="5days" data-i18n="feature5days">
+                <label for="feature-5days">$4.99 for 5 days</label>
+            </div>
+            <div>
+                <input type="radio" id="feature-10days" name="featured" value="10days" data-i18n="feature10days">
+                <label for="feature-10days">$8.99 for 10 days</label>
+            </div>
+        </div>
+
+        <!-- Post Ad Button -->
+        <button type="submit" id="post-ad-btn" class="btn-primary" data-i18n="postAdButton">Post Ad Now</button>
     </form>
-</section>
 
-<footer>
-    <div id="footer" class="container">
-        <p><a href="terms.html" data-i18n="footer_terms">Terms</a></p>
-        <p><a href="privacy.html" data-i18n="footer_privacy_header">Privacy</a></p>
-    </div>
-</footer>
-
-<script src="post.js"></script>
-
-<script>
-// PayPal Button Integration
-paypal.Buttons({
-    createOrder: function(data, actions) {
-        return actions.order.create({
-            purchase_units: [{
-                amount: {
-                    value: document.getElementById('ad-price').value || '0.00' // Dynamic amount based on ad price
-                }
-            }]
-        });
-    },
-    onApprove: function(data, actions) {
-        return actions.order.capture().then(function(details) {
-            alert('Payment completed for ' + details.payer.name.given_name);
-            document.getElementById('post-ad-form').submit(); // Submit the form once payment is successful
-        });
-    }
-}).render('#paypal-button-container'); // Render PayPal button
-</script>
-
+    <script src="post.js"></script>
 </body>
 </html>
 
