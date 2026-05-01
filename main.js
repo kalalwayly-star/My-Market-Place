@@ -224,6 +224,12 @@ document.querySelectorAll('.delete-btn').forEach((button) => {
 function renderUploadedImages(images) {
     const previewContainer = document.getElementById("galleryPreview");
 
+    // Check if previewContainer exists
+    if (!previewContainer) {
+        console.error("Error: galleryPreview container not found");
+        return; // Stop execution if the element doesn't exist
+    }
+
     previewContainer.innerHTML = "";  // Clear existing images
 
     images.forEach(async (image) => {
