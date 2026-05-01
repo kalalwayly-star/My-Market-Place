@@ -79,18 +79,24 @@
 
         <!-- Car-specific Fields (only for "Cars & Trucks") -->
         <div id="car-info" style="display:none;">
-            <div class="form-field">
-                <label for="car-year" data-i18n="year">Year</label>
-                <input type="text" id="car-year" name="year">
-            </div>
-            <div class="form-field">
-                <label for="car-make" data-i18n="make">Make</label>
-                <input type="text" id="car-make" name="make">
-            </div>
-            <div class="form-field">
-                <label for="car-model" data-i18n="model">Model</label>
-                <input type="text" id="car-model" name="model">
-            </div>
+           <div class="car-info-section">
+    <label for="car-year">Select Year:</label>
+    <select id="car-year" name="car-year">
+        <!-- Year options will be populated dynamically -->
+    </select>
+
+    <label for="car-make">Select Make:</label>
+    <select id="car-make" name="car-make">
+        <option value="">Select a Make</option>
+        <!-- Make options will be populated dynamically -->
+    </select>
+
+    <label for="car-model">Select Model:</label>
+    <select id="car-model" name="car-model">
+        <option value="">Select a Model</option>
+        <!-- Model options will be populated dynamically -->
+    </select>
+</div>
             <div class="form-field">
                 <label for="car-kms" data-i18n="kms">Kilometers</label>
                 <input type="number" id="car-kms" name="kms">
