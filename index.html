@@ -26,7 +26,7 @@
             <button id="lang-es" data-i18n="lang_es">Español</button>
             <button id="lang-ar" data-i18n="lang_ar">العربية</button>
         </div>
-       <br><br>
+        <br><br>
         <div class="nav">
             <a href="index.html" class="btn text" data-i18n="home">Home</a>
             <a href="messages.html" class="btn text" data-i18n="nav_messages">Messages</a>
@@ -145,8 +145,6 @@
     <p id="no-items-message" style="display:none; text-align:center;" data-i18n="no_items">No items found.</p>
 </section>
 
-
-
 <script>
 // Get Ads from Local Storage
 function getAdsFromLocalStorage() {
@@ -176,11 +174,11 @@ document.getElementById('logout-btn').addEventListener('click', function() {
 
 // On page load, check login status and display ads
 window.onload = function() {
+    checkLoginStatus();  // Check login status when page loads
     fetchAds();  // Call fetchAds on page load
 };
-<div id="galleryPreview"></div>
-
 </script>
+
 <footer>
     <div id="footer" class="container" style="text-align: center; padding: 40px 0; border-top: 1px solid #eee;">
         <p style="display: inline; margin: 0 10px;"><a href="terms.html" data-i18n="footer_terms">Terms</a></p>
@@ -194,4 +192,3 @@ window.onload = function() {
 <script src="main.js" defer></script>
 </body>
 </html>
-
