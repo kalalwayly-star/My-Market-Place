@@ -101,59 +101,51 @@ document.getElementById('ad-image').addEventListener('change', function(event) {
 // Handle the PayPal button and its rendering
 document.addEventListener("DOMContentLoaded", function () {
     const paypalButtonContainer = document.getElementById("paypal-button-container");
-    let paypalButtonRendered = false;
-
-    // Function to render the PayPal button
-    function renderPaypalButton(price) {
-        if (!paypalButtonRendered) {
-            paypal.Buttons({
-                createOrder: function (data, actions) {
-                    return actions.order.create({
-                        purchase_units: [{
-                            amount: {
-                                value: price // Dynamically set price for the ad
-                            }
-                        }]
-                    });
-                },
-                onApprove: function (data, actions) {
-                    return actions.order.capture().then(function (details) {
-                        alert("Payment completed for " + details.payer.name.given_name);
-                        // Once payment is successful, submit the form
-                        submitAd(event);
-                    });
-                },
-                onError: function (err) {
-                    console.error("PayPal Payment Error", err);
-                    alert("Payment failed. Please try again.");
-                }
-            }).render("#paypal-button-container"); // Render PayPal button inside this container
-            paypalButtonRendered = true;
-        }
-    }
-
-    // Checkboxes event listeners for PayPal button based on user selection
     const featured5DaysRadio = document.getElementById("isFeatured5Days");
     const featured10DaysRadio = document.getElementById("isFeatured10Days");
     const notFeaturedRadio = document.getElementById("isNotFeatured");
 
-    // Show PayPal button when 5-day feature is selected
+    // Function to render the PayPal button
+    function renderPaypalButton(price) {
+        paypal.Buttons({
+            createOrder: function (data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: price // Dynamically set price for the ad
+                        }
+                    }]
+                });
+            },
+            onApprove: function (data, actions) {
+                return actions.order.capture().then(function (details) {
+                    alert("Payment completed for " + details.payer.name.given_name);
+                    // Once payment is successful, submit the form
+                    submitAd(event);
+                });
+            },
+            onError: function (err) {
+                console.error("PayPal Payment Error", err);
+                alert("Payment failed. Please try again.");
+            }
+        }).render("#paypal-button-container"); // Render PayPal button inside this container
+    }
+
+    // Handle radio button changes for featured options
     featured5DaysRadio.addEventListener("change", function () {
         if (this.checked) {
-            paypalButtonContainer.style.display = "block";  // Show the button container
+            paypalButtonContainer.style.display = "block";  // Show the PayPal button container
             renderPaypalButton(4.99);  // Price for 5 days
         }
     });
 
-    // Show PayPal button when 10-day feature is selected
     featured10DaysRadio.addEventListener("change", function () {
         if (this.checked) {
-            paypalButtonContainer.style.display = "block";  // Show the button container
+            paypalButtonContainer.style.display = "block";  // Show the PayPal button container
             renderPaypalButton(8.99);  // Price for 10 days
         }
     });
 
-    // Hide PayPal button when "Do not feature" option is selected
     notFeaturedRadio.addEventListener("change", function () {
         if (this.checked) {
             paypalButtonContainer.style.display = "none";  // Hide the PayPal button container
