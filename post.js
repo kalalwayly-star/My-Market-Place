@@ -138,11 +138,16 @@ function renderPaypalButton() {
 }
     
     
-            onApprove: function (data, actions) {
-                return actions.order.capture().then(function (details) {
-                    alert("Payment completed for " + details.payer.name.given_name);
-                    // Once payment is successful, submit the form
-                    submitAd(event);  // Make sure submitAd is defined
+          // Function to render the PayPal button
+    function renderPaypalButton(price) {
+        paypal.Buttons({
+            createOrder: function (data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: price // Dynamically set price for the ad
+                        }
+                    }]
                 });
             },
             onError: function (err) {
