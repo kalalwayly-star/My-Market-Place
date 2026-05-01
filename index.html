@@ -186,8 +186,8 @@ document.getElementById('logout-btn').addEventListener('click', function() {
 
 // On page load, check login status and display ads
 window.onload = function() {
-    checkLoginStatus();
-    displayAds();
+    fetchAds();  // Call fetchAds on page load
+};
 };
 </script>
 
