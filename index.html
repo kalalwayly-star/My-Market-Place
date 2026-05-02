@@ -71,6 +71,22 @@
 
     <p id="no-items-message" style="display:none; text-align:center;" data-i18n="no_items">No items found.</p>
 </section>
+
+<script>
+// Check login status
+function checkLoginStatus() {
+    const user = localStorage.getItem('loggedInUser');
+    const userEmail = document.getElementById('header-user-email');
+    const loginBtn = document.getElementById('userAuth');
+    const logoutBtn = document.getElementById('logout-btn');
+
+    if (user) {
+        userEmail.innerText = user;
+        document.getElementById('user-info-header').style.display = 'block';
+        loginBtn.style.display = 'none';
+        logoutBtn.style.display = 'inline-block';
+    }
+}
 document.addEventListener('DOMContentLoaded', function() {
     // 1. Handle Email Display
     const userData = localStorage.getItem('loggedInUser');
@@ -90,22 +106,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-<script>
-// Check login status
-function checkLoginStatus() {
-    const user = localStorage.getItem('loggedInUser');
-    const userEmail = document.getElementById('header-user-email');
-    const loginBtn = document.getElementById('userAuth');
-    const logoutBtn = document.getElementById('logout-btn');
-
-    if (user) {
-        userEmail.innerText = user;
-        document.getElementById('user-info-header').style.display = 'block';
-        loginBtn.style.display = 'none';
-        logoutBtn.style.display = 'inline-block';
-    }
-}
-
 // Fetch and display categories
 function fetchCategories() {
     const categories = [
