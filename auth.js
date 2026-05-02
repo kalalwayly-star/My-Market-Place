@@ -101,35 +101,7 @@ export const updateUserProfile = (displayName) => {
 };
 
 /* --- LOGIN FUNCTION --- */
-// Login Function (as an event handler)
-window.login = function () {
-    const email = document.getElementById('loginEmail').value.trim();
-    const password = document.getElementById('loginPassword').value;
-    const errorMsg = document.getElementById('error-message');
 
-    // Clear previous error message
-    errorMsg.innerText = '';
-
-    // Input validation
-    if (!email || !password) {
-        errorMsg.innerText = "Please fill in all fields.";
-        return;
-    }
-
-    // Retrieve users from localStorage
-    const users = JSON.parse(localStorage.getItem('users')) || [];
-
-    // Find matching user
-    const user = users.find(u => u.email === email && u.password === password);
-
-    if (user) {
-        // User found, redirect to main page
-        localStorage.setItem('loggedInUser', JSON.stringify(user)); // Optionally store logged-in user
-        window.location.href = "index.html"; // Redirect after successful login
-    } else {
-        errorMsg.innerText = "Invalid credentials. Please try again.";
-    }
-};
 
 /* --- REGISTER FUNCTION --- */
 // Register function
