@@ -30,12 +30,10 @@ function getAdsFromLocalStorage() {
 // --- My Ads Page Specific Code ---
 
 // Display only the logged-in user's ads on the My Ads page
-function displayUserAds() {
-    const user = JSON.parse(localStorage.getItem('loggedInUser'));
-    if (!user) return; // If no user is logged in, exit
-
+// Display all ads on the home page
+function displayAllAds() {
     const adsContainer = document.getElementById('ads-container');
-    const ads = getAdsFromLocalStorage().filter(ad => ad.userId === user.email); // Filter ads by userId
+    const ads = getAdsFromLocalStorage();
 
     if (ads.length === 0) {
         adsContainer.innerHTML = '<p>No ads available. Please add some ads.</p>';
@@ -48,12 +46,18 @@ function displayUserAds() {
             adDiv.innerHTML = `
                 <h4>${ad.title}</h4>
                 <p>${ad.description}</p>
-                <button class="btn" onclick="deleteAd('${ad.id}')">Delete</button>
+                <p><b>Price: $${ad.price}</b></p>
+                <button class="btn" onclick="goToAdDetails('${ad.id}')">View Details</button>
             `;
             adsContainer.appendChild(adDiv);
         });
     }
 }
+
+// Call displayAllAds on page load for the home page
+window.onload = function() {
+    displayAllAds(); // Display all ads
+};
 
 // Function to delete an ad from localStorage (on My Ads page)
 function deleteAd(adId) {
