@@ -6,7 +6,7 @@
    <title data-i18n="greeting">Marketplace | Find Anything</title>
    <link rel="stylesheet" href="style.css">
    <link rel="icon" href="favicon.ico" type="image/x-icon">
-   
+
    <style>
        /* Global Styles */
        body {
@@ -244,6 +244,30 @@
 </footer>
 
 <script>
+// Check login status and toggle login/logout buttons
+function checkLoginStatus() {
+    const user = localStorage.getItem('loggedInUser');
+    const userEmail = document.getElementById('header-user-email');
+    const loginBtn = document.getElementById('userAuth');
+    const logoutBtn = document.getElementById('logout-btn');
+
+    if (user) {
+        userEmail.innerText = user;
+        document.getElementById('user-info-header').style.display = 'block';
+        loginBtn.style.display = 'none';
+        logoutBtn.style.display = 'inline-block';
+    } else {
+        loginBtn.style.display = 'inline-block';
+        logoutBtn.style.display = 'none';
+    }
+}
+
+// Logout function
+function logout() {
+    localStorage.removeItem('loggedInUser');
+    checkLoginStatus();
+}
+
 // Fetch and display categories
 function fetchCategories() {
     const categories = [
