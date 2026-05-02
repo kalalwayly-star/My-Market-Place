@@ -132,7 +132,7 @@ window.login = function () {
 };
 
 /* --- REGISTER FUNCTION --- */
-// Register Function (as an event handler)
+// Register function
 window.register = function () {
     const email = document.getElementById('registerEmail').value.trim();
     const password = document.getElementById('registerPassword').value;
@@ -149,15 +149,21 @@ window.register = function () {
         return;
     }
 
-    // Save user to localStorage (this is just a simple example, and it's not encrypted; you should use encryption for real apps)
+    // Save user to localStorage
     const existingUsers = JSON.parse(localStorage.getItem('users')) || [];
-    const newUser = { email, password }; // Ideally, you would hash the password before saving it
+    const newUser = { email, password };  // You may want to hash the password
     existingUsers.push(newUser);
     localStorage.setItem('users', JSON.stringify(existingUsers));
 
     // Redirect after successful registration
     window.location.href = "myads.html";
 };
+
+// Bind register function to form submission
+document.getElementById('registerForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    register();  // Call the register function
+});
 
 /* --- ADMIN CHECK --- */
 window.checkAdminAccess = function () {
