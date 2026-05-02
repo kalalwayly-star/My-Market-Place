@@ -51,58 +51,6 @@ function postAd() {
 
 // Event listener for the Post Ad button
 document.getElementById('postAdButton').addEventListener('click', postAd);
-    // Create a unique ID for the ad
-    const adId = new Date().toISOString(); // You can use a better ID generator if needed
-
-    // Handle car details if the category is "Cars & Trucks"
-    let carDetails = {};
-    if (adCategory === "Cars & Trucks") {
-        carDetails = {
-            year: document.getElementById('car-year').value,
-            make: document.getElementById('car-make').value,
-            model: document.getElementById('car-model').value,
-            kms: document.getElementById('car-kms').value,
-            fuel: document.getElementById('car-fuel').value
-        };
-    }
-
-    // Handle PayPal featured ads option
-    const featured = document.querySelector('input[name="featured"]:checked')?.value || 'none';
-
-    // Create the ad object
-    const ad = {
-        id: adId,
-        title: adTitle,
-        description: adDescription,
-        category: adCategory,
-        price: adPrice,
-        location: adLocation,
-        imageUrl: adImage ? URL.createObjectURL(adImage) : '', // Image URL if provided
-        condition: adCondition,
-        featured: featured,
-        carDetails: carDetails
-    };
-
-    // Save the ad to localStorage (or to Firebase/Backend)
-    let ads = JSON.parse(localStorage.getItem('ads')) || [];
-    ads.push(ad);
-    localStorage.setItem('ads', JSON.stringify(ads));
-
-    // Show success message
-    alert('Your ad has been posted successfully!');
-    // Inside your ad submission code (e.g., postAd function)
-if (adImage) {
-    uploadImageAndSave(adImage, adId);  // Save the image to localStorage
-}
-
-    // Redirect to home page (change the URL if needed)
-    window.location.href = "index.html"; // Redirect to home page (index.html)
-
-
-// Clear the form fields after submission
-function clearForm() {
-    document.getElementById('post-ad-form').reset(); // Reset the form
-}
 
 // Handle the photo upload and display preview
 document.getElementById('ad-image').addEventListener('change', function (event) {
@@ -153,65 +101,54 @@ document.getElementById('ad-image').addEventListener('change', function (event) 
     event.target.value = '';
 });
 
-// Handle the PayPal button and its rendering
+// Handle the PayPal button and its rendering for featured ads
 document.addEventListener("DOMContentLoaded", function () {
     const paypalButtonContainer = document.getElementById("paypal-button-container");
     const featured5DaysRadio = document.getElementById("isFeatured5Days");
     const featured10DaysRadio = document.getElementById("isFeatured10Days");
     const notFeaturedRadio = document.getElementById("isNotFeatured");
 
- 
-function renderPaypalButton() {
-    // Check if the SDK and the Buttons component are available
-    if (window.paypal && window.paypal.Buttons) {
-        paypal.Buttons({
-            // Your configuration here
-        }).render('#paypal-button-container');
-    } else {
-        console.error("PayPal SDK not loaded yet.");
-        // Optional: Retry after a short delay
-        setTimeout(renderPaypalButton, 100);
-    }
-}
-    
-    
-          // Function to render the PayPal button
+    // Function to render the PayPal button
     function renderPaypalButton(price) {
-        paypal.Buttons({
-            createOrder: function (data, actions) {
-                return actions.order.create({
-                    purchase_units: [{
-                        amount: {
-                            value: price // Dynamically set price for the ad
-                        }
-                    }]
-                });
-            },
-            onError: function (err) {
-                console.error("PayPal Payment Error", err);
-                alert("Payment failed. Please try again.");
-            }
-        }).render("#paypal-button-container"); // Render PayPal button inside this container
+        if (window.paypal && window.paypal.Buttons) {
+            paypal.Buttons({
+                createOrder: function (data, actions) {
+                    return actions.order.create({
+                        purchase_units: [{
+                            amount: { value: price }
+                        }]
+                    });
+                },
+                onError: function (err) {
+                    console.error("PayPal Payment Error", err);
+                    alert("Payment failed. Please try again.");
+                }
+            }).render("#paypal-button-container");
+        } else {
+            console.error("PayPal SDK not loaded yet.");
+            // Optional: Retry after a short delay
+            setTimeout(() => renderPaypalButton(price), 100);
+        }
     }
 
     // Handle radio button changes for featured options
     featured5DaysRadio.addEventListener("change", function () {
         if (this.checked) {
-            paypalButtonContainer.style.display = "block";  // Show the PayPal button container
-            renderPaypalButton(4.99);  // Price for 5 days
+            paypalButtonContainer.style.display = "block";
+            renderPaypalButton(4.99); // Price for 5 days
         }
     });
 
     featured10DaysRadio.addEventListener("change", function () {
         if (this.checked) {
-            paypalButtonContainer.style.display = "block";  // Show the PayPal button container
-            renderPaypalButton(8.99);  // Price for 10 days
+            paypalButtonContainer.style.display = "block";
+            renderPaypalButton(8.99); // Price for 10 days
         }
     });
 
     notFeaturedRadio.addEventListener("change", function () {
         if (this.checked) {
-            paypalButtonContainer.style.display = "none";  // Hide the PayPal button container
+            paypalButtonContainer.style.display = "none";
         }
     });
 });
