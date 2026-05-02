@@ -18,6 +18,11 @@
             <button id="logout-btn" class="btn logout-btn" data-i18n="nav_logout">Logout</button>            
         </div>
     </div>
+  <div id="user-info-header" style="display:none; padding:10px; text-align:right;">
+    <span data-i18n="logged_in_as">Logged in as:</span>
+    <span id="header-user-email" style="font-weight:bold; color:#007bff;"></span>
+</div>
+</div>
 </header>
 
 <section class="main-content container">
@@ -68,6 +73,10 @@ function deleteAd(adId) {
 window.onload = function() {
     fetchAds();  // Call fetchAds on page load
 };
+   <script>
+// Ensure the login status is checked on My Ads page
+checkLoginStatus();  // Call the same function here
+</script>
 </script>
 <script src="main.js" defer></script>
 
