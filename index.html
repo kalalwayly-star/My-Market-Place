@@ -269,15 +269,24 @@ function logout() {
 }
 
 // Fetch and display categories
+// Fetch and display categories
 function fetchCategories() {
     const categories = [
         { name: 'Real Estate', icon: '🏠' },
         { name: 'Cars', icon: '🚗' },
         { name: 'Furniture', icon: '🛋️' },
+        { name: 'Auto Accessories', icon: '🛠️' },
         { name: 'Electronics', icon: '📱' },
         { name: 'Fashion', icon: '👗' },
         { name: 'Pets', icon: '🐶' },
-        { name: 'Books', icon: '📚' }
+        { name: 'Sports', icon: '⚽' },
+        { name: 'Books', icon: '📚' },
+        { name: 'Appliances', icon: '🔌' },
+        { name: 'Toys', icon: '🧸' },
+        { name: 'Services', icon: '💼' },
+        { name: 'Garden', icon: '🌱' },
+        { name: 'Health', icon: '💊' },
+        { name: 'Baby', icon: '👶' }
     ];
 
     const categoryGrid = document.getElementById('categoryGrid');
@@ -286,7 +295,7 @@ function fetchCategories() {
         const categoryCard = document.createElement('div');
         categoryCard.classList.add('cat-card');
         categoryCard.innerHTML = `
-            <span class="icon">${category.icon}</span>
+            <span class="icon" style="font-size: 2rem;">${category.icon}</span>
             <p>${category.name}</p>
         `;
         categoryCard.onclick = function() {
@@ -295,6 +304,7 @@ function fetchCategories() {
         categoryGrid.appendChild(categoryCard);
     });
 }
+
 
 // Placeholder function for category filtering
 function filterByCategory(category) {
