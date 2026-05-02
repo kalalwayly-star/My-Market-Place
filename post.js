@@ -46,6 +46,24 @@ document.addEventListener('DOMContentLoaded', function() {
     alert('Ad Posted Successfully!');
     window.location.href = 'myads.html';
 }
+document.addEventListener('DOMContentLoaded', function() {
+    const ads = JSON.parse(localStorage.getItem('ads') || "[]");
+    const container = document.getElementById('ads-container'); // Make sure this ID exists
+
+    if (ads.length === 0) {
+        container.innerHTML = "<p>No ads found.</p>";
+        return;
+    }
+
+    container.innerHTML = ads.map(ad => `
+        <div class="ad-card">
+            <h3>${ad.title}</h3>
+            <p>${ad.price} $</p>
+            <p>${ad.location}</p>
+            <small>Category: ${ad.category}</small>
+        </div>
+    `).join('');
+});
 
 
     // Form submission listener
