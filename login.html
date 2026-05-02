@@ -63,7 +63,7 @@
         });
     }
 
-    // Login function using localStorage (from auth.js)
+    // Login function using localStorage
     function login() {
         const email = document.getElementById('loginEmail').value.trim();
         const password = document.getElementById('loginPassword').value;
@@ -78,12 +78,11 @@
             return;
         }
 
-
         // Attempt to log in with localStorage-based method
         loginUser(email, password);
     }
 
-    // Login user from localStorage (modifies auth.js loginUser function)
+    // Login user from localStorage
     function loginUser(email, password) {
         const users = JSON.parse(localStorage.getItem("users") || "[]");
 
