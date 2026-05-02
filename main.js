@@ -1,23 +1,5 @@
 // --- Common Functions ---
-document.addEventListener('DOMContentLoaded', function() {
-    // 1. Handle Email Display
-    const userData = localStorage.getItem('loggedInUser');
-    const displayElement = document.getElementById('user-email-display');
 
-    if (userData && displayElement) {
-        const user = JSON.parse(userData);
-        displayElement.textContent = user.email; // Shows only the email
-    }
-
-    // 2. Handle Logout Button
-    const logoutBtn = document.getElementById('logout-btn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', function() {
-            localStorage.removeItem('loggedInUser');
-            window.location.href = "login.html";
-        });
-    }
-});
 // Function to check login status and update the UI
 function checkLoginStatus() {
     const user = localStorage.getItem('loggedInUser');
