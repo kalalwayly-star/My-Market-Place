@@ -5,35 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-i18n="postAd">Post Ad</title>
     <link rel="stylesheet" href="style.css">
-<script 
-  src="https://www.paypal.com/sdk/js?client-id=BAALjbSyVpTywXL1shHMGKfQdSGCjgfLPchku1LlvChOCvK1gNTdU8nZrp9ApWOBqKZuIbDXVecCGOSqjE&components=hosted-buttons&disable-funding=venmo&currency=CAD">
-</script>
 </head>
 <body>
     <header class="header">
         <h1 data-i18n="postAdHeader">Post your ad</h1>
     </header>
     
-<form id="post-ad-form" onsubmit="submitAd(event)">
+    <form id="post-ad-form" onsubmit="submitAd(event)">
         <div class="form-field">
             <label for="ad-category" data-i18n="category">Category</label>
             <select id="ad-category" name="category" required>
-                <option value="">Select a category</option>
-                <option value="Cars & Trucks">Cars & Trucks</option>
-                <option value="Auto Accessories">Auto Accessories</option>
-                <option value="Real Estate">Real Estate</option>
-                <option value="Furniture">Furniture</option>
-                <option value="Electronics">Electronics</option>
-                <option value="Fashion">Fashion</option>
-                <option value="Pets">Pets</option>
-                <option value="Sports">Sports</option>
-                <option value="Books">Books</option>
-                <option value="Appliances">Appliances</option>
-                <option value="Toys">Toys</option>
-                <option value="Services">Services</option>
-                <option value="Garden">Garden</option>
-                <option value="Health">Health</option>
-                <option value="Baby">Baby</option>
+                <option value="" data-i18n="selectCategory">Select a category</option>
+                <option value="Real Estate" data-i18n="real_estate">🏠 Real Estate</option>
+                <option value="Cars" data-i18n="cars">🚗 Cars</option>
+                <option value="Furniture" data-i18n="furniture">🛋️ Furniture</option>
+                <option value="Auto Accessories" data-i18n="auto_accessories">🛠️ Auto Accessories</option>
+                <option value="Electronics" data-i18n="electronics">📱 Electronics</option>
+                <option value="Fashion" data-i18n="fashion">👗 Fashion</option>
+                <option value="Pets" data-i18n="pets">🐶 Pets</option>
+                <option value="Sports" data-i18n="sports">⚽ Sports</option>
+                <option value="Books" data-i18n="books">📚 Books</option>
+                <option value="Appliances" data-i18n="appliances">🔌 Appliances</option>
+                <option value="Toys" data-i18n="toys">🧸 Toys</option>
+                <option value="Services" data-i18n="services">💼 Services</option>
+                <option value="Garden" data-i18n="garden">🌱 Garden</option>
+                <option value="Health" data-i18n="health">💊 Health</option>
+                <option value="Baby" data-i18n="baby">👶 Baby</option>
             </select>
         </div>
 
@@ -41,9 +38,8 @@
         <div class="form-field">
             <label for="ad-image" data-i18n="imageUpload">Upload Image</label>
             <input type="file" id="ad-image" name="ad-image" multiple accept="image/*">
-    <div id="image-previews" class="image-previews"></div>  <!-- Container for image previews -->
+            <div id="image-previews" class="image-previews"></div>  <!-- Container for image previews -->
         </div>
-    </div>
 
         <!-- Title -->
         <div class="form-field">
@@ -78,66 +74,10 @@
             </select>
         </div>
 
-        <!-- Car-specific Fields (only for "Cars & Trucks") -->
-        <div id="car-info" style="display:none;">
-           <div class="car-info-section">
-    <label for="car-year">Select Year:</label>
-    <select id="car-year" name="car-year">
-        <!-- Year options will be populated dynamically -->
-    </select>
-
-    <label for="car-make">Select Make:</label>
-    <select id="car-make" name="car-make">
-        <option value="">Select a Make</option>
-        <!-- Make options will be populated dynamically -->
-    </select>
-
-    <label for="car-model">Select Model:</label>
-    <select id="car-model" name="car-model">
-        <option value="">Select a Model</option>
-        <!-- Model options will be populated dynamically -->
-    </select>
-</div>
-            <div class="form-field">
-                <label for="car-kms" data-i18n="kms">Kilometers</label>
-                <input type="number" id="car-kms" name="kms">
-            </div>
-            <div class="form-field">
-                <label for="car-fuel" data-i18n="fuel">Fuel Type</label>
-                <select id="car-fuel" name="fuel">
-                    <option value="Petrol" data-i18n="petrol">Petrol</option>
-                    <option value="Diesel" data-i18n="diesel">Diesel</option>
-                    <option value="Electric" data-i18n="electric">Electric</option>
-                    <option value="Hybrid" data-i18n="hybrid">Hybrid</option>
-                </select>
-            </div>
-        </div>
-
-        <!-- PayPal Featured Options -->
-        <div class="form-field">
-            <!-- Featured Ad Section with Localization -->
-<label for="featured" data-i18n="featured_label">Featured Ad:</label><br>
-
-<input type="radio" id="isFeatured5Days" name="featured" value="5Days" data-i18n="feature_5days">
-<label for="isFeatured5Days" data-i18n="feature_5days_label">$4.99 - Stay at top for 5 days</label><br>
-
-<input type="radio" id="isFeatured10Days" name="featured" value="10Days" data-i18n="feature_10days">
-<label for="isFeatured10Days" data-i18n="feature_10days_label">$8.99 - Stay at top for 10 days</label><br>
-
-<input type="radio" id="isNotFeatured" name="featured" value="none" data-i18n="no_feature">
-<label for="isNotFeatured" data-i18n="no_feature_label">Do not feature</label><br>
-
-<!-- PayPal Button Container (Only visible when feature is selected) -->
-<div id="paypal-button-container" style="display:none;"></div>
-        </div>
-
         <!-- Post Ad Button -->
         <button type="submit" id="post-ad-btn" class="btn-primary" data-i18n="postAdButton">Post Ad Now</button>
     </form>
-<script src="post.js"></script>  <!-- For custom JS files using modules -->
+
+    <script src="post.js"></script>  <!-- For custom JS files using modules -->
 </body>
 </html>
-
-
-
-
