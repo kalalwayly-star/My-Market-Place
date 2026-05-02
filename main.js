@@ -1,4 +1,4 @@
-let globalAds = []; // Declare globalAds at the top of the file to avoid the ReferenceError
+let globalAds = []; // Declare globalAds at the top of the file to avoid ReferenceError
 
 // Function to check login status using localStorage
 function checkLoginStatus() {
@@ -31,16 +31,6 @@ document.getElementById('logout-btn').addEventListener('click', function () {
     window.location.href = 'login.html';  // Redirect to login page
 });
 
-// Logout button click event handler
-const logoutBtn = document.getElementById("logout-btn");
-if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => {
-        // Perform logout actions (if applicable)
-        alert("Logged out!");
-        window.location.href = "index.html";  // Redirect to home page after logging out
-    });
-}
-
 // Navigate to ad details page
 window.goToDetails = function(id) {
     if (!id) {
@@ -52,7 +42,6 @@ window.goToDetails = function(id) {
 
 // Function to fetch ads (from localStorage, simulating Firestore data)
 function fetchAds() {
-    // Simulating fetching ads from local storage (a mock example)
     const storedAds = JSON.parse(localStorage.getItem('marketplace_ads')) || [];
     globalAds = storedAds;
     renderAds(globalAds);
@@ -215,6 +204,7 @@ function handleCategoryChange() {
     }
 }
 
+// Delete ad event listener
 document.querySelectorAll('.delete-btn').forEach((button) => {
     button.addEventListener('click', function() {
         const adId = button.dataset.adId;
@@ -222,12 +212,8 @@ document.querySelectorAll('.delete-btn').forEach((button) => {
     });
 });
 
-
-    previewContainer.innerHTML = ""; 
-});
-// Example usage of rendering uploaded images (simulating local image upload)
+// Render uploaded images (simulating local image upload)
 function renderUploadedImages(images) {
-   document.addEventListener("DOMContentLoaded", () => {
     const previewContainer = document.getElementById("galleryPreview");
 
     if (!previewContainer) {
