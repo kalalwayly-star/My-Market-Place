@@ -1,19 +1,56 @@
 // Initialize the uploadedImages array globally to store uploaded images
 let uploadedImages = [];
 
-// Handle the form submission for posting an ad
-function submitAd(event) {
-    event.preventDefault();  // Prevent page reload on form submission
+// Function to post a new ad
+function postAd() {
+    // Get the input values from the form
+    const title = document.getElementById('adTitle').value.trim();
+    const description = document.getElementById('adDescription').value.trim();
+    const price = document.getElementById('adPrice').value.trim();
+    const location = document.getElementById('adLocation').value.trim();
+    const condition = document.querySelector('input[name="condition"]:checked').value;
+    const featuredAd = document.querySelector('input[name="featured"]:checked')?.value || 'none';  // If no option is checked, set default
+    const user = JSON.parse(localStorage.getItem('loggedInUser'));
 
-    // Get ad details from the form
-    const adTitle = document.getElementById('ad-title').value;
-    const adDescription = document.getElementById('ad-description').value;
-    const adCategory = document.getElementById('ad-category').value;
-    const adPrice = document.getElementById('ad-price').value;
-    const adLocation = document.getElementById('ad-location').value;
-    const adImage = document.getElementById('ad-image').files[0]; // Handle image upload (optional)
-    const adCondition = document.querySelector('input[name="condition"]:checked')?.value || 'N/A';
+    // Validation: Make sure the user is logged in
+    if (!user) {
+        alert('You must be logged in to post an ad!');
+        return;
+    }
 
+    // Validation: Make sure all required fields are filled in
+    if (!title || !description || !price || !location) {
+        alert('Please fill in all the required fields.');
+        return;
+    }
+
+    // Create a new ad object
+    const newAd = {
+        id: Date.now().toString(), // Use current timestamp as unique id
+        title,
+        description,
+        price,
+        location,
+        condition,
+        featuredAd,
+        userId: user.email, // Store the user's email with the ad
+    };
+
+    // Retrieve existing ads from localStorage
+    const ads = JSON.parse(localStorage.getItem('ads')) || [];
+    ads.push(newAd);  // Add the new ad to the ads array
+
+    // Save the updated ads array to localStorage
+    localStorage.setItem('ads', JSON.stringify(ads));
+
+    alert('Your ad has been posted successfully!'); // Show success message
+
+    // Redirect to My Ads page after posting the ad
+    window.location.href = 'myads.html';
+}
+
+// Event listener for the Post Ad button
+document.getElementById('postAdButton').addEventListener('click', postAd);
     // Create a unique ID for the ad
     const adId = new Date().toISOString(); // You can use a better ID generator if needed
 
@@ -60,7 +97,7 @@ if (adImage) {
 
     // Redirect to home page (change the URL if needed)
     window.location.href = "index.html"; // Redirect to home page (index.html)
-}
+
 
 // Clear the form fields after submission
 function clearForm() {
