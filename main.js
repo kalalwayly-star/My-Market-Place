@@ -30,10 +30,12 @@ function getAdsFromLocalStorage() {
 // --- My Ads Page Specific Code ---
 
 // Display only the logged-in user's ads on the My Ads page
-// Display all ads on the home page
-function displayAllAds() {
+function displayUserAds() {
+    const user = JSON.parse(localStorage.getItem('loggedInUser'));
+    if (!user) return; // If no user is logged in, exit
+
     const adsContainer = document.getElementById('ads-container');
-    const ads = getAdsFromLocalStorage();
+    const ads = getAdsFromLocalStorage().filter(ad => ad.userId === user.email); // Filter ads by userId
 
     if (ads.length === 0) {
         adsContainer.innerHTML = '<p>No ads available. Please add some ads.</p>';
@@ -47,21 +49,12 @@ function displayAllAds() {
                 <h4>${ad.title}</h4>
                 <p>${ad.description}</p>
                 <p><b>Price: $${ad.price}</b></p>
-                <button class="btn" onclick="goToAdDetails('${ad.id}')">View Details</button>
+                <button class="btn" onclick="deleteAd('${ad.id}')">Delete</button>
             `;
             adsContainer.appendChild(adDiv);
         });
     }
 }
-
-// Call displayAllAds on page load for the home page
-window.onload = function() {
-    displayAllAds(); // Display all ads
-};
-// Call displayAllAds on page load for the home page
-window.onload = function() {
-    displayAllAds(); // Display all ads
-};
 
 // Function to delete an ad from localStorage (on My Ads page)
 function deleteAd(adId) {
@@ -69,14 +62,6 @@ function deleteAd(adId) {
     ads = ads.filter(ad => ad.id !== adId);
     localStorage.setItem('ads', JSON.stringify(ads));
     displayUserAds(); // Refresh the display
-}
-
-// On page load, display ads for the logged-in user
-if (window.location.pathname.includes('myads.html')) {
-    window.onload = function() {
-        displayUserAds(); // Display the user's own ads
-        checkLoginStatus();  // Ensure the login status is checked
-    };
 }
 
 // --- Home Page Specific Code (index.html) ---
@@ -135,24 +120,6 @@ function filterAdsByCategory(category) {
     }
 }
 
-// On page load, display all ads on the home page
-if (window.location.pathname.includes('index.html')) {
-    window.onload = function() {
-        displayAllAds();  // Display all ads
-        checkLoginStatus();  // Ensure the login status is checked
-    };
-}
-
-// --- Helper Functions ---
-
-// Logout functionality (using localStorage)
-if (window.location.pathname.includes('index.html')) {
-    document.getElementById('logout-btn')?.addEventListener('click', function () {
-        localStorage.removeItem('loggedInUser');
-        window.location.href = 'login.html';  // Redirect to login page
-    });
-}
-
 // --- Add a New Ad (for Post Ad page, when creating an ad) ---
 window.addAd = function () {
     const title = document.getElementById('adTitle').value.trim();
@@ -183,4 +150,22 @@ window.addAd = function () {
     localStorage.setItem('ads', JSON.stringify(ads));
 
     window.location.href = 'myads.html'; // Redirect to My Ads page after posting
+};
+
+// --- Logout functionality ---
+if (window.location.pathname.includes('index.html') || window.location.pathname.includes('myads.html')) {
+    document.getElementById('logout-btn')?.addEventListener('click', function () {
+        localStorage.removeItem('loggedInUser');
+        window.location.href = 'login.html';  // Redirect to login page
+    });
+}
+
+// --- On page load, ensure proper login status and display ads ---
+window.onload = function() {
+    checkLoginStatus();  // Ensure the login status is checked
+    if (window.location.pathname.includes('index.html')) {
+        displayAllAds(); // Display all ads on the home page
+    } else if (window.location.pathname.includes('myads.html')) {
+        displayUserAds(); // Display the logged-in user's ads on the My Ads page
+    }
 };
