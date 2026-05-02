@@ -58,6 +58,10 @@ function displayAllAds() {
 window.onload = function() {
     displayAllAds(); // Display all ads
 };
+// Call displayAllAds on page load for the home page
+window.onload = function() {
+    displayAllAds(); // Display all ads
+};
 
 // Function to delete an ad from localStorage (on My Ads page)
 function deleteAd(adId) {
