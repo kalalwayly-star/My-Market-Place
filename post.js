@@ -2,112 +2,63 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize the uploadedImages array globally to store uploaded images
     let uploadedImages = [];
 
-    // Function to post a new ad
-    function postAd() {
-        // Get the input values from the form
-        const title = document.getElementById('adTitle').value.trim();
-        const description = document.getElementById('adDescription').value.trim();
-        const price = document.getElementById('adPrice').value.trim();
-        const location = document.getElementById('adLocation').value.trim();
-const conditionElement = document.querySelector('input[name="condition"]:checked');
-const condition = conditionElement ? conditionElement.value : 'not specified';
-        const featuredAd = document.querySelector('input[name="featured"]:checked')?.value || 'none';  // If no option is checked, set default
-        const user = JSON.parse(localStorage.getItem('loggedInUser'));
+   // Function to post a new ad
+function postAd(event) {
+    if (event) event.preventDefault(); // Stop the page from refreshing
 
-        // Validation: Make sure the user is logged in
-        if (!user) {
-            alert('You must be logged in to post an ad!');
-            return;
-        }
+    // FIX: IDs must match the HTML exactly (ad-title vs adTitle)
+    const title = document.getElementById('ad-title').value.trim();
+    const description = document.getElementById('ad-description').value.trim();
+    const price = document.getElementById('ad-price').value.trim();
+    const location = document.getElementById('ad-location').value.trim();
+    const category = document.getElementById('ad-category').value;
+    
+    // Safety check for radio buttons
+    const featuredElement = document.querySelector('input[name="featured"]:checked');
+    const featuredAd = featuredElement ? featuredElement.value : 'none';
 
-        // Validation: Make sure all required fields are filled in
-        if (!title || !description || !price || !location) {
-            alert('Please fill in all the required fields.');
-            return;
-        }
+    const user = JSON.parse(localStorage.getItem('loggedInUser'));
 
-        // Create a new ad object
-      const newAd = {
-    id: Date.now().toString(),
-    title,
-    description,
-    price,
-    location,
-    condition, // Add this
-    images: uploadedImages, // You will need to handle conversion here
-    userId: user.email,
-};
-
-const ads = JSON.parse(localStorage.getItem('ads')) || [];
-ads.push(newAd);
-localStorage.setItem('ads', JSON.stringify(ads));  // Save ads array
-
-       
-
-        alert('Your ad has been posted successfully!'); // Show success message
-
-        // Redirect to My Ads page after posting the ad
-        window.location.href = 'myads.html';
+    if (!user) {
+        alert('You must be logged in to post an ad!');
+        return;
     }
 
-    // Event listener for the Post Ad button
-    const postAdButton = document.getElementById('postAdButton');
-    if (postAdButton) {
-        postAdButton.addEventListener('click', postAd);
+    if (!title || !description || !price || !location) {
+        alert('Please fill in all the required fields.');
+        return;
     }
 
-    // Handle the photo upload and display preview
-    const adImageInput = document.getElementById('ad-image');
-    if (adImageInput) {
-        adImageInput.addEventListener('change', function (event) {
-            const files = Array.from(event.target.files || []);
-            const previewContainer = document.getElementById('image-previews');
+    // Create the ad object
+    const newAd = {
+        id: Date.now().toString(),
+        title,
+        description,
+        price,
+        location,
+        category,
+        featuredAd,
+        userId: user.email,
+        images: [] // Note: Storing actual image files in LocalStorage is complex due to size limits
+    };
 
-            if (!previewContainer || !files.length) return;
+    // Save to LocalStorage
+    const ads = JSON.parse(localStorage.getItem('ads')) || [];
+    ads.push(newAd);
+    localStorage.setItem('ads', JSON.stringify(ads));
 
-            // Limit the number of images to 6
-            if (uploadedImages.length + files.length > 6) {
-                alert('You can upload up to 6 images only.');
-                return;
-            }
+    alert('Your ad has been posted successfully!');
+    window.location.href = 'myads.html';
+}
 
-            files.forEach((file) => {
-                // Prevent duplicate uploads
-                if (uploadedImages.includes(file)) {
-                    alert('This image is already uploaded.');
-                    return;
-                }
-
-                const previewDiv = document.createElement('div');
-                previewDiv.classList.add('image-preview');
-
-                const img = document.createElement('img');
-                img.src = URL.createObjectURL(file); // Preview image before upload
-                previewDiv.appendChild(img);
-
-                const deleteBtn = document.createElement('button');
-                deleteBtn.classList.add('delete-btn');
-                deleteBtn.textContent = 'X';
-                deleteBtn.onclick = function () {
-                    const index = uploadedImages.indexOf(file);
-                    if (index > -1) {
-                        uploadedImages.splice(index, 1);
-                    }
-                    previewDiv.remove(); // Remove the image preview from the DOM
-                };
-                previewDiv.appendChild(deleteBtn);
-
-                previewContainer.appendChild(previewDiv);
-
-                // Add to the uploaded images array
-                uploadedImages.push(file);
-            });
-
-            // Clear input value after preview
-            event.target.value = '';
-        });
+// FIX: Change the event listener to match your HTML form submission
+document.addEventListener('DOMContentLoaded', function() {
+    const postForm = document.getElementById('post-ad-form');
+    if (postForm) {
+        postForm.addEventListener('submit', postAd);
     }
 });
+
 
 // Handle the PayPal button and its rendering for featured ads
 document.addEventListener("DOMContentLoaded", function () {
