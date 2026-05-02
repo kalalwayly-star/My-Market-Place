@@ -752,3 +752,16 @@ label[for="ad-image"] {
 .delete-btn:hover {
     background-color: red;
 }
+.lang-buttons {
+    display: flex;
+    flex-direction: column; /* This stacks them vertically */
+    gap: 10px;              /* Adds space between buttons */
+    width: fit-content;     /* Prevents buttons from stretching across the whole screen */
+    margin: 10px 0;         /* Adds some breathing room */
+}
+
+.lang-buttons button {
+    width: 100%;            /* Makes all buttons the same width */
+    text-align: center;
+    padding: 8px 15px;
+}
