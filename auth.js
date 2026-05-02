@@ -1,135 +1,70 @@
-// auth.js
-
 // Function to register a new user
-export const registerUser = async (email, password) => {
-  try {
+export const registerUser = (email, password) => {
     const users = JSON.parse(localStorage.getItem("users") || "[]");
 
-    // Check if the user already exists
-    const userExists = users.some(user => user.email === email);
-    if (userExists) {
-      console.error('User already exists');
-      alert('User already exists');
-      return;
+    if (users.some(user => user.email === email)) {
+        alert('User already exists');
+        return;
     }
 
-    // Create new user and add it to localStorage
-    const newUser = {
-      email: email,
-      password: password,
-      displayName: "", // Default to empty displayName
-    };
-
+    const newUser = { email, password, displayName: "" };
     users.push(newUser);
     localStorage.setItem("users", JSON.stringify(users));
-    console.log('User registered:', newUser);
-
-    // Store the logged-in user in localStorage
-    localStorage.setItem("currentUser", JSON.stringify(newUser));
-
-    // Redirect after successful registration
+    
+    // Log them in immediately using the unified key
+    localStorage.setItem("loggedInUser", JSON.stringify(newUser));
     window.location.href = "myads.html";
-  } catch (error) {
-    console.error('Error registering user:', error);
-  }
 };
 
 // Function to log in a user
-export const loginUser = async (email, password) => {
-  try {
+export const loginUser = (email, password) => {
     const users = JSON.parse(localStorage.getItem("users") || "[]");
-
-    const user = users.find(user => user.email === email && user.password === password);
+    const user = users.find(u => u.email === email && u.password === password);
 
     if (user) {
-      console.log('User logged in:', user);
-      localStorage.setItem("currentUser", JSON.stringify(user)); // Store logged-in user
-      window.location.href = "index.html"; // Redirect to the homepage after login
+        localStorage.setItem("loggedInUser", JSON.stringify(user));
+        window.location.href = "index.html";
     } else {
-      console.error('Invalid credentials');
-      alert('Invalid email or password');
+        alert('Invalid email or password');
     }
-  } catch (error) {
-    console.error('Error logging in user:', error);
-  }
 };
 
-// Function to log out the user
-export const logoutUser = () => {
-  try {
-    localStorage.removeItem("currentUser");
-    console.log('User logged out');
-    window.location.href = "login.html"; // Redirect to login page after logout
-  } catch (error) {
-    console.error('Error signing out user:', error);
-  }
-};
-
-// Function to reset the password (simulate with localStorage)
-export const resetPassword = (email) => {
-  try {
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
-
-    const user = users.find(user => user.email === email);
-    if (user) {
-      alert('Password reset email sent (simulated)');
-    } else {
-      alert('No user found with this email');
-    }
-  } catch (error) {
-    console.error('Error sending password reset email:', error);
-  }
-};
-
-// Function to update user profile (simulated with localStorage)
-export const updateUserProfile = (displayName) => {
-  try {
-    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-    if (currentUser) {
-      currentUser.displayName = displayName;
-      localStorage.setItem("currentUser", JSON.stringify(currentUser));
-      console.log('User profile updated');
-    } else {
-      alert('No user logged in');
-    }
-  } catch (error) {
-    console.error('Error updating user profile:', error);
-  }
-};
-
-// Register function for form submission
-window.register = function () {
+// Global Registration function for the form
+window.register = function() {
     const email = document.getElementById('registerEmail').value.trim();
     const password = document.getElementById('registerPassword').value;
     const errorMsg = document.getElementById('error-message');
 
-    // Input validation
     if (!email || !password) {
-        errorMsg.innerText = "Please fill in all fields.";
+        if(errorMsg) errorMsg.innerText = "Please fill in all fields.";
         return;
     }
 
     if (password.length < 7) {
-        errorMsg.innerText = "Password must be at least 7 characters.";
+        if(errorMsg) errorMsg.innerText = "Password must be at least 7 characters.";
         return;
     }
 
-    const existingUsers = JSON.parse(localStorage.getItem('users')) || [];
-    const newUser = { email, password };  // Store user with email and password
-    existingUsers.push(newUser);
-    localStorage.setItem('users', JSON.stringify(existingUsers));
-
-    // Redirect after successful registration
-    window.location.href = "myads.html";
+    registerUser(email, password);
 };
 
-// Bind register function to form submission
-document.getElementById('registerForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    register();  // Call the register function
+// Global Login function for the form
+window.login = function() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    loginUser(email, password);
+};
+
+// Event Listeners for Forms
+document.addEventListener('DOMContentLoaded', () => {
+    const regForm = document.getElementById('registerForm');
+    if (regForm) regForm.addEventListener('submit', (e) => { e.preventDefault(); window.register(); });
+
+    const logForm = document.getElementById('loginForm');
+    if (logForm) logForm.addEventListener('submit', (e) => { e.preventDefault(); window.login(); });
 });
 
-// Admin check (optional)
+// Admin check
 window.checkAdminAccess = function () {
     const pass = prompt("Enter Admin Password:");
     if (btoa(pass) === "S2FsZWQxOTcwIQ==") {
