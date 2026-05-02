@@ -1,78 +1,69 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     let uploadedImages = [];
 
     // Function to post a new ad
-   function postAd(event) {
-    if (event) event.preventDefault();
+    function postAd(event) {
+        if (event) event.preventDefault();
 
-    // 1. Get values safely
-    const title = document.getElementById('ad-title')?.value.trim();
-    const description = document.getElementById('ad-description')?.value.trim();
-    const price = document.getElementById('ad-price')?.value.trim();
-    const location = document.getElementById('ad-location')?.value.trim();
-    const category = document.getElementById('ad-category')?.value;
+        // 1. Get form values safely
+        const title = document.getElementById('ad-title')?.value.trim();
+        const description = document.getElementById('ad-description')?.value.trim();
+        const price = document.getElementById('ad-price')?.value.trim();
+        const location = document.getElementById('ad-location')?.value.trim();
+        const category = document.getElementById('ad-category')?.value;
 
-    // 2. Validate login
-    const userRaw = localStorage.getItem('loggedInUser');
-    if (!userRaw) {
-        alert('Please login first!');
-        return;
-    }
-    const user = JSON.parse(userRaw);
+        // 2. Validate login
+        const userRaw = localStorage.getItem('loggedInUser');
+        if (!userRaw) {
+            alert('Please login first!');
+            return;
+        }
+        const user = JSON.parse(userRaw);
 
-    // 3. Basic Validation
-    if (!title || !price || !category) {
-        alert('Please fill in Title, Price, and Category.');
-        return;
-    }
+        // 3. Basic Validation
+        if (!title || !price || !category) {
+            alert('Please fill in Title, Price, and Category.');
+            return;
+        }
 
-    // 4. Create the Ad Object
-    const newAd = {
-        id: Date.now().toString(),
-        title: title,
-        description: description,
-        price: price,
-        location: location,
-        category: category,
-        userEmail: user.email,
-        date: new Date().toLocaleDateString()
-    };
+        // 4. Convert images to base64 format
+        const convertImages = async () => {
+            const promises = uploadedImages.map(file => {
+                return new Promise(resolve => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(reader.result);
+                    reader.readAsDataURL(file);
+                });
+            });
 
-    // 5. Save to Array
-    const ads = JSON.parse(localStorage.getItem('ads') || "[]");
-    ads.push(newAd);
-    localStorage.setItem('ads', JSON.stringify(ads));
+            return Promise.all(promises);
+        };
 
-    alert('Ad Posted Successfully!');
-    window.location.href = 'myads.html';
-}
-document.addEventListener('DOMContentLoaded', function() {
-    const ads = JSON.parse(localStorage.getItem('ads') || "[]");
-    const container = document.getElementById('ads-container'); // Make sure this ID exists
+        convertImages().then(imagesBase64 => {
+            // 5. Create the Ad Object
+            const newAd = {
+                id: Date.now().toString(),
+                title,
+                description,
+                price,
+                location,
+                category,
+                userEmail: user.email,
+                images: imagesBase64, // Save images as base64
+                date: new Date().toLocaleDateString()
+            };
 
-    if (ads.length === 0) {
-        container.innerHTML = "<p>No ads found.</p>";
-        return;
-    }
+            // 6. Save the Ad to LocalStorage
+            const ads = JSON.parse(localStorage.getItem('ads') || "[]");
+            ads.push(newAd);
+            localStorage.setItem('ads', JSON.stringify(ads));
 
-    container.innerHTML = ads.map(ad => `
-        <div class="ad-card">
-            <h3>${ad.title}</h3>
-            <p>${ad.price} $</p>
-            <p>${ad.location}</p>
-            <small>Category: ${ad.category}</small>
-        </div>
-    `).join('');
-});
-
-
-    // Form submission listener
-    const postForm = document.getElementById('post-ad-form');
-    if (postForm) {
-        postForm.addEventListener('submit', postAd);
+            alert('Ad Posted Successfully!');
+            window.location.href = 'myads.html';  // Redirect to My Ads page
+        });
     }
 
-    // Handle the photo upload
+    // Handle the image upload preview
     const adImageInput = document.getElementById('ad-image');
     if (adImageInput) {
         adImageInput.addEventListener('change', function (event) {
@@ -108,58 +99,32 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-   const categorySelect = document.getElementById("ad-category");
-const carInfo = document.getElementById("car-info");
+    // Car-specific category logic (optional)
+    const categorySelect = document.getElementById("ad-category");
+    const carInfo = document.getElementById("car-info");
 
-if (categorySelect) {
-    categorySelect.addEventListener("change", function() {
-        // Show car fields only if "Cars & Trucks" is selected
-        if (this.value === "Cars & Trucks") {
-            carInfo.style.display = "block";
-        } else {
-            carInfo.style.display = "none";
-        }
-    });
-}
-
-
-    // Populate Year, Make, Model
-    const yearSelect = document.getElementById("car-year");
-    const makeSelect = document.getElementById("car-make");
-    const modelSelect = document.getElementById("car-model");
-
-    if (yearSelect) {
-        const currentYear = new Date().getFullYear();
-        for (let year = 2001; year <= currentYear; year++) {
-            const option = new Option(year, year);
-            yearSelect.add(option);
-        }
-    }
-
-    const carData = {
-        "Toyota": ["Corolla", "Camry", "Hilux"],
-        "Honda": ["Civic", "Accord", "CR-V"],
-        "Ford": ["Focus", "Fiesta", "Mustang"]
-    };
-
-    if (makeSelect) {
-        Object.keys(carData).forEach(make => {
-            makeSelect.add(new Option(make, make));
-        });
-
-        makeSelect.addEventListener("change", function() {
-            modelSelect.innerHTML = '<option value="">Select a Model</option>';
-            const models = carData[this.value] || [];
-            models.forEach(m => modelSelect.add(new Option(m, m)));
+    if (categorySelect) {
+        categorySelect.addEventListener("change", function () {
+            if (this.value === "Cars & Trucks") {
+                carInfo.style.display = "block";
+            } else {
+                carInfo.style.display = "none";
+            }
         });
     }
 
-    // PayPal UI Logic
+    // PayPal UI Logic (for Featured Ads)
     const paypalContainer = document.getElementById("paypal-button-container");
     document.querySelectorAll('input[name="featured"]').forEach(radio => {
-        radio.addEventListener("change", function() {
+        radio.addEventListener("change", function () {
             paypalContainer.style.display = (this.value !== "none") ? "block" : "none";
         });
     });
+
+    // Form submission listener
+    const postForm = document.getElementById('post-ad-form');
+    if (postForm) {
+        postForm.addEventListener('submit', postAd);
+    }
 });
 
