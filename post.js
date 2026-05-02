@@ -9,7 +9,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const description = document.getElementById('adDescription').value.trim();
         const price = document.getElementById('adPrice').value.trim();
         const location = document.getElementById('adLocation').value.trim();
-        const condition = document.querySelector('input[name="condition"]:checked').value;
+const conditionElement = document.querySelector('input[name="condition"]:checked');
+const condition = conditionElement ? conditionElement.value : 'not specified';
         const featuredAd = document.querySelector('input[name="featured"]:checked')?.value || 'none';  // If no option is checked, set default
         const user = JSON.parse(localStorage.getItem('loggedInUser'));
 
@@ -26,20 +27,22 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Create a new ad object
-       const newAd = {
-    id: Date.now().toString(), // Unique ad ID
+      const newAd = {
+    id: Date.now().toString(),
     title,
     description,
     price,
     location,
-    userId: user.email, // Store the logged-in user's email
+    condition, // Add this
+    images: uploadedImages, // You will need to handle conversion here
+    userId: user.email,
 };
+
 const ads = JSON.parse(localStorage.getItem('ads')) || [];
 ads.push(newAd);
 localStorage.setItem('ads', JSON.stringify(ads));  // Save ads array
 
-        // Save the updated ads array to localStorage
-        localStorage.setItem('ads', JSON.stringify(ads));
+       
 
         alert('Your ad has been posted successfully!'); // Show success message
 
@@ -206,3 +209,11 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 });
+// Event listener for the Post Ad button
+const postAdButton = document.getElementById('postAdButton');
+if (postAdButton) {
+    postAdButton.addEventListener('click', function(event) {
+        event.preventDefault(); // This stops the page from reloading
+        postAd() ;
+    });
+}
