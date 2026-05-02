@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Account - Classified Site</title>
+    <title data-i18n="register_page_title">Create Account - Classified Site</title>
     <!-- FIX: Corrected Font Awesome Link -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <!-- FIX: Updated versioning to v=1.2 to match your latest CSS save -->
@@ -13,59 +13,57 @@
 
 <div class="auth-wrapper">
     <div class="form-card">
-        <h2>Create Account</h2>
-        <p class="subtitle">Join our marketplace today.</p>
+        <h2 data-i18n="create_account_header">Create Account</h2>
+        <p class="subtitle" data-i18n="join_marketplace">Join our marketplace today.</p>
         
         <!-- Error Message Placeholder -->
         <div id="error-message" class="error-text" style="text-align: center; margin-bottom: 15px;"></div>
 
         <form id="registerForm">
-    <!-- Email Field -->
-    <div class="input-group">
-        <label data-i18n="label_email">Email Address</label>
-        <input 
-            type="email" 
-            id="registerEmail" 
-            data-i18n-placeholder="enter_email" 
-            placeholder="Enter your email" 
-            required>
-    </div>
+            <!-- Email Field -->
+            <div class="input-group">
+                <label data-i18n="label_email">Email Address</label>
+                <input 
+                    type="email" 
+                    id="registerEmail" 
+                    data-i18n-placeholder="enter_email" 
+                    placeholder="Enter your email" 
+                    required>
+            </div>
 
-    <!-- Password Field -->
-    <div class="input-group">
-        <label data-i18n="label_password">Password</label>
-        <input 
-            type="password" 
-            id="registerPassword" 
-            data-i18n-placeholder="enter_password" 
-            placeholder="Enter your password" 
-            required>
-        <i class="fas fa-eye" id="toggleRegPassword"></i>
-    </div>
+            <!-- Password Field -->
+            <div class="input-group">
+                <label data-i18n="label_password">Password</label>
+                <input 
+                    type="password" 
+                    id="registerPassword" 
+                    data-i18n-placeholder="enter_password" 
+                    placeholder="Enter your password" 
+                    required>
+                <i class="fas fa-eye" id="toggleRegPassword"></i>
+            </div>
 
-    <!-- Terms and Conditions -->
-    <div class="input-group">
-        <label>
-            <input type="checkbox" id="termsOfUse" style="margin-right: 10px;">
-            <span data-i18n="agree_terms">I agree to the</span> 
-            <a href="terms.html" data-i18n="terms_link">Terms of Use</a>
-        </label>
-    </div>
+            <!-- Terms and Conditions -->
+            <div class="input-group">
+                <label>
+                    <input type="checkbox" id="termsOfUse" style="margin-right: 10px;">
+                    <span data-i18n="agree_terms">I agree to the</span> 
+                    <a href="terms.html" data-i18n="terms_link">Terms of Use</a>
+                </label>
+            </div>
 
-    <!-- Submit Button -->
-    <button 
-        type="submit" 
-        class="btn-primary" 
-        id="registerBtn" 
-        data-i18n="create_account_btn" 
-        disabled>
-        Create Account
-    </button>
-</form>
+            <!-- Submit Button -->
+            <button 
+                type="submit" 
+                class="btn-primary" 
+                id="registerBtn" 
+                data-i18n="create_account_btn" 
+                disabled>
+                Create Account
+            </button>
+        </form>
 
-               
-        
-        <div class="divider"><span>OR</span></div>
+        <div class="divider"><span data-i18n="or_divider">OR</span></div>
 
         <div style="text-align: center;">
             <p style="font-size: 14px; color: #666;">
@@ -73,7 +71,6 @@
                 <a href="login.html" data-i18n="login_here" style="color: #007bff; text-decoration: none; font-weight: bold;">Login here</a>
             </p>
         </div>
-
     </div>
 </div>
 
@@ -83,7 +80,7 @@
     const toggleBtn = document.getElementById('toggleRegPassword');
     const passInput = document.getElementById('registerPassword');
 
-    if (toggleBtn) {
+    if (toggleBtn && passInput) {
         toggleBtn.addEventListener('click', function() {
             const isPass = passInput.type === 'password';
             passInput.type = isPass ? 'text' : 'password';
@@ -91,18 +88,20 @@
         });
     }
 
-    // Enable the "Create Account" button when both checkboxes are checked
+    // Enable the "Create Account" button when Terms checkbox is checked
     const termsOfUseCheckbox = document.getElementById('termsOfUse');
     const registerBtn = document.getElementById('registerBtn');
 
-    termsOfUseCheckbox.addEventListener('change', function() {
-        // Check if the Terms checkbox is checked
-        registerBtn.disabled = !this.checked;
-    });
-    
-    // Optional: Add similar logic if you have another checkbox for Privacy Policy or need validation
+    if (termsOfUseCheckbox && registerBtn) {
+        termsOfUseCheckbox.addEventListener('change', function() {
+            registerBtn.disabled = !this.checked;
+        });
+    }
 </script>
-<script src="auth.js"></script>
+
+<!-- Note: type="module" is required if your auth.js uses "export" -->
+<script src="languages.js"></script>
+<script type="module" src="auth.js"></script>
 
 </body>
 </html>
