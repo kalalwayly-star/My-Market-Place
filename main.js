@@ -61,29 +61,7 @@ function deleteAd(adId) {
 
 // --- Home Page Specific Code (index.html) ---
 
-// Display all ads on the home page, with category filtering
-function displayAllAds() {
-    const adsContainer = document.getElementById('ads-container');
-    const ads = getAdsFromLocalStorage();
 
-    if (ads.length === 0) {
-        adsContainer.innerHTML = '<p>No ads available.</p>';
-    } else {
-        adsContainer.innerHTML = ''; // Clear previous ads
-
-        ads.forEach(ad => {
-            const adDiv = document.createElement('div');
-            adDiv.className = 'ad-card';
-            adDiv.innerHTML = `
-                <h4>${ad.title}</h4>
-                <p>${ad.description}</p>
-                <p><b>Category: ${ad.category}</b></p>
-                <button class="btn" onclick="goToAdDetails('${ad.id}')">View Details</button>
-            `;
-            adsContainer.appendChild(adDiv);
-        });
-    }
-}
 
 // Go to Ad Details page (can be implemented later)
 function goToAdDetails(adId) {
@@ -140,9 +118,9 @@ window.addAd = function () {
         userId: user.email // Associate the ad with the logged-in user
     };
 
-    const ads = getAdsFromLocalStorage();
-    ads.push(newAd);
-    localStorage.setItem('ads', JSON.stringify(ads));
+  const ads = JSON.parse(localStorage.getItem('ads')) || [];
+ads.push(newAd);
+localStorage.setItem('ads', JSON.stringify(ads));  // Save ads array
 
     window.location.href = 'myads.html'; // Redirect to My Ads page after posting
 };
