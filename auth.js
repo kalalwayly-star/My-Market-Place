@@ -5,7 +5,7 @@ export const registerUser = async (email, password) => {
   try {
     // Simulate user registration by storing user data in localStorage
     const users = JSON.parse(localStorage.getItem("users") || "[]");
-    
+
     // Check if the user already exists
     const userExists = users.some(user => user.email === email);
     if (userExists) {
@@ -68,16 +68,6 @@ export const logoutUser = () => {
   }
 };
 
-// Check for the authentication state (whether user is logged in or not)
-export const authStateListener = () => {
-  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-  if (currentUser) {
-    console.log('User is logged in:', currentUser);
-  } else {
-    console.log('No user logged in');
-  }
-};
-
 // Function to reset the password (simulate with localStorage)
 export const resetPassword = (email) => {
   try {
@@ -111,7 +101,7 @@ export const updateUserProfile = (displayName) => {
 };
 
 /* --- LOGIN FUNCTION --- */
-// Login Function
+// Login Function (as an event handler)
 window.login = function () {
     const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value;
@@ -142,7 +132,7 @@ window.login = function () {
 };
 
 /* --- REGISTER FUNCTION --- */
-// Register Function
+// Register Function (as an event handler)
 window.register = function () {
     const email = document.getElementById('registerEmail').value.trim();
     const password = document.getElementById('registerPassword').value;
@@ -180,8 +170,3 @@ window.checkAdminAccess = function () {
         alert("Access Denied");
     }
 };
-
-// Logout Function
-document.getElementById("logoutBtn").addEventListener("click", function () {
-    logoutUser();
-});
