@@ -90,15 +90,20 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Car Details Logic
-    const categorySelect = document.getElementById("ad-category");
-    const carInfo = document.getElementById("car-info");
-    
-    if(categorySelect) {
-        categorySelect.addEventListener("change", function() {
-            carInfo.style.display = this.value === "Cars & Trucks" ? "block" : "none";
-        });
-    }
+   const categorySelect = document.getElementById("ad-category");
+const carInfo = document.getElementById("car-info");
+
+if (categorySelect) {
+    categorySelect.addEventListener("change", function() {
+        // Show car fields only if "Cars & Trucks" is selected
+        if (this.value === "Cars & Trucks") {
+            carInfo.style.display = "block";
+        } else {
+            carInfo.style.display = "none";
+        }
+    });
+}
+
 
     // Populate Year, Make, Model
     const yearSelect = document.getElementById("car-year");
