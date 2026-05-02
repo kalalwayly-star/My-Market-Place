@@ -26,20 +26,17 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Create a new ad object
-        const newAd = {
-            id: Date.now().toString(), // Use current timestamp as unique id
-            title,
-            description,
-            price,
-            location,
-            condition,
-            featuredAd,
-            userId: user.email, // Store the user's email with the ad
-        };
-
-        // Retrieve existing ads from localStorage
-        const ads = JSON.parse(localStorage.getItem('ads')) || [];
-        ads.push(newAd);  // Add the new ad to the ads array
+       const newAd = {
+    id: Date.now().toString(), // Unique ad ID
+    title,
+    description,
+    price,
+    location,
+    userId: user.email, // Store the logged-in user's email
+};
+const ads = JSON.parse(localStorage.getItem('ads')) || [];
+ads.push(newAd);
+localStorage.setItem('ads', JSON.stringify(ads));  // Save ads array
 
         // Save the updated ads array to localStorage
         localStorage.setItem('ads', JSON.stringify(ads));
