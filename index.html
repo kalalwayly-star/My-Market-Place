@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,46 +42,6 @@
             <span id="header-user-email" style="font-weight:bold; color:#007bff;"></span>
         </div>
     </div>
-   <script>
-// Function to check login status using localStorage
-function checkLoginStatus() {
-    const user = localStorage.getItem('loggedInUser');
-    const userEmail = document.getElementById('header-user-email');
-    const loginBtn = document.getElementById('userAuth');
-    const logoutBtn = document.getElementById('logout-btn');
-    const userInfoDiv = document.getElementById('user-info-header');
-
-    if (user) {
-        // User is logged in
-        if (userEmail) {
-            userEmail.innerText = user; // Display the user's email
-        }
-        if (userInfoDiv) {
-            userInfoDiv.style.display = 'block'; // Show the user info section
-        }
-        if (loginBtn) {
-            loginBtn.style.display = 'none'; // Hide the login button
-        }
-        if (logoutBtn) {
-            logoutBtn.style.display = 'inline-block'; // Show the logout button
-        }
-    } else {
-        // User is logged out
-        if (userInfoDiv) {
-            userInfoDiv.style.display = 'none'; // Hide the user info section
-        }
-        if (loginBtn) {
-            loginBtn.style.display = 'inline-block'; // Show the login button
-        }
-        if (logoutBtn) {
-            logoutBtn.style.display = 'none'; // Hide the logout button
-        }
-    }
-}
-
-// Call this function to update the UI based on login status
-checkLoginStatus();
-</script>
 </header>
 
 <section class="hero">
@@ -96,82 +57,8 @@ checkLoginStatus();
 
 <section class="categories-section container">
     <h3 data-i18n="cat_header">Browse Categories</h3>
-    <div class="category-grid">
-        <!-- Real Estate -->
-        <div class="cat-card" onclick="filterByCategory('Real Estate')" data-i18n="cat_realestate">
-            <span class="icon" style="font-size: 2rem;">🏠</span>
-            <p data-i18n="cat_realestate">Real Estate</p>
-        </div>
-        <!-- Cars -->
-        <div class="cat-card" onclick="filterByCategory('Cars & Trucks')" data-i18n="cat_cars_trucks">
-            <span class="icon" style="font-size: 2rem;">🚗</span>
-            <p data-i18n="cat_cars_trucks">Cars</p>
-        </div>
-        <!-- Furniture -->
-        <div class="cat-card" onclick="filterByCategory('Furniture')" data-i18n="cat_furniture">
-            <span class="icon" style="font-size: 2rem;">🛋️</span>
-            <p data-i18n="cat_furniture">Furniture</p>
-        </div>
-        <!-- Auto Accessories -->
-        <div class="cat-card" onclick="filterByCategory('Auto Accessories')" data-i18n="cat_auto_accessories">
-            <span class="icon" style="font-size: 2rem;">🛠️</span>
-            <p data-i18n="cat_auto_accessories">Auto Accessories</p>
-        </div>
-        <!-- Electronics -->
-        <div class="cat-card" onclick="filterByCategory('Electronics')" data-i18n="cat_electronics">
-            <span class="icon" style="font-size: 2rem;">📱</span>
-            <p data-i18n="cat_electronics">Electronics</p>
-        </div>
-        <!-- Fashion -->
-        <div class="cat-card" onclick="filterByCategory('Fashion')" data-i18n="cat_fashion">
-            <span class="icon" style="font-size: 2rem;">👗</span>
-            <p data-i18n="cat_fashion">Fashion</p>
-        </div>
-        <!-- Pets -->
-        <div class="cat-card" onclick="filterByCategory('Pets')" data-i18n="cat_pets">
-            <span class="icon" style="font-size: 2rem;">🐶</span>
-            <p data-i18n="cat_pets">Pets</p>
-        </div>
-        <!-- Sports -->
-        <div class="cat-card" onclick="filterByCategory('Sports')" data-i18n="cat_sports">
-            <span class="icon" style="font-size: 2rem;">⚽</span>
-            <p data-i18n="cat_sports">Sports</p>
-        </div>
-        <!-- Books -->
-        <div class="cat-card" onclick="filterByCategory('Books')" data-i18n="cat_books">
-            <span class="icon" style="font-size: 2rem;">📚</span>
-            <p data-i18n="cat_books">Books</p>
-        </div>
-        <!-- Appliances -->
-        <div class="cat-card" onclick="filterByCategory('Appliances')" data-i18n="cat_appliances">
-            <span class="icon" style="font-size: 2rem;">🔌</span>
-            <p data-i18n="cat_appliances">Appliances</p>
-        </div>
-        <!-- Toys -->
-        <div class="cat-card" onclick="filterByCategory('Toys')" data-i18n="cat_toys">
-            <span class="icon" style="font-size: 2rem;">🧸</span>
-            <p data-i18n="cat_toys">Toys</p>
-        </div>
-        <!-- Services -->
-        <div class="cat-card" onclick="filterByCategory('Services')" data-i18n="cat_services">
-            <span class="icon" style="font-size: 2rem;">💼</span>
-            <p data-i18n="cat_services">Services</p>
-        </div>
-        <!-- Garden -->
-        <div class="cat-card" onclick="filterByCategory('Garden')" data-i18n="cat_garden">
-            <span class="icon" style="font-size: 2rem;">🌱</span>
-            <p data-i18n="cat_garden">Garden</p>
-        </div>
-        <!-- Health -->
-        <div class="cat-card" onclick="filterByCategory('Health')" data-i18n="cat_health">
-            <span class="icon" style="font-size: 2rem;">💊</span>
-            <p data-i18n="cat_health">Health</p>
-        </div>
-        <!-- Baby -->
-        <div class="cat-card" onclick="filterByCategory('Baby')" data-i18n="cat_baby">
-            <span class="icon" style="font-size: 2rem;">👶</span>
-            <p data-i18n="cat_baby">Baby</p>
-        </div>
+    <div class="category-grid" id="categoryGrid">
+        <!-- Categories will be dynamically inserted here -->
     </div>
 </section>
 
@@ -186,12 +73,7 @@ checkLoginStatus();
 </section>
 
 <script>
-// Get Ads from Local Storage
-function getAdsFromLocalStorage() {
-    return JSON.parse(localStorage.getItem('ads')) || [];
-}
-
-// Check if user is logged in
+// Check login status
 function checkLoginStatus() {
     const user = localStorage.getItem('loggedInUser');
     const userEmail = document.getElementById('header-user-email');
@@ -212,19 +94,54 @@ document.getElementById('logout-btn').addEventListener('click', function() {
     window.location.href = "login.html";
 });
 
-// On page load, check login status and display ads
+// Fetch and display categories
+function fetchCategories() {
+    const categories = [
+        { name: 'Real Estate', icon: '🏠' },
+        { name: 'Cars', icon: '🚗' },
+        { name: 'Furniture', icon: '🛋️' },
+        { name: 'Auto Accessories', icon: '🛠️' },
+        { name: 'Electronics', icon: '📱' },
+        { name: 'Fashion', icon: '👗' },
+        { name: 'Pets', icon: '🐶' },
+        { name: 'Sports', icon: '⚽' },
+        { name: 'Books', icon: '📚' },
+        { name: 'Appliances', icon: '🔌' },
+        { name: 'Toys', icon: '🧸' },
+        { name: 'Services', icon: '💼' },
+        { name: 'Garden', icon: '🌱' },
+        { name: 'Health', icon: '💊' },
+        { name: 'Baby', icon: '👶' }
+    ];
+
+    const categoryGrid = document.getElementById('categoryGrid');
+    categoryGrid.innerHTML = '';  // Clear previous content
+    categories.forEach(category => {
+        const categoryCard = document.createElement('div');
+        categoryCard.classList.add('cat-card');
+        categoryCard.innerHTML = `
+            <span class="icon" style="font-size: 2rem;">${category.icon}</span>
+            <p>${category.name}</p>
+        `;
+        categoryCard.onclick = function() {
+            filterByCategory(category.name);
+        };
+        categoryGrid.appendChild(categoryCard);
+    });
+}
+
+// Placeholder function for category filtering
+function filterByCategory(category) {
+    console.log('Filtering by category:', category);
+}
+
+// Load categories and check login status on page load
 window.onload = function() {
-    checkLoginStatus();  // Check login status when page loads
-    fetchAds();  // Call fetchAds on page load
+    checkLoginStatus();  // Check login status
+    fetchCategories();    // Fetch and display categories
 };
 </script>
-<script>
-// Logout functionality
-document.getElementById('logout-btn').addEventListener('click', function () {
-    localStorage.removeItem('loggedInUser'); // Remove the user from localStorage
-    window.location.href = 'login.html';  // Redirect to login page
-});
-</script>
+
 <footer>
     <div id="footer" class="container" style="text-align: center; padding: 40px 0; border-top: 1px solid #eee;">
         <p style="display: inline; margin: 0 10px;"><a href="terms.html" data-i18n="footer_terms">Terms</a></p>
