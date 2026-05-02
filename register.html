@@ -19,40 +19,53 @@
         <!-- Error Message Placeholder -->
         <div id="error-message" class="error-text" style="text-align: center; margin-bottom: 15px;"></div>
 
-        <!-- Step 1: Basic Info -->
-        <div class="input-group">
-            <label>Email Address</label>
-            <input 
-              type="email" 
-              id="registerEmail" 
-              data-i18n-placeholder="enter_email"
-              placeholder="Enter your email">
-        </div>
+        <form id="registerForm">
+    <!-- Email Field -->
+    <div class="input-group">
+        <label data-i18n="label_email">Email Address</label>
+        <input 
+            type="email" 
+            id="registerEmail" 
+            data-i18n-placeholder="enter_email" 
+            placeholder="Enter your email" 
+            required>
+    </div>
 
-        <div class="input-group">
-            <label>Password</label>
-            <input 
-              type="password" 
-              id="registerPassword" 
-              data-i18n-placeholder="enter_password"
-              placeholder="Enter your password">
-            <!-- Icon will now show up because of the Font Awesome fix -->
-            <i class="fas fa-eye" id="toggleRegPassword"></i>
-        </div>
+    <!-- Password Field -->
+    <div class="input-group">
+        <label data-i18n="label_password">Password</label>
+        <input 
+            type="password" 
+            id="registerPassword" 
+            data-i18n-placeholder="enter_password" 
+            placeholder="Enter your password" 
+            required>
+        <i class="fas fa-eye" id="toggleRegPassword"></i>
+    </div>
 
-        <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
-        
-        <!-- Terms of Use and Privacy Policy Agreement -->
-        <div class="input-group">
-            <label>
-                <input type="checkbox" id="termsOfUse" style="margin-right: 10px;">
-                I agree to the <a href="terms.html" target="_blank" style="color: #007bff;">Terms of Use</a> and
+    <!-- Terms and Conditions -->
+    <div class="input-group">
+        <label>
+            <input type="checkbox" id="termsOfUse" style="margin-right: 10px;">
+            <span data-i18n="agree_terms">I agree to the</span> 
+            <a href="terms.html" data-i18n="terms_link">Terms of Use</a>
+        </label>
+    </div>
+
+    <!-- Submit Button -->
+    <button 
+        type="submit" 
+        class="btn-primary" 
+        id="registerBtn" 
+        data-i18n="create_account_btn" 
+        disabled>
+        Create Account
+    </button>
+</form>
+
                 <a href="privacy-policy.html" target="_blank" style="color: #007bff;">Privacy Policy</a>
             </label>
         </div>
-
-        <!-- Action Button -->
-        <button type="button" class="btn-primary" onclick="register()" id="registerBtn" disabled>Create Account</button>
         
         <div class="divider"><span>OR</span></div>
 
