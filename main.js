@@ -30,18 +30,13 @@ function getAdsFromLocalStorage() {
 // --- My Ads Page Specific Code ---
 
 // Display only the logged-in user's ads on the My Ads page
-function displayUserAds() {
-    const user = JSON.parse(localStorage.getItem('loggedInUser'));
-    if (!user) return; // If no user is logged in, exit
-
+// Ensure ads are displayed on the homepage or My Ads page
+function displayAds() {
     const adsContainer = document.getElementById('ads-container');
-    const ads = getAdsFromLocalStorage().filter(ad => ad.userId === user.email); // Filter ads by userId
-
+    const ads = JSON.parse(localStorage.getItem('ads')) || [];
     if (ads.length === 0) {
         adsContainer.innerHTML = '<p>No ads available. Please add some ads.</p>';
     } else {
-        adsContainer.innerHTML = ''; // Clear previous ads
-
         ads.forEach(ad => {
             const adDiv = document.createElement('div');
             adDiv.className = 'ad-card';
@@ -49,7 +44,7 @@ function displayUserAds() {
                 <h4>${ad.title}</h4>
                 <p>${ad.description}</p>
                 <p><b>Price: $${ad.price}</b></p>
-                <button class="btn" onclick="deleteAd('${ad.id}')">Delete</button>
+                <button class="btn" onclick="viewAdDetails('${ad.id}')">View Details</button>
             `;
             adsContainer.appendChild(adDiv);
         });
