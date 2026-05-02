@@ -222,14 +222,17 @@ document.querySelectorAll('.delete-btn').forEach((button) => {
     });
 });
 
+
+    previewContainer.innerHTML = ""; 
+});
 // Example usage of rendering uploaded images (simulating local image upload)
 function renderUploadedImages(images) {
+   document.addEventListener("DOMContentLoaded", () => {
     const previewContainer = document.getElementById("galleryPreview");
 
-    // Check if previewContainer exists
     if (!previewContainer) {
         console.error("Error: galleryPreview container not found");
-        return; // Stop execution if the element doesn't exist
+        return;
     }
 
     previewContainer.innerHTML = "";  // Clear existing images
