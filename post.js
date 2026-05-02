@@ -2,51 +2,51 @@ document.addEventListener('DOMContentLoaded', function() {
     let uploadedImages = [];
 
     // Function to post a new ad
-    function postAd(event) {
-        event.preventDefault(); // Prevents page refresh
+   function postAd(event) {
+    if (event) event.preventDefault();
 
-        const title = document.getElementById('ad-title').value.trim();
-        const description = document.getElementById('ad-description').value.trim();
-        const price = document.getElementById('ad-price').value.trim();
-        const location = document.getElementById('ad-location').value.trim();
-        const category = document.getElementById('ad-category').value;
-        const condition = document.getElementById('ad-condition').value;
-        
-        const featuredElement = document.querySelector('input[name="featured"]:checked');
-        const featuredAd = featuredElement ? featuredElement.value : 'none';
+    // 1. Get values safely
+    const title = document.getElementById('ad-title')?.value.trim();
+    const description = document.getElementById('ad-description')?.value.trim();
+    const price = document.getElementById('ad-price')?.value.trim();
+    const location = document.getElementById('ad-location')?.value.trim();
+    const category = document.getElementById('ad-category')?.value;
 
-        const user = JSON.parse(localStorage.getItem('loggedInUser'));
-
-        if (!user) {
-            alert('You must be logged in to post an ad!');
-            return;
-        }
-
-        if (!title || !description || !price || !location) {
-            alert('Please fill in all the required fields.');
-            return;
-        }
-
-        const newAd = {
-            id: Date.now().toString(),
-            title,
-            description,
-            price,
-            location,
-            category,
-            condition,
-            featuredAd,
-            userId: user.email,
-            date: new Date().toLocaleDateString()
-        };
-
-        const ads = JSON.parse(localStorage.getItem('ads')) || [];
-        ads.push(newAd);
-        localStorage.setItem('ads', JSON.stringify(ads));
-
-        alert('Your ad has been posted successfully!');
-        window.location.href = 'myads.html';
+    // 2. Validate login
+    const userRaw = localStorage.getItem('loggedInUser');
+    if (!userRaw) {
+        alert('Please login first!');
+        return;
     }
+    const user = JSON.parse(userRaw);
+
+    // 3. Basic Validation
+    if (!title || !price || !category) {
+        alert('Please fill in Title, Price, and Category.');
+        return;
+    }
+
+    // 4. Create the Ad Object
+    const newAd = {
+        id: Date.now().toString(),
+        title: title,
+        description: description,
+        price: price,
+        location: location,
+        category: category,
+        userEmail: user.email,
+        date: new Date().toLocaleDateString()
+    };
+
+    // 5. Save to Array
+    const ads = JSON.parse(localStorage.getItem('ads') || "[]");
+    ads.push(newAd);
+    localStorage.setItem('ads', JSON.stringify(ads));
+
+    alert('Ad Posted Successfully!');
+    window.location.href = 'myads.html';
+}
+
 
     // Form submission listener
     const postForm = document.getElementById('post-ad-form');
