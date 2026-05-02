@@ -3,7 +3,6 @@
 // Function to register a new user
 export const registerUser = async (email, password) => {
   try {
-    // Simulate user registration by storing user data in localStorage
     const users = JSON.parse(localStorage.getItem("users") || "[]");
 
     // Check if the user already exists
@@ -40,7 +39,6 @@ export const loginUser = async (email, password) => {
   try {
     const users = JSON.parse(localStorage.getItem("users") || "[]");
 
-    // Check if the user exists
     const user = users.find(user => user.email === email && user.password === password);
 
     if (user) {
@@ -59,7 +57,6 @@ export const loginUser = async (email, password) => {
 // Function to log out the user
 export const logoutUser = () => {
   try {
-    // Remove the user from localStorage (logout)
     localStorage.removeItem("currentUser");
     console.log('User logged out');
     window.location.href = "login.html"; // Redirect to login page after logout
@@ -100,11 +97,7 @@ export const updateUserProfile = (displayName) => {
   }
 };
 
-/* --- LOGIN FUNCTION --- */
-
-
-/* --- REGISTER FUNCTION --- */
-// Register function
+// Register function for form submission
 window.register = function () {
     const email = document.getElementById('registerEmail').value.trim();
     const password = document.getElementById('registerPassword').value;
@@ -121,9 +114,8 @@ window.register = function () {
         return;
     }
 
-    // Save user to localStorage
     const existingUsers = JSON.parse(localStorage.getItem('users')) || [];
-    const newUser = { email, password };  // You may want to hash the password
+    const newUser = { email, password };  // Store user with email and password
     existingUsers.push(newUser);
     localStorage.setItem('users', JSON.stringify(existingUsers));
 
@@ -137,10 +129,9 @@ document.getElementById('registerForm').addEventListener('submit', function(e) {
     register();  // Call the register function
 });
 
-/* --- ADMIN CHECK --- */
+// Admin check (optional)
 window.checkAdminAccess = function () {
     const pass = prompt("Enter Admin Password:");
-
     if (btoa(pass) === "S2FsZWQxOTcwIQ==") {
         localStorage.setItem('isAdmin', 'true');
         window.location.href = "admin.html";
