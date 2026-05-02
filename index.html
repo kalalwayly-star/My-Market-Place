@@ -6,7 +6,7 @@
    <title data-i18n="greeting">Marketplace | Find Anything</title>
    <link rel="stylesheet" href="style.css">
    <link rel="icon" href="favicon.ico" type="image/x-icon">
-    
+   
    <style>
        /* Global Styles */
        body {
@@ -54,19 +54,16 @@
 
        .lang-buttons {
            margin-top: 10px;
+           display: flex;
+           flex-direction: column; /* Vertically aligned */
+           justify-content: center;
+           align-items: center;
        }
 
-       .lang-buttons button {
-           padding: 8px 16px;
-           background-color: #fff;
-           border: none;
-           margin: 5px;
+       .lang-buttons span {
+           padding: 5px 0;
+           font-size: 1.2em;
            cursor: pointer;
-           border-radius: 5px;
-       }
-
-       .lang-buttons button:hover {
-           background-color: #f0f0f0;
        }
 
        /* Hero Section Styles */
@@ -199,10 +196,10 @@
     <div class="container">
         <h1>My Marketplace</h1>
         <div class="lang-buttons">
-            <button id="lang-en">English</button>
-            <button id="lang-fr">Français</button>
-            <button id="lang-es">Español</button>
-            <button id="lang-ar">العربية</button>
+            <span id="lang-en">English</span>
+            <span id="lang-fr">Français</span>
+            <span id="lang-es">Español</span>
+            <span id="lang-ar">العربية</span>
         </div>
     </div>
 </header>
@@ -247,21 +244,6 @@
 </footer>
 
 <script>
-// JavaScript to manage categories and login/logout
-function checkLoginStatus() {
-    const user = localStorage.getItem('loggedInUser');
-    const userEmail = document.getElementById('header-user-email');
-    const loginBtn = document.getElementById('userAuth');
-    const logoutBtn = document.getElementById('logout-btn');
-
-    if (user) {
-        userEmail.innerText = user;
-        document.getElementById('user-info-header').style.display = 'block';
-        loginBtn.style.display = 'none';
-        logoutBtn.style.display = 'inline-block';
-    }
-}
-
 // Fetch and display categories
 function fetchCategories() {
     const categories = [
@@ -295,16 +277,15 @@ function filterByCategory(category) {
     console.log('Filtering by category:', category);
 }
 
-// Initialize categories and check login status
+// On page load, display categories and check login status
 window.onload = function() {
-    checkLoginStatus();
-    fetchCategories();
+    fetchCategories();    // Fetch and display categories
+    checkLoginStatus();   // Check login status
 };
 </script>
 
-<script src="storage.js"></script>
-<script src="languages.js"></script>
 <script src="main.js"></script>
+<script src="storage.js"></script>
 
 </body>
 </html>
