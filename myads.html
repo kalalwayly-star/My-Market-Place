@@ -1,112 +1,74 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title data-i18n="myAdsTitle">My Ads</title>
-   <link rel="stylesheet" href="style.css">
-   <style>
-       /* Add some basic styling for ad cards */
-       .ad-card {
-           background-color: #fff;
-           padding: 15px;
-           margin: 15px 0;
-           border: 1px solid #ddd;
-           border-radius: 5px;
-           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-       }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="myAdsTitle">My Ads</title>
+    <link rel="stylesheet" href="style.css">
 
-       .ad-card img {
-           max-width: 100%;
-           height: auto;
-           border-radius: 5px;
-       }
+    <style>
+        .ad-card {
+            background-color: #fff;
+            padding: 15px;
+            margin: 15px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
 
-       .ad-card h4 {
-           font-size: 1.5em;
-           margin-bottom: 10px;
-       }
+        .ad-card img {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
 
-       .ad-card p {
-           margin-bottom: 10px;
-           color: #333;
-       }
+        .ad-card h4 {
+            margin-bottom: 10px;
+        }
 
-       .ad-card button {
-           background-color: #ff5722;
-           color: white;
-           border: none;
-           padding: 10px 15px;
-           border-radius: 5px;
-           cursor: pointer;
-       }
+        .ad-card button {
+            margin-right: 10px;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
 
-       .ad-card button:hover {
-           background-color: #e64a19;
-       }
-   </style>
+        .delete-btn {
+            background-color: #ff5722;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background-color: #e64a19;
+        }
+
+        .details-btn {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .details-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-<script>
-       // Check URL parameters for redirection at the very beginning
-       const urlParams = new URLSearchParams(window.location.search);
-       const goToPage = urlParams.get('goto'); // Get the 'goto' parameter value
 
-       if (goToPage === 'index') {
-           // If 'goto' is 'index', redirect to the Home (index.html)
-           window.location.href = 'index.html'; 
-       } else {
-           // Proceed with other operations on myads.html (e.g., displaying ads)
-           document.addEventListener("DOMContentLoaded", function() {
-               displayUserAds();
-           });
-       }
-
-       // Function to display user ads
-       function displayUserAds() {
-           const adsContainer = document.getElementById('adsContainer');
-           const ads = JSON.parse(localStorage.getItem('ads') || "[]");
-           const user = JSON.parse(localStorage.getItem('loggedInUser'));
-
-           if (ads.length === 0) {
-               adsContainer.innerHTML = '<p>No ads available. Please post some ads.</p>';
-           } else {
-               // Filter ads for the logged-in user
-               const userAds = ads.filter(ad => ad.userId === user.email);
-
-               if (userAds.length === 0) {
-                   adsContainer.innerHTML = '<p>No ads posted by you yet.</p>';
-               } else {
-                   userAds.forEach(ad => {
-                       const adDiv = document.createElement('div');
-                       adDiv.className = 'ad-card';
-                       adDiv.innerHTML = `
-                           <h4>${ad.title}</h4>
-                           <p>${ad.description}</p>
-                           <p><b>Price: $${ad.price}</b></p>
-                           <button onclick="goToAdDetails('${ad.id}')">View Details</button>
-                       `;
-                       adsContainer.appendChild(adDiv);
-                   });
-               }
-           }
-       }
-
-       // Function to go to ad details
-       function goToAdDetails(adId) {
-           window.location.href = `ad-details.html?id=${adId}`; 
-       }
-   </script>
 <header class="header">
     <div class="container">
         <h1 data-i18n="your_ads">Your Ads</h1>
         <div class="nav">
-            <a href="index.html" class="btn text" data-i18n="home">Home</a>
-            <a href="post.html" class="btn primary" data-i18n="postAd">Post Ad</a>
+            <a href="index.html" class="btn" data-i18n="home">Home</a>
+            <a href="post.html" class="btn" data-i18n="postAd">Post Ad</a>
         </div>
     </div>
+
     <div id="user-info-header" style="display:none; padding:10px; text-align:right;">
-        <span id="header-user-email" style="font-weight:bold; color:#007bff;"></span>
+        <span id="header-user-email"></span>
     </div>
 </header>
 
@@ -116,54 +78,82 @@
 </section>
 
 <footer>
-    <div id="footer" class="container">
+    <div class="container">
         <p><a href="terms.html" data-i18n="footer_terms">Terms</a></p>
         <p><a href="privacy.html" data-i18n="footer_privacy_header">Privacy</a></p>
     </div>
 </footer>
 
 <script>
+function getLoggedInUser() {
+    return JSON.parse(localStorage.getItem('loggedInUser')) || null;
+}
+
 function getAdsFromLocalStorage() {
     return JSON.parse(localStorage.getItem('ads')) || [];
 }
 
-function displayAds() {
+function displayUserAds() {
     const adsContainer = document.getElementById('ads-container');
+    const user = getLoggedInUser();
     const ads = getAdsFromLocalStorage();
 
-    if (ads.length === 0) {
-        adsContainer.innerHTML = '<p data-i18n="no_ads">No ads available. Please add some ads.</p>';
-    } else {
-        ads.forEach(ad => {
-            const adDiv = document.createElement('div');
-            adDiv.className = 'ad-card';
-            adDiv.innerHTML = `
-                <h4>${ad.title}</h4>
-                <p>${ad.description}</p>
-                ${ad.imageUrl ? `<img src="${ad.imageUrl}" alt="${ad.title}">` : ''}
-                <button class="btn" onclick="deleteAd('${ad.id}')" data-i18n="delete_ad">Delete</button>
-            `;
-            adsContainer.appendChild(adDiv);
-        });
+    adsContainer.innerHTML = '';
+
+    if (!user) {
+        adsContainer.innerHTML = '<p>Please log in to view your ads.</p>';
+        return;
     }
+
+    const userAds = ads.filter(ad => ad.userId === user.email);
+
+    if (userAds.length === 0) {
+        adsContainer.innerHTML = '<p>No ads posted by you yet.</p>';
+        return;
+    }
+
+    userAds.forEach(ad => {
+        const adDiv = document.createElement('div');
+        adDiv.className = 'ad-card';
+
+        adDiv.innerHTML = `
+            ${ad.image ? `<img src="${ad.image}" alt="${ad.title}">` : ''}
+            <h4>${ad.title}</h4>
+            <p>${ad.description}</p>
+            <p><b>Category:</b> ${ad.category}</p>
+            <p><b>Price: $${ad.price}</b></p>
+            <button class="details-btn" onclick="goToAdDetails('${ad.id}')" data-i18n="view_details">View Details</button>
+            <button class="delete-btn" onclick="deleteAd('${ad.id}')" data-i18n="delete_ad">Delete</button>
+        `;
+
+        adsContainer.appendChild(adDiv);
+    });
 }
 
 function deleteAd(adId) {
+    if (!confirm('Are you sure you want to delete this ad?')) return;
+
     let ads = getAdsFromLocalStorage();
     ads = ads.filter(ad => ad.id !== adId);
+
     localStorage.setItem('ads', JSON.stringify(ads));
-    displayAds();
+
+    displayUserAds();
 }
 
-// On page load, display ads
-window.onload = function() {
-    displayAds();  // Fetch and display ads
-};
-   
+function goToAdDetails(adId) {
+    window.location.href = `ad-details.html?id=${adId}`;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    displayUserAds();
+});
 </script>
 
 <script src="main.js"></script>
 
 </body>
 </html>
+```
+
        
