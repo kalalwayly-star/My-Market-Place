@@ -62,7 +62,7 @@ localStorage.setItem('ads', JSON.stringify(ads));
 alert('Ad Posted Successfully!');
 
 // Redirect to My Ads page
-window.location.href = 'myads.html';
+window.location.href = 'myads.html?goto=index';
 
 // After a small delay, redirect to Index page
 setTimeout(() => {
