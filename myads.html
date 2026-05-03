@@ -47,7 +47,56 @@
    </style>
 </head>
 <body>
+<script>
+       // Check URL parameters for redirection at the very beginning
+       const urlParams = new URLSearchParams(window.location.search);
+       const goToPage = urlParams.get('goto'); // Get the 'goto' parameter value
 
+       if (goToPage === 'index') {
+           // If 'goto' is 'index', redirect to the Home (index.html)
+           window.location.href = 'index.html'; 
+       } else {
+           // Proceed with other operations on myads.html (e.g., displaying ads)
+           document.addEventListener("DOMContentLoaded", function() {
+               displayUserAds();
+           });
+       }
+
+       // Function to display user ads
+       function displayUserAds() {
+           const adsContainer = document.getElementById('adsContainer');
+           const ads = JSON.parse(localStorage.getItem('ads') || "[]");
+           const user = JSON.parse(localStorage.getItem('loggedInUser'));
+
+           if (ads.length === 0) {
+               adsContainer.innerHTML = '<p>No ads available. Please post some ads.</p>';
+           } else {
+               // Filter ads for the logged-in user
+               const userAds = ads.filter(ad => ad.userId === user.email);
+
+               if (userAds.length === 0) {
+                   adsContainer.innerHTML = '<p>No ads posted by you yet.</p>';
+               } else {
+                   userAds.forEach(ad => {
+                       const adDiv = document.createElement('div');
+                       adDiv.className = 'ad-card';
+                       adDiv.innerHTML = `
+                           <h4>${ad.title}</h4>
+                           <p>${ad.description}</p>
+                           <p><b>Price: $${ad.price}</b></p>
+                           <button onclick="goToAdDetails('${ad.id}')">View Details</button>
+                       `;
+                       adsContainer.appendChild(adDiv);
+                   });
+               }
+           }
+       }
+
+       // Function to go to ad details
+       function goToAdDetails(adId) {
+           window.location.href = `ad-details.html?id=${adId}`; 
+       }
+   </script>
 <header class="header">
     <div class="container">
         <h1 data-i18n="your_ads">Your Ads</h1>
