@@ -3,40 +3,34 @@
 // Function to check login status and update the UI
 function checkLoginStatus() {
     const user = localStorage.getItem('loggedInUser');
-    const userEmail = document.getElementById('header-user-email');
     const loginBtn = document.getElementById('userAuth');
     const logoutBtn = document.getElementById('logout-btn');
     const userInfoDiv = document.getElementById('user-info-header');
+    const userEmail = document.getElementById('header-user-email');
 
     if (user) {
         // User is logged in
-        if (userEmail) userEmail.innerText = JSON.parse(user).email; // Display user email
-        if (userInfoDiv) userInfoDiv.style.display = 'block';
-        if (loginBtn) loginBtn.style.display = 'none';
-        if (logoutBtn) logoutBtn.style.display = 'inline-block';
+        const parsedUser = JSON.parse(user);
+        if (userEmail) userEmail.innerText = parsedUser.email; // Display user email
+        if (userInfoDiv) userInfoDiv.style.display = 'block'; // Show user info
+        if (loginBtn) loginBtn.style.display = 'none'; // Hide login button
+        if (logoutBtn) logoutBtn.style.display = 'inline-block'; // Show logout button
     } else {
         // User is logged out
-        if (userInfoDiv) userInfoDiv.style.display = 'none';
-        if (loginBtn) loginBtn.style.display = 'inline-block';
-        if (logoutBtn) logoutBtn.style.display = 'none';
+        if (userInfoDiv) userInfoDiv.style.display = 'none'; // Hide user info
+        if (loginBtn) loginBtn.style.display = 'inline-block'; // Show login button
+        if (logoutBtn) logoutBtn.style.display = 'none'; // Hide logout button
     }
 }
-// Call checkLoginStatus() on page load to refresh the UI
-window.onload = function () {
-    checkLoginStatus();
-};
+
+// --- Ads Functions ---
+
 // Function to get ads from localStorage
 function getAdsFromLocalStorage() {
     return JSON.parse(localStorage.getItem('ads')) || [];
 }
 
-// --- My Ads Page Specific Code ---
-
-
-
-// --- Home Page Specific Code (index.html) ---
-
-// Display all ads on the home page
+// Display all ads on the home page (index.html)
 function displayAllAds() {
     const adsContainer = document.getElementById('listings');
     const ads = getAdsFromLocalStorage();
@@ -60,12 +54,13 @@ function displayAllAds() {
     }
 }
 
+// Navigate to ad details page
 function goToAdDetails(adId) {
-    window.location.href = `ad-details.html?id=${adId}`;  // Ensure ad-id is passed in the URL
+    window.location.href = `ad-details.html?id=${adId}`;  // Pass ad-id in the URL
 }
 
-// --- Add a New Ad (for Post Ad page, when creating an ad) ---
-window.addAd = function () {
+// Add a New Ad (for Post Ad page)
+function addAd() {
     const title = document.getElementById('adTitle').value.trim();
     const description = document.getElementById('adDescription').value.trim();
     const price = document.getElementById('adPrice').value.trim();
@@ -96,47 +91,46 @@ window.addAd = function () {
     localStorage.setItem('ads', JSON.stringify(ads));  // Save ads array
 
     window.location.href = 'myads.html'; // Redirect to My Ads page after posting
-};
-
-// --- Logout functionality ---
-if (window.location.pathname.includes('index.html') || window.location.pathname.includes('myads.html')) {
-    document.getElementById('logout-btn')?.addEventListener('click', function () {
-        localStorage.removeItem('loggedInUser');
-        window.location.href();  //
-    });
 }
 
-// --- On page load, ensure proper login status and display ads ---
-window.onload = function() {
-    checkLoginStatus();  // Ensure the login status is checked
+// --- Logout Functionality ---
+
+// Logout function to clear the user data and reload the page
+function logout() {
+    localStorage.removeItem('loggedInUser'); // Clear user from localStorage
+    checkLoginStatus(); // Update the UI after logout
+    window.location.href = 'index.html'; // Redirect to homepage or login page
+}
+
+// --- Page Load Initialization ---
+
+// Ensure proper login status on page load and display ads
+window.onload = function () {
+    checkLoginStatus(); // Ensure the login status is checked
     if (window.location.pathname.includes('index.html')) {
         displayAllAds(); // Display all ads on the home page
     } else if (window.location.pathname.includes('myads.html')) {
-        displayUserAds(); // Display the logged-in user's ads on the My Ads page
+        displayUserAds(); // Display the logged-in user's ads on My Ads page
     }
 };
-document.addEventListener("DOMContentLoaded", function () {
-    updateAuthButton();
-});
 
+// --- Update Authentication Buttons ---
+
+// Update the authentication buttons based on the login status
 function updateAuthButton() {
-    const loginButton = document.getElementById("login-btn");
-    const logoutButton = document.getElementById("logout-btn");
+    const loginButton = document.getElementById('userAuth');
+    const logoutButton = document.getElementById('logout-btn');
 
-    // Check if the user is logged in
-    const currentUserEmail = localStorage.getItem("currentUserEmail");
+    const currentUserEmail = localStorage.getItem('currentUserEmail');
 
-    
+    if (currentUserEmail) {
+        loginButton.style.display = 'none'; // Hide login button
+        logoutButton.style.display = 'inline-block'; // Show logout button
+    } else {
+        loginButton.style.display = 'inline-block'; // Show login button
+        logoutButton.style.display = 'none'; // Hide logout button
+    }
 }
 
-function logout() {
-    // Clear user data from localStorage (log the user out)
-    localStorage.removeItem("currentUserEmail");
-
-    // Update the button visibility after logout
-    updateAuthButton();
-
-    // Redirect the user to the homepage or login page
-    window.location.href = "index.html"; // or wherever you'd like to redirect
-}
-}
+// Ensure correct auth button display on page load
+document.addEventListener("DOMContentLoaded", updateAuthButton);
