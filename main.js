@@ -21,7 +21,10 @@ function checkLoginStatus() {
         if (logoutBtn) logoutBtn.style.display = 'none';
     }
 }
-
+// Call checkLoginStatus() on page load to refresh the UI
+window.onload = function () {
+    checkLoginStatus();
+};
 // Function to get ads from localStorage
 function getAdsFromLocalStorage() {
     return JSON.parse(localStorage.getItem('ads')) || [];
