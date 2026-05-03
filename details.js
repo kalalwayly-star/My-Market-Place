@@ -1,30 +1,29 @@
-let currentUserEmail = "Guest";
+let currentUserEmail = "Guest"; 
 let ad;
 const adId = new URLSearchParams(window.location.search).get("id");
 console.log("Ad ID from URL:", adId);
 
 // Check auth state
 document.addEventListener("DOMContentLoaded", () => {
-    currentUserEmail = localStorage.getItem("currentUserEmail") || "Guest"; // Assuming the user's email is stored in local storage
+    currentUserEmail = localStorage.getItem("currentUserEmail") || "Guest"; // Assuming the user's email is stored in localStorage
     initDetailsPage();
 });
 
 // Initialize the details page
 async function initDetailsPage() {
     if (!adId) {
-        window.location.href = "index.html";
+        window.location.href = "index.html";  // Redirect if no ad ID in URL
         return;
     }
 
-    // Fetch ad details from localStorage (for simplicity, we're assuming ads are stored as an array in localStorage)
+    // Fetch ad details from localStorage
     const ads = JSON.parse(localStorage.getItem("marketplace_ads")) || [];
-
     ad = ads.find(ad => ad.id === adId);
 
     if (!ad) {
-        alert(getText("ad_not_found")); // Using localization key
+        alert("Ad not found");
         console.log("Ad not found in localStorage:", adId);
-        window.location.href = "index.html";
+        window.location.href = "index.html";  // Redirect to homepage if ad not found
         return;
     }
 
@@ -36,8 +35,9 @@ function renderAdDetails() {
     setText("adTitle", ad.title);
     setText("adPrice", `$${ad.price}`);
     setText("adCategory", ad.category);
-    setText("adLocation", ad.location || getText("local")); // Using localization key
-    setText("adDesc", ad.description || getText("no_description")); // Using localization key
+    setText("adLocation", ad.location || "Unknown Location");
+    setText("adDesc", ad.description || "No Description");
+
     renderImages();
 }
 
@@ -46,7 +46,7 @@ function renderImages() {
     const imgContainer = document.getElementById("adImageContainer");
     if (!imgContainer) return;
 
-    let photoList = Array.isArray(ad.image) && ad.image.length > 0 ? ad.image : [ad.image || "https://via.placeholder.com/300"];
+    let photoList = Array.isArray(ad.images) && ad.images.length > 0 ? ad.images : [ad.images || "https://via.placeholder.com/300"];
 
     imgContainer.innerHTML = `
         <div style="width:100%; text-align:center; background:#f4f4f4; border-radius:10px; overflow:hidden; margin-bottom:15px; border:1px solid #ddd;">
@@ -64,8 +64,8 @@ function renderImages() {
 // Send a message to the seller
 window.sendMessage = function() {
     if (currentUserEmail === "Guest") {
-        alert(getText("please_login")); // Using localization key
-        window.location.href = "login.html";
+        alert("Please log in first!");
+        window.location.href = "login.html";  // Redirect to login page
         return;
     }
 
@@ -87,22 +87,32 @@ window.sendMessage = function() {
     messages.push(newMessage);
     localStorage.setItem("marketplace_messages", JSON.stringify(messages));
 
-    alert(getText("message_sent")); // Using localization key
+    alert("Message sent successfully!");
     if (messageInput) messageInput.value = "";
 }
 
 // Report an ad
 window.submitReport = function() {
     const reason = document.getElementById("reportReason")?.value;
-    if (!reason) return alert(getText("please_select_reason")); // Using localization key
+    if (!reason) return alert("Please select a reason for reporting.");
 
     // Store the report in localStorage
     const reports = JSON.parse(localStorage.getItem("flaggedAds")) || [];
     reports.push({ adId, reason, timestamp: new Date().toISOString() });
     localStorage.setItem("flaggedAds", JSON.stringify(reports));
 
-    alert(getText("report_submitted")); // Using localization key
+    alert("Report submitted successfully.");
     closeModal();
+}
+
+// Open the report modal
+function showReportModal() {
+    document.getElementById("reportModal").style.display = "block";
+}
+
+// Close the report modal
+function closeModal() {
+    document.getElementById("reportModal").style.display = "none";
 }
 
 // Helper functions
@@ -110,9 +120,3 @@ function setText(id, value) {
     const el = document.getElementById(id);
     if (el) el.innerText = value;
 }
-
-function getText(key) {
-    return (window.translations && window.translations[key]) ? window.translations[key] : key;
-}
-
-
