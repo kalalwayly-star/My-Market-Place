@@ -54,15 +54,20 @@ function saveAd(title, description, price, location, category, imageUrls, user) 
         date: new Date().toLocaleDateString()
     };
 
-    // Save ad to localStorage
-    const ads = JSON.parse(localStorage.getItem('ads') || "[]");
-    ads.push(newAd);
-    localStorage.setItem('ads', JSON.stringify(ads));
+   // Save ad to localStorage
+const ads = JSON.parse(localStorage.getItem('ads') || "[]");
+ads.push(newAd);
+localStorage.setItem('ads', JSON.stringify(ads));
 
-    alert('Ad Posted Successfully!');
-    window.location.href = 'myads.html';
+alert('Ad Posted Successfully!');
 
-}
+// Redirect to My Ads page
+window.location.href = 'myads.html';
+
+// After a small delay, redirect to Index page
+setTimeout(() => {
+    window.location.href = 'index.html';
+}, 1000);  // Adjust the timeout delay (in milliseconds) as needed
 
     // Handle the image upload preview
     const adImageInput = document.getElementById('ad-image');
