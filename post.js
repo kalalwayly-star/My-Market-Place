@@ -61,7 +61,6 @@ function saveAd(title, description, price, location, category, imageUrls, user) 
 
     alert('Ad Posted Successfully!');
     window.location.href = 'myads.html';
-    window.location.href = 'index.html';
 
 }
 
