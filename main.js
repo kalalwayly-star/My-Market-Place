@@ -31,40 +31,59 @@ function getAdsFromLocalStorage() {
 }
 
 // Display all ads on the home page (index.html)
-// Function to display user ads
-function displayUserAds() {
+function displayAllAds() {
     const adsContainer = document.getElementById('ads-container');
-    const ads = JSON.parse(localStorage.getItem('ads') || "[]");
+    const ads = getAdsFromLocalStorage();
 
     if (ads.length === 0) {
         adsContainer.innerHTML = '<p>No ads available. Please post some ads.</p>';
     } else {
-        // Filter ads for the logged-in user
-        const userAds = ads.filter(ad => ad.userEmail === user.email);
-
-        if (userAds.length === 0) {
-            adsContainer.innerHTML = '<p>No ads posted by you yet.</p>';
-        } else {
-            userAds.forEach(ad => {
-                const adDiv = document.createElement('div');
-                adDiv.className = 'ad-card';
-                adDiv.innerHTML = `
-                    <h4>${ad.title}</h4>
-                    <p>${ad.description}</p>
-                    <p><b>Price: $${ad.price}</b></p>
-                    <button onclick="goToAdDetails('${ad.id}')">View Details</button>
-                `;
-                adsContainer.appendChild(adDiv);
-            });
-        }
+        ads.forEach(ad => {
+            const adDiv = document.createElement('div');
+            adDiv.className = 'ad-card';
+            adDiv.innerHTML = `
+                <h4>${ad.title}</h4>
+                <p>${ad.description}</p>
+                <p><b>Price: $${ad.price}</b></p>
+                <button onclick="goToAdDetails('${ad.id}')">View Details</button>
+            `;
+            adsContainer.appendChild(adDiv);
+        });
     }
 }
 
-function logout() {
-    // Clear user data (i.e., "currentUserEmail") from localStorage
-    localStorage.removeItem("currentUserEmail");
+// Display logged-in user's ads on myads.html
+function displayUserAds() {
+    const adsContainer = document.getElementById('ads-container');
+    const ads = getAdsFromLocalStorage();
+    const userRaw = localStorage.getItem('loggedInUser');
 
+    if (!userRaw) {
+        alert('Please log in to view your ads.');
+        window.location.href = 'login.html'; // Redirect to login page if no user is logged in
+        return;
+    }
+
+    const user = JSON.parse(userRaw);
+    const userAds = ads.filter(ad => ad.userId === user.email); // Filter ads by user email
+
+    if (userAds.length === 0) {
+        adsContainer.innerHTML = '<p>No ads posted by you yet.</p>';
+    } else {
+        userAds.forEach(ad => {
+            const adDiv = document.createElement('div');
+            adDiv.className = 'ad-card';
+            adDiv.innerHTML = `
+                <h4>${ad.title}</h4>
+                <p>${ad.description}</p>
+                <p><b>Price: $${ad.price}</b></p>
+                <button onclick="goToAdDetails('${ad.id}')">View Details</button>
+            `;
+            adsContainer.appendChild(adDiv);
+        });
+    }
 }
+
 // Navigate to ad details page
 function goToAdDetails(adId) {
     window.location.href = `ad-details.html?id=${adId}`;  // Pass ad-id in the URL
