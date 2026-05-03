@@ -38,7 +38,7 @@
         </div>
 
         <!-- Login Form -->
-        <form id="loginForm" onsubmit="event.preventDefault(); login();">
+        <form id="loginForm">
             <button type="submit" class="btn-primary" data-i18n="login_btn">Login</button>
         </form>
         
@@ -55,7 +55,7 @@
     // Password visibility toggle functionality
     const toggleBtn = document.querySelector('#toggleLoginPassword');
     const passwordField = document.querySelector('#loginPassword');
-   if (toggleBtn) {
+    if (toggleBtn) {
         toggleBtn.addEventListener('click', function () {
             const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
             passwordField.setAttribute('type', type);
@@ -63,13 +63,15 @@
         });
     }
 
-    // Login function using localStorage
-    function login() {
+    // Login function to handle form submission
+    function handleLogin(event) {
+        event.preventDefault(); // Prevent form from submitting traditionally
+
         const email = document.getElementById('loginEmail').value.trim();
         const password = document.getElementById('loginPassword').value;
         const errorMsg = document.getElementById('error-message');
 
-        // Clear any previous error message
+        // Clear previous error message
         errorMsg.innerText = '';
 
         // Input validation
@@ -78,26 +80,29 @@
             return;
         }
 
-        // Attempt to log in with localStorage-based method
-        login()(email, password);
+        // Call loginUser from auth.js or author.js
+        loginUser(email, password); 
     }
 
     // Login user from localStorage
     function loginUser(email, password) {
         const users = JSON.parse(localStorage.getItem("users") || "[]");
 
-        // Check if the user exists
+        // Find the user with matching email and password
         const user = users.find(user => user.email === email && user.password === password);
 
         if (user) {
             console.log('User logged in:', user);
-            localStorage.setItem("currentUser", JSON.stringify(user)); // Store logged-in user
+            localStorage.setItem("loggedInUser", JSON.stringify(user)); // Store logged-in user
             window.location.href = "index.html"; // Redirect to the homepage after login
         } else {
             console.error('Invalid credentials');
             alert('Invalid email or password');
         }
     }
+
+    // Attach event listener to form submit
+    document.getElementById('loginForm').addEventListener('submit', handleLogin);
 </script>
 
 <script src="languages.js"></script>
