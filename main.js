@@ -130,7 +130,7 @@ window.addAd = function () {
 if (window.location.pathname.includes('index.html') || window.location.pathname.includes('myads.html')) {
     document.getElementById('logout-btn')?.addEventListener('click', function () {
         localStorage.removeItem('loggedInUser');
-        window.location.href = 'login.html';  // Redirect to login page
+        window.location.href();  //
     });
 }
 
