@@ -281,4 +281,45 @@ function fetchCategories() {
         { name: 'Pets', icon: '🐶' },
         { name: 'Sports', icon: '⚽' },
         { name: 'Books', icon: '📚' },
-        { name: 'Ap
+        { name: 'Appliances', icon: '🔌' },
+        { name: 'Toys', icon: '🧸' },
+        { name: 'Services', icon: '💼' },
+        { name: 'Garden', icon: '🌱' },
+        { name: 'Health', icon: '💊' },
+        { name: 'Baby', icon: '👶' }
+    ];
+
+    const categoryGrid = document.getElementById('categoryGrid');
+    categoryGrid.innerHTML = '';  // Clear previous content
+
+    categories.forEach(category => {
+        const categoryCard = document.createElement('div');
+        categoryCard.classList.add('cat-card');
+        categoryCard.innerHTML = `
+            <span class="icon" style="font-size: 2rem;">${category.icon}</span>
+            <p>${category.name}</p>
+        `;
+        categoryCard.onclick = function() {
+            filterByCategory(category.name);
+        };
+        categoryGrid.appendChild(categoryCard);
+    });
+}
+
+// Placeholder function for category filtering
+function filterByCategory(category) {
+    console.log('Filtering by category:', category);
+}
+
+// On page load, display categories and check login status
+window.onload = function() {
+    fetchCategories();    // Fetch and display categories
+    checkLoginStatus();   // Check login status
+};
+</script>
+
+<script src="storage.js"></script>
+<script src="main.js"></script>
+
+</body>
+</html>
