@@ -1,113 +1,139 @@
 // --- Common Functions ---
 
-// Function to check login status and update the UI
+// Safe localStorage helpers
+function getLoggedInUser() {
+    try {
+        return JSON.parse(localStorage.getItem('loggedInUser')) || null;
+    } catch {
+        return null;
+    }
+}
+
+function getAdsFromLocalStorage() {
+    try {
+        return JSON.parse(localStorage.getItem('ads')) || [];
+    } catch {
+        return [];
+    }
+}
+
+function saveAdsToLocalStorage(ads) {
+    localStorage.setItem('ads', JSON.stringify(ads));
+}
+
+// Function to check login status and update UI
 function checkLoginStatus() {
-    const user = localStorage.getItem('loggedInUser');
+    const user = getLoggedInUser();
     const loginBtn = document.getElementById('userAuth');
     const logoutBtn = document.getElementById('logout-btn');
     const userInfoDiv = document.getElementById('user-info-header');
     const userEmail = document.getElementById('header-user-email');
 
     if (user) {
-        // User is logged in
-        const parsedUser = JSON.parse(user);
-        if (userEmail) userEmail.innerText = parsedUser.email; // Display user email
-        if (userInfoDiv) userInfoDiv.style.display = 'block'; // Show user info
-        if (loginBtn) loginBtn.style.display = 'none'; // Hide login button
-        if (logoutBtn) logoutBtn.style.display = 'inline-block'; // Show logout button
+        if (userEmail) userEmail.innerText = user.email || '';
+        if (userInfoDiv) userInfoDiv.style.display = 'block';
+        if (loginBtn) loginBtn.style.display = 'none';
+        if (logoutBtn) logoutBtn.style.display = 'inline-block';
     } else {
-        // User is logged out
-        if (userInfoDiv) userInfoDiv.style.display = 'none'; // Hide user info
-        if (loginBtn) loginBtn.style.display = 'inline-block'; // Show login button
-        if (logoutBtn) logoutBtn.style.display = 'none'; // Hide logout button
+        if (userInfoDiv) userInfoDiv.style.display = 'none';
+        if (loginBtn) loginBtn.style.display = 'inline-block';
+        if (logoutBtn) logoutBtn.style.display = 'none';
     }
 }
 
-// --- Ads Functions ---
+// --- Image Handling ---
+function handleImageUpload(fileInput, callback) {
+    const file = fileInput?.files?.[0];
 
-// Function to get ads from localStorage
-function getAdsFromLocalStorage() {
-    return JSON.parse(localStorage.getItem('ads')) || [];
-}
-
-// Display all ads on the home page (index.html)
-// Display all ads in the home page (index.html)
-function displayAllAds() {
-    const listingsContainer = document.getElementById('listings');
-    if (!listingsContainer) {
-        console.error('Error: #listings container not found');
+    if (!file) {
+        callback('');
         return;
     }
 
-    const ads = JSON.parse(localStorage.getItem('ads')) || [];
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        callback(e.target.result); // Base64 image data
+    };
+    reader.readAsDataURL(file);
+}
+
+// --- Ads Display Functions ---
+function createAdCard(ad) {
+    const adDiv = document.createElement('div');
+    adDiv.className = 'ad-card';
+
+    adDiv.innerHTML = `
+        ${ad.image ? `<img src="${ad.image}" alt="${ad.title}" class="ad-image">` : ''}
+        <h4>${ad.title}</h4>
+        <p>${ad.description}</p>
+        <p><b>Category:</b> ${ad.category}</p>
+        <p><b>Price: $${ad.price}</b></p>
+        <button onclick="goToAdDetails('${ad.id}')">View Details</button>
+    `;
+
+    return adDiv;
+}
+
+// Display all ads on homepage
+function displayAllAds() {
+    const listingsContainer = document.getElementById('listings');
+    if (!listingsContainer) return;
+
+    const ads = getAdsFromLocalStorage();
+    listingsContainer.innerHTML = '';
 
     if (ads.length === 0) {
         listingsContainer.innerHTML = '<p>No ads available.</p>';
-    } else {
-        listingsContainer.innerHTML = '';  // Clear existing content
-        ads.forEach(ad => {
-            const adDiv = document.createElement('div');
-            adDiv.className = 'ad-card';
-            adDiv.innerHTML = `
-                <h4>${ad.title}</h4>
-                <p>${ad.description}</p>
-                <p><b>Price: $${ad.price}</b></p>
-                <button onclick="goToAdDetails('${ad.id}')">View Details</button>
-            `;
-            listingsContainer.appendChild(adDiv);
-        });
-    }
-}
-
-// Run the function when the page loads
-window.onload = function () {
-    displayAllAds();  // Display ads on home page
-};
-
-// Display logged-in user's ads on myads.html
-function displayUserAds() {
-    const adsContainer = document.getElementById('ads-container');
-    const ads = getAdsFromLocalStorage();
-    const userRaw = localStorage.getItem('loggedInUser');
-
-    if (!userRaw) {
-        alert('Please log in to view your ads.');
-        window.location.href = 'login.html'; // Redirect to login page if no user is logged in
         return;
     }
 
-    const user = JSON.parse(userRaw);
-    const userAds = ads.filter(ad => ad.userId === user.email); // Filter ads by user email
+    ads.forEach(ad => {
+        listingsContainer.appendChild(createAdCard(ad));
+    });
+}
+
+// Display logged-in user's ads
+function displayUserAds() {
+    const adsContainer = document.getElementById('ads-container');
+    if (!adsContainer) return;
+
+    const user = getLoggedInUser();
+
+    if (!user) {
+        alert('Please log in to view your ads.');
+        window.location.href = 'login.html';
+        return;
+    }
+
+    const ads = getAdsFromLocalStorage();
+    const userAds = ads.filter(ad => ad.userId === user.email);
+
+    adsContainer.innerHTML = '';
 
     if (userAds.length === 0) {
         adsContainer.innerHTML = '<p>No ads posted by you yet.</p>';
-    } else {
-        userAds.forEach(ad => {
-            const adDiv = document.createElement('div');
-            adDiv.className = 'ad-card';
-            adDiv.innerHTML = `
-                <h4>${ad.title}</h4>
-                <p>${ad.description}</p>
-                <p><b>Price: $${ad.price}</b></p>
-                <button onclick="goToAdDetails('${ad.id}')">View Details</button>
-            `;
-            adsContainer.appendChild(adDiv);
-        });
+        return;
     }
+
+    userAds.forEach(ad => {
+        adsContainer.appendChild(createAdCard(ad));
+    });
 }
 
 // Navigate to ad details page
 function goToAdDetails(adId) {
-    window.location.href = `ad-details.html?id=${adId}`;  // Pass ad-id in the URL
+    window.location.href = `ad-details.html?id=${adId}`;
 }
 
-// Add a New Ad (for Post Ad page)
+// --- Add New Ad ---
 function addAd() {
-    const title = document.getElementById('adTitle').value.trim();
-    const description = document.getElementById('adDescription').value.trim();
-    const price = document.getElementById('adPrice').value.trim();
-    const category = document.getElementById('adCategory').value.trim();
-    const user = JSON.parse(localStorage.getItem('loggedInUser'));
+    const title = document.getElementById('adTitle')?.value.trim();
+    const description = document.getElementById('adDescription')?.value.trim();
+    const price = document.getElementById('adPrice')?.value.trim();
+    const category = document.getElementById('adCategory')?.value.trim();
+    const imageInput = document.getElementById('adImage');
+
+    const user = getLoggedInUser();
 
     if (!user) {
         alert('You must be logged in to post an ad!');
@@ -119,63 +145,65 @@ function addAd() {
         return;
     }
 
-    const newAd = {
-        id: Date.now().toString(),
-        title,
-        description,
-        price,
-        category,
-        userId: user.email // Associate the ad with the logged-in user
-    };
+    handleImageUpload(imageInput, function(imageData) {
+        const newAd = {
+            id: Date.now().toString(),
+            title,
+            description,
+            price,
+            category,
+            image: imageData,
+            userId: user.email,
+            createdAt: new Date().toISOString()
+        };
 
-    const ads = JSON.parse(localStorage.getItem('ads')) || [];
-    ads.push(newAd);
-    localStorage.setItem('ads', JSON.stringify(ads));  // Save ads array
+        const ads = getAdsFromLocalStorage();
+        ads.push(newAd);
+        saveAdsToLocalStorage(ads);
 
-    window.location.href = 'myads.html'; // Redirect to My Ads page after posting
+        alert('Ad posted successfully!');
+        window.location.href = 'myads.html';
+    });
 }
 
-// --- Logout Functionality ---
-
-// Logout functionality
+// --- Logout ---
 function logout() {
-    localStorage.removeItem('loggedInUser');  // Remove user from localStorage
-    checkLoginStatus();  // Update the UI (login/logout state)
-    window.location.href = 'index.html';  // Redirect to homepage
+    localStorage.removeItem('loggedInUser');
+    localStorage.removeItem('currentUserEmail');
+    checkLoginStatus();
+    window.location.href = 'index.html';
 }
 
-// Attach event listener for logout button
-document.getElementById('logout-btn')?.addEventListener('click', logout);
-
-// --- Page Load Initialization ---
-
-// Ensure proper login status on page load and display ads
-window.onload = function () {
-    checkLoginStatus(); // Ensure the login status is checked
-    if (window.location.pathname.includes('index.html')) {
-        displayAllAds(); // Display all ads on the home page
-    } else if (window.location.pathname.includes('myads.html')) {
-        displayUserAds(); // Display the logged-in user's ads on My Ads page
-    }
-};
-
-// --- Update Authentication Buttons ---
-
-// Update the authentication buttons based on the login status
+// --- Authentication Buttons ---
 function updateAuthButton() {
     const loginButton = document.getElementById('userAuth');
     const logoutButton = document.getElementById('logout-btn');
+    const user = getLoggedInUser();
 
-    const currentUserEmail = localStorage.getItem('currentUserEmail');
-
-    if (currentUserEmail) {
-        loginButton.style.display = 'none'; // Hide login button
-        logoutButton.style.display = 'inline-block'; // Show logout button
-    } else {
-        loginButton.style.display = 'inline-block'; // Show login button
-        logoutButton.style.display = 'none'; // Hide logout button
-    }
+    if (loginButton) loginButton.style.display = user ? 'none' : 'inline-block';
+    if (logoutButton) logoutButton.style.display = user ? 'inline-block' : 'none';
 }
 
-// Ensure correct auth button display on page load
-document.addEventListener("DOMContentLoaded", updateAuthButton);
+// --- Initialize Page ---
+document.addEventListener('DOMContentLoaded', function () {
+    checkLoginStatus();
+    updateAuthButton();
+
+    document.getElementById('logout-btn')?.addEventListener('click', logout);
+
+    const path = window.location.pathname;
+
+    if (path.includes('index.html') || path.endsWith('/')) {
+        displayAllAds();
+    }
+
+    if (path.includes('myads.html')) {
+        displayUserAds();
+    }
+
+    document.getElementById('postAdForm')?.addEventListener('submit', function(e) {
+        e.preventDefault();
+        addAd();
+    });
+});
+
