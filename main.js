@@ -32,35 +32,31 @@ function getAdsFromLocalStorage() {
 
 // --- My Ads Page Specific Code ---
 
-// Display only the logged-in user's ads on the My Ads page
-function displayUserAds() {
+function displayAds() {
     const adsContainer = document.getElementById('ads-container');
     const ads = getAdsFromLocalStorage();
-    const user = JSON.parse(localStorage.getItem('loggedInUser'));
-
+    
     if (ads.length === 0) {
         adsContainer.innerHTML = '<p>No ads available. Please add some ads.</p>';
     } else {
-        const userAds = ads.filter(ad => ad.userId === user.email);
+        ads.forEach(ad => {
+            const adDiv = document.createElement('div');
+            adDiv.className = 'ad-card';
 
-        if (userAds.length === 0) {
-            adsContainer.innerHTML = '<p>No ads found for you.</p>';
-        } else {
-            adsContainer.innerHTML = ''; // Clear any existing ads
+            let imageHtml = '';
+            if (ad.images && ad.images.length > 0) {
+                imageHtml = `<img src="${ad.images[0]}" alt="Ad Image" class="ad-image" />`; // Show the first image
+            }
 
-            userAds.forEach(ad => {
-                const adDiv = document.createElement('div');
-                adDiv.className = 'ad-card';
-                adDiv.innerHTML = `
-                    <h4>${ad.title}</h4>
-                    <p>${ad.description}</p>
-                    <p><b>Price: $${ad.price}</b></p>
-                    <button class="btn" onclick="viewAdDetails('${ad.id}')">View Details</button>
-                    <button class="btn" onclick="deleteAd('${ad.id}')">Delete</button>
-                `;
-                adsContainer.appendChild(adDiv);
-            });
-        }
+            adDiv.innerHTML = `
+                ${imageHtml}
+                <h4>${ad.title}</h4>
+                <p>${ad.description}</p>
+                <p><b>Price: $${ad.price}</b></p>
+                <button class="btn" onclick="goToAdDetails('${ad.id}')">View Details</button>
+            `;
+            adsContainer.appendChild(adDiv);
+        });
     }
 }
 
