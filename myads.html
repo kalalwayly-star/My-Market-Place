@@ -110,14 +110,7 @@ function deleteAd(adId) {
 window.onload = function() {
     displayAds();  // Fetch and display ads
 };
-   // Check URL parameters for redirection
-const urlParams = new URLSearchParams(window.location.search);
-const goToPage = urlParams.get('goto'); // Check if there's a 'goto' parameter
-
-if (goToPage === 'index') {
-    // If 'goto' is 'index', redirect to the Home (index.html)
-    window.location.href = 'index.html'; 
-}
+   
 </script>
 
 <script src="main.js"></script>
