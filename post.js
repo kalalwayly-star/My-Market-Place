@@ -1,67 +1,67 @@
 document.addEventListener('DOMContentLoaded', function () {
     let uploadedImages = [];
 
-    // Function to post a new ad
-    function postAd(event) {
-        if (event) event.preventDefault();
+   function postAd(event) {
+    if (event) event.preventDefault();
 
-        // 1. Get form values safely
-        const title = document.getElementById('ad-title')?.value.trim();
-        const description = document.getElementById('ad-description')?.value.trim();
-        const price = document.getElementById('ad-price')?.value.trim();
-        const location = document.getElementById('ad-location')?.value.trim();
-        const category = document.getElementById('ad-category')?.value;
+    // Get values safely
+    const title = document.getElementById('ad-title')?.value.trim();
+    const description = document.getElementById('ad-description')?.value.trim();
+    const price = document.getElementById('ad-price')?.value.trim();
+    const location = document.getElementById('ad-location')?.value.trim();
+    const category = document.getElementById('ad-category')?.value;
+    const imageFiles = uploadedImages;  // Assuming uploadedImages is an array of selected files
 
-        // 2. Validate login
-        const userRaw = localStorage.getItem('loggedInUser');
-        if (!userRaw) {
-            alert('Please login first!');
-            return;
-        }
-        const user = JSON.parse(userRaw);
-
-        // 3. Basic Validation
-        if (!title || !price || !category) {
-            alert('Please fill in Title, Price, and Category.');
-            return;
-        }
-
-        // 4. Convert images to base64 format
-        const convertImages = async () => {
-            const promises = uploadedImages.map(file => {
-                return new Promise(resolve => {
-                    const reader = new FileReader();
-                    reader.onload = () => resolve(reader.result);
-                    reader.readAsDataURL(file);
-                });
-            });
-
-            return Promise.all(promises);
-        };
-
-        convertImages().then(imagesBase64 => {
-            // 5. Create the Ad Object
-            const newAd = {
-                id: Date.now().toString(),
-                title,
-                description,
-                price,
-                location,
-                category,
-                userEmail: user.email,
-                images: imagesBase64, // Save images as base64
-                date: new Date().toLocaleDateString()
-            };
-
-            // 6. Save the Ad to LocalStorage
-            const ads = JSON.parse(localStorage.getItem('ads') || "[]");
-            ads.push(newAd);
-            localStorage.setItem('ads', JSON.stringify(ads));
-
-            alert('Ad Posted Successfully!');
-            window.location.href = 'myads.html';  // Redirect to My Ads page
-        });
+    // Validate login
+    const userRaw = localStorage.getItem('loggedInUser');
+    if (!userRaw) {
+        alert('Please login first!');
+        return;
     }
+    const user = JSON.parse(userRaw);
+
+    // Basic Validation
+    if (!title || !price || !category) {
+        alert('Please fill in Title, Price, and Category.');
+        return;
+    }
+
+    // Convert images to base64
+    const imageUrls = [];
+    imageFiles.forEach(file => {
+        const reader = new FileReader();
+        reader.onloadend = function () {
+            imageUrls.push(reader.result);  // This will hold base64 encoded images
+            if (imageUrls.length === imageFiles.length) {
+                saveAd(title, description, price, location, category, imageUrls, user);
+            }
+        };
+        reader.readAsDataURL(file);  // Convert file to base64
+    });
+}
+
+// Save the ad with images
+function saveAd(title, description, price, location, category, imageUrls, user) {
+    const newAd = {
+        id: Date.now().toString(),
+        title: title,
+        description: description,
+        price: price,
+        location: location,
+        category: category,
+        userEmail: user.email,
+        images: imageUrls,  // Store images in the ad object
+        date: new Date().toLocaleDateString()
+    };
+
+    // Save ad to localStorage
+    const ads = JSON.parse(localStorage.getItem('ads') || "[]");
+    ads.push(newAd);
+    localStorage.setItem('ads', JSON.stringify(ads));
+
+    alert('Ad Posted Successfully!');
+    window.location.href = 'myads.html';
+}
 
     // Handle the image upload preview
     const adImageInput = document.getElementById('ad-image');
