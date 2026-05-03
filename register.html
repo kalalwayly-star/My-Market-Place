@@ -97,6 +97,48 @@
             registerBtn.disabled = !this.checked;
         });
     }
+
+    // Register user function
+    function registerUser(email, password) {
+        const users = JSON.parse(localStorage.getItem("users") || "[]");
+
+        // Check if the email already exists
+        if (users.some(user => user.email === email)) {
+            alert('User already exists');
+            return;
+        }
+
+        const newUser = { email, password, displayName: "" };
+        users.push(newUser);
+        localStorage.setItem("users", JSON.stringify(users));
+        
+        // Log the user in immediately
+        localStorage.setItem("loggedInUser", JSON.stringify(newUser));
+        window.location.href = "myads.html"; // Redirect to the "My Ads" page
+    }
+
+    // Handle form submission
+    document.getElementById('registerForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent form from submitting traditionally
+        
+        const email = document.getElementById('registerEmail').value.trim();
+        const password = document.getElementById('registerPassword').value;
+        const errorMsg = document.getElementById('error-message');
+
+        // Input validation
+        if (!email || !password) {
+            errorMsg.innerText = "Please fill in all fields.";
+            return;
+        }
+
+        if (password.length < 7) {
+            errorMsg.innerText = "Password must be at least 7 characters.";
+            return;
+        }
+
+        // Register user
+        registerUser(email, password);
+    });
 </script>
 
 <!-- Note: type="module" is required if your auth.js uses "export" -->
@@ -105,10 +147,4 @@
 
 </body>
 </html>
-
-
-
-
-
-
 
