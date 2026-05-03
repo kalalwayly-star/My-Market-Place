@@ -193,7 +193,6 @@
     <button id="logout-btn" class="btn" style="display:none;">Logout</button>
 </div>
    
-</div>
 <!-- Header Section -->
 <header class="header">
     <div class="container">
@@ -222,44 +221,8 @@
 <!-- Categories Section -->
 <section class="categories-section container">
     <h3>Browse Categories</h3>
-   // Fetch and display categories
-
-    <div class="category-grid" id="categoryGrid">
-       function fetchCategories() {
-        <!-- Categories will be dynamically inserted here -->
-       const categories = [
-        { name: 'Real Estate', icon: '🏠' },
-        { name: 'Cars', icon: '🚗' },
-        { name: 'Furniture', icon: '🛋️' },
-        { name: 'Auto Accessories', icon: '🛠️' },
-        { name: 'Electronics', icon: '📱' },
-        { name: 'Fashion', icon: '👗' },
-        { name: 'Pets', icon: '🐶' },
-        { name: 'Sports', icon: '⚽' },
-        { name: 'Books', icon: '📚' },
-        { name: 'Appliances', icon: '🔌' },
-        { name: 'Toys', icon: '🧸' },
-        { name: 'Services', icon: '💼' },
-        { name: 'Garden', icon: '🌱' },
-        { name: 'Health', icon: '💊' },
-        { name: 'Baby', icon: '👶' }
-    ];
- const categoryGrid = document.getElementById('categoryGrid');
-    categoryGrid.innerHTML = '';  // Clear previous content
-    categories.forEach(category => {
-        const categoryCard = document.createElement('div');
-        categoryCard.classList.add('cat-card');
-        categoryCard.innerHTML = `
-            <span class="icon" style="font-size: 2rem;">${category.icon}</span>
-            <p>${category.name}</p>
-        `;
-        categoryCard.onclick = function() {
-            filterByCategory(category.name);
-        };
-        categoryGrid.appendChild(categoryCard);
-    });
-}
-   
+    <div class="category-grid" id="categoryGrid"></div> <!-- Categories will be dynamically inserted here -->
+</section>
 
 <!-- Main Content Section -->
 <section class="main-content container">
@@ -267,8 +230,7 @@
         <h3>Latest Ads</h3>
         <button onclick="resetFilters()" class="btn-link">View All</button>
     </div>
-    <div id="listings" class="grid"></div>
-   <div id="user-email"></div>
+    <div id="listings" class="grid"></div> <!-- Ads will be dynamically inserted here -->
     <p id="no-items-message" style="display:none; text-align:center;">No items found.</p>
 </section>
 
@@ -290,7 +252,7 @@ function checkLoginStatus() {
     const logoutBtn = document.getElementById('logout-btn');
 
     if (user) {
-        userEmail.innerText = user;
+        userEmail.innerText = user.email;  // Assuming 'email' field is available in user object
         document.getElementById('user-info-header').style.display = 'block';
         loginBtn.style.display = 'none';
         logoutBtn.style.display = 'inline-block';
@@ -307,23 +269,16 @@ function logout() {
     window.location.href = "index.html"; // Redirect after logging out
 }
 
-
-// Placeholder function for category filtering
-function filterByCategory(category) {
-    console.log('Filtering by category:', category);
-}
-
-// On page load, display categories and check login status
-window.onload = function() {
-    fetchCategories();    // Fetch and display categories
-    checkLoginStatus();   // Check login status
-};
-</script>
-<script src="storage.js"></script>
-
-<script src="main.js"></script>
-
-
-</body>
-</html>
-
+// Fetch and display categories
+function fetchCategories() {
+    const categories = [
+        { name: 'Real Estate', icon: '🏠' },
+        { name: 'Cars', icon: '🚗' },
+        { name: 'Furniture', icon: '🛋️' },
+        { name: 'Auto Accessories', icon: '🛠️' },
+        { name: 'Electronics', icon: '📱' },
+        { name: 'Fashion', icon: '👗' },
+        { name: 'Pets', icon: '🐶' },
+        { name: 'Sports', icon: '⚽' },
+        { name: 'Books', icon: '📚' },
+        { name: 'Ap
