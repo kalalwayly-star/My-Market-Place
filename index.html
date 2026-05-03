@@ -179,16 +179,20 @@
 </head>
 
 <body>
-  <div class="nav">
+ <div class="nav">
     <a href="index.html" class="btn">Home</a>
     <a href="messages.html" class="btn">Messages</a>
     <a href="myads.html" class="btn">My Ads</a>
     <a href="post.html" class="btn">Post Ad</a>
     
-    <!-- Login button (visible when logged out) -->
-    <a id="login-btn" href="login.html" class="btn">Login</a>
-     <!-- Logout button (visible when logged in) -->
-    <button id="logout-btn" class="btn logout-btn" style="display:none;">Logout</button>
+    <span id="header-user-email"></span> <!-- Display user email -->
+    <div id="user-info-header" style="display:none;">
+        <span>Logged in as: <span id="header-user-email"></span></span>
+    </div>
+
+    <a id="userAuth" href="login.html" class="btn">Login</a>
+    <button id="logout-btn" class="btn" style="display:none;">Logout</button>
+</div>
    
 </div>
 <!-- Header Section -->
