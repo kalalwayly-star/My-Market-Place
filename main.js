@@ -127,12 +127,12 @@ function updateAuthButton() {
     const currentUserEmail = localStorage.getItem("currentUserEmail");
 
     if (currentUserEmail && currentUserEmail !== "Guest") {
-        // User is logged in, show Logout button
+        // User is logged in, hide Login button and show Logout button
         loginButton.style.display = "none";
         logoutButton.style.display = "inline-block";  // Show the logout button
         logoutButton.onclick = logout;  // Set the logout function for the button
     } else {
-        // User is not logged in, show Login button
+        // User is not logged in, show Login button and hide Logout button
         loginButton.style.display = "inline-block";  // Show the login link
         logoutButton.style.display = "none";  // Hide the logout button
     }
@@ -147,4 +147,5 @@ function logout() {
 
     // Redirect the user to the homepage or login page
     window.location.href = "index.html"; // or wherever you'd like to redirect
+}
 }
