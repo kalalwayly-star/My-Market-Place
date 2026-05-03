@@ -222,8 +222,12 @@
 <!-- Categories Section -->
 <section class="categories-section container">
     <h3>Browse Categories</h3>
+   // Fetch and display categories
+
     <div class="category-grid" id="categoryGrid">
+       function fetchCategories() {
         <!-- Categories will be dynamically inserted here -->
+       const categories = [
         { name: 'Real Estate', icon: '🏠' },
         { name: 'Cars', icon: '🚗' },
         { name: 'Furniture', icon: '🛋️' },
@@ -239,8 +243,23 @@
         { name: 'Garden', icon: '🌱' },
         { name: 'Health', icon: '💊' },
         { name: 'Baby', icon: '👶' }
-    </div>
-</section>
+    ];
+ const categoryGrid = document.getElementById('categoryGrid');
+    categoryGrid.innerHTML = '';  // Clear previous content
+    categories.forEach(category => {
+        const categoryCard = document.createElement('div');
+        categoryCard.classList.add('cat-card');
+        categoryCard.innerHTML = `
+            <span class="icon" style="font-size: 2rem;">${category.icon}</span>
+            <p>${category.name}</p>
+        `;
+        categoryCard.onclick = function() {
+            filterByCategory(category.name);
+        };
+        categoryGrid.appendChild(categoryCard);
+    });
+}
+   
 
 <!-- Main Content Section -->
 <section class="main-content container">
@@ -286,42 +305,6 @@ function logout() {
     localStorage.removeItem('loggedInUser');
     checkLoginStatus();
     window.location.href = "index.html"; // Redirect after logging out
-}
-
-// Fetch and display categories
-function fetchCategories() {
-    const categories = [
-        { name: 'Real Estate', icon: '🏠' },
-        { name: 'Cars', icon: '🚗' },
-        { name: 'Furniture', icon: '🛋️' },
-        { name: 'Auto Accessories', icon: '🛠️' },
-        { name: 'Electronics', icon: '📱' },
-        { name: 'Fashion', icon: '👗' },
-        { name: 'Pets', icon: '🐶' },
-        { name: 'Sports', icon: '⚽' },
-        { name: 'Books', icon: '📚' },
-        { name: 'Appliances', icon: '🔌' },
-        { name: 'Toys', icon: '🧸' },
-        { name: 'Services', icon: '💼' },
-        { name: 'Garden', icon: '🌱' },
-        { name: 'Health', icon: '💊' },
-        { name: 'Baby', icon: '👶' }
-    ];
-
-    const categoryGrid = document.getElementById('categoryGrid');
-    categoryGrid.innerHTML = '';  // Clear previous content
-    categories.forEach(category => {
-        const categoryCard = document.createElement('div');
-        categoryCard.classList.add('cat-card');
-        categoryCard.innerHTML = `
-            <span class="icon" style="font-size: 2rem;">${category.icon}</span>
-            <p>${category.name}</p>
-        `;
-        categoryCard.onclick = function() {
-            filterByCategory(category.name);
-        };
-        categoryGrid.appendChild(categoryCard);
-    });
 }
 
 
