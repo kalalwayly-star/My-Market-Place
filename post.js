@@ -1,75 +1,72 @@
 document.addEventListener('DOMContentLoaded', function () {
     let uploadedImages = [];
 
-   function postAd(event) {
-    if (event) event.preventDefault();
+    function postAd(event) {
+        if (event) event.preventDefault();
 
-    // Get values safely
-    const title = document.getElementById('ad-title')?.value.trim();
-    const description = document.getElementById('ad-description')?.value.trim();
-    const price = document.getElementById('ad-price')?.value.trim();
-    const location = document.getElementById('ad-location')?.value.trim();
-    const category = document.getElementById('ad-category')?.value;
-    const imageFiles = uploadedImages;  // Assuming uploadedImages is an array of selected files
+        const title = document.getElementById('ad-title')?.value.trim();
+        const description = document.getElementById('ad-description')?.value.trim();
+        const price = document.getElementById('ad-price')?.value.trim();
+        const location = document.getElementById('ad-location')?.value.trim();
+        const category = document.getElementById('ad-category')?.value;
 
-    // Validate login
-    const userRaw = localStorage.getItem('loggedInUser');
-    if (!userRaw) {
-        alert('Please login first!');
-        return;
-    }
-    const user = JSON.parse(userRaw);
+        const userRaw = localStorage.getItem('loggedInUser');
+        if (!userRaw) {
+            alert('Please login first!');
+            return;
+        }
+        const user = JSON.parse(userRaw);
 
-    // Basic Validation
-    if (!title || !price || !category) {
-        alert('Please fill in Title, Price, and Category.');
-        return;
-    }
+        if (!title || !price || !category) {
+            alert('Please fill in Title, Price, and Category.');
+            return;
+        }
 
-    // Convert images to base64
-    const imageUrls = [];
-    imageFiles.forEach(file => {
-        const reader = new FileReader();
-        reader.onloadend = function () {
-            imageUrls.push(reader.result);  // This will hold base64 encoded images
-            if (imageUrls.length === imageFiles.length) {
+        // If no images, save immediately. If images exist, convert then save.
+        if (uploadedImages.length === 0) {
+            saveAd(title, description, price, location, category, [], user);
+        } else {
+            const readers = uploadedImages.map(file => {
+                return new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result);
+                    reader.readAsDataURL(file);
+                });
+            });
+
+            Promise.all(readers).then(imageUrls => {
                 saveAd(title, description, price, location, category, imageUrls, user);
-            }
+            });
+        }
+    }
+
+    function saveAd(title, description, price, location, category, imageUrls, user) {
+        const newAd = {
+            id: Date.now().toString(),
+            title: title,
+            description: description,
+            price: price,
+            location: location,
+            category: category,
+            userEmail: user.email,
+            images: imageUrls,
+            date: new Date().toLocaleDateString()
         };
-        reader.readAsDataURL(file);  // Convert file to base64
-    });
-}
 
-// Save the ad with images
-function saveAd(title, description, price, location, category, imageUrls, user) {
-    const newAd = {
-        id: Date.now().toString(),
-        title: title,
-        description: description,
-        price: price,
-        location: location,
-        category: category,
-        userEmail: user.email,
-        images: imageUrls,  // Store images in the ad object
-        date: new Date().toLocaleDateString()
-    };
+        const ads = JSON.parse(localStorage.getItem('ads') || "[]");
+        ads.push(newAd);
+        localStorage.setItem('ads', JSON.stringify(ads));
 
-   // Save ad to localStorage
-const ads = JSON.parse(localStorage.getItem('ads') || "[]");
-ads.push(newAd);
-localStorage.setItem('ads', JSON.stringify(ads));
+        alert('Ad Posted Successfully!');
+        
+        // Redirecting to index after a tiny delay
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 500);
+    }
 
-alert('Ad Posted Successfully!');
+    // --- UI Logic & Event Listeners ---
 
-// Redirect to My Ads page
-window.location.href = 'myads.html?goto=index';
-
-// After a small delay, redirect to Index page
-setTimeout(() => {
-    window.location.href = 'index.html';
-}, 1000);  // Adjust the timeout delay (in milliseconds) as needed
-
-    // Handle the image upload preview
     const adImageInput = document.getElementById('ad-image');
     if (adImageInput) {
         adImageInput.addEventListener('change', function (event) {
@@ -105,29 +102,23 @@ setTimeout(() => {
         });
     }
 
-    // Car-specific category logic (optional)
     const categorySelect = document.getElementById("ad-category");
     const carInfo = document.getElementById("car-info");
-
-    if (categorySelect) {
+    if (categorySelect && carInfo) {
         categorySelect.addEventListener("change", function () {
-            if (this.value === "Cars & Trucks") {
-                carInfo.style.display = "block";
-            } else {
-                carInfo.style.display = "none";
-            }
+            carInfo.style.display = (this.value === "Cars & Trucks") ? "block" : "none";
         });
     }
 
-    // PayPal UI Logic (for Featured Ads)
     const paypalContainer = document.getElementById("paypal-button-container");
     document.querySelectorAll('input[name="featured"]').forEach(radio => {
         radio.addEventListener("change", function () {
-            paypalContainer.style.display = (this.value !== "none") ? "block" : "none";
+            if (paypalContainer) {
+                paypalContainer.style.display = (this.value !== "none") ? "block" : "none";
+            }
         });
     });
 
-    // Form submission listener
     const postForm = document.getElementById('post-ad-form');
     if (postForm) {
         postForm.addEventListener('submit', postAd);
