@@ -1,122 +1,144 @@
-let currentUserEmail = "Guest"; 
-let ad;
+let currentUserEmail = "Guest";
+let ad = null;
 const adId = new URLSearchParams(window.location.search).get("id");
-console.log("Ad ID from URL:", adId);
 
-// Check auth state
-document.addEventListener("DOMContentLoaded", () => {
-    currentUserEmail = localStorage.getItem("currentUserEmail") || "Guest"; // Assuming the user's email is stored in localStorage
+// Page load
+window.addEventListener("DOMContentLoaded", () => {
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser") || "null");
+    currentUserEmail = loggedInUser?.email || "Guest";
     initDetailsPage();
 });
 
-// Initialize the details page
-async function initDetailsPage() {
+// Initialize details page
+function initDetailsPage() {
     if (!adId) {
-        window.location.href = "index.html";  // Redirect if no ad ID in URL
+        window.location.href = "index.html";
         return;
     }
 
-    // Fetch ad details from localStorage
-    const ads = JSON.parse(localStorage.getItem("marketplace_ads")) || [];
-    ad = ads.find(ad => ad.id === adId);
+    // Use same storage key as main.js
+    const ads = JSON.parse(localStorage.getItem("ads") || "[]");
+    ad = ads.find(item => item.id === adId);
 
     if (!ad) {
-        alert("Ad not found");
-        console.log("Ad not found in localStorage:", adId);
-        window.location.href = "index.html";  // Redirect to homepage if ad not found
+        alert("Ad not found.");
+        window.location.href = "index.html";
         return;
     }
 
     renderAdDetails();
 }
 
-// Render the ad details
+// Render ad details
 function renderAdDetails() {
-    setText("adTitle", ad.title);
-    setText("adPrice", `$${ad.price}`);
-    setText("adCategory", ad.category);
+    setText("adTitle", ad.title || "Untitled Ad");
+    setText("adPrice", `$${ad.price || 0}`);
+    setText("adCategory", ad.category || "Unknown");
     setText("adLocation", ad.location || "Unknown Location");
-    setText("adDesc", ad.description || "No Description");
+    setText("adDesc", ad.description || "No Description Available");
+    setText("sellerEmail", ad.userEmail || ad.userId || "Unknown Seller");
 
     renderImages();
 }
 
-// Render images
+// Render images gallery
 function renderImages() {
     const imgContainer = document.getElementById("adImageContainer");
     if (!imgContainer) return;
 
-    let photoList = Array.isArray(ad.images) && ad.images.length > 0 ? ad.images : [ad.images || "https://via.placeholder.com/300"];
+    let photoList = [];
+
+    if (Array.isArray(ad.images) && ad.images.length > 0) {
+        photoList = ad.images;
+    } else if (ad.image) {
+        photoList = [ad.image];
+    } else {
+        photoList = ["https://via.placeholder.com/500x300?text=No+Image"];
+    }
 
     imgContainer.innerHTML = `
         <div style="width:100%; text-align:center; background:#f4f4f4; border-radius:10px; overflow:hidden; margin-bottom:15px; border:1px solid #ddd;">
-            <img id="mainDisplayImg" src="${photoList[0]}" style="max-width:100%; max-height:500px; object-fit:contain; display: block; margin: 0 auto;">
+            <img id="mainDisplayImg" src="${photoList[0]}" style="max-width:100%; max-height:500px; object-fit:contain; display:block; margin:0 auto;">
         </div>
         <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:10px;">
-            ${photoList.length > 1 ? photoList.map(img => `
-                <img src="${img}" onclick="document.getElementById('mainDisplayImg').src='${img}'"
+            ${photoList.map(img => `
+                <img src="${img}" 
+                     onclick="document.getElementById('mainDisplayImg').src='${img}'"
                      style="width:70px; height:70px; object-fit:cover; cursor:pointer; border-radius:5px; border:1px solid #ccc;">
-            `).join('') : ""}
+            `).join('')}
         </div>
     `;
 }
 
-// Send a message to the seller
-window.sendMessage = function() {
+// Send message to seller
+window.sendMessage = function () {
     if (currentUserEmail === "Guest") {
         alert("Please log in first!");
-        window.location.href = "login.html";  // Redirect to login page
+        window.location.href = "login.html";
         return;
     }
 
     const messageInput = document.getElementById("messageText");
     const text = messageInput?.value.trim();
 
-    if (!text) return;
+    if (!text) {
+        alert("Please enter a message.");
+        return;
+    }
 
     const newMessage = {
+        adId: ad.id,
         adTitle: ad.title,
         senderEmail: currentUserEmail,
-        receiverEmail: ad.userEmail, // Make sure ad.userEmail is correctly set in localStorage
-        text: text,
+        receiverEmail: ad.userEmail || ad.userId,
+        text,
         date: new Date().toLocaleString()
     };
 
-    // Store the message in localStorage
-    const messages = JSON.parse(localStorage.getItem("marketplace_messages")) || [];
+    const messages = JSON.parse(localStorage.getItem("marketplace_messages") || "[]");
     messages.push(newMessage);
     localStorage.setItem("marketplace_messages", JSON.stringify(messages));
 
     alert("Message sent successfully!");
-    if (messageInput) messageInput.value = "";
-}
+    messageInput.value = "";
+};
 
-// Report an ad
-window.submitReport = function() {
+// Report ad
+window.submitReport = function () {
     const reason = document.getElementById("reportReason")?.value;
-    if (!reason) return alert("Please select a reason for reporting.");
 
-    // Store the report in localStorage
-    const reports = JSON.parse(localStorage.getItem("flaggedAds")) || [];
-    reports.push({ adId, reason, timestamp: new Date().toISOString() });
+    if (!reason) {
+        alert("Please select a reason.");
+        return;
+    }
+
+    const reports = JSON.parse(localStorage.getItem("flaggedAds") || "[]");
+    reports.push({
+        adId: ad.id,
+        reason,
+        timestamp: new Date().toISOString()
+    });
+
     localStorage.setItem("flaggedAds", JSON.stringify(reports));
 
     alert("Report submitted successfully.");
     closeModal();
-}
+};
 
-// Open the report modal
-function showReportModal() {
-    document.getElementById("reportModal").style.display = "block";
-}
+// Modal controls
+window.showReportModal = function () {
+    const modal = document.getElementById("reportModal");
+    if (modal) modal.style.display = "block";
+};
 
-// Close the report modal
-function closeModal() {
-    document.getElementById("reportModal").style.display = "none";
-}
+window.closeModal = function () {
+    const modal = document.getElementById("reportModal");
+    if (modal) modal.style.display = "none";
+};
 
-// Helper functions
+// Helper
 function setText(id, value) {
     const el = document.getElementById(id);
     if (el) el.innerText = value;
 }
+
