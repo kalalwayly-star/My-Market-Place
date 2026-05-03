@@ -125,11 +125,15 @@ function addAd() {
 
 // --- Logout Functionality ---
 
-document.getElementById('logout-btn')?.addEventListener('click', function () {
-    localStorage.removeItem('loggedInUser');
+// Logout functionality
+function logout() {
+    localStorage.removeItem('loggedInUser');  // Remove user from localStorage
     checkLoginStatus();  // Update the UI (login/logout state)
-    window.location.href = 'index.html'; // Redirect to homepage
-});
+    window.location.href = 'index.html';  // Redirect to homepage
+}
+
+// Attach event listener for logout button
+document.getElementById('logout-btn')?.addEventListener('click', logout);
 
 // --- Page Load Initialization ---
 
