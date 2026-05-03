@@ -95,12 +95,11 @@ function addAd() {
 
 // --- Logout Functionality ---
 
-// Logout function to clear the user data and reload the page
-function logout() {
-    localStorage.removeItem('loggedInUser'); // Clear user from localStorage
-    checkLoginStatus(); // Update the UI after logout
-    window.location.href = 'index.html'; // Redirect to homepage or login page
-}
+document.getElementById('logout-btn')?.addEventListener('click', function () {
+    localStorage.removeItem('loggedInUser');
+    checkLoginStatus();  // Update the UI (login/logout state)
+    window.location.href = 'index.html'; // Redirect to homepage
+});
 
 // --- Page Load Initialization ---
 
