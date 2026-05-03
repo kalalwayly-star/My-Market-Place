@@ -31,13 +31,20 @@ function getAdsFromLocalStorage() {
 }
 
 // Display all ads on the home page (index.html)
+// Display all ads in the home page (index.html)
 function displayAllAds() {
-    const adsContainer = document.getElementById('ads-container');
-    const ads = getAdsFromLocalStorage();
+    const listingsContainer = document.getElementById('listings');
+    if (!listingsContainer) {
+        console.error('Error: #listings container not found');
+        return;
+    }
+
+    const ads = JSON.parse(localStorage.getItem('ads')) || [];
 
     if (ads.length === 0) {
-        adsContainer.innerHTML = '<p>No ads available. Please post some ads.</p>';
+        listingsContainer.innerHTML = '<p>No ads available.</p>';
     } else {
+        listingsContainer.innerHTML = '';  // Clear existing content
         ads.forEach(ad => {
             const adDiv = document.createElement('div');
             adDiv.className = 'ad-card';
@@ -47,10 +54,15 @@ function displayAllAds() {
                 <p><b>Price: $${ad.price}</b></p>
                 <button onclick="goToAdDetails('${ad.id}')">View Details</button>
             `;
-            adsContainer.appendChild(adDiv);
+            listingsContainer.appendChild(adDiv);
         });
     }
 }
+
+// Run the function when the page loads
+window.onload = function () {
+    displayAllAds();  // Display ads on home page
+};
 
 // Display logged-in user's ads on myads.html
 function displayUserAds() {
