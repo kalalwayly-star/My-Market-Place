@@ -35,7 +35,6 @@ function getAdsFromLocalStorage() {
 function displayUserAds() {
     const adsContainer = document.getElementById('ads-container');
     const ads = JSON.parse(localStorage.getItem('ads') || "[]");
-    const user = JSON.parse(localStorage.getItem('loggedInUser'));
 
     if (ads.length === 0) {
         adsContainer.innerHTML = '<p>No ads available. Please post some ads.</p>';
