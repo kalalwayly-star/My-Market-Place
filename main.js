@@ -115,3 +115,36 @@ window.onload = function() {
         displayUserAds(); // Display the logged-in user's ads on the My Ads page
     }
 };
+document.addEventListener("DOMContentLoaded", function () {
+    updateAuthButton();
+});
+
+function updateAuthButton() {
+    const loginButton = document.getElementById("login-btn");
+    const logoutButton = document.getElementById("logout-btn");
+
+    // Check if the user is logged in
+    const currentUserEmail = localStorage.getItem("currentUserEmail");
+
+    if (currentUserEmail && currentUserEmail !== "Guest") {
+        // User is logged in, show Logout button
+        loginButton.style.display = "none";
+        logoutButton.style.display = "inline-block";  // Show the logout button
+        logoutButton.onclick = logout;  // Set the logout function for the button
+    } else {
+        // User is not logged in, show Login button
+        loginButton.style.display = "inline-block";  // Show the login link
+        logoutButton.style.display = "none";  // Hide the logout button
+    }
+}
+
+function logout() {
+    // Clear user data from localStorage (log the user out)
+    localStorage.removeItem("currentUserEmail");
+
+    // Update the button visibility after logout
+    updateAuthButton();
+
+    // Redirect the user to the homepage or login page
+    window.location.href = "index.html"; // or wherever you'd like to redirect
+}
