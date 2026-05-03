@@ -126,16 +126,7 @@ function updateAuthButton() {
     // Check if the user is logged in
     const currentUserEmail = localStorage.getItem("currentUserEmail");
 
-    if (currentUserEmail && currentUserEmail !== "Guest") {
-        // User is logged in, hide Login button and show Logout button
-        loginButton.style.display = "none";
-        logoutButton.style.display = "inline-block";  // Show the logout button
-        logoutButton.onclick = logout;  // Set the logout function for the button
-    } else {
-        // User is not logged in, show Login button and hide Logout button
-        loginButton.style.display = "inline-block";  // Show the login link
-        logoutButton.style.display = "none";  // Hide the logout button
-    }
+    
 }
 
 function logout() {
