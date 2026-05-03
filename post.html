@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,79 +6,227 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-i18n="postAd">Post Ad</title>
     <link rel="stylesheet" href="style.css">
+
+    <!-- PayPal SDK -->
+    <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=USD"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        form {
+            max-width: 800px;
+            margin: 30px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .form-field {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .image-previews {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .image-preview {
+            position: relative;
+        }
+
+        .image-preview img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .image-preview button {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: red;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+        }
+
+        .featured-options {
+            background: #f1f1f1;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        #paypal-button-container {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .nav-links {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .nav-links a {
+            margin: 0 10px;
+            color: #007bff;
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
-    <header class="header">
-        <h1 data-i18n="postAdHeader">Post your ad</h1>
-    </header>
-    
-    <form id="post-ad-form" onsubmit="submitAd(event)">
+
+<header class="header">
+    <h1 data-i18n="postAdHeader">Post your ad</h1>
+    <div class="nav-links">
+        <a href="index.html" data-i18n="home">Home</a>
+        <a href="myads.html" data-i18n="myAds">My Ads</a>
+    </div>
+</header>
+
+<form id="post-ad-form">
+
+    <!-- Category -->
+    <div class="form-field">
+        <label for="ad-category" data-i18n="category">Category</label>
+        <select id="ad-category" name="category" required>
+            <option value="" data-i18n="selectCategory">Select a category</option>
+            <option value="Real Estate">🏠 Real Estate</option>
+            <option value="Cars & Trucks">🚗 Cars</option>
+            <option value="Furniture">🛋️ Furniture</option>
+            <option value="Auto Accessories">🛠️ Auto Accessories</option>
+            <option value="Electronics">📱 Electronics</option>
+            <option value="Fashion">👗 Fashion</option>
+            <option value="Pets">🐶 Pets</option>
+            <option value="Sports">⚽ Sports</option>
+            <option value="Books">📚 Books</option>
+            <option value="Appliances">🔌 Appliances</option>
+            <option value="Toys">🧸 Toys</option>
+            <option value="Services">💼 Services</option>
+            <option value="Garden">🌱 Garden</option>
+            <option value="Health">💊 Health</option>
+            <option value="Baby">👶 Baby</option>
+        </select>
+    </div>
+
+    <!-- Images -->
+    <div class="form-field">
+        <label for="ad-image" data-i18n="imageUpload">Upload Images (Max 6)</label>
+        <input type="file" id="ad-image" multiple accept="image/*">
+        <div id="image-previews" class="image-previews"></div>
+    </div>
+
+    <!-- Title -->
+    <div class="form-field">
+        <label for="ad-title" data-i18n="title">Title</label>
+        <input type="text" id="ad-title" required>
+    </div>
+
+    <!-- Location -->
+    <div class="form-field">
+        <label for="ad-location" data-i18n="location">Location</label>
+        <input type="text" id="ad-location" required>
+    </div>
+
+    <!-- Price -->
+    <div class="form-field">
+        <label for="ad-price" data-i18n="price">Price ($)</label>
+        <input type="number" id="ad-price" required>
+    </div>
+
+    <!-- Description -->
+    <div class="form-field">
+        <label for="ad-description" data-i18n="description">Description</label>
+        <textarea id="ad-description" rows="5" required></textarea>
+    </div>
+
+    <!-- Condition -->
+    <div class="form-field" id="condition-field">
+        <label for="ad-condition" data-i18n="condition">Condition</label>
+        <select id="ad-condition">
+            <option value="new" data-i18n="new">New</option>
+            <option value="used" data-i18n="used">Used</option>
+        </select>
+    </div>
+
+    <!-- Car Info -->
+    <div id="car-info" style="display:none;">
         <div class="form-field">
-            <label for="ad-category" data-i18n="category">Category</label>
-            <select id="ad-category" name="category" required>
-                <option value="" data-i18n="selectCategory">Select a category</option>
-                <option value="Real Estate" data-i18n="real_estate">🏠 Real Estate</option>
-                <option value="Cars" data-i18n="cars">🚗 Cars</option>
-                <option value="Furniture" data-i18n="furniture">🛋️ Furniture</option>
-                <option value="Auto Accessories" data-i18n="auto_accessories">🛠️ Auto Accessories</option>
-                <option value="Electronics" data-i18n="electronics">📱 Electronics</option>
-                <option value="Fashion" data-i18n="fashion">👗 Fashion</option>
-                <option value="Pets" data-i18n="pets">🐶 Pets</option>
-                <option value="Sports" data-i18n="sports">⚽ Sports</option>
-                <option value="Books" data-i18n="books">📚 Books</option>
-                <option value="Appliances" data-i18n="appliances">🔌 Appliances</option>
-                <option value="Toys" data-i18n="toys">🧸 Toys</option>
-                <option value="Services" data-i18n="services">💼 Services</option>
-                <option value="Garden" data-i18n="garden">🌱 Garden</option>
-                <option value="Health" data-i18n="health">💊 Health</option>
-                <option value="Baby" data-i18n="baby">👶 Baby</option>
-            </select>
+            <label for="car-mileage">Mileage</label>
+            <input type="text" id="car-mileage">
         </div>
+    </div>
 
-        <!-- Image Upload -->
-        <div class="form-field">
-            <label for="ad-image" data-i18n="imageUpload">Upload Image</label>
-            <input type="file" id="ad-image" name="ad-image" multiple accept="image/*">
-            <div id="image-previews" class="image-previews"></div>  <!-- Container for image previews -->
-        </div>
+    <!-- Featured Ads -->
+    <div class="form-field featured-options">
+        <label data-i18n="featured_ad">Boost Your Ad</label>
+        <label><input type="radio" name="featured" value="none" checked> Standard Free</label><br>
+        <label><input type="radio" name="featured" value="featured"> Featured Ad ($5)</label>
+    </div>
 
-        <!-- Title -->
-        <div class="form-field">
-            <label for="ad-title" data-i18n="title">Title</label>
-            <input type="text" id="ad-title" name="title" required>
-        </div>
+    <!-- PayPal -->
+    <div id="paypal-button-container"></div>
 
-        <!-- Location -->
-        <div class="form-field">
-            <label for="ad-location" data-i18n="location">Location</label>
-            <input type="text" id="ad-location" name="location" required>
-        </div>
+    <!-- Submit -->
+    <button type="submit" id="post-ad-btn" class="btn-primary" data-i18n="postAdButton">Post Ad Now</button>
 
-        <!-- Price -->
-        <div class="form-field">
-            <label for="ad-price" data-i18n="price">Price ($)</label>
-            <input type="number" id="ad-price" name="price" required>
-        </div>
+</form>
 
-        <!-- Description -->
-        <div class="form-field">
-            <label for="ad-description" data-i18n="description">Description</label>
-            <textarea id="ad-description" name="description" rows="5" required></textarea>
-        </div>
+<script src="post.js"></script>
 
-        <!-- Condition (depends on category) -->
-        <div class="form-field" id="condition-field">
-            <label for="ad-condition" data-i18n="condition">Condition</label>
-            <select id="ad-condition" name="condition">
-                <option value="new" data-i18n="new">New</option>
-                <option value="used" data-i18n="used">Used</option>
-            </select>
-        </div>
-
-        <!-- Post Ad Button -->
-        <button type="submit" id="post-ad-btn" class="btn-primary" data-i18n="postAdButton">Post Ad Now</button>
-    </form>
-
-    <script src="post.js"></script>  <!-- For custom JS files using modules -->
 </body>
 </html>
+```
+
