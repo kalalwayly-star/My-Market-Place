@@ -32,33 +32,7 @@ function getAdsFromLocalStorage() {
 
 // --- My Ads Page Specific Code ---
 
-function displayAds() {
-    const adsContainer = document.getElementById('ads-container');
-    const ads = getAdsFromLocalStorage();
-    
-    if (ads.length === 0) {
-        adsContainer.innerHTML = '<p>No ads available. Please add some ads.</p>';
-    } else {
-        ads.forEach(ad => {
-            const adDiv = document.createElement('div');
-            adDiv.className = 'ad-card';
 
-            let imageHtml = '';
-            if (ad.images && ad.images.length > 0) {
-                imageHtml = `<img src="${ad.images[0]}" alt="Ad Image" class="ad-image" />`; // Show the first image
-            }
-
-            adDiv.innerHTML = `
-                ${imageHtml}
-                <h4>${ad.title}</h4>
-                <p>${ad.description}</p>
-                <p><b>Price: $${ad.price}</b></p>
-                <button class="btn" onclick="goToAdDetails('${ad.id}')">View Details</button>
-            `;
-            adsContainer.appendChild(adDiv);
-        });
-    }
-}
 
 // --- Home Page Specific Code (index.html) ---
 
@@ -86,9 +60,8 @@ function displayAllAds() {
     }
 }
 
-// Go to Ad Details page (can be implemented later)
 function goToAdDetails(adId) {
-    window.location.href = `ad-details.html?id=${adId}`;
+    window.location.href = `ad-details.html?id=${adId}`;  // Ensure ad-id is passed in the URL
 }
 
 // --- Add a New Ad (for Post Ad page, when creating an ad) ---
