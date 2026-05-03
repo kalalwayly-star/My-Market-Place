@@ -54,13 +54,16 @@ function displayAllAds() {
     }
 }
 
+function logout() {
+    // Clear user data (i.e., "currentUserEmail") from localStorage
+    localStorage.removeItem("currentUserEmail");
+
+}
 // Navigate to ad details page
 function goToAdDetails(adId) {
     window.location.href = `ad-details.html?id=${adId}`;  // Pass ad-id in the URL
 }
-function logout() {
-    // Clear user data (i.e., "currentUserEmail") from localStorage
-    localStorage.removeItem("currentUserEmail");
+
 // Add a New Ad (for Post Ad page)
 function addAd() {
     const title = document.getElementById('adTitle').value.trim();
