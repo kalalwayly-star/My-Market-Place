@@ -36,8 +36,8 @@ function renderAdDetails() {
     setText("adCategory", ad.category || "Unknown");
     setText("adLocation", ad.location || "Unknown Location");
     setText("adDesc", ad.description || "No Description Available");
-    setText("sellerEmail", ad.userEmail || ad.userId || "Unknown Seller");
-
+const sellerEl = document.getElementById("sellerEmail");
+if (sellerEl) sellerEl.parentElement.style.display = "none";
     renderImages();
 }
 
