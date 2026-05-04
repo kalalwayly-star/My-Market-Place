@@ -185,14 +185,15 @@ document.addEventListener('DOMContentLoaded', function () {
     // PAYPAL (SAFE INIT)
     // -----------------------------
 
-  // --- FEATURED AD + PAYPAL DISPLAY (UPDATED CLEAN VERSION) ---
-const paypalContainer = document.getElementById('paypal-button-container');
+ // --- FEATURED AD + PAYPAL DISPLAY (FIXED & RELIABLE) ---
+document.addEventListener("DOMContentLoaded", function () {
 
-document.querySelectorAll('input[name="featured"]').forEach(radio => {
-    radio.addEventListener("change", function () {
+    const paypalContainer = document.getElementById("paypal-button-container");
+
+    function togglePayPal(show) {
         if (!paypalContainer) return;
 
-        if (this.value !== "none") {
+        if (show) {
             paypalContainer.style.display = "block";
 
             paypalContainer.innerHTML = `
@@ -204,15 +205,15 @@ document.querySelectorAll('input[name="featured"]').forEach(radio => {
                     margin-top:15px;
                     text-align:center;
                 ">
-                    <p style="margin-bottom:10px; font-weight:bold;">
-                        Complete payment to boost your ad
+                    <p style="font-weight:bold; margin-bottom:10px;">
+                        Boost your ad (Featured Listing)
                     </p>
 
                     <p style="font-size:0.9em; color:#555;">
-                        PayPal accepts Credit & Debit cards securely
+                        PayPal accepts Credit & Debit Cards securely
                     </p>
 
-                    <a href="https://www.paypal.com/ncp/payment/J2JFQFB2TYJC8" 
+                    <a href="https://www.paypal.com/ncp/payment/J2JFQFB2TYJC8"
                        target="_blank"
                        style="
                             display:block;
@@ -228,10 +229,23 @@ document.querySelectorAll('input[name="featured"]').forEach(radio => {
                     </a>
                 </div>
             `;
-
         } else {
             paypalContainer.style.display = "none";
             paypalContainer.innerHTML = "";
         }
+    }
+
+    const featuredRadios = document.querySelectorAll('input[name="featured"]');
+
+    featuredRadios.forEach(radio => {
+        radio.addEventListener("change", function () {
+            togglePayPal(this.value !== "none");
+        });
     });
+
+    // OPTIONAL: set initial state on load
+    const selected = document.querySelector('input[name="featured"]:checked');
+    if (selected) {
+        togglePayPal(selected.value !== "none");
+    }
 });
