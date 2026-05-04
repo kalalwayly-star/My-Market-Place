@@ -1,8 +1,74 @@
 document.addEventListener('DOMContentLoaded', function () {
+
     let uploadedImages = [];
     let paypalPaid = false;
 
-    // --- MAIN POST FUNCTION ---
+    // -----------------------------
+    // CATEGORY RULES
+    // -----------------------------
+    function getMaxImages(category) {
+        if (category === "Cars" || category === "Cars & Trucks" || category === "Real Estate") {
+            return 6;
+        }
+        return 3;
+    }
+
+    function showCarFields(category) {
+        const carInfo = document.getElementById('car-info');
+        if (!carInfo) return;
+
+        if (category === "Cars" || category === "Cars & Trucks") {
+            carInfo.style.display = "block";
+        } else {
+            carInfo.style.display = "none";
+        }
+    }
+
+    function hideConditionIfNeeded(category) {
+        const condition = document.getElementById('condition-field');
+        if (!condition) return;
+
+        const hideFor = ["Jobs", "Services", "Real Estate", "Business", "Cars", "Cars & Trucks"];
+
+        if (hideFor.includes(category)) {
+            condition.style.display = "none";
+        } else {
+            condition.style.display = "block";
+        }
+    }
+
+    // -----------------------------
+    // IMAGE COMPRESSION
+    // -----------------------------
+    function compressImage(file, maxWidth = 800, quality = 0.65) {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const img = new Image();
+                img.src = e.target.result;
+
+                img.onload = function () {
+                    const canvas = document.createElement("canvas");
+
+                    const scale = maxWidth / img.width;
+                    canvas.width = maxWidth;
+                    canvas.height = img.height * scale;
+
+                    const ctx = canvas.getContext("2d");
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                    resolve(canvas.toDataURL("image/jpeg", quality));
+                };
+            };
+
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // -----------------------------
+    // POST AD
+    // -----------------------------
     function postAd(event) {
         if (event) event.preventDefault();
 
@@ -22,35 +88,47 @@ document.addEventListener('DOMContentLoaded', function () {
         const user = JSON.parse(userRaw);
 
         if (!title || !price || !category) {
-            alert('Please fill in Title, Price, and Category.');
+            alert('Please fill Title, Price, Category.');
             return;
         }
 
-        // Require PayPal payment for featured ads
+        // PayPal required for featured ads
         if (featuredOption !== 'none' && !paypalPaid) {
-            alert('Please complete PayPal payment for featured ads before posting.');
+            alert('Complete PayPal payment first.');
             return;
         }
 
-        if (uploadedImages.length === 0) {
-            saveAd(title, description, price, location, category, [], user, featuredOption);
-        } else {
-            const readers = uploadedImages.map(file => {
-                return new Promise(resolve => {
-                    const reader = new FileReader();
-                    reader.onloadend = () => resolve(reader.result);
-                    reader.readAsDataURL(file);
-                });
-            });
+        const carFields = {
+            make: document.getElementById("car-make")?.value || "",
+            model: document.getElementById("car-model")?.value || "",
+            year: document.getElementById("car-year")?.value || "",
+            fuel: document.getElementById("car-fuel")?.value || "",
+            transmission: document.getElementById("car-transmission")?.value || "",
+            kms: document.getElementById("car-kms")?.value || ""
+        };
 
-            Promise.all(readers).then(imageUrls => {
-                saveAd(title, description, price, location, category, imageUrls, user, featuredOption);
-            });
-        }
+        const processImages = async () => {
+            if (uploadedImages.length === 0) {
+                return [];
+            }
+
+            const results = [];
+            for (let file of uploadedImages) {
+                results.push(await compressImage(file));
+            }
+            return results;
+        };
+
+        processImages().then(imageUrls => {
+            saveAd(title, description, price, location, category, imageUrls, user, featuredOption, carFields);
+        });
     }
 
-    // --- SAVE AD ---
-    function saveAd(title, description, price, location, category, imageUrls, user, featuredOption) {
+    // -----------------------------
+    // SAVE AD
+    // -----------------------------
+    function saveAd(title, description, price, location, category, imageUrls, user, featuredOption, carFields) {
+
         const newAd = {
             id: Date.now().toString(),
             title,
@@ -58,16 +136,29 @@ document.addEventListener('DOMContentLoaded', function () {
             price,
             location,
             category,
+
             images: imageUrls,
-            image: imageUrls[0] || '',
+            image: imageUrls[0] || "",
+
             userId: user.email,
             userEmail: user.email,
+
             featured: featuredOption,
             date: new Date().toLocaleDateString(),
-            createdAt: new Date().toISOString()
+
+            // CAR DATA
+            car: carFields
         };
 
         const ads = JSON.parse(localStorage.getItem('ads') || '[]');
+
+        // storage safety check
+        const size = new Blob([JSON.stringify(ads)]).size;
+        if (size > 4.5 * 1024 * 1024) {
+            alert("Storage full. Delete old ads first.");
+            return;
+        }
+
         ads.push(newAd);
         localStorage.setItem('ads', JSON.stringify(ads));
 
@@ -78,40 +169,52 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 500);
     }
 
-    // --- IMAGE UPLOAD ---
+    // -----------------------------
+    // IMAGE UPLOAD
+    // -----------------------------
     const adImageInput = document.getElementById('ad-image');
+
     if (adImageInput) {
         adImageInput.addEventListener('change', function (event) {
+
+            const category = document.getElementById('ad-category')?.value;
+            const maxImages = getMaxImages(category);
+
             const files = Array.from(event.target.files || []);
             const previewContainer = document.getElementById('image-previews');
 
             if (!previewContainer || !files.length) return;
 
-            if (uploadedImages.length + files.length > 6) {
-                alert('You can upload up to 6 images only.');
+            if (uploadedImages.length + files.length > maxImages) {
+                alert(`Max ${maxImages} images allowed for this category.`);
                 return;
             }
 
             files.forEach(file => {
+
                 const previewDiv = document.createElement('div');
                 previewDiv.className = 'image-preview';
 
                 const img = document.createElement('img');
                 img.src = URL.createObjectURL(file);
-                img.style.maxWidth = '120px';
-                img.style.margin = '5px';
-                previewDiv.appendChild(img);
+                img.style.width = "100px";
+                img.style.height = "100px";
+                img.style.objectFit = "cover";
+                img.style.borderRadius = "6px";
 
-                const deleteBtn = document.createElement('button');
-                deleteBtn.textContent = 'X';
-                deleteBtn.type = 'button';
-                deleteBtn.onclick = function () {
+                const btn = document.createElement('button');
+                btn.type = "button";
+                btn.innerText = "X";
+
+                btn.onclick = () => {
                     uploadedImages = uploadedImages.filter(f => f !== file);
                     previewDiv.remove();
                 };
 
-                previewDiv.appendChild(deleteBtn);
+                previewDiv.appendChild(img);
+                previewDiv.appendChild(btn);
                 previewContainer.appendChild(previewDiv);
+
                 uploadedImages.push(file);
             });
 
@@ -119,17 +222,21 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // --- CATEGORY EXTRA FIELDS ---
+    // -----------------------------
+    // CATEGORY CHANGE
+    // -----------------------------
     const categorySelect = document.getElementById('ad-category');
-    const carInfo = document.getElementById('car-info');
 
-    if (categorySelect && carInfo) {
+    if (categorySelect) {
         categorySelect.addEventListener('change', function () {
-            carInfo.style.display = (this.value === 'Cars & Trucks') ? 'block' : 'none';
+            showCarFields(this.value);
+            hideConditionIfNeeded(this.value);
         });
     }
 
-    // --- FEATURED AD + PAYPAL DISPLAY ---
+    // -----------------------------
+    // PAYPAL
+    // -----------------------------
     const paypalContainer = document.getElementById('paypal-button-container');
 
     document.querySelectorAll('input[name="featured"]').forEach(radio => {
@@ -140,36 +247,30 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // --- PAYPAL INTEGRATION ---
     if (typeof paypal !== 'undefined' && paypalContainer) {
         paypal.Buttons({
-            createOrder: function(data, actions) {
+            createOrder: (data, actions) => {
                 return actions.order.create({
                     purchase_units: [{
-                        amount: {
-                            value: '5.00'
-                        },
-                        description: 'Featured Ad Upgrade'
+                        amount: { value: '5.00' }
                     }]
                 });
             },
-            onApprove: function(data, actions) {
-                return actions.order.capture().then(function(details) {
+            onApprove: (data, actions) => {
+                return actions.order.capture().then(() => {
                     paypalPaid = true;
-                    alert('Payment completed by ' + details.payer.name.given_name + '! You can now post your featured ad.');
+                    alert("Payment successful!");
                 });
-            },
-            onError: function(err) {
-                console.error('PayPal Error:', err);
-                alert('PayPal payment failed. Please try again.');
             }
         }).render('#paypal-button-container');
     }
 
-    // --- FORM SUBMIT ---
+    // -----------------------------
+    // SUBMIT FORM
+    // -----------------------------
     const postForm = document.getElementById('post-ad-form');
     if (postForm) {
         postForm.addEventListener('submit', postAd);
     }
-});
 
+});
