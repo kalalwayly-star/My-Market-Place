@@ -1,7 +1,26 @@
 // ------------------------------
 // COMMON AUTH FUNCTIONS
 // ------------------------------
+function getUserCity() {
+    const user = JSON.parse(localStorage.getItem("loggedInUser"));
+    return (user?.city || "").toLowerCase();
+}
+function sortAdsByCity(ads, userCity) {
+    return ads.sort((a, b) => {
 
+        const aCity = (a.city || "").toLowerCase();
+        const bCity = (b.city || "").toLowerCase();
+
+        const score = (city) => {
+            if (!city) return 0;
+            if (city === userCity) return 2;
+            if (city.includes(userCity)) return 1;
+            return 0;
+        };
+
+        return score(bCity) - score(aCity);
+    });
+}
 function checkLoginStatus() {
     const userRaw = localStorage.getItem('loggedInUser');
     const loginBtn = document.getElementById('userAuth');
@@ -53,6 +72,9 @@ function saveAdsToLocalStorage(ads) {
 function displayAllAds(filteredAds = null) {
     const listingsContainer = document.getElementById('listings');
     if (!listingsContainer) return;
+   const allAds = filteredAds || getAdsFromLocalStorage();
+const userCity = getUserCity();
+const ads = sortAdsByCity(allAds, userCity); 
 
     let ads = filteredAds || getAdsFromLocalStorage();
 
@@ -159,12 +181,21 @@ function displayUserAds() {
         return;
     }
 
-    const user = JSON.parse(userRaw);
-    const ads = getAdsFromLocalStorage();
+    let user;
+    try {
+        user = JSON.parse(userRaw);
+    } catch (e) {
+        console.error("Invalid user data in localStorage");
+        return;
+    }
 
-    const userAds = ads.filter(
-        ad => ad.userEmail === user.email || ad.userId === user.email
-    );
+    const ads = getAdsFromLocalStorage() || [];
+
+    // ✅ FIXED: use ONLY ONE consistent field
+    const userAds = ads.filter(ad => ad.userEmail === user.email);
+
+    // ✅ newest first
+    userAds.sort((a, b) => new Date(b.date) - new Date(a.date));
 
     adsContainer.innerHTML = '';
 
@@ -175,11 +206,9 @@ function displayUserAds() {
 
     userAds.forEach(ad => {
         const previewImage =
-            ad.images && ad.images.length > 0
-                ? ad.images[0]
-                : ad.image
-                ? ad.image
-                : 'https://via.placeholder.com/400?text=No+Image';
+            ad.images?.[0] ||
+            ad.image ||
+            'https://via.placeholder.com/400?text=No+Image';
 
         const adDiv = document.createElement('div');
         adDiv.className = 'ad-card';
@@ -194,7 +223,6 @@ function displayUserAds() {
                 
                 <!-- Square Image -->
                 <div style="
-                    min-width:180px;
                     width:180px;
                     height:180px;
                     overflow:hidden;
@@ -212,7 +240,7 @@ function displayUserAds() {
                          ">
                 </div>
 
-                <!-- Right Side Content -->
+                <!-- Right Content -->
                 <div style="flex:1;">
                     <h4 style="margin-top:0;">${ad.title}</h4>
                     <p>${ad.description || ''}</p>
@@ -232,7 +260,6 @@ function displayUserAds() {
         adsContainer.appendChild(adDiv);
     });
 }
-
 
 
 
@@ -348,4 +375,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-
+document.addEventListener("DOMContentLoaded", () => {
+    displayAllAds();
+});
