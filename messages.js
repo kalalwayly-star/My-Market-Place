@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Default tab
         changeTab('received');
     });
 });
@@ -20,24 +19,27 @@ document.addEventListener('DOMContentLoaded', () => {
 // LOAD RECEIVED MESSAGES
 // ============================================
 function loadMessages(userId) {
-    const messagesContainer = document.getElementById('messagesContainer');
-    if (!messagesContainer) return;
+    const container = document.getElementById('messagesContainer');
+    if (!container) return;
 
     const messagesRef = ref(rtdb, `marketplace_messages/received/${userId}`);
 
-    onValue(messagesRef, (snapshot) => {
+    onValue(messagesRef, snapshot => {
+        container.innerHTML = "";
+
         const messages = snapshot.val();
-        messagesContainer.innerHTML = "";
 
         if (!messages) {
-            messagesContainer.innerHTML = "<p>No messages found.</p>";
+            container.innerHTML = "<p>No messages found.</p>";
             return;
         }
 
-        Object.keys(messages)
-            .sort((a, b) => new Date(messages[b].timestamp) - new Date(messages[a].timestamp))
-            .forEach(msgId => {
-                renderMessage(messages[msgId], msgId, 'received');
+        Object.entries(messages)
+            .sort((a, b) =>
+                new Date(b[1].timestamp) - new Date(a[1].timestamp)
+            )
+            .forEach(([msgId, message]) => {
+                renderMessage(message, msgId, 'received');
             });
     });
 }
@@ -47,73 +49,79 @@ function loadMessages(userId) {
 // LOAD SENT MESSAGES
 // ============================================
 function loadSentMessages(userId) {
-    const messagesContainer = document.getElementById('messagesContainer');
-    if (!messagesContainer) return;
+    const container = document.getElementById('messagesContainer');
+    if (!container) return;
 
     const messagesRef = ref(rtdb, `marketplace_messages/sent/${userId}`);
 
-    onValue(messagesRef, (snapshot) => {
+    onValue(messagesRef, snapshot => {
+        container.innerHTML = "";
+
         const messages = snapshot.val();
-        messagesContainer.innerHTML = "";
 
         if (!messages) {
-            messagesContainer.innerHTML = "<p>No sent messages found.</p>";
+            container.innerHTML = "<p>No sent messages found.</p>";
             return;
         }
 
-        Object.keys(messages)
-            .sort((a, b) => new Date(messages[b].timestamp) - new Date(messages[a].timestamp))
-            .forEach(msgId => {
-                renderMessage(messages[msgId], msgId, 'sent');
+        Object.entries(messages)
+            .sort((a, b) =>
+                new Date(b[1].timestamp) - new Date(a[1].timestamp)
+            )
+            .forEach(([msgId, message]) => {
+                renderMessage(message, msgId, 'sent');
             });
     });
 }
 
 
 // ============================================
-// RENDER MESSAGE
+// RENDER SINGLE MESSAGE
 // ============================================
 function renderMessage(message, msgId, type) {
-    const messagesContainer = document.getElementById('messagesContainer');
-    if (!messagesContainer) return;
+    const container = document.getElementById('messagesContainer');
+    if (!container) return;
 
-    const messageElement = document.createElement('div');
-    messageElement.classList.add('message-card');
+    const card = document.createElement('div');
+    card.className = "message-card";
 
-    messageElement.innerHTML = `
+    card.innerHTML = `
         <div class="message-header">
             <strong>${type === 'received' ? 'From' : 'To'}:</strong>
-            <span>${type === 'received' ? message.sender : message.receiver}</span>
+            ${type === 'received'
+                ? (message.sender || 'Unknown')
+                : (message.receiver || 'Unknown')}
         </div>
 
         <div class="message-ad">
-            <strong>Ad:</strong> ${message.adTitle || 'Unknown Ad'}
+            <strong>Ad:</strong> ${message.adTitle || 'Marketplace Ad'}
         </div>
 
         <div class="message-body">
-            <p>${message.text}</p>
+            <p>${message.text || ''}</p>
         </div>
 
         <div class="message-footer">
             <small>${new Date(message.timestamp).toLocaleString()}</small>
-            <button onclick="deleteMessage('${msgId}', '${type}')">
+            <button class="delete-btn"
+                onclick="deleteMessage('${msgId}', '${type}')">
                 Delete
             </button>
         </div>
     `;
 
-    messagesContainer.appendChild(messageElement);
+    container.appendChild(card);
 }
 
 
 // ============================================
-// DELETE MESSAGE
+// DELETE SINGLE MESSAGE ONLY
 // ============================================
 window.deleteMessage = function(msgId, type) {
     const user = auth.currentUser;
     if (!user) return;
 
-    if (!confirm("Are you sure you want to delete this message?")) return;
+    if (!confirm("Delete this message?")) return;
 
     const msgRef = ref(
         rtdb,
@@ -124,19 +132,26 @@ window.deleteMessage = function(msgId, type) {
         .then(() => {
             alert("Message deleted successfully.");
         })
-        .catch(err => {
-            console.error("Delete failed:", err);
+        .catch(error => {
+            console.error("Delete failed:", error);
             alert("Failed to delete message.");
         });
 };
 
 
 // ============================================
-// SEND MESSAGE
+// SEND MESSAGE TO SELLER
 // ============================================
 window.sendMessage = function(ad, messageText, senderEmail) {
     if (!messageText.trim()) {
         alert("Message cannot be empty.");
+        return;
+    }
+
+    const senderUser = auth.currentUser;
+
+    if (!senderUser) {
+        alert("Please log in first.");
         return;
     }
 
@@ -145,28 +160,22 @@ window.sendMessage = function(ad, messageText, senderEmail) {
         return;
     }
 
-    const senderUser = auth.currentUser;
-    if (!senderUser) {
-        alert("Please log in first.");
-        return;
-    }
+    const sellerId = ad.userId;
 
     const messageData = {
         sender: senderEmail,
         receiver: ad.userEmail || ad.userId,
-        adId: ad.id,
-        adTitle: ad.title,
+        adId: ad.id || "",
+        adTitle: ad.title || "Marketplace Ad",
         text: messageText,
         timestamp: new Date().toISOString()
     };
 
-    // Push to seller inbox
     const sellerInboxRef = ref(
         rtdb,
-        `marketplace_messages/received/${ad.userId}`
+        `marketplace_messages/received/${sellerId}`
     );
 
-    // Push to sender sent folder
     const senderSentRef = ref(
         rtdb,
         `marketplace_messages/sent/${senderUser.uid}`
@@ -178,32 +187,34 @@ window.sendMessage = function(ad, messageText, senderEmail) {
     ])
         .then(() => {
             alert("Message sent successfully!");
-            document.getElementById("messageText").value = "";
+
+            const msgBox = document.getElementById("messageText");
+            if (msgBox) msgBox.value = "";
         })
-        .catch(err => {
-            console.error("Send failed:", err);
+        .catch(error => {
+            console.error("Send failed:", error);
             alert("Failed to send message.");
         });
 };
 
 
 // ============================================
-// TAB SWITCHING
+// SWITCH BETWEEN RECEIVED & SENT
 // ============================================
 window.changeTab = function(tab) {
     const user = auth.currentUser;
     if (!user) return;
 
-    const tabReceived = document.getElementById('btnReceived');
-    const tabSent = document.getElementById('btnSent');
+    const btnReceived = document.getElementById('btnReceived');
+    const btnSent = document.getElementById('btnSent');
 
     if (tab === 'received') {
-        tabReceived?.classList.add('active');
-        tabSent?.classList.remove('active');
+        btnReceived?.classList.add('active');
+        btnSent?.classList.remove('active');
         loadMessages(user.uid);
     } else {
-        tabSent?.classList.add('active');
-        tabReceived?.classList.remove('active');
+        btnSent?.classList.add('active');
+        btnReceived?.classList.remove('active');
         loadSentMessages(user.uid);
     }
 };
