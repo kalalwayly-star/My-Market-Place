@@ -47,6 +47,9 @@ function saveAdsToLocalStorage(ads) {
 // HOME PAGE ADS DISPLAY
 // ------------------------------
 
+// ------------------------------
+// HOME PAGE ADS
+// ------------------------------
 function displayAllAds(filteredAds = null) {
     const listingsContainer = document.getElementById('listings');
     if (!listingsContainer) return;
@@ -63,46 +66,60 @@ function displayAllAds(filteredAds = null) {
         const adDiv = document.createElement('div');
         adDiv.className = 'ad-card';
 
-        const previewImage = ad.images && ad.images.length > 0
-            ? ad.images[0]
-            : 'https://via.placeholder.com/300x200?text=No+Image';
+        const previewImage =
+            ad.images && ad.images.length > 0
+                ? ad.images[0]
+                : ad.image
+                ? ad.image
+                : 'https://via.placeholder.com/400x300?text=No+Image';
 
         adDiv.innerHTML = `
-<div class="ad-image-box">
-    <img src="${previewImage}" alt="${ad.title}">
-</div>    
-     <h4 style="cursor:pointer;">${ad.title}</h4>
-            <p>${ad.description || ''}</p>
-            <p><b>Price: $${ad.price}</b></p>
-            <p>📍 ${ad.location || 'Unknown'}</p>
-            <button class="view-details-btn">View Details</button>
+            <div class="ad-image-box">
+                <img src="${previewImage}" alt="${ad.title}">
+            </div>
+
+            <div class="ad-card-content">
+                <h4 class="ad-title">${ad.title}</h4>
+                <p class="ad-description">${ad.description || ''}</p>
+                <p class="ad-price"><b>Price: $${ad.price}</b></p>
+                <p class="ad-location">📍 ${ad.location || 'Unknown'}</p>
+
+                <button class="view-details-btn" type="button">
+                    View Details
+                </button>
+            </div>
         `;
 
-        // Entire card clickable
+        // Entire card clickable except buttons
         adDiv.addEventListener('click', function (e) {
             if (!e.target.closest('button')) {
                 goToAdDetails(ad.id);
             }
         });
 
-        // Button clickable
-        adDiv.querySelector('.view-details-btn').addEventListener('click', function () {
-            goToAdDetails(ad.id);
-        });
+        // View details button
+        const detailsBtn = adDiv.querySelector('.view-details-btn');
+        if (detailsBtn) {
+            detailsBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                goToAdDetails(ad.id);
+            });
+        }
 
         listingsContainer.appendChild(adDiv);
     });
 }
 
+
 // ------------------------------
 // MY ADS PAGE
 // ------------------------------
-
 function displayUserAds() {
     const adsContainer = document.getElementById('ads-container');
     if (!adsContainer) return;
 
     const userRaw = localStorage.getItem('loggedInUser');
+
     if (!userRaw) {
         alert('Please log in first.');
         window.location.href = 'login.html';
@@ -112,8 +129,8 @@ function displayUserAds() {
     const user = JSON.parse(userRaw);
     const ads = getAdsFromLocalStorage();
 
-    const userAds = ads.filter(ad =>
-        ad.userEmail === user.email || ad.userId === user.email
+    const userAds = ads.filter(
+        ad => ad.userEmail === user.email || ad.userId === user.email
     );
 
     adsContainer.innerHTML = '';
@@ -124,33 +141,62 @@ function displayUserAds() {
     }
 
     userAds.forEach(ad => {
-        const previewImage = ad.images && ad.images.length > 0
-            ? ad.images[0]
-            : 'https://via.placeholder.com/300x200?text=No+Image';
+        const previewImage =
+            ad.images && ad.images.length > 0
+                ? ad.images[0]
+                : ad.image
+                ? ad.image
+                : 'https://via.placeholder.com/400x300?text=No+Image';
 
         const adDiv = document.createElement('div');
         adDiv.className = 'ad-card';
+
         adDiv.innerHTML = `
-<div class="ad-image-box">
-    <img src="${previewImage}" alt="${ad.title}">
-</div>
-     <h4>${ad.title}</h4>
-            <p>${ad.description || ''}</p>
-            <p><b>Price: $${ad.price}</b></p>
-            <button onclick="goToAdDetails('${ad.id}')">View Details</button>
-            <button onclick="deleteAd('${ad.id}')">Delete</button>
+            <div class="ad-image-box">
+                <img src="${previewImage}" alt="${ad.title}">
+            </div>
+
+            <div class="ad-card-content">
+                <h4 class="ad-title">${ad.title}</h4>
+                <p class="ad-description">${ad.description || ''}</p>
+                <p class="ad-price"><b>Price: $${ad.price}</b></p>
+
+                <div class="ad-actions">
+                    <button class="view-details-btn" type="button">
+                        View Details
+                    </button>
+
+                    <button class="delete-ad-btn" type="button">
+                        Delete
+                    </button>
+                </div>
+            </div>
         `;
+
+        // View details
+        const detailsBtn = adDiv.querySelector('.view-details-btn');
+        if (detailsBtn) {
+            detailsBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                goToAdDetails(ad.id);
+            });
+        }
+
+        // Delete ad
+        const deleteBtn = adDiv.querySelector('.delete-ad-btn');
+        if (deleteBtn) {
+            deleteBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                deleteAd(ad.id);
+            });
+        }
 
         adsContainer.appendChild(adDiv);
     });
 }
 
-function deleteAd(adId) {
-    let ads = getAdsFromLocalStorage();
-    ads = ads.filter(ad => ad.id !== adId);
-    saveAdsToLocalStorage(ads);
-    displayUserAds();
-}
+
+
 
 // ------------------------------
 // DETAILS PAGE NAVIGATION
