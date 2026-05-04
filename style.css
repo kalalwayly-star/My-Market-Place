@@ -757,6 +757,16 @@ label[for="ad-image"] {
     flex-direction: column; /* This stacks them vertically */
     gap: 10px;              /* Adds space between buttons */
     width: fit-content;     /* Prevents buttons from stretching across the whole screen */
+.ad-card img,
+#ads-container img,
+#listings img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+    
     margin: 10px 0;         /* Adds some breathing room */
 }
 
