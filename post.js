@@ -185,49 +185,53 @@ document.addEventListener('DOMContentLoaded', function () {
     // PAYPAL (SAFE INIT)
     // -----------------------------
 
-    function initPayPal() {
+  // --- FEATURED AD + PAYPAL DISPLAY (UPDATED CLEAN VERSION) ---
+const paypalContainer = document.getElementById('paypal-button-container');
+
+document.querySelectorAll('input[name="featured"]').forEach(radio => {
+    radio.addEventListener("change", function () {
         if (!paypalContainer) return;
-        if (typeof paypal === "undefined") return;
 
-        try {
-            document.querySelectorAll('input[name="featured"]').forEach(radio => {
+        if (this.value !== "none") {
+            paypalContainer.style.display = "block";
 
-                radio.addEventListener("change", function () {
+            paypalContainer.innerHTML = `
+                <div style="
+                    background:#fff;
+                    border:1px solid #ddd;
+                    padding:15px;
+                    border-radius:8px;
+                    margin-top:15px;
+                    text-align:center;
+                ">
+                    <p style="margin-bottom:10px; font-weight:bold;">
+                        Complete payment to boost your ad
+                    </p>
 
-                    if (this.value !== "none") {
-                        paypalContainer.style.display = "block";
+                    <p style="font-size:0.9em; color:#555;">
+                        PayPal accepts Credit & Debit cards securely
+                    </p>
 
-                        paypalContainer.innerHTML = `
-                            <a href="https://www.paypal.com/ncp/payment/J2JFQFB2TYJC8"
-                               target="_blank"
-                               style="display:block;padding:12px;background:#ffc439;text-align:center;font-weight:bold;border-radius:8px;">
-                               Pay Featured Ad
-                            </a>
+                    <a href="https://www.paypal.com/ncp/payment/J2JFQFB2TYJC8" 
+                       target="_blank"
+                       style="
+                            display:block;
+                            background:#ffc439;
+                            color:#111;
+                            padding:14px;
+                            border-radius:8px;
+                            font-weight:bold;
+                            text-decoration:none;
+                            margin-top:10px;
+                       ">
+                       Pay with PayPal
+                    </a>
+                </div>
+            `;
 
-                            <button type="button" id="confirmPay"
-                                style="width:100%;margin-top:10px;padding:10px;background:#28a745;color:white;border:none;">
-                                I Have Paid
-                            </button>
-                        `;
-
-                        document.getElementById("confirmPay").onclick = function () {
-                            paypalPaid = true;
-                            alert("Payment confirmed!");
-                        };
-
-                    } else {
-                        paypalContainer.style.display = "none";
-                        paypalContainer.innerHTML = "";
-                        paypalPaid = false;
-                    }
-                });
-            });
-
-        } catch (e) {
-            console.error("PayPal error:", e);
+        } else {
+            paypalContainer.style.display = "none";
+            paypalContainer.innerHTML = "";
         }
-    }
-
-    window.addEventListener("load", initPayPal);
-
+    });
 });
