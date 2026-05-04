@@ -74,9 +74,9 @@ function displayAllAds(filteredAds = null) {
                 : 'https://via.placeholder.com/400x300?text=No+Image';
 
         adDiv.innerHTML = `
-            <div class="ad-image-box">
-                <img src="${previewImage}" alt="${ad.title}">
-            </div>
+            <img src="${previewImage}" 
+     alt="${ad.title}" 
+     style="width:100%; height:180px; object-fit:cover; border-radius:8px; display:block;">
 
             <div class="ad-card-content">
                 <h4 class="ad-title">${ad.title}</h4>
@@ -152,9 +152,9 @@ function displayUserAds() {
         adDiv.className = 'ad-card';
 
         adDiv.innerHTML = `
-            <div class="ad-image-box">
-                <img src="${previewImage}" alt="${ad.title}">
-            </div>
+            <img src="${previewImage}" 
+     alt="${ad.title}" 
+     style="width:100%; height:180px; object-fit:cover; border-radius:8px; display:block;">
 
             <div class="ad-card-content">
                 <h4 class="ad-title">${ad.title}</h4>
