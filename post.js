@@ -3,25 +3,27 @@ document.addEventListener('DOMContentLoaded', function () {
     let uploadedImages = [];
     let paypalPaid = false;
 
+    const form = document.getElementById('post-ad-form');
     const categorySelect = document.getElementById('ad-category');
+    const imageInput = document.getElementById('ad-image');
+    const previewContainer = document.getElementById('image-previews');
+    const paypalContainer = document.getElementById('paypal-button-container');
 
     // -----------------------------
-    // CATEGORY RULES
+    // CATEGORY CONFIG
     // -----------------------------
 
     function getMaxImages(category) {
-        const highImageCategories = ["Cars", "Cars & Trucks", "Real Estate"];
-        return highImageCategories.includes(category) ? 6 : 3;
+        const highLimit = ["Cars", "Cars & Trucks", "Real Estate"];
+        return highLimit.includes(category) ? 6 : 3;
     }
 
     function showCarFields(category) {
         const carInfo = document.getElementById('car-info');
         if (!carInfo) return;
 
-        carInfo.style.display =
-            (category === "Cars" || category === "Cars & Trucks")
-                ? "block"
-                : "none";
+        const isCar = category === "Cars" || category === "Cars & Trucks";
+        carInfo.style.display = isCar ? "block" : "none";
     }
 
     function hideConditionIfNeeded(category) {
@@ -43,186 +45,66 @@ document.addEventListener('DOMContentLoaded', function () {
         hint.innerText = `You can upload up to ${max} images`;
     }
 
-    // -----------------------------
-    // CATEGORY CHANGE EVENT
-    // -----------------------------
+    function handleCategoryChange() {
+        const category = categorySelect.value;
+
+        showCarFields(category);
+        hideConditionIfNeeded(category);
+        updateImageHint(category);
+    }
 
     if (categorySelect) {
-        categorySelect.addEventListener("change", function () {
-            const category = this.value;
-
-            showCarFields(category);
-            hideConditionIfNeeded(category);
-            updateImageHint(category);
-        });
-    }
-
-});
-
-/* ✅ ADD THIS HERE */
-function updateImageHint(category) {
-    const hint = document.getElementById("image-limit-hint");
-    if (!hint) return;
-
-    const max = getMaxImages(category);
-    hint.innerText = `You can upload up to ${max} images for this category`;
-}
-
-    // -----------------------------
-    // POST AD
-    // -----------------------------
-    function postAd(event) {
-        if (event) event.preventDefault();
-
-        const title = document.getElementById('ad-title')?.value.trim();
-        const description = document.getElementById('ad-description')?.value.trim();
-        const price = document.getElementById('ad-price')?.value.trim();
-        const location = document.getElementById('ad-location')?.value.trim();
-        const category = document.getElementById('ad-category')?.value;
-        const featuredOption = document.querySelector('input[name="featured"]:checked')?.value || 'none';
-
-        const userRaw = localStorage.getItem('loggedInUser');
-        if (!userRaw) {
-            alert('Please login first!');
-            return;
-        }
-
-        const user = JSON.parse(userRaw);
-
-        if (!title || !price || !category) {
-            alert('Please fill Title, Price, Category.');
-            return;
-        }
-
-        // PayPal required for featured ads
-        if (featuredOption !== 'none' && !paypalPaid) {
-            alert('Complete PayPal payment first.');
-            return;
-        }
-
-        const carFields = {
-            make: document.getElementById("car-make")?.value || "",
-            model: document.getElementById("car-model")?.value || "",
-            year: document.getElementById("car-year")?.value || "",
-            fuel: document.getElementById("car-fuel")?.value || "",
-            transmission: document.getElementById("car-transmission")?.value || "",
-            kms: document.getElementById("car-kms")?.value || ""
-        };
-
-        const processImages = async () => {
-            if (uploadedImages.length === 0) {
-                return [];
-            }
-
-            const results = [];
-            for (let file of uploadedImages) {
-                results.push(await compressImage(file));
-            }
-            return results;
-        };
-
-        processImages().then(imageUrls => {
-            saveAd(title, description, price, location, category, imageUrls, user, featuredOption, carFields);
-        });
+        categorySelect.addEventListener('change', handleCategoryChange);
+        handleCategoryChange(); // run on load
     }
 
     // -----------------------------
-    // SAVE AD
+    // IMAGE UPLOAD (FIXED LIMIT)
     // -----------------------------
-    function saveAd(title, description, price, location, category, imageUrls, user, featuredOption, carFields) {
 
-        const newAd = {
-            id: Date.now().toString(),
-            title,
-            description,
-            price,
-            location,
-            category,
-
-            images: imageUrls,
-            image: imageUrls[0] || "",
-
-            userId: user.email,
-            userEmail: user.email,
-
-            featured: featuredOption !== 'none',
-featuredType: featuredOption,
-featuredUntil: featuredOption !== 'none'
-    ? new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString()
-    : null,
-
-            // CAR DATA
-            car: carFields
-        };
-
-        const ads = JSON.parse(localStorage.getItem('ads') || '[]');
-ads.push(newAd);
-localStorage.setItem('ads', JSON.stringify(ads));
-
-        // storage safety check
-        const size = new Blob([JSON.stringify(ads)]).size;
-        if (size > 4.5 * 1024 * 1024) {
-            alert("Storage full. Delete old ads first.");
-            return;
-        }
-
-        ads.push(newAd);
-        localStorage.setItem('ads', JSON.stringify(ads));
-
-        alert('Ad Posted Successfully!');
-
-        setTimeout(() => {
-            window.location.href = 'myads.html';
-        }, 500);
-    }
-
-    // -----------------------------
-    // IMAGE UPLOAD
-    // -----------------------------
-    const adImageInput = document.getElementById('ad-image');
-
-    if (adImageInput) {
-        adImageInput.addEventListener('change', function (event) {
-
-            const category = document.getElementById('ad-category')?.value;
-            const maxImages = getMaxImages(category);
+    if (imageInput) {
+        imageInput.addEventListener('change', function (event) {
 
             const files = Array.from(event.target.files || []);
-            const previewContainer = document.getElementById('image-previews');
+            const category = categorySelect.value;
+            const maxImages = getMaxImages(category);
 
-            if (!previewContainer || !files.length) return;
+            if (!previewContainer) return;
 
             if (uploadedImages.length + files.length > maxImages) {
-                alert(`Max ${maxImages} images allowed for this category.`);
+                alert(`You can upload up to ${maxImages} images only.`);
                 return;
             }
 
             files.forEach(file => {
 
-                const previewDiv = document.createElement('div');
-                previewDiv.className = 'image-preview';
+                const reader = new FileReader();
 
-                const img = document.createElement('img');
-                img.src = URL.createObjectURL(file);
-                img.style.width = "100px";
-                img.style.height = "100px";
-                img.style.objectFit = "cover";
-                img.style.borderRadius = "6px";
+                reader.onload = function (e) {
 
-                const btn = document.createElement('button');
-                btn.type = "button";
-                btn.innerText = "X";
+                    const previewDiv = document.createElement('div');
+                    previewDiv.className = 'image-preview';
 
-                btn.onclick = () => {
-                    uploadedImages = uploadedImages.filter(f => f !== file);
-                    previewDiv.remove();
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+
+                    const btn = document.createElement('button');
+                    btn.type = "button";
+                    btn.textContent = "X";
+
+                    btn.onclick = function () {
+                        uploadedImages = uploadedImages.filter(f => f !== file);
+                        previewDiv.remove();
+                    };
+
+                    previewDiv.appendChild(img);
+                    previewDiv.appendChild(btn);
+
+                    previewContainer.appendChild(previewDiv);
+                    uploadedImages.push(file);
                 };
 
-                previewDiv.appendChild(img);
-                previewDiv.appendChild(btn);
-                previewContainer.appendChild(previewDiv);
-
-                uploadedImages.push(file);
+                reader.readAsDataURL(file);
             });
 
             event.target.value = '';
@@ -230,58 +112,122 @@ localStorage.setItem('ads', JSON.stringify(ads));
     }
 
     // -----------------------------
-    // CATEGORY CHANGE
+    // SAVE AD
     // -----------------------------
-    const categorySelect = document.getElementById('ad-category');
 
-    if (categorySelect) {
-        categorySelect.addEventListener('change', function () {
-            showCarFields(this.value);
-            hideConditionIfNeeded(this.value);
+    function saveAd(data) {
+        const ads = JSON.parse(localStorage.getItem('ads') || "[]");
+
+        ads.push(data);
+
+        localStorage.setItem('ads', JSON.stringify(ads));
+
+        alert("Ad posted successfully!");
+
+        window.location.href = "myads.html";
+    }
+
+    function postAd(e) {
+        e.preventDefault();
+
+        const user = JSON.parse(localStorage.getItem("loggedInUser") || "null");
+
+        if (!user) {
+            alert("Please login first!");
+            return;
+        }
+
+        const title = document.getElementById('ad-title').value.trim();
+        const description = document.getElementById('ad-description').value.trim();
+        const price = document.getElementById('ad-price').value.trim();
+        const location = document.getElementById('ad-location').value.trim();
+        const category = categorySelect.value;
+
+        if (!title || !price || !category) {
+            alert("Please fill required fields");
+            return;
+        }
+
+        const images = [];
+
+        const promises = uploadedImages.map(file => {
+            return new Promise(resolve => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.readAsDataURL(file);
+            });
+        });
+
+        Promise.all(promises).then(results => {
+
+            const newAd = {
+                id: Date.now().toString(),
+                title,
+                description,
+                price,
+                location,
+                category,
+                images: results,
+                userEmail: user.email,
+                date: new Date().toLocaleString(),
+                featured: paypalPaid ? "featured" : "normal"
+            };
+
+            saveAd(newAd);
         });
     }
 
-    // -----------------------------
-    // PAYPAL
-    // -----------------------------
-  const paypalContainer = document.getElementById('paypal-button-container');
-
-document.querySelectorAll('input[name="featured"]').forEach(radio => {
-    radio.addEventListener("change", function () {
-        if (!paypalContainer) return;
-
-        if (this.value !== "none") {
-            paypalContainer.style.display = "block";
-
-            paypalContainer.innerHTML = `
-                <div id="paypal-container-J2JFQFB2TYJC8"></div>
-            `;
-
-            if (!paypalContainer.dataset.loaded && typeof paypal !== "undefined") {
-                paypalContainer.dataset.loaded = "true";
-
-                paypal.HostedButtons({
-                    hostedButtonId: "J2JFQFB2TYJC8"
-                }).render("#paypal-container-J2JFQFB2TYJC8");
-
-                // Auto mark payment success after return
-                paypalPaid = true;
-            }
-
-        } else {
-            paypalContainer.style.display = "none";
-            paypalContainer.innerHTML = "";
-            paypalContainer.dataset.loaded = "";
-            paypalPaid = false;
-        }
-    });
-});
-    // -----------------------------
-    // SUBMIT FORM
-    // -----------------------------
-    const postForm = document.getElementById('post-ad-form');
-    if (postForm) {
-        postForm.addEventListener('submit', postAd);
+    if (form) {
+        form.addEventListener('submit', postAd);
     }
+
+    // -----------------------------
+    // PAYPAL (SAFE INIT)
+    // -----------------------------
+
+    function initPayPal() {
+        if (!paypalContainer) return;
+        if (typeof paypal === "undefined") return;
+
+        try {
+            document.querySelectorAll('input[name="featured"]').forEach(radio => {
+
+                radio.addEventListener("change", function () {
+
+                    if (this.value !== "none") {
+                        paypalContainer.style.display = "block";
+
+                        paypalContainer.innerHTML = `
+                            <a href="https://www.paypal.com/ncp/payment/J2JFQFB2TYJC8"
+                               target="_blank"
+                               style="display:block;padding:12px;background:#ffc439;text-align:center;font-weight:bold;border-radius:8px;">
+                               Pay Featured Ad
+                            </a>
+
+                            <button type="button" id="confirmPay"
+                                style="width:100%;margin-top:10px;padding:10px;background:#28a745;color:white;border:none;">
+                                I Have Paid
+                            </button>
+                        `;
+
+                        document.getElementById("confirmPay").onclick = function () {
+                            paypalPaid = true;
+                            alert("Payment confirmed!");
+                        };
+
+                    } else {
+                        paypalContainer.style.display = "none";
+                        paypalContainer.innerHTML = "";
+                        paypalPaid = false;
+                    }
+                });
+            });
+
+        } catch (e) {
+            console.error("PayPal error:", e);
+        }
+    }
+
+    window.addEventListener("load", initPayPal);
 
 });
