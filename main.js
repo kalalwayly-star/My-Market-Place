@@ -239,35 +239,83 @@ function goToAdDetails(adId) {
 // ------------------------------
 // SEARCH FILTERS
 // ------------------------------
+// ADVANCED LOCATION SEARCH:
+// 1. Show exact city matches first
+// 2. If none found, show closest matching cities
+// 3. Results ranked by similarity
 
 function applyFilters() {
-    const searchText = document.getElementById('searchInput')?.value.toLowerCase() || '';
-    const locationText = document.getElementById('locationInput')?.value.toLowerCase() || '';
+    const searchText = document.getElementById("searchInput")?.value.toLowerCase().trim() || "";
+    const userLocation = document.getElementById("locationInput")?.value.toLowerCase().trim() || "";
 
-    const ads = getAdsFromLocalStorage();
+    let ads = getAdsFromLocalStorage();
 
-    const filteredAds = ads.filter(ad => {
-        return (
-            (ad.title?.toLowerCase().includes(searchText) ||
-             ad.description?.toLowerCase().includes(searchText)) &&
-            (ad.location?.toLowerCase().includes(locationText) || !locationText)
-        );
+    // First: Filter by keyword
+    let keywordFiltered = ads.filter(ad =>
+        ad.title?.toLowerCase().includes(searchText) ||
+        ad.description?.toLowerCase().includes(searchText) ||
+        ad.category?.toLowerCase().includes(searchText)
+    );
+
+    // Exact city match first
+    let exactCityMatches = keywordFiltered.filter(ad =>
+        ad.location && ad.location.toLowerCase() === userLocation
+    );
+
+    // If exact matches found
+    if (exactCityMatches.length > 0) {
+        displayAllAds(exactCityMatches);
+        toggleNoItemsMessage(false);
+        return;
+    }
+
+    // If no exact city, find closest matching cities
+    let nearbyMatches = keywordFiltered
+        .filter(ad => ad.location)
+        .map(ad => {
+            return {
+                ...ad,
+                similarity: calculateLocationSimilarity(userLocation, ad.location.toLowerCase())
+            };
+        })
+        .filter(ad => ad.similarity > 0)
+        .sort((a, b) => b.similarity - a.similarity);
+
+    if (nearbyMatches.length > 0) {
+        displayAllAds(nearbyMatches);
+        toggleNoItemsMessage(false);
+        return;
+    }
+
+    // No results
+    displayAllAds([]);
+    toggleNoItemsMessage(true);
+}
+
+// Simple similarity scoring
+function calculateLocationSimilarity(userCity, adCity) {
+    if (!userCity || !adCity) return 0;
+
+    if (adCity.includes(userCity)) return 100;
+    if (userCity.includes(adCity)) return 90;
+
+    let score = 0;
+    const userWords = userCity.split(" ");
+    userWords.forEach(word => {
+        if (adCity.includes(word)) score += 20;
     });
 
-    displayAllAds(filteredAds);
+    return score;
 }
 
-function resetFilters() {
-    document.getElementById('searchInput').value = '';
-    document.getElementById('locationInput').value = '';
-    displayAllAds();
+// Show/hide no items
+function toggleNoItemsMessage(show) {
+    const noItemsMessage = document.getElementById("no-items-message");
+    if (noItemsMessage) {
+        noItemsMessage.style.display = show ? "block" : "none";
+    }
 }
 
-function filterByCategory(category) {
-    const ads = getAdsFromLocalStorage();
-    const filteredAds = ads.filter(ad => ad.category === category);
-    displayAllAds(filteredAds);
-}
 
 // ------------------------------
 // PAGE LOAD
