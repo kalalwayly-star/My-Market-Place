@@ -63,47 +63,68 @@ function displayAllAds(filteredAds = null) {
     }
 
     ads.forEach(ad => {
-        const adDiv = document.createElement('div');
-        adDiv.className = 'ad-card';
-
         const previewImage =
             ad.images && ad.images.length > 0
                 ? ad.images[0]
                 : ad.image
                 ? ad.image
-                : 'https://via.placeholder.com/400x300?text=No+Image';
+                : 'https://via.placeholder.com/400?text=No+Image';
+
+        const adDiv = document.createElement('div');
+        adDiv.className = 'ad-card';
 
         adDiv.innerHTML = `
-<img src="${previewImage}" 
-     alt="${ad.title}" 
-     style="width:75%; height:120px; object-fit:cover; border-radius:8px; display:block;">
-            <div class="ad-card-content">
-                <h4 class="ad-title">${ad.title}</h4>
-                <p class="ad-description">${ad.description || ''}</p>
-                <p class="ad-price"><b>Price: $${ad.price}</b></p>
-                <p class="ad-location">📍 ${ad.location || 'Unknown'}</p>
+            <div style="
+                display:flex;
+                gap:15px;
+                align-items:flex-start;
+                padding:15px;
+            ">
+                
+                <!-- Square Image -->
+                <div style="
+                    min-width:180px;
+                    width:180px;
+                    height:180px;
+                    overflow:hidden;
+                    border-radius:8px;
+                    flex-shrink:0;
+                    background:#f4f4f4;
+                ">
+                    <img src="${previewImage}" 
+                         alt="${ad.title}" 
+                         style="
+                            width:100%;
+                            height:100%;
+                            object-fit:cover;
+                            display:block;
+                         ">
+                </div>
 
-                <button class="view-details-btn" type="button">
-                    View Details
-                </button>
+                <!-- Right Side Content -->
+                <div style="flex:1;">
+                    <h4 style="margin-top:0; cursor:pointer;">${ad.title}</h4>
+                    <p>${ad.description || ''}</p>
+                    <p><b>Price: $${ad.price}</b></p>
+                    <p>📍 ${ad.location || 'Unknown'}</p>
+
+                    <button class="view-details-btn" type="button">
+                        View Details
+                    </button>
+                </div>
             </div>
         `;
 
-        // Entire card clickable except buttons
         adDiv.addEventListener('click', function (e) {
             if (!e.target.closest('button')) {
                 goToAdDetails(ad.id);
             }
         });
 
-        // View details button
-        const detailsBtn = adDiv.querySelector('.view-details-btn');
-        if (detailsBtn) {
-            detailsBtn.addEventListener('click', function (e) {
-                e.stopPropagation();
-                goToAdDetails(ad.id);
-            });
-        }
+        adDiv.querySelector('.view-details-btn').addEventListener('click', function (e) {
+            e.stopPropagation();
+            goToAdDetails(ad.id);
+        });
 
         listingsContainer.appendChild(adDiv);
     });
@@ -145,50 +166,55 @@ function displayUserAds() {
                 ? ad.images[0]
                 : ad.image
                 ? ad.image
-                : 'https://via.placeholder.com/400x300?text=No+Image';
+                : 'https://via.placeholder.com/400?text=No+Image';
 
         const adDiv = document.createElement('div');
         adDiv.className = 'ad-card';
 
         adDiv.innerHTML = `
-            <img src="${previewImage}" 
-     alt="${ad.title}" 
-     style="width:100%; height:180px; object-fit:cover; border-radius:8px; display:block;">
+            <div style="
+                display:flex;
+                gap:15px;
+                align-items:flex-start;
+                padding:15px;
+            ">
+                
+                <!-- Square Image -->
+                <div style="
+                    min-width:180px;
+                    width:180px;
+                    height:180px;
+                    overflow:hidden;
+                    border-radius:8px;
+                    flex-shrink:0;
+                    background:#f4f4f4;
+                ">
+                    <img src="${previewImage}" 
+                         alt="${ad.title}" 
+                         style="
+                            width:100%;
+                            height:100%;
+                            object-fit:cover;
+                            display:block;
+                         ">
+                </div>
 
-            <div class="ad-card-content">
-                <h4 class="ad-title">${ad.title}</h4>
-                <p class="ad-description">${ad.description || ''}</p>
-                <p class="ad-price"><b>Price: $${ad.price}</b></p>
+                <!-- Right Side Content -->
+                <div style="flex:1;">
+                    <h4 style="margin-top:0;">${ad.title}</h4>
+                    <p>${ad.description || ''}</p>
+                    <p><b>Price: $${ad.price}</b></p>
 
-                <div class="ad-actions">
-                    <button class="view-details-btn" type="button">
+                    <button type="button" onclick="goToAdDetails('${ad.id}')">
                         View Details
                     </button>
 
-                    <button class="delete-ad-btn" type="button">
+                    <button type="button" onclick="deleteAd('${ad.id}')">
                         Delete
                     </button>
                 </div>
             </div>
         `;
-
-        // View details
-        const detailsBtn = adDiv.querySelector('.view-details-btn');
-        if (detailsBtn) {
-            detailsBtn.addEventListener('click', function (e) {
-                e.stopPropagation();
-                goToAdDetails(ad.id);
-            });
-        }
-
-        // Delete ad
-        const deleteBtn = adDiv.querySelector('.delete-ad-btn');
-        if (deleteBtn) {
-            deleteBtn.addEventListener('click', function (e) {
-                e.stopPropagation();
-                deleteAd(ad.id);
-            });
-        }
 
         adsContainer.appendChild(adDiv);
     });
