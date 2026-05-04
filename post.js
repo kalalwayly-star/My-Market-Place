@@ -185,37 +185,69 @@ document.addEventListener('DOMContentLoaded', function () {
     // PAYPAL (SAFE INIT)
     // -----------------------------
 
- const paypalContainer = document.getElementById('paypal-button-container');
+ // --- FEATURED AD + PAYPAL DISPLAY (FIXED & RELIABLE) ---
+document.addEventListener("DOMContentLoaded", function () {
 
-document.querySelectorAll('input[name="featured"]').forEach(radio => {
-    radio.addEventListener("change", function () {
+    const paypalContainer = document.getElementById("paypal-button-container");
+
+    function togglePayPal(show) {
         if (!paypalContainer) return;
 
-        if (this.value !== "none") {
+        if (show) {
             paypalContainer.style.display = "block";
 
             paypalContainer.innerHTML = `
-                <div id="paypal-container-J2JFQFB2TYJC8"></div>
+                <div style="
+                    background:#fff;
+                    border:1px solid #ddd;
+                    padding:15px;
+                    border-radius:8px;
+                    margin-top:15px;
+                    text-align:center;
+                ">
+                    <p style="font-weight:bold; margin-bottom:10px;">
+                        Boost your ad (Featured Listing)
+                    </p>
+
+                    <p style="font-size:0.9em; color:#555;">
+                        PayPal accepts Credit & Debit Cards securely
+                    </p>
+
+                    <a href="https://www.paypal.com/ncp/payment/J2JFQFB2TYJC8"
+                       target="_blank"
+                       style="
+                            display:block;
+                            background:#ffc439;
+                            color:#111;
+                            padding:14px;
+                            border-radius:8px;
+                            font-weight:bold;
+                            text-decoration:none;
+                            margin-top:10px;
+                       ">
+                       Pay with PayPal
+                    </a>
+                </div>
             `;
-
-            if (!paypalContainer.dataset.loaded && typeof paypal !== "undefined") {
-                paypalContainer.dataset.loaded = "true";
-
-                paypal.HostedButtons({
-                    hostedButtonId: "J2JFQFB2TYJC8"
-                }).render("#paypal-container-J2JFQFB2TYJC8");
-
-                // Auto mark payment success after return
-                paypalPaid = true;
-            }
-
         } else {
             paypalContainer.style.display = "none";
             paypalContainer.innerHTML = "";
-            paypalContainer.dataset.loaded = "";
-            paypalPaid = false;
         }
+    }
+
+    const featuredRadios = document.querySelectorAll('input[name="featured"]');
+
+    featuredRadios.forEach(radio => {
+        radio.addEventListener("change", function () {
+            togglePayPal(this.value !== "none");
+        });
     });
+
+    // OPTIONAL: set initial state on load
+    const selected = document.querySelector('input[name="featured"]:checked');
+    if (selected) {
+        togglePayPal(selected.value !== "none");
+    }
 });
     // -----------------------------
     // SUBMIT FORM
