@@ -16,10 +16,6 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.08);
         }
 
-        .message-card h4 {
-            margin: 0 0 10px;
-        }
-
         .message-actions {
             display: flex;
             gap: 15px;
@@ -34,13 +30,8 @@
             font-weight: bold;
         }
 
-        .delete-btn {
-            color: #d9534f;
-        }
-
-        .reply-btn {
-            color: #007bff;
-        }
+        .delete-btn { color: #d9534f; }
+        .reply-btn { color: #007bff; }
 
         .reply-box {
             margin-top: 10px;
@@ -82,8 +73,8 @@
 <header class="header">
     <h1 data-i18n="messages_title">My Messages</h1>
     <div class="nav">
-        <a href="index.html" class="btn">Home</a>
-        <a href="myads.html" class="btn">My Ads</a>
+        <a href="index.html" class="btn" data-i18n="home">Home</a>
+        <a href="myads.html" class="btn" data-i18n="myAds">My Ads</a>
     </div>
 </header>
 
@@ -94,6 +85,7 @@
         <input
             type="text"
             id="msgSearch"
+            data-i18n-placeholder="search_messages"
             placeholder="Search Messages"
             style="width:100%; padding:12px; border-radius:8px; border:1px solid #ccc;"
         >
@@ -101,8 +93,8 @@
 
     <!-- Tabs -->
     <div class="message-tabs">
-        <button id="btnReceived" class="btn active">Received</button>
-        <button id="btnSent" class="btn">Sent</button>
+        <button id="btnReceived" class="btn active" data-i18n="received">Received</button>
+        <button id="btnSent" class="btn" data-i18n="sent">Sent</button>
     </div>
 
     <!-- Messages -->
@@ -114,24 +106,21 @@
 const STORAGE_KEY = "marketplace_messages";
 let currentTab = "received";
 
-// Get logged-in user
 function getCurrentUser() {
     return JSON.parse(localStorage.getItem("loggedInUser"));
 }
 
-// Load messages
 function renderMessages(searchText = "") {
     const user = getCurrentUser();
     const container = document.getElementById("messageList");
 
     if (!user) {
-        container.innerHTML = "<p>Please log in first.</p>";
+        container.innerHTML = '<p data-i18n="login_first">Please log in first.</p>';
         return;
     }
 
     let messages = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
 
-    // Filter by tab
     messages = messages.filter(msg => {
         if (currentTab === "received") {
             return msg.receiverEmail === user.email && !msg.deletedByReceiver;
@@ -140,7 +129,6 @@ function renderMessages(searchText = "") {
         }
     });
 
-    // Search
     if (searchText.trim()) {
         const query = searchText.toLowerCase();
         messages = messages.filter(msg =>
@@ -150,7 +138,7 @@ function renderMessages(searchText = "") {
     }
 
     if (messages.length === 0) {
-        container.innerHTML = "<p>No messages found.</p>";
+        container.innerHTML = '<p data-i18n="no_messages">No messages found.</p>';
         return;
     }
 
@@ -173,26 +161,34 @@ function renderMessages(searchText = "") {
             <small>${msg.date || ""}</small>
 
             <div class="message-actions">
-                <button class="delete-btn" onclick="deleteMessage('${msg.id}')">Delete</button>
+                <button class="delete-btn" onclick="deleteMessage('${msg.id}')"
+                    data-i18n="delete_message">Delete</button>
 
                 ${currentTab === "received" ? `
-                    <button class="reply-btn" onclick="toggleReply('${msg.id}')">Reply</button>
+                    <button class="reply-btn" onclick="toggleReply('${msg.id}')"
+                        data-i18n="reply_message">Reply</button>
                 ` : ""}
             </div>
 
             ${currentTab === "received" ? `
                 <div class="reply-box" id="reply-box-${msg.id}">
-                    <textarea id="reply-text-${msg.id}" placeholder="Type your reply..."></textarea>
-                    <button onclick="sendReply('${msg.id}')">Send Reply</button>
+                    <textarea id="reply-text-${msg.id}"
+                        data-i18n-placeholder="type_answer"
+                        placeholder="Type your reply..."></textarea>
+                    <button onclick="sendReply('${msg.id}')"
+                        data-i18n="send_reply">Send Reply</button>
                 </div>
             ` : ""}
         `;
 
         container.appendChild(card);
     });
+
+    if (typeof loadLanguage === "function") {
+        loadLanguage(localStorage.getItem("language") || "en");
+    }
 }
 
-// Delete message
 function deleteMessage(messageId) {
     if (!confirm("Delete this message?")) return;
 
@@ -201,33 +197,26 @@ function deleteMessage(messageId) {
 
     messages = messages.map(msg => {
         if (String(msg.id) === String(messageId)) {
-            if (msg.receiverEmail === user.email) {
-                msg.deletedByReceiver = true;
-            }
-
-            if (msg.senderEmail === user.email) {
-                msg.deletedBySender = true;
-            }
+            if (msg.receiverEmail === user.email) msg.deletedByReceiver = true;
+            if (msg.senderEmail === user.email) msg.deletedBySender = true;
         }
         return msg;
     });
 
-    // Remove fully deleted
-    messages = messages.filter(msg => !(msg.deletedByReceiver && msg.deletedBySender));
+    messages = messages.filter(
+        msg => !(msg.deletedByReceiver && msg.deletedBySender)
+    );
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
     renderMessages(document.getElementById("msgSearch").value);
 }
 
-// Toggle reply box
 function toggleReply(messageId) {
     const box = document.getElementById(`reply-box-${messageId}`);
     if (!box) return;
-
     box.style.display = box.style.display === "block" ? "none" : "block";
 }
 
-// Send reply
 function sendReply(originalMessageId) {
     const user = getCurrentUser();
     const textArea = document.getElementById(`reply-text-${originalMessageId}`);
@@ -238,8 +227,10 @@ function sendReply(originalMessageId) {
         return;
     }
 
-    const messages = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-    const original = messages.find(msg => String(msg.id) === String(originalMessageId));
+    let messages = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    const original = messages.find(msg =>
+        String(msg.id) === String(originalMessageId)
+    );
 
     if (!original) return;
 
@@ -259,24 +250,29 @@ function sendReply(originalMessageId) {
     renderMessages();
 }
 
-// Change tab
 function changeTab(tab) {
     currentTab = tab;
 
-    document.getElementById("btnReceived").classList.toggle("active", tab === "received");
-    document.getElementById("btnSent").classList.toggle("active", tab === "sent");
+    document.getElementById("btnReceived")
+        .classList.toggle("active", tab === "received");
+
+    document.getElementById("btnSent")
+        .classList.toggle("active", tab === "sent");
 
     renderMessages(document.getElementById("msgSearch").value);
 }
 
-// Event listeners
 document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById("btnReceived").addEventListener("click", () => changeTab("received"));
-    document.getElementById("btnSent").addEventListener("click", () => changeTab("sent"));
+    document.getElementById("btnReceived")
+        .addEventListener("click", () => changeTab("received"));
 
-    document.getElementById("msgSearch").addEventListener("input", function() {
-        renderMessages(this.value);
-    });
+    document.getElementById("btnSent")
+        .addEventListener("click", () => changeTab("sent"));
+
+    document.getElementById("msgSearch")
+        .addEventListener("input", function() {
+            renderMessages(this.value);
+        });
 
     renderMessages();
 });
@@ -288,4 +284,3 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </body>
 </html>
-
