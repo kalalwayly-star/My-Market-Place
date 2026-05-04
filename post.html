@@ -164,11 +164,16 @@
     </div>
 
     <!-- IMAGES -->
-    <div class="form-field">
-        <label for="ad-image">Upload Images (Max 6)</label>
-        <input type="file" id="ad-image" multiple accept="image/*">
-        <div id="image-previews" class="image-previews"></div>
-    </div>
+   <div class="form-field">
+    <label for="ad-image">Upload Images</label>
+
+    <input type="file" id="ad-image" multiple accept="image/*">
+
+    <!-- Dynamic limit message -->
+    <small id="image-limit-hint">You can upload up to 3 images</small>
+
+    <div id="image-previews" class="image-previews"></div>
+</div>
 
     <!-- TITLE -->
     <div class="form-field">
