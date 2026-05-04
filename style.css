@@ -821,6 +821,27 @@ body {
 html[dir="rtl"] .nav {
     justify-content: flex-end;
 }
+.lang-text {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    align-items: center;
 
+    /* TOP LEFT POSITION */
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+.lang-text span {
+    cursor: pointer;
+    font-size: 14px;
+    color: #000;
+    text-decoration: none;
+}
+
+.lang-text span:hover {
+    text-decoration: underline;
+}
 
 
