@@ -151,6 +151,8 @@ document.addEventListener('DOMContentLoaded', function () {
         };
 
         const ads = JSON.parse(localStorage.getItem('ads') || '[]');
+ads.push(newAd);
+localStorage.setItem('ads', JSON.stringify(ads));
 
         // storage safety check
         const size = new Blob([JSON.stringify(ads)]).size;
