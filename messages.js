@@ -1,114 +1,209 @@
-// This function will be used to load messages for the logged-in user and render them
+// ============================================
+// MARKETPLACE MESSAGES SYSTEM (FIREBASE)
+// ============================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    auth.onAuthStateChanged(user => {
+        if (!user) {
+            alert("Please log in first.");
+            window.location.href = "login.html";
+            return;
+        }
+
+        // Default tab
+        changeTab('received');
+    });
+});
+
+
+// ============================================
+// LOAD RECEIVED MESSAGES
+// ============================================
 function loadMessages(userId) {
-    const messagesRef = ref(rtdb, 'marketplace_messages/' + userId);
+    const messagesContainer = document.getElementById('messagesContainer');
+    if (!messagesContainer) return;
+
+    const messagesRef = ref(rtdb, `marketplace_messages/received/${userId}`);
+
     onValue(messagesRef, (snapshot) => {
         const messages = snapshot.val();
-        const messagesContainer = document.getElementById('messagesContainer');
-        if (messages) {
-            messagesContainer.innerHTML = "";  // Clear existing messages
-            Object.keys(messages).forEach(msgId => {
-                const message = messages[msgId];
-                renderMessage(message, msgId);  // Render each message
-            });
-        } else {
+        messagesContainer.innerHTML = "";
+
+        if (!messages) {
             messagesContainer.innerHTML = "<p>No messages found.</p>";
+            return;
         }
+
+        Object.keys(messages)
+            .sort((a, b) => new Date(messages[b].timestamp) - new Date(messages[a].timestamp))
+            .forEach(msgId => {
+                renderMessage(messages[msgId], msgId, 'received');
+            });
     });
 }
 
-// Function to render a single message in the DOM
-function renderMessage(message, msgId) {
+
+// ============================================
+// LOAD SENT MESSAGES
+// ============================================
+function loadSentMessages(userId) {
     const messagesContainer = document.getElementById('messagesContainer');
-    const messageElement = document.createElement('div');
-    messageElement.classList.add('message');
-    messageElement.innerHTML = `
-        <p>${message.text}</p>
-        <small>Sent at ${new Date(message.timestamp).toLocaleString()}</small>
-        <button onclick="deleteMessage('${msgId}')">Delete</button>
-    `;
-    messagesContainer.appendChild(messageElement);  // Append message to container
+    if (!messagesContainer) return;
+
+    const messagesRef = ref(rtdb, `marketplace_messages/sent/${userId}`);
+
+    onValue(messagesRef, (snapshot) => {
+        const messages = snapshot.val();
+        messagesContainer.innerHTML = "";
+
+        if (!messages) {
+            messagesContainer.innerHTML = "<p>No sent messages found.</p>";
+            return;
+        }
+
+        Object.keys(messages)
+            .sort((a, b) => new Date(messages[b].timestamp) - new Date(messages[a].timestamp))
+            .forEach(msgId => {
+                renderMessage(messages[msgId], msgId, 'sent');
+            });
+    });
 }
 
-// Function to delete a message from Realtime Database
-window.deleteMessage = function(msgId) {
-    if (confirm("Are you sure you want to delete this message?")) {
-        const msgRef = ref(rtdb, `marketplace_messages/${msgId}`);
-        remove(msgRef).then(() => {
+
+// ============================================
+// RENDER MESSAGE
+// ============================================
+function renderMessage(message, msgId, type) {
+    const messagesContainer = document.getElementById('messagesContainer');
+    if (!messagesContainer) return;
+
+    const messageElement = document.createElement('div');
+    messageElement.classList.add('message-card');
+
+    messageElement.innerHTML = `
+        <div class="message-header">
+            <strong>${type === 'received' ? 'From' : 'To'}:</strong>
+            <span>${type === 'received' ? message.sender : message.receiver}</span>
+        </div>
+
+        <div class="message-ad">
+            <strong>Ad:</strong> ${message.adTitle || 'Unknown Ad'}
+        </div>
+
+        <div class="message-body">
+            <p>${message.text}</p>
+        </div>
+
+        <div class="message-footer">
+            <small>${new Date(message.timestamp).toLocaleString()}</small>
+            <button onclick="deleteMessage('${msgId}', '${type}')">
+                Delete
+            </button>
+        </div>
+    `;
+
+    messagesContainer.appendChild(messageElement);
+}
+
+
+// ============================================
+// DELETE MESSAGE
+// ============================================
+window.deleteMessage = function(msgId, type) {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    if (!confirm("Are you sure you want to delete this message?")) return;
+
+    const msgRef = ref(
+        rtdb,
+        `marketplace_messages/${type}/${user.uid}/${msgId}`
+    );
+
+    remove(msgRef)
+        .then(() => {
             alert("Message deleted successfully.");
-        }).catch(err => {
-            console.error("Error deleting message:", err);
+        })
+        .catch(err => {
+            console.error("Delete failed:", err);
             alert("Failed to delete message.");
         });
-    }
 };
 
-// Function to send a message to the seller
-window.sendMessage = function(adId, messageText, senderEmail) {
+
+// ============================================
+// SEND MESSAGE
+// ============================================
+window.sendMessage = function(ad, messageText, senderEmail) {
     if (!messageText.trim()) {
         alert("Message cannot be empty.");
         return;
     }
 
+    if (!ad || !ad.userId) {
+        alert("Seller information missing.");
+        return;
+    }
+
+    const senderUser = auth.currentUser;
+    if (!senderUser) {
+        alert("Please log in first.");
+        return;
+    }
+
     const messageData = {
         sender: senderEmail,
-        receiver: adId.userEmail,  // Assuming adId has the receiver's email
+        receiver: ad.userEmail || ad.userId,
+        adId: ad.id,
+        adTitle: ad.title,
         text: messageText,
-        timestamp: new Date().toISOString()  // Get timestamp of the message
+        timestamp: new Date().toISOString()
     };
 
-    const messagesRef = ref(rtdb, `messages/${adId}`);
-    push(messagesRef, messageData)  // Push the message to Firebase Realtime Database
+    // Push to seller inbox
+    const sellerInboxRef = ref(
+        rtdb,
+        `marketplace_messages/received/${ad.userId}`
+    );
+
+    // Push to sender sent folder
+    const senderSentRef = ref(
+        rtdb,
+        `marketplace_messages/sent/${senderUser.uid}`
+    );
+
+    Promise.all([
+        push(sellerInboxRef, messageData),
+        push(senderSentRef, messageData)
+    ])
         .then(() => {
             alert("Message sent successfully!");
-            loadMessages(adId);  // Reload messages after sending
+            document.getElementById("messageText").value = "";
         })
         .catch(err => {
-            console.error("Error sending message:", err);
+            console.error("Send failed:", err);
             alert("Failed to send message.");
         });
 };
 
-// Function to switch between tabs (Received/Sent messages)
+
+// ============================================
+// TAB SWITCHING
+// ============================================
 window.changeTab = function(tab) {
+    const user = auth.currentUser;
+    if (!user) return;
+
     const tabReceived = document.getElementById('btnReceived');
     const tabSent = document.getElementById('btnSent');
-    const currentTab = tab === 'received' ? 'sent' : 'received';
 
     if (tab === 'received') {
-        tabReceived.classList.add('active');
-        tabSent.classList.remove('active');
-        // Render received messages
-        loadMessages(auth.currentUser.uid);
+        tabReceived?.classList.add('active');
+        tabSent?.classList.remove('active');
+        loadMessages(user.uid);
     } else {
-        tabSent.classList.add('active');
-        tabReceived.classList.remove('active');
-        // Render sent messages
-        loadSentMessages(auth.currentUser.uid);
+        tabSent?.classList.add('active');
+        tabReceived?.classList.remove('active');
+        loadSentMessages(user.uid);
     }
 };
-
-// Load sent messages for the logged-in user
-function loadSentMessages(userId) {
-    const messagesRef = ref(rtdb, 'marketplace_messages/sent/' + userId);
-    onValue(messagesRef, (snapshot) => {
-        const messages = snapshot.val();
-        const messagesContainer = document.getElementById('messagesContainer');
-        if (messages) {
-            messagesContainer.innerHTML = "";  // Clear existing messages
-            Object.keys(messages).forEach(msgId => {
-                const message = messages[msgId];
-                renderMessage(message, msgId);  // Render each message
-            });
-        } else {
-            messagesContainer.innerHTML = "<p>No sent messages found.</p>";
-        }
-    });
-}
-
-// Initialize messages on page load
-document.addEventListener('DOMContentLoaded', () => {
-    const user = auth.currentUser;
-    if (user) {
-        loadMessages(user.uid);  // Load messages for the logged-in user
-    }
-});
