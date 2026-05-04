@@ -242,30 +242,50 @@ localStorage.setItem('ads', JSON.stringify(ads));
     const paypalContainer = document.getElementById('paypal-button-container');
 
     document.querySelectorAll('input[name="featured"]').forEach(radio => {
-        radio.addEventListener('change', function () {
-            if (paypalContainer) {
-                paypalContainer.style.display = (this.value !== 'none') ? 'block' : 'none';
-            }
-        });
-    });
+    radio.addEventListener("change", function () {
+        if (!paypalContainer) return;
 
-    if (typeof paypal !== 'undefined' && paypalContainer) {
-        paypal.Buttons({
-            createOrder: (data, actions) => {
-                return actions.order.create({
-                    purchase_units: [{
-                        amount: { value: '5.00' }
-                    }]
-                });
-            },
-            onApprove: (data, actions) => {
-                return actions.order.capture().then(() => {
-                    paypalPaid = true;
-                    alert("Payment successful!");
-                });
+        if (this.value !== "none") {
+            paypalContainer.style.display = "block";
+
+            // Prevent duplicate PayPal buttons
+            if (!paypalContainer.dataset.loaded) {
+                paypalContainer.dataset.loaded = "true";
+
+                if (typeof paypal !== "undefined") {
+                    paypal.Buttons({
+                        createOrder: function(data, actions) {
+                            return actions.order.create({
+                                purchase_units: [{
+                                    amount: {
+                                        value: '4.99'
+                                    },
+                                    description: 'Featured Ad Upgrade'
+                                }]
+                            });
+                        },
+
+                        onApprove: function(data, actions) {
+                            return actions.order.capture().then(function(details) {
+                                paypalPaid = true;
+                                alert('Payment completed successfully by ' + details.payer.name.given_name);
+                            });
+                        },
+
+                        onError: function(err) {
+                            console.error(err);
+                            alert('PayPal payment failed.');
+                        }
+                    }).render('#paypal-button-container');
+                }
             }
-        }).render('#paypal-button-container');
-    }
+
+        } else {
+            paypalContainer.style.display = "none";
+            paypalPaid = false;
+        }
+    });
+});
 
     // -----------------------------
     // SUBMIT FORM
