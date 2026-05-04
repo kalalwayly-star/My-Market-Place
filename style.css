@@ -787,3 +787,40 @@ label[for="ad-image"] {
     text-align: center;
     padding: 8px 15px;
 }
+body {
+    background: #fff;
+    color: #111;
+    font-family: Arial;
+}
+
+/* clean top navigation */
+.nav {
+    display: flex;
+    gap: 15px;
+    padding: 15px;
+    border-bottom: 1px solid #000;
+    background: white;
+    align-items: center;
+}
+
+/* buttons minimal style */
+.nav a, .nav button {
+    background: none;
+    border: none;
+    color: black;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* hover effect */
+.nav a:hover, .nav button:hover {
+    text-decoration: underline;
+}
+
+/* RTL support improvement */
+html[dir="rtl"] .nav {
+    justify-content: flex-end;
+}
+
+
+
