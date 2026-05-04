@@ -727,7 +727,19 @@ label[for="ad-image"] {
     overflow: hidden;
     display: inline-block;
 }
+.ad-image-box {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 8px;
+}
 
+.ad-image-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
 .image-preview img {
     width: 100%;
     height: 100%;
