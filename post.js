@@ -3,45 +3,69 @@ document.addEventListener('DOMContentLoaded', function () {
     let uploadedImages = [];
     let paypalPaid = false;
 
+    const categorySelect = document.getElementById('ad-category');
+
     // -----------------------------
     // CATEGORY RULES
     // -----------------------------
-   function getMaxImages(category) {
-    const highImageCategories = ["Cars", "Cars & Trucks", "Real Estate"];
 
-    if (highImageCategories.includes(category)) {
-        return 6;
+    function getMaxImages(category) {
+        const highImageCategories = ["Cars", "Cars & Trucks", "Real Estate"];
+        return highImageCategories.includes(category) ? 6 : 3;
     }
 
-    return 3;
-}
+    function showCarFields(category) {
+        const carInfo = document.getElementById('car-info');
+        if (!carInfo) return;
 
-function showCarFields(category) {
-    const carInfo = document.getElementById('car-info');
-    if (!carInfo) return;
-
-    const isCarCategory = category === "Cars" || category === "Cars & Trucks";
-
-    carInfo.style.display = isCarCategory ? "block" : "none";
-}
-
-function hideConditionIfNeeded(category) {
-    const condition = document.getElementById('condition-field');
-    if (!condition) return;
-
-    // categories where condition should NOT appear
-    const hideFor = [
-        "Jobs",
-        "Services",
-        "Real Estate",
-        "Business"
-    ];
-
-    if (hideFor.includes(category)) {
-        condition.style.display = "none";
-    } else {
-        condition.style.display = "block";
+        carInfo.style.display =
+            (category === "Cars" || category === "Cars & Trucks")
+                ? "block"
+                : "none";
     }
+
+    function hideConditionIfNeeded(category) {
+        const condition = document.getElementById('condition-field');
+        if (!condition) return;
+
+        const hideFor = ["Jobs", "Services", "Real Estate", "Business"];
+
+        condition.style.display = hideFor.includes(category)
+            ? "none"
+            : "block";
+    }
+
+    function updateImageHint(category) {
+        const hint = document.getElementById("image-limit-hint");
+        if (!hint) return;
+
+        const max = getMaxImages(category);
+        hint.innerText = `You can upload up to ${max} images`;
+    }
+
+    // -----------------------------
+    // CATEGORY CHANGE EVENT
+    // -----------------------------
+
+    if (categorySelect) {
+        categorySelect.addEventListener("change", function () {
+            const category = this.value;
+
+            showCarFields(category);
+            hideConditionIfNeeded(category);
+            updateImageHint(category);
+        });
+    }
+
+});
+
+/* ✅ ADD THIS HERE */
+function updateImageHint(category) {
+    const hint = document.getElementById("image-limit-hint");
+    if (!hint) return;
+
+    const max = getMaxImages(category);
+    hint.innerText = `You can upload up to ${max} images for this category`;
 }
 
     // -----------------------------
