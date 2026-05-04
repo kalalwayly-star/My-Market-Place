@@ -68,8 +68,10 @@ function displayAllAds(filteredAds = null) {
             : 'https://via.placeholder.com/300x200?text=No+Image';
 
         adDiv.innerHTML = `
-            <img src="${previewImage}" alt="${ad.title}" style="width:100%; height:200px; object-fit:cover; border-radius:8px; cursor:pointer;">
-            <h4 style="cursor:pointer;">${ad.title}</h4>
+<img src="${previewImage}" 
+     alt="${ad.title}" 
+     style="width:100%; height:180px; object-fit:cover; border-radius:8px; display:block;">       
+     <h4 style="cursor:pointer;">${ad.title}</h4>
             <p>${ad.description || ''}</p>
             <p><b>Price: $${ad.price}</b></p>
             <p>📍 ${ad.location || 'Unknown'}</p>
@@ -129,8 +131,10 @@ function displayUserAds() {
         const adDiv = document.createElement('div');
         adDiv.className = 'ad-card';
         adDiv.innerHTML = `
-            <img src="${previewImage}" alt="${ad.title}" style="width:100%; max-height:200px; object-fit:cover; border-radius:8px;">
-            <h4>${ad.title}</h4>
+<img src="${previewImage}" 
+     alt="${ad.title}" 
+     style="width:100%; height:180px; object-fit:cover; border-radius:8px; display:block;">  
+     <h4>${ad.title}</h4>
             <p>${ad.description || ''}</p>
             <p><b>Price: $${ad.price}</b></p>
             <button onclick="goToAdDetails('${ad.id}')">View Details</button>
