@@ -9,6 +9,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const previewContainer = document.getElementById('image-previews');
     const paypalContainer = document.getElementById('paypal-button-container');
 
+    function getUserCity() {
+    const user = JSON.parse(localStorage.getItem("loggedInUser"));
+    return (user?.city || "").toLowerCase();
+}
+
     // -----------------------------
     // CATEGORY CONFIG
     // -----------------------------
@@ -56,7 +61,28 @@ document.addEventListener('DOMContentLoaded', function () {
         categorySelect.addEventListener('change', handleCategoryChange);
         handleCategoryChange();
     }
+function sortByLocation(ads, userCity) {
 
+    return ads.sort((a, b) => {
+
+        const aCity = (a.city || "").toLowerCase();
+        const bCity = (b.city || "").toLowerCase();
+
+        // priority:
+        // 2 = same city
+        // 1 = partial match
+        // 0 = other
+
+        const score = (city) => {
+            if (!city) return 0;
+            if (city === userCity) return 2;
+            if (city.includes(userCity) || userCity.includes(city)) return 1;
+            return 0;
+        };
+
+        return score(bCity) - score(aCity);
+    });
+}
     // -----------------------------
     // IMAGE UPLOAD
     // -----------------------------
@@ -164,6 +190,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 description,
                 price,
                 location,
+                city: location.toLowerCase(),
                 category,
                 images: results,
                 userEmail: user.email,
