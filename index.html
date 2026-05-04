@@ -4,7 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-i18n="greeting">Marketplace | Find Anything</title>
-
+<div class="lang-text">
+    <span onclick="setLanguage('en')">English</span>
+    <span onclick="setLanguage('fr')">Français</span>
+    <span onclick="setLanguage('es')">Español</span>
+    <span onclick="setLanguage('ar')">العربية</span>
+</div>
     <link rel="stylesheet" href="style.css">
     <script src="languages.js"></script>
 
@@ -231,14 +236,7 @@
             <button id="logout-btn" onclick="logout()" style="display:none;" data-i18n="logout">Logout</button>
         </div>
 
-        <!-- LANGUAGES -->
-        <div class="lang-buttons">
-            <button onclick="setLanguage('en')">English</button>
-            <button onclick="setLanguage('fr')">Français</button>
-            <button onclick="setLanguage('es')">Español</button>
-            <button onclick="setLanguage('ar')">العربية</button>
-        </div>
-
+     
     </div>
 </div>
 
