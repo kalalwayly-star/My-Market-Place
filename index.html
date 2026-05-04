@@ -377,6 +377,28 @@ window.onload = function() {
         displayAllAds();
     }
 };
+
+ function checkLogin() {
+    const user = localStorage.getItem("loggedInUser");
+    const loginBtn = document.getElementById("loginBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    if (user) {
+        loginBtn.style.display = "none";
+        logoutBtn.style.display = "inline-block";
+    } else {
+        loginBtn.style.display = "inline-block";
+        logoutBtn.style.display = "none";
+    }
+}
+
+document.getElementById("logoutBtn").addEventListener("click", () => {
+    localStorage.removeItem("loggedInUser");
+    checkLogin();
+    window.location.href = "index.html";
+});
+
+window.onload = checkLogin;   
 </script>
 
 <script src="storage.js"></script>
