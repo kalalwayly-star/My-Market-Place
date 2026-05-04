@@ -239,57 +239,60 @@ localStorage.setItem('ads', JSON.stringify(ads));
     // -----------------------------
     // PAYPAL
     // -----------------------------
-    const paypalContainer = document.getElementById('paypal-button-container');
+   const paypalContainer = document.getElementById('paypal-button-container');
 
-   document.querySelectorAll('input[name="featured"]').forEach(radio => {
+document.querySelectorAll('input[name="featured"]').forEach(radio => {
     radio.addEventListener("change", function () {
         if (!paypalContainer) return;
 
         if (this.value !== "none") {
             paypalContainer.style.display = "block";
 
-            paypalContainer.innerHTML = `
-                <a href="https://www.paypal.com/ncp/payment/J2JFQFB2TYJC8" 
-                   target="_blank" 
-                   id="paypal-link-btn"
-                   style="
-                        display:block;
-                        text-align:center;
-                        background:#ffc439;
-                        color:#111;
-                        padding:14px;
-                        border-radius:8px;
-                        font-weight:bold;
-                        text-decoration:none;
-                        margin-top:15px;
-                   ">
-                   Pay Featured Ad Fee with PayPal
-                </a>
+            // Prevent duplicate PayPal button loading
+            if (!paypalContainer.dataset.loaded) {
+                paypalContainer.dataset.loaded = "true";
 
-                <button type="button"
-                    id="confirm-paypal-payment"
-                    style="
-                        width:100%;
-                        margin-top:10px;
-                        padding:12px;
-                        background:#28a745;
-                        color:white;
-                        border:none;
-                        border-radius:8px;
-                        cursor:pointer;
-                    ">
-                    I Have Completed Payment
-                </button>
-            `;
+                // Clear old content
+                paypalContainer.innerHTML = `
+                    <div id="paypal-container-J2JFQFB2TYJC8"></div>
 
-            document.getElementById("confirm-paypal-payment").addEventListener("click", function() {
-                paypalPaid = true;
-                alert("Payment confirmed. You can now post your featured ad.");
-            });
+                    <button 
+                        type="button"
+                        id="confirm-paypal-payment"
+                        style="
+                            width:100%;
+                            margin-top:15px;
+                            padding:12px;
+                            background:#28a745;
+                            color:white;
+                            border:none;
+                            border-radius:8px;
+                            cursor:pointer;
+                            font-size:16px;
+                            font-weight:bold;
+                        ">
+                        I Have Completed Payment
+                    </button>
+                `;
+
+                // Load PayPal Hosted Button
+                if (typeof paypal !== "undefined") {
+                    paypal.HostedButtons({
+                        hostedButtonId: "J2JFQFB2TYJC8"
+                    }).render("#paypal-container-J2JFQFB2TYJC8");
+                }
+
+                // Manual confirmation button
+                document.getElementById("confirm-paypal-payment").addEventListener("click", function () {
+                    paypalPaid = true;
+                    alert("Payment confirmed. You can now post your featured ad.");
+                });
+            }
 
         } else {
             paypalContainer.style.display = "none";
             paypalContainer.innerHTML = "";
+            paypalContainer.dataset.loaded = "";
             paypalPaid = false;
         }
     });
