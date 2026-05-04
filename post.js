@@ -143,8 +143,11 @@ document.addEventListener('DOMContentLoaded', function () {
             userId: user.email,
             userEmail: user.email,
 
-            featured: featuredOption,
-            date: new Date().toLocaleDateString(),
+            featured: featuredOption !== 'none',
+featuredType: featuredOption,
+featuredUntil: featuredOption !== 'none'
+    ? new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString()
+    : null,
 
             // CAR DATA
             car: carFields
@@ -239,7 +242,7 @@ localStorage.setItem('ads', JSON.stringify(ads));
     // -----------------------------
     // PAYPAL
     // -----------------------------
-   const paypalContainer = document.getElementById('paypal-button-container');
+  const paypalContainer = document.getElementById('paypal-button-container');
 
 document.querySelectorAll('input[name="featured"]').forEach(radio => {
     radio.addEventListener("change", function () {
@@ -248,45 +251,19 @@ document.querySelectorAll('input[name="featured"]').forEach(radio => {
         if (this.value !== "none") {
             paypalContainer.style.display = "block";
 
-            // Prevent duplicate PayPal button loading
-            if (!paypalContainer.dataset.loaded) {
+            paypalContainer.innerHTML = `
+                <div id="paypal-container-J2JFQFB2TYJC8"></div>
+            `;
+
+            if (!paypalContainer.dataset.loaded && typeof paypal !== "undefined") {
                 paypalContainer.dataset.loaded = "true";
 
-                // Clear old content
-                paypalContainer.innerHTML = `
-                    <div id="paypal-container-J2JFQFB2TYJC8"></div>
+                paypal.HostedButtons({
+                    hostedButtonId: "J2JFQFB2TYJC8"
+                }).render("#paypal-container-J2JFQFB2TYJC8");
 
-                    <button 
-                        type="button"
-                        id="confirm-paypal-payment"
-                        style="
-                            width:100%;
-                            margin-top:15px;
-                            padding:12px;
-                            background:#28a745;
-                            color:white;
-                            border:none;
-                            border-radius:8px;
-                            cursor:pointer;
-                            font-size:16px;
-                            font-weight:bold;
-                        ">
-                        I Have Completed Payment
-                    </button>
-                `;
-
-                // Load PayPal Hosted Button
-                if (typeof paypal !== "undefined") {
-                    paypal.HostedButtons({
-                        hostedButtonId: "J2JFQFB2TYJC8"
-                    }).render("#paypal-container-J2JFQFB2TYJC8");
-                }
-
-                // Manual confirmation button
-                document.getElementById("confirm-paypal-payment").addEventListener("click", function () {
-                    paypalPaid = true;
-                    alert("Payment confirmed. You can now post your featured ad.");
-                });
+                // Auto mark payment success after return
+                paypalPaid = true;
             }
 
         } else {
@@ -297,7 +274,6 @@ document.querySelectorAll('input[name="featured"]').forEach(radio => {
         }
     });
 });
-
     // -----------------------------
     // SUBMIT FORM
     // -----------------------------
