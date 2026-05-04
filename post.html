@@ -1,4 +1,4 @@
-```html
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -139,13 +139,13 @@
 
 <form id="post-ad-form">
 
-    <!-- Category -->
+    <!-- CATEGORY -->
     <div class="form-field">
         <label for="ad-category" data-i18n="category">Category</label>
         <select id="ad-category" name="category" required>
-            <option value="" data-i18n="selectCategory">Select a category</option>
+            <option value="">Select a category</option>
             <option value="Real Estate">🏠 Real Estate</option>
-            <option value="Cars & Trucks">🚗 Cars</option>
+            <option value="Cars & Trucks">🚗 Cars & Trucks</option>
             <option value="Furniture">🛋️ Furniture</option>
             <option value="Auto Accessories">🛠️ Auto Accessories</option>
             <option value="Electronics">📱 Electronics</option>
@@ -162,72 +162,106 @@
         </select>
     </div>
 
-    <!-- Images -->
+    <!-- IMAGES -->
     <div class="form-field">
-        <label for="ad-image" data-i18n="imageUpload">Upload Images (Max 6)</label>
+        <label for="ad-image">Upload Images (Max 6)</label>
         <input type="file" id="ad-image" multiple accept="image/*">
         <div id="image-previews" class="image-previews"></div>
     </div>
 
-    <!-- Title -->
+    <!-- TITLE -->
     <div class="form-field">
-        <label for="ad-title" data-i18n="title">Title</label>
+        <label for="ad-title">Title</label>
         <input type="text" id="ad-title" required>
     </div>
 
-    <!-- Location -->
+    <!-- LOCATION -->
     <div class="form-field">
-        <label for="ad-location" data-i18n="location">Location</label>
+        <label for="ad-location">Location</label>
         <input type="text" id="ad-location" required>
     </div>
 
-    <!-- Price -->
+    <!-- PRICE -->
     <div class="form-field">
-        <label for="ad-price" data-i18n="price">Price ($)</label>
+        <label for="ad-price">Price ($)</label>
         <input type="number" id="ad-price" required>
     </div>
 
-    <!-- Description -->
+    <!-- DESCRIPTION -->
     <div class="form-field">
-        <label for="ad-description" data-i18n="description">Description</label>
+        <label for="ad-description">Description</label>
         <textarea id="ad-description" rows="5" required></textarea>
     </div>
 
-    <!-- Condition -->
+    <!-- CONDITION -->
     <div class="form-field" id="condition-field">
-        <label for="ad-condition" data-i18n="condition">Condition</label>
+        <label for="ad-condition">Condition</label>
         <select id="ad-condition">
-            <option value="new" data-i18n="new">New</option>
-            <option value="used" data-i18n="used">Used</option>
+            <option value="new">New</option>
+            <option value="used">Used</option>
         </select>
     </div>
 
-    <!-- Car Info -->
-    <div id="car-info" style="display:none;">
+    <!-- 🚗 CAR / TRUCK EXTRA INFO -->
+    <div id="car-info" style="display:none; background:#f9f9f9; padding:15px; border-radius:8px; margin-top:10px;">
+
         <div class="form-field">
-            <label for="car-mileage">Mileage</label>
-            <input type="text" id="car-mileage">
+            <label>Make</label>
+            <input type="text" id="car-make">
         </div>
+
+        <div class="form-field">
+            <label>Model</label>
+            <input type="text" id="car-model">
+        </div>
+
+        <div class="form-field">
+            <label>Year</label>
+            <input type="number" id="car-year">
+        </div>
+
+        <div class="form-field">
+            <label>Fuel Type</label>
+            <select id="car-fuel">
+                <option value="">Select</option>
+                <option>Gasoline</option>
+                <option>Diesel</option>
+                <option>Hybrid</option>
+                <option>Electric</option>
+            </select>
+        </div>
+
+        <div class="form-field">
+            <label>Transmission</label>
+            <select id="car-transmission">
+                <option value="">Select</option>
+                <option>Automatic</option>
+                <option>Manual</option>
+            </select>
+        </div>
+
+        <div class="form-field">
+            <label>Kilometers</label>
+            <input type="number" id="car-kms">
+        </div>
+
     </div>
 
-    <!-- Featured Ads -->
-    <div class="form-field featured-options">
-        <label data-i18n="featured_ad">Boost Your Ad</label>
-        <label><input type="radio" name="featured" value="none" checked> Standard Free</label><br>
-        <label><input type="radio" name="featured" value="featured"> Featured Ad ($4.99)</label>
+    <!-- FEATURED -->
+    <div class="form-field">
+        <label>Boost Your Ad</label>
+        <label><input type="radio" name="featured" value="none" checked> Free</label><br>
+        <label><input type="radio" name="featured" value="featured"> Featured ($4.99)</label>
     </div>
 
-    <!-- PayPal -->
+    <!-- PAYPAL -->
     <div id="paypal-button-container"></div>
 
-    <!-- Submit -->
-    <button type="submit" id="post-ad-btn" class="btn-primary" data-i18n="postAdButton">Post Ad Now</button>
+    <!-- SUBMIT -->
+    <button type="submit" class="btn-primary">Post Ad Now</button>
 
 </form>
-
-<script src="post.js"></script>
-
-</body>
+<script src="post.js"></script> 
+</body> 
 </html>
-```
-
+    
