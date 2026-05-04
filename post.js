@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // -----------------------------
     // CATEGORY CONFIG
     // -----------------------------
-
     function getMaxImages(category) {
         const highLimit = ["Cars", "Cars & Trucks", "Real Estate"];
         return highLimit.includes(category) ? 6 : 3;
@@ -55,13 +54,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (categorySelect) {
         categorySelect.addEventListener('change', handleCategoryChange);
-        handleCategoryChange(); // run on load
+        handleCategoryChange();
     }
 
     // -----------------------------
-    // IMAGE UPLOAD (FIXED LIMIT)
+    // IMAGE UPLOAD
     // -----------------------------
-
     if (imageInput) {
         imageInput.addEventListener('change', function (event) {
 
@@ -114,7 +112,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // -----------------------------
     // SAVE AD
     // -----------------------------
-
     function saveAd(data) {
         const ads = JSON.parse(localStorage.getItem('ads') || "[]");
 
@@ -127,6 +124,9 @@ document.addEventListener('DOMContentLoaded', function () {
         window.location.href = "myads.html";
     }
 
+    // -----------------------------
+    // POST AD
+    // -----------------------------
     function postAd(e) {
         e.preventDefault();
 
@@ -147,8 +147,6 @@ document.addEventListener('DOMContentLoaded', function () {
             alert("Please fill required fields");
             return;
         }
-
-        const images = [];
 
         const promises = uploadedImages.map(file => {
             return new Promise(resolve => {
@@ -182,14 +180,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // -----------------------------
-    // PAYPAL (SAFE INIT)
+    // PAYPAL DISPLAY
     // -----------------------------
-
- // --- FEATURED AD + PAYPAL DISPLAY (FIXED & RELIABLE) ---
-document.addEventListener("DOMContentLoaded", function () {
-
-    const paypalContainer = document.getElementById("paypal-button-container");
-
     function togglePayPal(show) {
         if (!paypalContainer) return;
 
@@ -229,9 +221,13 @@ document.addEventListener("DOMContentLoaded", function () {
                     </a>
                 </div>
             `;
+
+            paypalPaid = true;
+
         } else {
             paypalContainer.style.display = "none";
             paypalContainer.innerHTML = "";
+            paypalPaid = false;
         }
     }
 
@@ -243,20 +239,9 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // OPTIONAL: set initial state on load
     const selected = document.querySelector('input[name="featured"]:checked');
     if (selected) {
         togglePayPal(selected.value !== "none");
     }
-});
-    // -----------------------------
-    // SUBMIT FORM
-    // -----------------------------
-    const postForm = document.getElementById('post-ad-form');
-    if (postForm) {
-        postForm.addEventListener('submit', postAd);
-    }
 
 });
-
-
