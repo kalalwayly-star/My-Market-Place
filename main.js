@@ -72,24 +72,27 @@ function saveAdsToLocalStorage(ads) {
 function displayAllAds(filteredAds = null) {
     const listingsContainer = document.getElementById('listings');
     if (!listingsContainer) return;
-   const allAds = filteredAds || getAdsFromLocalStorage();
-const userCity = getUserCity();
-const ads = sortAdsByCity(allAds, userCity); 
 
     let ads = filteredAds || getAdsFromLocalStorage();
 
-// Featured ads first
-ads.sort((a, b) => {
-    const now = new Date();
+    const userCity = getUserCity();
 
-    const aFeatured = a.featuredUntil && new Date(a.featuredUntil) > now;
-    const bFeatured = b.featuredUntil && new Date(b.featuredUntil) > now;
+    // STEP 1: city priority sorting
+    ads = sortAdsByCity(ads, userCity);
 
-    if (aFeatured && !bFeatured) return -1;
-    if (!aFeatured && bFeatured) return 1;
+    // STEP 2: featured first (optional boost)
+    ads.sort((a, b) => {
+        const now = new Date();
 
-    return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
-});
+        const aFeatured = a.featuredUntil && new Date(a.featuredUntil) > now;
+        const bFeatured = b.featuredUntil && new Date(b.featuredUntil) > now;
+
+        if (aFeatured && !bFeatured) return -1;
+        if (!aFeatured && bFeatured) return 1;
+
+        return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+    });
+
     listingsContainer.innerHTML = '';
 
     if (ads.length === 0) {
@@ -99,64 +102,40 @@ ads.sort((a, b) => {
 
     ads.forEach(ad => {
         const previewImage =
-            ad.images && ad.images.length > 0
-                ? ad.images[0]
-                : ad.image
-                ? ad.image
-                : 'https://via.placeholder.com/400?text=No+Image';
+            ad.images?.[0] ||
+            ad.image ||
+            'https://via.placeholder.com/400?text=No+Image';
 
         const adDiv = document.createElement('div');
         adDiv.className = 'ad-card';
 
         adDiv.innerHTML = `
-            <div style="
-                display:flex;
-                gap:15px;
-                align-items:flex-start;
-                padding:15px;
-            ">
+            <div style="display:flex; gap:15px; align-items:flex-start; padding:15px;">
                 
-                <!-- Square Image -->
-                <div style="
-                    min-width:180px;
-                    width:180px;
-                    height:180px;
-                    overflow:hidden;
-                    border-radius:8px;
-                    flex-shrink:0;
-                    background:#f4f4f4;
-                ">
+                <div style="width:180px; height:180px; overflow:hidden; border-radius:8px; background:#f4f4f4;">
                     <img src="${previewImage}" 
                          alt="${ad.title}" 
-                         style="
-                            width:100%;
-                            height:100%;
-                            object-fit:cover;
-                            display:block;
-                         ">
+                         style="width:100%; height:100%; object-fit:cover;">
                 </div>
 
-                <!-- Right Side Content -->
                 <div style="flex:1;">
-                    <h4 style="margin-top:0; cursor:pointer;">${ad.title}</h4>
+                    <h4 style="margin:0; cursor:pointer;">${ad.title}</h4>
                     <p>${ad.description || ''}</p>
                     <p><b>Price: $${ad.price}</b></p>
                     <p>📍 ${ad.location || 'Unknown'}</p>
 
-                    <button class="view-details-btn" type="button">
-                        View Details
-                    </button>
+                    <button class="view-details-btn">View Details</button>
                 </div>
             </div>
         `;
 
-        adDiv.addEventListener('click', function (e) {
+        adDiv.addEventListener('click', (e) => {
             if (!e.target.closest('button')) {
                 goToAdDetails(ad.id);
             }
         });
 
-        adDiv.querySelector('.view-details-btn').addEventListener('click', function (e) {
+        adDiv.querySelector('.view-details-btn').addEventListener('click', (e) => {
             e.stopPropagation();
             goToAdDetails(ad.id);
         });
@@ -375,6 +354,4 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-document.addEventListener("DOMContentLoaded", () => {
-    displayAllAds();
-});
+
