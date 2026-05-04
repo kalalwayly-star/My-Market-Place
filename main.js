@@ -68,9 +68,9 @@ function displayAllAds(filteredAds = null) {
             : 'https://via.placeholder.com/300x200?text=No+Image';
 
         adDiv.innerHTML = `
-<img src="${previewImage}" 
-     alt="${ad.title}" 
-     style="width:100%; height:180px; object-fit:cover; border-radius:8px; display:block;">       
+<div class="ad-image-box">
+    <img src="${previewImage}" alt="${ad.title}">
+</div>    
      <h4 style="cursor:pointer;">${ad.title}</h4>
             <p>${ad.description || ''}</p>
             <p><b>Price: $${ad.price}</b></p>
