@@ -6,65 +6,43 @@ document.addEventListener('DOMContentLoaded', function () {
     // -----------------------------
     // CATEGORY RULES
     // -----------------------------
-    function getMaxImages(category) {
-        if (category === "Cars" || category === "Cars & Trucks" || category === "Real Estate") {
-            return 6;
-        }
-        return 3;
+   function getMaxImages(category) {
+    const highImageCategories = ["Cars", "Cars & Trucks", "Real Estate"];
+
+    if (highImageCategories.includes(category)) {
+        return 6;
     }
 
-    function showCarFields(category) {
-        const carInfo = document.getElementById('car-info');
-        if (!carInfo) return;
+    return 3;
+}
 
-        if (category === "Cars" || category === "Cars & Trucks") {
-            carInfo.style.display = "block";
-        } else {
-            carInfo.style.display = "none";
-        }
+function showCarFields(category) {
+    const carInfo = document.getElementById('car-info');
+    if (!carInfo) return;
+
+    const isCarCategory = category === "Cars" || category === "Cars & Trucks";
+
+    carInfo.style.display = isCarCategory ? "block" : "none";
+}
+
+function hideConditionIfNeeded(category) {
+    const condition = document.getElementById('condition-field');
+    if (!condition) return;
+
+    // categories where condition should NOT appear
+    const hideFor = [
+        "Jobs",
+        "Services",
+        "Real Estate",
+        "Business"
+    ];
+
+    if (hideFor.includes(category)) {
+        condition.style.display = "none";
+    } else {
+        condition.style.display = "block";
     }
-
-    function hideConditionIfNeeded(category) {
-        const condition = document.getElementById('condition-field');
-        if (!condition) return;
-
-        const hideFor = ["Jobs", "Services", "Real Estate", "Business", "Cars", "Cars & Trucks"];
-
-        if (hideFor.includes(category)) {
-            condition.style.display = "none";
-        } else {
-            condition.style.display = "block";
-        }
-    }
-
-    // -----------------------------
-    // IMAGE COMPRESSION
-    // -----------------------------
-    function compressImage(file, maxWidth = 800, quality = 0.65) {
-        return new Promise((resolve) => {
-            const reader = new FileReader();
-
-            reader.onload = function (e) {
-                const img = new Image();
-                img.src = e.target.result;
-
-                img.onload = function () {
-                    const canvas = document.createElement("canvas");
-
-                    const scale = maxWidth / img.width;
-                    canvas.width = maxWidth;
-                    canvas.height = img.height * scale;
-
-                    const ctx = canvas.getContext("2d");
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-                    resolve(canvas.toDataURL("image/jpeg", quality));
-                };
-            };
-
-            reader.readAsDataURL(file);
-        });
-    }
+}
 
     // -----------------------------
     // POST AD
