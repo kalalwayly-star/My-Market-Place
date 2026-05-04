@@ -158,7 +158,7 @@ function goToAdDetails(adId) {
         return;
     }
 
-    window.location.href = `ad-details.html?id=${encodeURIComponent(adId)}`;
+    window.location.href = `details.html?id=${encodeURIComponent(adId)}`;
 }
 
 // ------------------------------
