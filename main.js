@@ -54,7 +54,20 @@ function displayAllAds(filteredAds = null) {
     const listingsContainer = document.getElementById('listings');
     if (!listingsContainer) return;
 
-    const ads = filteredAds || getAdsFromLocalStorage();
+    let ads = filteredAds || getAdsFromLocalStorage();
+
+// Featured ads first
+ads.sort((a, b) => {
+    const now = new Date();
+
+    const aFeatured = a.featuredUntil && new Date(a.featuredUntil) > now;
+    const bFeatured = b.featuredUntil && new Date(b.featuredUntil) > now;
+
+    if (aFeatured && !bFeatured) return -1;
+    if (!aFeatured && bFeatured) return 1;
+
+    return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+});
     listingsContainer.innerHTML = '';
 
     if (ads.length === 0) {
