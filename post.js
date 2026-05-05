@@ -194,7 +194,7 @@ function sortByLocation(ads, userCity) {
                 category,
                 images: results,
                 userEmail: user.email,
-                date: new Date().toLocaleString(),
+                date: new Date().toISOString(),
                 featured: paypalPaid ? "featured" : "normal"
             };
 
