@@ -90,8 +90,7 @@ function displayAllAds(filteredAds = null) {
         if (aFeatured && !bFeatured) return -1;
         if (!aFeatured && bFeatured) return 1;
 
-        return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
-    });
+return new Date(b.date || 0) - new Date(a.date || 0);    });
 
     listingsContainer.innerHTML = '';
 
