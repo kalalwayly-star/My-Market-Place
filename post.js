@@ -185,18 +185,19 @@ function sortByLocation(ads, userCity) {
         Promise.all(promises).then(results => {
 
             const newAd = {
-                id: Date.now().toString(),
-                title,
-                description,
-                price,
-                location,
-                city: location.toLowerCase(),
-                category,
-                images: results,
-                userEmail: user.email,
-                date: new Date().toISOString(),
-                featured: paypalPaid ? "featured" : "normal"
-            };
+    id: Date.now().toString(),
+    title,
+    description,
+    price,
+    location,
+    city: user.city ? user.city.toLowerCase() : location.toLowerCase(),
+    category,
+    images: results,
+    userEmail: user.email,
+    username: user.name || user.email,
+    date: new Date().toISOString(),
+    featured: paypalPaid ? "featured" : "normal"
+};
 
             saveAd(newAd);
         });
