@@ -78,19 +78,29 @@ function displayAllAds(filteredAds = null) {
     const userCity = getUserCity();
 
     // STEP 1: city priority sorting
-    ads = sortAdsByCity(ads, userCity);
-
-    // STEP 2: featured first (optional boost)
     ads.sort((a, b) => {
-        const now = new Date();
 
-        const aFeatured = a.featuredUntil && new Date(a.featuredUntil) > now;
-        const bFeatured = b.featuredUntil && new Date(b.featuredUntil) > now;
+    const aFeatured = a.featured === "featured";
+    const bFeatured = b.featured === "featured";
 
-        if (aFeatured && !bFeatured) return -1;
-        if (!aFeatured && bFeatured) return 1;
+    if (aFeatured && !bFeatured) return -1;
+    if (!aFeatured && bFeatured) return 1;
 
-return new Date(b.date || 0) - new Date(a.date || 0);    });
+    const cityScore = (ad) => {
+        const city = (ad.city || "").toLowerCase();
+
+        if (city === userCity) return 2;
+        if (city.includes(userCity)) return 1;
+
+        return 0;
+    };
+
+    const cityDifference = cityScore(b) - cityScore(a);
+
+    if (cityDifference !== 0) return cityDifference;
+
+    return new Date(b.date || 0) - new Date(a.date || 0);
+});
 
     listingsContainer.innerHTML = '';
 
@@ -143,7 +153,17 @@ return new Date(b.date || 0) - new Date(a.date || 0);    });
     });
 }
 
+function deleteAd(adId) {
+    const user = JSON.parse(localStorage.getItem("loggedInUser"));
+    let ads = getAdsFromLocalStorage();
 
+    ads = ads.filter(ad =>
+        !(ad.id === adId && ad.userEmail === user.email)
+    );
+
+    saveAdsToLocalStorage(ads);
+    displayUserAds();
+}
 // ------------------------------
 // MY ADS PAGE
 // ------------------------------
