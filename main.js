@@ -54,53 +54,47 @@ document.getElementById('logout-btn')?.addEventListener('click', logout);
 // ADS STORAGE
 // ------------------------------
 
+// ------------------------------
+// ADS STORAGE
+// ------------------------------
 function getAdsFromLocalStorage() {
     return JSON.parse(localStorage.getItem('ads') || '[]');
 }
 
-function saveAdsToLocalStorage(ads) {
-    localStorage.setItem('ads', JSON.stringify(ads));
-}
-
 // ------------------------------
-// HOME PAGE ADS DISPLAY
-// ------------------------------
-
-// ------------------------------
-// HOME PAGE ADS
+// HOME PAGE - SHOW ALL USERS ADS
 // ------------------------------
 function displayAllAds(filteredAds = null) {
     const listingsContainer = document.getElementById('listings');
     if (!listingsContainer) return;
 
     let ads = filteredAds || getAdsFromLocalStorage();
-
     const userCity = getUserCity();
 
-    // STEP 1: city priority sorting
+    // SHOW ALL ADS FROM ALL USERS
     ads.sort((a, b) => {
 
-    const aFeatured = a.featured === "featured";
-    const bFeatured = b.featured === "featured";
+        const aFeatured = a.featured === "featured";
+        const bFeatured = b.featured === "featured";
 
-    if (aFeatured && !bFeatured) return -1;
-    if (!aFeatured && bFeatured) return 1;
+        if (aFeatured && !bFeatured) return -1;
+        if (!aFeatured && bFeatured) return 1;
 
-    const cityScore = (ad) => {
-        const city = (ad.city || "").toLowerCase();
+        const cityScore = (ad) => {
+            const city = (ad.city || "").toLowerCase();
 
-        if (city === userCity) return 2;
-        if (city.includes(userCity)) return 1;
+            if (city === userCity) return 2;
+            if (city.includes(userCity)) return 1;
 
-        return 0;
-    };
+            return 0;
+        };
 
-    const cityDifference = cityScore(b) - cityScore(a);
+        const cityDifference = cityScore(b) - cityScore(a);
 
-    if (cityDifference !== 0) return cityDifference;
+        if (cityDifference !== 0) return cityDifference;
 
-    return new Date(b.date || 0) - new Date(a.date || 0);
-});
+        return new Date(b.date || 0) - new Date(a.date || 0);
+    });
 
     listingsContainer.innerHTML = '';
 
@@ -152,6 +146,20 @@ function displayAllAds(filteredAds = null) {
         listingsContainer.appendChild(adDiv);
     });
 }
+
+// ------------------------------
+// PAGE LOAD
+// ------------------------------
+document.addEventListener('DOMContentLoaded', function () {
+
+    checkLoginStatus();
+
+    const ads = getAdsFromLocalStorage();
+
+    // LOAD ALL ADS FROM ALL USERS
+    displayAllAds(ads);
+
+});
 
 function deleteAd(adId) {
     const user = JSON.parse(localStorage.getItem("loggedInUser"));
