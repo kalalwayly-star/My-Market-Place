@@ -365,8 +365,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const path = window.location.pathname;
 
     if (path.includes('index.html') || path.endsWith('/')) {
-        displayAllAds();
-    }
+    const ads = getAdsFromLocalStorage();
+    displayAllAds(ads);
+}
 
     if (path.includes('myads.html')) {
         displayUserAds();
