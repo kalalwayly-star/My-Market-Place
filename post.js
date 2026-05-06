@@ -190,7 +190,7 @@ function sortByLocation(ads, userCity) {
     description,
     price,
     location,
-    city: user.city ? user.city.toLowerCase() : location.toLowerCase(),
+    city: (user.city || location || "anywhere").toLowerCase(),    
     category,
     images: results,
     userEmail: user.email,
